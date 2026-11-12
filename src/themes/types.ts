@@ -7,8 +7,8 @@ export interface Theme {
   /** Game name shown on screens and in the share text. */
   title: string;
   tagline: string;
-  /** Names for the three difficulty bands. */
-  bandNames: readonly [string, string, string];
+  /** Names for the four difficulty bands. */
+  bandNames: readonly [string, string, string, string];
   /** Emoji shown at the top of the share text. */
   shareIcon: string;
   /** Sprite atlas URL (grid of SPRITE_SIZE squares, SPRITE_COLS wide). */

@@ -284,3 +284,76 @@
 🗑️ | Office | 3 | wastebasket, trash can, bin, wastepaper basket, waste basket, rubbish bin, trash, garbage can, waste bin, trashcan, dustbin
 📐 | Office | 3 | set square, triangle, triangle ruler, triangular ruler, protractor
 🖋️ | Office | 3 | fountain pen, pen, ink pen, nib, quill
+
+# ---------- Band 4: niche, for long streaks (starts 4x zoomed, out of focus) ----------
+🦤 | Birds | 4 | dodo, dodo bird
+🦃 | Birds | 4 | turkey
+🪿 | Birds | 4 | goose, geese, gander
+🦣 | Animals | 4 | mammoth, woolly mammoth, wooly mammoth, mastodon
+🦬 | Animals | 4 | bison, buffalo
+🦨 | Animals | 4 | skunk
+🦡 | Animals | 4 | badger, honey badger
+🫎 | Animals | 4 | moose, elk
+🫏 | Animals | 4 | donkey, mule, burro, ass
+🐐 | Animals | 4 | goat, billy goat, nanny goat
+🦌 | Animals | 4 | deer, stag, reindeer, buck, elk
+🐆 | Animals | 4 | leopard, cheetah, jaguar
+🪸 | Sea life | 4 | coral, coral reef
+🦪 | Sea life | 4 | oyster, clam, pearl, mussel, oyster with pearl
+🪷 | Nature | 4 | lotus, water lily, waterlily, lotus flower
+🪻 | Nature | 4 | hyacinth, lavender, lupine, lupin, bluebell
+🪨 | Nature | 4 | rock, stone, boulder, pebble
+🪵 | Nature | 4 | log, wood, firewood, timber, tree trunk
+🫚 | Vegetables | 4 | ginger, ginger root, root ginger
+🫛 | Vegetables | 4 | pea pod, peas, pea, peapod, green beans, edamame
+🥬 | Vegetables | 4 | bok choy, pak choi, lettuce, cabbage, leafy greens, chard, kale, greens, spinach
+🫒 | Fruit | 4 | olive, olives, green olive
+🥮 | Food | 4 | mooncake, moon cake
+🧆 | Food | 4 | falafel
+🥠 | Food | 4 | fortune cookie
+🍡 | Food | 4 | dango, mochi, skewer
+🥧 | Food | 4 | pie, apple pie, tart
+🫕 | Food | 4 | fondue, cheese fondue
+🧉 | Kitchen | 4 | mate, yerba mate, maté, gourd
+🫙 | Kitchen | 4 | jar, mason jar, glass jar
+🏺 | Places | 4 | amphora, vase, urn, jug, pot
+🪆 | Toys | 4 | nesting doll, nesting dolls, matryoshka, russian doll, babushka doll, russian dolls
+🧮 | Office | 4 | abacus, counting frame
+🪈 | Music | 4 | flute, recorder, pipe, fife
+🪘 | Music | 4 | djembe, drum, bongo, conga, long drum, hand drum
+📯 | Music | 4 | postal horn, horn, post horn, bugle, french horn
+📻 | Tech | 4 | radio, transistor radio, boombox
+☎️ | Tech | 4 | telephone, phone, landline, rotary phone, old phone
+📟 | Tech | 4 | pager, beeper
+⏱️ | Tech | 4 | stopwatch, stop watch, timer
+🛞 | Vehicles | 4 | wheel, tire, tyre
+🛼 | Sports | 4 | roller skate, roller skates, rollerskate, skate, quad skate
+⛸️ | Sports | 4 | ice skate, ice skates, skate, figure skate
+🥏 | Sports | 4 | frisbee, flying disc, disc
+🎣 | Sports | 4 | fishing rod, fishing pole, rod, fishing
+🏏 | Sports | 4 | cricket, cricket bat, bat
+🥍 | Sports | 4 | lacrosse, lacrosse stick
+🎿 | Sports | 4 | skis, ski, skiing
+🛡️ | Toys | 4 | shield
+🗡️ | Toys | 4 | dagger, knife, sword
+🪖 | Clothing | 4 | helmet, army helmet, military helmet
+🎓 | Clothing | 4 | graduation cap, mortarboard, grad cap, cap
+🥾 | Clothing | 4 | hiking boot, boot, boots, walking boot
+🩴 | Clothing | 4 | flip flop, flip flops, thong, sandal, jandal
+🩰 | Clothing | 4 | ballet shoes, ballet shoe, ballet slippers, pointe shoes, ballet flats
+💼 | Clothing | 4 | briefcase, brief case, attache case, bag, portfolio
+🧳 | Clothing | 4 | suitcase, luggage, baggage
+🪭 | Clothing | 4 | fan, folding fan, hand fan
+🩺 | Science | 4 | stethoscope
+🩹 | Science | 4 | bandage, band aid, plaster, sticking plaster, bandaid
+💉 | Science | 4 | syringe, needle, injection, shot, vaccine
+🗜️ | Tools | 4 | clamp, vise, vice, c clamp
+⛏️ | Tools | 4 | pickaxe, pick, pick axe, mattock
+🧨 | Party | 4 | firecracker, dynamite, cracker, banger
+🪩 | Party | 4 | disco ball, mirror ball, glitter ball
+🪔 | Party | 4 | diya, oil lamp, diwali lamp, lamp
+🧧 | Party | 4 | red envelope, envelope, red packet, hongbao, lai see
+🪙 | Party | 4 | coin, gold coin, money
+💎 | Party | 4 | gem, diamond, jewel, gemstone, crystal
+🛖 | Places | 4 | hut, cabin, shack
+⛩️ | Places | 4 | torii, torii gate, shrine gate, gate, shrine

@@ -8,14 +8,22 @@ export const CONFIG = {
   countdownSeconds: 3,
   /** Puzzle #1 is this local date. */
   launchDate: "2026-11-12",
-  /** Objects per band in the daily sky, in order: clear, distant, deep space. */
-  perBand: [10, 15, 15] as const,
+  /**
+   * Streak tiers. Your streak going into today picks your tier; everyone in the same tier
+   * gets the same sky. perBand = objects from each band, in order: clear, distant, deep space, uncharted.
+   */
+  tiers: [
+    { name: "Stargazer", minStreak: 0, perBand: [10, 15, 15, 0] },
+    { name: "Astronomer", minStreak: 3, perBand: [6, 12, 15, 7] },
+    { name: "Deep-sky hunter", minStreak: 7, perBand: [3, 9, 14, 14] },
+  ],
   bands: [
     // startZoom: how far in the telescope starts; pullBack: seconds to reach full view;
     // startBlur: how out of focus it starts, in sprite pixels (0 = sharp, max 2.4); points / zoomedPoints.
     { startZoom: 1, pullBack: 0, startBlur: 0, points: 1, zoomedPoints: 1 },
     { startZoom: 2, pullBack: 3, startBlur: 0.6, points: 2, zoomedPoints: 3 },
     { startZoom: 4, pullBack: 4, startBlur: 1.4, points: 3, zoomedPoints: 5 },
+    { startZoom: 4, pullBack: 4.5, startBlur: 1.6, points: 4, zoomedPoints: 6 },
   ],
   /** Typo tolerance: one wrong, missing, extra or swapped letter on answers this long or longer. */
   typoMinLength: 6,
@@ -23,4 +31,11 @@ export const CONFIG = {
   longerNameWaitMs: 280,
 } as const;
 
-export type BandIndex = 0 | 1 | 2;
+export type BandIndex = 0 | 1 | 2 | 3;
+
+/** Tier index for a streak (days in a row played, not counting today). */
+export function tierFor(streak: number): number {
+  let t = 0;
+  CONFIG.tiers.forEach((tier, i) => { if (streak >= tier.minStreak) t = i; });
+  return t;
+}

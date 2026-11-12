@@ -1,6 +1,6 @@
 import "@fontsource/press-start-2p";
 import "@fontsource/vt323";
-import { CONFIG } from "./config";
+import { CONFIG, tierFor } from "./config";
 import { OBJECTS, BY_ID, type SkyObject } from "./library";
 import { makeMatcher, normalize, forms as formsOf } from "./match";
 import { dailySky, practiceSky, localDateKey, puzzleNumber } from "./daily";
@@ -49,6 +49,8 @@ interface Run {
   mode: "daily" | "practice";
   puzzle: number;
   date: string;
+  tier: number;
+  streak: number;
   sky: SkyObject[];
   i: number;
   phase: "ready" | "countdown" | "playing" | "over";
@@ -187,8 +189,10 @@ function shake() {
 function newRun(mode: Run["mode"]): Run {
   const date = localDateKey();
   const puzzle = puzzleNumber(date);
-  const sky = mode === "daily" ? dailySky(puzzle) : practiceSky();
-  return { mode, puzzle, date, sky, i: 0, phase: "ready", countdownAt: 0, startAt: 0, penalty: 0, score: 0, items: [], attempt: "", lastTick: 99, pending: null };
+  const streak = store.streakThrough(puzzle - 1);
+  const tier = tierFor(streak);
+  const sky = mode === "daily" ? dailySky(puzzle, tier) : practiceSky(tier);
+  return { mode, puzzle, date, tier, streak, sky, i: 0, phase: "ready", countdownAt: 0, startAt: 0, penalty: 0, score: 0, items: [], attempt: "", lastTick: 99, pending: null };
 }
 
 async function openPlay(mode: Run["mode"]) {
@@ -204,13 +208,14 @@ async function openPlay(mode: Run["mode"]) {
   el.start.innerHTML = `
     <h1>${title}</h1>
     <p class="date">${mode === "daily" ? fmtDate(run.date) : "Random objects, not scored"}</p>
+    ${tierLine(run.tier, run.streak)}
     <ul class="rules">
       <li><b>Type</b> the name of what you see. No Enter needed.</li>
       <li><b>${isTouch ? "Skip" : "Tab"}</b> moves on, but costs ${CONFIG.skipCost} seconds.</li>
       <li>Far-off objects start <b>zoomed in</b>. Name them before the view pulls back for <b>${b[1].zoomedPoints}</b> or <b>${b[2].zoomedPoints}</b> points.</li>
     </ul>
     <button class="btn primary" id="go">START</button>
-    <p class="small">${CONFIG.runSeconds} seconds · ${run.sky.length} objects · ${mode === "daily" ? "same sky for everyone today" : "practice"}</p>`;
+    <p class="small">${CONFIG.runSeconds} seconds · ${run.sky.length} objects · ${mode === "daily" ? "same sky for everyone on your streak tier" : "practice"}</p>`;
   document.getElementById("go")!.onclick = begin;
   loop();
 }
@@ -318,6 +323,7 @@ function finish(now: number) {
     skipped: run.items.filter((i) => i.outcome === "skipped").length,
     items: run.items,
     device: isTouch ? "touch" : "keyboard",
+    tier: run.tier,
   };
   if (run.mode === "daily" && !store.today(run.date)) store.save(result);
   setTimeout(() => { (el.guess as HTMLInputElement).blur(); resultsScreen(result, run.mode); }, 1400);
@@ -362,6 +368,13 @@ function loop() {
   raf = requestAnimationFrame(frame);
 }
 
+function tierLine(tier: number, streak: number): string {
+  const t = CONFIG.tiers[tier], next = CONFIG.tiers[tier + 1];
+  const streakTxt = streak ? `${streak}-day streak` : "No streak yet";
+  const nextTxt = next ? `Play ${next.minStreak - streak} more day${next.minStreak - streak === 1 ? "" : "s"} in a row for the ${next.name} sky.` : "The hardest sky there is.";
+  return `<p class="tier">${t.name.toUpperCase()} SKY · ${streakTxt}</p><p class="small next">${nextTxt}</p>`;
+}
+
 // ---------------------------------------------------------------- results
 
 function nextSkyIn(): string {
@@ -376,12 +389,13 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
   cancelAnimationFrame(raf);
   if (!viewer) { viewer = new Viewer(document.createElement("canvas"), theme); }
   await viewer.load();
-  const stats = store.stats();
+  const stats = store.stats(puzzleNumber(localDateKey()));
   const daily = mode === "daily";
   app.innerHTML = `
   <main class="results">
     <h1>${daily ? `${theme.title.toUpperCase()} #${r.puzzle}` : "PRACTICE SKY"}</h1>
     <p class="date">${daily ? fmtDate(r.date) : "Not scored"}</p>
+    ${daily ? `<p class="tier">${CONFIG.tiers[r.tier ?? 0].name.toUpperCase()} SKY</p>` : ""}
     <div class="final"><span>${r.score}</span><small>POINTS</small></div>
     <p class="line">${r.named} named · ${r.zoomed} zoom bonus${r.zoomed === 1 ? "" : "es"} · ${r.skipped} skipped</p>
     <div class="actions">

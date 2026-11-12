@@ -1,5 +1,6 @@
 import type { RunResult } from "./storage";
 import type { Theme } from "./themes/types";
+import { CONFIG } from "./config";
 
 export function shareText(r: RunResult, theme: Theme, url: string): string {
   const sym = { named: "🟦", zoomed: "⭐", skipped: "⬛" } as const;
@@ -8,7 +9,7 @@ export function shareText(r: RunResult, theme: Theme, url: string): string {
   for (let i = 0; i < marks.length; i += 10) rows.push(marks.slice(i, i + 10).join(""));
   const device = r.device === "touch" ? "📱" : "⌨️";
   return [
-    `${theme.title} #${r.puzzle} ${theme.shareIcon}`,
+    `${theme.title} #${r.puzzle} ${theme.shareIcon}${r.tier ? ` ${CONFIG.tiers[r.tier].name}` : ""}`,
     `${r.score} pts · ${r.named} named · ${r.skipped} skipped ${device}`,
     ...rows,
     url,

@@ -30,7 +30,7 @@ export const pixelSpace: Theme = {
   id: "pixel-space",
   title: "Stargazer",
   tagline: "One minute at the telescope. Name what drifts by.",
-  bandNames: ["Clear sky", "Distant", "Deep space"],
+  bandNames: ["Clear sky", "Distant", "Deep space", "Uncharted"],
   shareIcon: "🔭",
   spriteSheet: sheet,
   viewSize: V,

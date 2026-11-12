@@ -42,13 +42,13 @@ export function puzzleNumber(dateKey: string): number {
  * The sky for a puzzle number. Each band walks through its own shuffled deck, so an
  * object never repeats until every object in that band has been used once.
  */
-export function dailySky(puzzle: number, pool: SkyObject[] = OBJECTS): SkyObject[] {
+export function dailySky(puzzle: number, tier = 0, pool: SkyObject[] = OBJECTS): SkyObject[] {
   const day = Math.max(0, puzzle - 1);
   const sky: SkyObject[] = [];
-  CONFIG.perBand.forEach((k, band) => {
+  CONFIG.tiers[tier].perBand.forEach((k, band) => {
     const items = pool.filter((o) => o.band === band).sort((a, b) => a.id.localeCompare(b.id));
     const L = items.length;
-    const deck = (cycle: number) => shuffled(items, mulberry32(hash(`stargazer:${band}:${cycle}`)));
+    const deck = (cycle: number) => shuffled(items, mulberry32(hash(`stargazer:t${tier}:${band}:${cycle}`)));
     const take = Math.min(k, L);
     for (let i = 0; i < take; i++) {
       const pos = day * take + i;
@@ -59,7 +59,7 @@ export function dailySky(puzzle: number, pool: SkyObject[] = OBJECTS): SkyObject
 }
 
 /** A random sky for practice runs. */
-export function practiceSky(pool: SkyObject[] = OBJECTS): SkyObject[] {
+export function practiceSky(tier = 0, pool: SkyObject[] = OBJECTS): SkyObject[] {
   const rand = mulberry32((Math.random() * 2 ** 32) >>> 0);
-  return CONFIG.perBand.flatMap((k, band) => shuffled(pool.filter((o) => o.band === band), rand).slice(0, k));
+  return CONFIG.tiers[tier].perBand.flatMap((k, band) => shuffled(pool.filter((o) => o.band === band), rand).slice(0, k));
 }

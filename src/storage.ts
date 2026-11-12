@@ -9,6 +9,8 @@ export interface RunResult {
   skipped: number;
   items: ItemResult[];
   device: "keyboard" | "touch";
+  /** Streak tier the run was played at. */
+  tier?: number;
 }
 interface Saved { days: Record<string, RunResult>; muted?: boolean; seenHelp?: boolean }
 
@@ -30,11 +32,17 @@ export const store = {
   save(r: RunResult) { const s = read(); s.days[r.date] = r; write(s); },
   get muted() { return !!read().muted; },
   set muted(m: boolean) { const s = read(); s.muted = m; write(s); },
-  stats() {
-    const days = Object.values(read().days).sort((a, b) => a.puzzle - b.puzzle);
+  /** Days in a row played up to and including `puzzle`. */
+  streakThrough(puzzle: number): number {
+    const have = new Set(Object.values(read().days).map((d) => d.puzzle));
+    let n = 0;
+    while (have.has(puzzle - n)) n++;
+    return n;
+  },
+  stats(today: number) {
+    const days = Object.values(read().days);
     const best = days.reduce((m, d) => Math.max(m, d.score), 0);
-    let streak = 0;
-    for (let i = days.length - 1, want = days.at(-1)?.puzzle; i >= 0 && days[i].puzzle === want; i--, want!--) streak++;
+    const streak = this.streakThrough(today) || this.streakThrough(today - 1);
     return { played: days.length, best, streak };
   },
 };
