@@ -1,0 +1,3281 @@
+{
+"spriteSize": 32,
+"cols": 16,
+"objects": [
+{
+"id": "banana",
+"sprite": 0,
+"theme": "Fruit",
+"band": 1,
+"names": [
+"banana",
+"bananas",
+"peeled banana"
+]
+},
+{
+"id": "apple",
+"sprite": 1,
+"theme": "Fruit",
+"band": 1,
+"names": [
+"apple",
+"red apple"
+]
+},
+{
+"id": "strawberry",
+"sprite": 2,
+"theme": "Fruit",
+"band": 1,
+"names": [
+"strawberry",
+"berry"
+]
+},
+{
+"id": "grapes",
+"sprite": 3,
+"theme": "Fruit",
+"band": 1,
+"names": [
+"grapes",
+"grape",
+"bunch of grapes",
+"purple grapes"
+]
+},
+{
+"id": "watermelon",
+"sprite": 4,
+"theme": "Fruit",
+"band": 1,
+"names": [
+"watermelon",
+"melon",
+"watermelon slice",
+"slice of watermelon"
+]
+},
+{
+"id": "lemon",
+"sprite": 5,
+"theme": "Fruit",
+"band": 1,
+"names": [
+"lemon",
+"citrus"
+]
+},
+{
+"id": "cherries",
+"sprite": 6,
+"theme": "Fruit",
+"band": 1,
+"names": [
+"cherries",
+"cherry"
+]
+},
+{
+"id": "carrot",
+"sprite": 7,
+"theme": "Vegetables",
+"band": 1,
+"names": [
+"carrot"
+]
+},
+{
+"id": "corn",
+"sprite": 8,
+"theme": "Vegetables",
+"band": 1,
+"names": [
+"corn",
+"corn on the cob",
+"maize",
+"sweetcorn",
+"sweet corn",
+"cob",
+"ear of corn"
+]
+},
+{
+"id": "pizza",
+"sprite": 9,
+"theme": "Food",
+"band": 1,
+"names": [
+"pizza",
+"pizza slice",
+"slice of pizza",
+"slice"
+]
+},
+{
+"id": "burger",
+"sprite": 10,
+"theme": "Food",
+"band": 1,
+"names": [
+"burger",
+"hamburger",
+"cheeseburger"
+]
+},
+{
+"id": "hot-dog",
+"sprite": 11,
+"theme": "Food",
+"band": 1,
+"names": [
+"hot dog",
+"hotdog",
+"frankfurter",
+"sausage",
+"frank",
+"wiener"
+]
+},
+{
+"id": "doughnut",
+"sprite": 12,
+"theme": "Food",
+"band": 1,
+"names": [
+"doughnut",
+"donut"
+]
+},
+{
+"id": "cookie",
+"sprite": 13,
+"theme": "Food",
+"band": 1,
+"names": [
+"cookie",
+"biscuit",
+"chocolate chip cookie",
+"choc chip cookie"
+]
+},
+{
+"id": "cake",
+"sprite": 14,
+"theme": "Food",
+"band": 1,
+"names": [
+"cake",
+"birthday cake"
+]
+},
+{
+"id": "ice-cream",
+"sprite": 15,
+"theme": "Food",
+"band": 1,
+"names": [
+"ice cream",
+"ice cream cone",
+"cone",
+"soft serve",
+"soft ice cream",
+"icecream",
+"gelato",
+"frozen yogurt",
+"froyo"
+]
+},
+{
+"id": "cheese",
+"sprite": 16,
+"theme": "Food",
+"band": 1,
+"names": [
+"cheese",
+"wedge of cheese",
+"cheese wedge",
+"swiss cheese"
+]
+},
+{
+"id": "bread",
+"sprite": 17,
+"theme": "Food",
+"band": 1,
+"names": [
+"bread",
+"loaf",
+"loaf of bread"
+]
+},
+{
+"id": "egg",
+"sprite": 18,
+"theme": "Food",
+"band": 1,
+"names": [
+"egg"
+]
+},
+{
+"id": "coffee",
+"sprite": 19,
+"theme": "Kitchen",
+"band": 1,
+"names": [
+"coffee",
+"mug",
+"cup",
+"coffee cup",
+"coffee mug",
+"cup of coffee",
+"tea",
+"cup of tea",
+"teacup",
+"hot drink",
+"hot beverage",
+"hot chocolate",
+"cocoa",
+"latte"
+]
+},
+{
+"id": "cat",
+"sprite": 20,
+"theme": "Animals",
+"band": 1,
+"names": [
+"cat",
+"kitty",
+"kitten",
+"house cat",
+"tabby",
+"tabby cat",
+"ginger cat"
+]
+},
+{
+"id": "dog",
+"sprite": 21,
+"theme": "Animals",
+"band": 1,
+"names": [
+"dog",
+"puppy",
+"pup",
+"doggy",
+"doggo",
+"hound",
+"pooch"
+]
+},
+{
+"id": "pig",
+"sprite": 22,
+"theme": "Animals",
+"band": 1,
+"names": [
+"pig",
+"hog",
+"piggy",
+"swine",
+"sow",
+"boar",
+"piglet"
+]
+},
+{
+"id": "cow",
+"sprite": 23,
+"theme": "Animals",
+"band": 1,
+"names": [
+"cow",
+"cattle",
+"dairy cow",
+"bull",
+"calf"
+]
+},
+{
+"id": "elephant",
+"sprite": 24,
+"theme": "Animals",
+"band": 1,
+"names": [
+"elephant"
+]
+},
+{
+"id": "giraffe",
+"sprite": 25,
+"theme": "Animals",
+"band": 1,
+"names": [
+"giraffe"
+]
+},
+{
+"id": "horse",
+"sprite": 26,
+"theme": "Animals",
+"band": 1,
+"names": [
+"horse",
+"racehorse",
+"race horse",
+"pony",
+"stallion",
+"mare",
+"galloping horse"
+]
+},
+{
+"id": "frog",
+"sprite": 27,
+"theme": "Animals",
+"band": 1,
+"names": [
+"frog",
+"toad"
+]
+},
+{
+"id": "turtle",
+"sprite": 28,
+"theme": "Animals",
+"band": 1,
+"names": [
+"turtle",
+"tortoise"
+]
+},
+{
+"id": "penguin",
+"sprite": 29,
+"theme": "Birds",
+"band": 1,
+"names": [
+"penguin"
+]
+},
+{
+"id": "duck",
+"sprite": 30,
+"theme": "Birds",
+"band": 1,
+"names": [
+"duck",
+"mallard",
+"drake"
+]
+},
+{
+"id": "fish",
+"sprite": 31,
+"theme": "Sea life",
+"band": 1,
+"names": [
+"fish"
+]
+},
+{
+"id": "bee",
+"sprite": 32,
+"theme": "Bugs",
+"band": 1,
+"names": [
+"bee",
+"honeybee",
+"bumblebee",
+"wasp",
+"hornet"
+]
+},
+{
+"id": "butterfly",
+"sprite": 33,
+"theme": "Bugs",
+"band": 1,
+"names": [
+"butterfly",
+"moth"
+]
+},
+{
+"id": "tree",
+"sprite": 34,
+"theme": "Nature",
+"band": 1,
+"names": [
+"tree",
+"oak",
+"oak tree"
+]
+},
+{
+"id": "cactus",
+"sprite": 35,
+"theme": "Nature",
+"band": 1,
+"names": [
+"cactus",
+"cacti",
+"saguaro"
+]
+},
+{
+"id": "sunflower",
+"sprite": 36,
+"theme": "Nature",
+"band": 1,
+"names": [
+"sunflower",
+"flower"
+]
+},
+{
+"id": "mushroom",
+"sprite": 37,
+"theme": "Nature",
+"band": 1,
+"names": [
+"mushroom",
+"toadstool",
+"fungus",
+"fungi"
+]
+},
+{
+"id": "rainbow",
+"sprite": 38,
+"theme": "Weather",
+"band": 1,
+"names": [
+"rainbow"
+]
+},
+{
+"id": "snowflake",
+"sprite": 39,
+"theme": "Weather",
+"band": 1,
+"names": [
+"snowflake",
+"snow",
+"flake",
+"ice crystal"
+]
+},
+{
+"id": "snowman",
+"sprite": 40,
+"theme": "Weather",
+"band": 1,
+"names": [
+"snowman",
+"snow man"
+]
+},
+{
+"id": "fire",
+"sprite": 41,
+"theme": "Nature",
+"band": 1,
+"names": [
+"fire",
+"flame",
+"flames",
+"blaze"
+]
+},
+{
+"id": "sun",
+"sprite": 42,
+"theme": "Space",
+"band": 1,
+"names": [
+"sun",
+"sunshine",
+"star"
+]
+},
+{
+"id": "moon",
+"sprite": 43,
+"theme": "Space",
+"band": 1,
+"names": [
+"moon",
+"crescent moon",
+"crescent",
+"half moon"
+]
+},
+{
+"id": "star",
+"sprite": 44,
+"theme": "Space",
+"band": 1,
+"names": [
+"star",
+"gold star"
+]
+},
+{
+"id": "rocket",
+"sprite": 45,
+"theme": "Space",
+"band": 1,
+"names": [
+"rocket",
+"rocket ship",
+"rocketship",
+"spaceship",
+"space ship",
+"spacecraft",
+"space rocket"
+]
+},
+{
+"id": "earth",
+"sprite": 46,
+"theme": "Space",
+"band": 1,
+"names": [
+"earth",
+"globe",
+"world",
+"planet earth",
+"planet",
+"the world"
+]
+},
+{
+"id": "car",
+"sprite": 47,
+"theme": "Vehicles",
+"band": 1,
+"names": [
+"car",
+"automobile",
+"auto",
+"red car",
+"sedan",
+"vehicle"
+]
+},
+{
+"id": "bicycle",
+"sprite": 48,
+"theme": "Vehicles",
+"band": 1,
+"names": [
+"bicycle",
+"bike",
+"cycle",
+"push bike",
+"pushbike",
+"pedal bike"
+]
+},
+{
+"id": "bus",
+"sprite": 49,
+"theme": "Vehicles",
+"band": 1,
+"names": [
+"bus",
+"school bus",
+"coach"
+]
+},
+{
+"id": "airplane",
+"sprite": 50,
+"theme": "Vehicles",
+"band": 1,
+"names": [
+"airplane",
+"aeroplane",
+"plane",
+"jet",
+"aircraft",
+"airliner",
+"jet plane"
+]
+},
+{
+"id": "house",
+"sprite": 51,
+"theme": "Home",
+"band": 1,
+"names": [
+"house",
+"home",
+"cottage"
+]
+},
+{
+"id": "key",
+"sprite": 52,
+"theme": "Home",
+"band": 1,
+"names": [
+"key",
+"door key"
+]
+},
+{
+"id": "candle",
+"sprite": 53,
+"theme": "Home",
+"band": 1,
+"names": [
+"candle",
+"candlestick",
+"wax candle"
+]
+},
+{
+"id": "alarm-clock",
+"sprite": 54,
+"theme": "Home",
+"band": 1,
+"names": [
+"alarm clock",
+"clock",
+"alarm"
+]
+},
+{
+"id": "light-bulb",
+"sprite": 55,
+"theme": "Home",
+"band": 1,
+"names": [
+"light bulb",
+"lightbulb",
+"bulb",
+"light",
+"lamp",
+"idea"
+]
+},
+{
+"id": "phone",
+"sprite": 56,
+"theme": "Tech",
+"band": 1,
+"names": [
+"phone",
+"mobile phone",
+"cell phone",
+"cellphone",
+"smartphone",
+"smart phone",
+"mobile",
+"iphone",
+"android",
+"telephone",
+"cell"
+]
+},
+{
+"id": "glasses",
+"sprite": 57,
+"theme": "Clothing",
+"band": 1,
+"names": [
+"glasses",
+"eyeglasses",
+"spectacles",
+"specs",
+"sunglasses"
+]
+},
+{
+"id": "sneaker",
+"sprite": 58,
+"theme": "Clothing",
+"band": 1,
+"names": [
+"sneaker",
+"shoe",
+"trainer",
+"running shoe",
+"tennis shoe",
+"gym shoe",
+"sports shoe",
+"athletic shoe",
+"kicks",
+"runner"
+]
+},
+{
+"id": "top-hat",
+"sprite": 59,
+"theme": "Clothing",
+"band": 1,
+"names": [
+"top hat",
+"hat",
+"magician hat",
+"tophat",
+"stovepipe hat"
+]
+},
+{
+"id": "socks",
+"sprite": 60,
+"theme": "Clothing",
+"band": 1,
+"names": [
+"socks",
+"sock",
+"pair of socks",
+"stocking"
+]
+},
+{
+"id": "scissors",
+"sprite": 61,
+"theme": "Office",
+"band": 1,
+"names": [
+"scissors",
+"shears",
+"pair of scissors"
+]
+},
+{
+"id": "pencil",
+"sprite": 62,
+"theme": "Office",
+"band": 1,
+"names": [
+"pencil"
+]
+},
+{
+"id": "books",
+"sprite": 63,
+"theme": "Office",
+"band": 1,
+"names": [
+"books",
+"book",
+"stack of books",
+"pile of books",
+"textbooks"
+]
+},
+{
+"id": "umbrella",
+"sprite": 64,
+"theme": "Weather",
+"band": 1,
+"names": [
+"umbrella",
+"brolly",
+"parasol"
+]
+},
+{
+"id": "guitar",
+"sprite": 65,
+"theme": "Music",
+"band": 1,
+"names": [
+"guitar",
+"electric guitar",
+"bass",
+"bass guitar"
+]
+},
+{
+"id": "soccer-ball",
+"sprite": 66,
+"theme": "Sports",
+"band": 1,
+"names": [
+"soccer ball",
+"football",
+"soccer",
+"ball"
+]
+},
+{
+"id": "basketball",
+"sprite": 67,
+"theme": "Sports",
+"band": 1,
+"names": [
+"basketball",
+"ball",
+"basket ball"
+]
+},
+{
+"id": "balloon",
+"sprite": 68,
+"theme": "Party",
+"band": 1,
+"names": [
+"balloon",
+"red balloon"
+]
+},
+{
+"id": "gift",
+"sprite": 69,
+"theme": "Party",
+"band": 1,
+"names": [
+"gift",
+"present",
+"gift box",
+"wrapped gift",
+"wrapped present",
+"birthday present"
+]
+},
+{
+"id": "pumpkin",
+"sprite": 70,
+"theme": "Party",
+"band": 1,
+"names": [
+"pumpkin",
+"jack o lantern",
+"jackolantern",
+"halloween pumpkin",
+"carved pumpkin",
+"gourd"
+]
+},
+{
+"id": "bell",
+"sprite": 71,
+"theme": "Music",
+"band": 1,
+"names": [
+"bell",
+"golden bell",
+"church bell",
+"jingle bell"
+]
+},
+{
+"id": "pineapple",
+"sprite": 72,
+"theme": "Fruit",
+"band": 2,
+"names": [
+"pineapple",
+"ananas"
+]
+},
+{
+"id": "pear",
+"sprite": 73,
+"theme": "Fruit",
+"band": 2,
+"names": [
+"pear"
+]
+},
+{
+"id": "orange",
+"sprite": 74,
+"theme": "Fruit",
+"band": 2,
+"names": [
+"orange",
+"tangerine",
+"mandarin",
+"clementine",
+"satsuma",
+"citrus"
+]
+},
+{
+"id": "avocado",
+"sprite": 75,
+"theme": "Fruit",
+"band": 2,
+"names": [
+"avocado",
+"avo"
+]
+},
+{
+"id": "broccoli",
+"sprite": 76,
+"theme": "Vegetables",
+"band": 2,
+"names": [
+"broccoli",
+"brocoli"
+]
+},
+{
+"id": "eggplant",
+"sprite": 77,
+"theme": "Vegetables",
+"band": 2,
+"names": [
+"eggplant",
+"aubergine",
+"brinjal"
+]
+},
+{
+"id": "potato",
+"sprite": 78,
+"theme": "Vegetables",
+"band": 2,
+"names": [
+"potato",
+"spud",
+"tater"
+]
+},
+{
+"id": "chili",
+"sprite": 79,
+"theme": "Vegetables",
+"band": 2,
+"names": [
+"chili",
+"chilli",
+"chile",
+"chili pepper",
+"chilli pepper",
+"hot pepper",
+"red pepper",
+"pepper",
+"jalapeno",
+"cayenne"
+]
+},
+{
+"id": "croissant",
+"sprite": 80,
+"theme": "Food",
+"band": 2,
+"names": [
+"croissant"
+]
+},
+{
+"id": "pretzel",
+"sprite": 81,
+"theme": "Food",
+"band": 2,
+"names": [
+"pretzel"
+]
+},
+{
+"id": "cupcake",
+"sprite": 82,
+"theme": "Food",
+"band": 2,
+"names": [
+"cupcake",
+"muffin",
+"fairy cake",
+"cup cake"
+]
+},
+{
+"id": "popcorn",
+"sprite": 83,
+"theme": "Food",
+"band": 2,
+"names": [
+"popcorn",
+"pop corn"
+]
+},
+{
+"id": "taco",
+"sprite": 84,
+"theme": "Food",
+"band": 2,
+"names": [
+"taco",
+"tacos"
+]
+},
+{
+"id": "pancakes",
+"sprite": 85,
+"theme": "Food",
+"band": 2,
+"names": [
+"pancakes",
+"pancake",
+"hotcakes",
+"hotcake",
+"flapjacks",
+"flapjack",
+"stack of pancakes",
+"crepes"
+]
+},
+{
+"id": "waffle",
+"sprite": 86,
+"theme": "Food",
+"band": 2,
+"names": [
+"waffle",
+"waffles"
+]
+},
+{
+"id": "honey",
+"sprite": 87,
+"theme": "Food",
+"band": 2,
+"names": [
+"honey",
+"honey pot",
+"honeypot",
+"jar of honey",
+"honey jar"
+]
+},
+{
+"id": "fries",
+"sprite": 88,
+"theme": "Food",
+"band": 2,
+"names": [
+"fries",
+"french fries",
+"chips",
+"frites",
+"potato fries"
+]
+},
+{
+"id": "salad",
+"sprite": 89,
+"theme": "Food",
+"band": 2,
+"names": [
+"salad",
+"green salad",
+"bowl of salad",
+"salad bowl"
+]
+},
+{
+"id": "spaghetti",
+"sprite": 90,
+"theme": "Food",
+"band": 2,
+"names": [
+"spaghetti",
+"pasta",
+"noodles",
+"spaghetti bolognese",
+"bolognese"
+]
+},
+{
+"id": "lollipop",
+"sprite": 91,
+"theme": "Food",
+"band": 2,
+"names": [
+"lollipop",
+"lolly",
+"lollypop",
+"sucker",
+"candy",
+"swirl lollipop"
+]
+},
+{
+"id": "chocolate",
+"sprite": 92,
+"theme": "Food",
+"band": 2,
+"names": [
+"chocolate",
+"chocolate bar",
+"candy bar",
+"bar of chocolate"
+]
+},
+{
+"id": "milk",
+"sprite": 93,
+"theme": "Kitchen",
+"band": 2,
+"names": [
+"milk",
+"glass of milk",
+"glass"
+]
+},
+{
+"id": "frying-pan",
+"sprite": 94,
+"theme": "Kitchen",
+"band": 2,
+"names": [
+"frying pan",
+"pan",
+"skillet",
+"fried egg",
+"egg",
+"egg in a pan",
+"fry pan",
+"frypan",
+"cooking"
+]
+},
+{
+"id": "crab",
+"sprite": 95,
+"theme": "Sea life",
+"band": 2,
+"names": [
+"crab"
+]
+},
+{
+"id": "octopus",
+"sprite": 96,
+"theme": "Sea life",
+"band": 2,
+"names": [
+"octopus"
+]
+},
+{
+"id": "shark",
+"sprite": 97,
+"theme": "Sea life",
+"band": 2,
+"names": [
+"shark"
+]
+},
+{
+"id": "whale",
+"sprite": 98,
+"theme": "Sea life",
+"band": 2,
+"names": [
+"whale",
+"spouting whale",
+"blue whale"
+]
+},
+{
+"id": "dolphin",
+"sprite": 99,
+"theme": "Sea life",
+"band": 2,
+"names": [
+"dolphin",
+"porpoise"
+]
+},
+{
+"id": "shell",
+"sprite": 100,
+"theme": "Sea life",
+"band": 2,
+"names": [
+"shell",
+"seashell",
+"sea shell",
+"conch",
+"spiral shell",
+"snail shell"
+]
+},
+{
+"id": "owl",
+"sprite": 101,
+"theme": "Birds",
+"band": 2,
+"names": [
+"owl"
+]
+},
+{
+"id": "rooster",
+"sprite": 102,
+"theme": "Birds",
+"band": 2,
+"names": [
+"rooster",
+"chicken",
+"cockerel",
+"cock",
+"hen"
+]
+},
+{
+"id": "eagle",
+"sprite": 103,
+"theme": "Birds",
+"band": 2,
+"names": [
+"eagle",
+"bald eagle",
+"hawk",
+"falcon",
+"bird of prey"
+]
+},
+{
+"id": "fox",
+"sprite": 104,
+"theme": "Animals",
+"band": 2,
+"names": [
+"fox",
+"red fox"
+]
+},
+{
+"id": "squirrel",
+"sprite": 105,
+"theme": "Animals",
+"band": 2,
+"names": [
+"squirrel",
+"chipmunk"
+]
+},
+{
+"id": "zebra",
+"sprite": 106,
+"theme": "Animals",
+"band": 2,
+"names": [
+"zebra"
+]
+},
+{
+"id": "camel",
+"sprite": 107,
+"theme": "Animals",
+"band": 2,
+"names": [
+"camel",
+"dromedary"
+]
+},
+{
+"id": "rabbit",
+"sprite": 108,
+"theme": "Animals",
+"band": 2,
+"names": [
+"rabbit",
+"bunny",
+"hare",
+"bunny rabbit"
+]
+},
+{
+"id": "mouse",
+"sprite": 109,
+"theme": "Animals",
+"band": 2,
+"names": [
+"mouse",
+"mice",
+"rat"
+]
+},
+{
+"id": "snail",
+"sprite": 110,
+"theme": "Bugs",
+"band": 2,
+"names": [
+"snail",
+"slug"
+]
+},
+{
+"id": "ladybug",
+"sprite": 111,
+"theme": "Bugs",
+"band": 2,
+"names": [
+"ladybug",
+"ladybird",
+"lady bug",
+"lady beetle",
+"ladybird beetle",
+"beetle",
+"bug"
+]
+},
+{
+"id": "spider",
+"sprite": 112,
+"theme": "Bugs",
+"band": 2,
+"names": [
+"spider",
+"tarantula"
+]
+},
+{
+"id": "violin",
+"sprite": 113,
+"theme": "Music",
+"band": 2,
+"names": [
+"violin",
+"fiddle",
+"viola",
+"cello"
+]
+},
+{
+"id": "trumpet",
+"sprite": 114,
+"theme": "Music",
+"band": 2,
+"names": [
+"trumpet",
+"horn",
+"bugle",
+"cornet"
+]
+},
+{
+"id": "drum",
+"sprite": 115,
+"theme": "Music",
+"band": 2,
+"names": [
+"drum",
+"drums",
+"snare drum",
+"snare",
+"drum kit",
+"drumsticks"
+]
+},
+{
+"id": "piano",
+"sprite": 116,
+"theme": "Music",
+"band": 2,
+"names": [
+"piano",
+"keyboard",
+"keys",
+"musical keyboard",
+"synthesizer",
+"synth",
+"piano keys"
+]
+},
+{
+"id": "microphone",
+"sprite": 117,
+"theme": "Music",
+"band": 2,
+"names": [
+"microphone",
+"mic",
+"mike"
+]
+},
+{
+"id": "hammer",
+"sprite": 118,
+"theme": "Tools",
+"band": 2,
+"names": [
+"hammer"
+]
+},
+{
+"id": "wrench",
+"sprite": 119,
+"theme": "Tools",
+"band": 2,
+"names": [
+"wrench",
+"spanner"
+]
+},
+{
+"id": "magnet",
+"sprite": 120,
+"theme": "Tools",
+"band": 2,
+"names": [
+"magnet",
+"horseshoe magnet"
+]
+},
+{
+"id": "flashlight",
+"sprite": 121,
+"theme": "Tools",
+"band": 2,
+"names": [
+"flashlight",
+"torch"
+]
+},
+{
+"id": "fire-extinguisher",
+"sprite": 122,
+"theme": "Home",
+"band": 2,
+"names": [
+"fire extinguisher",
+"extinguisher"
+]
+},
+{
+"id": "broom",
+"sprite": 123,
+"theme": "Home",
+"band": 2,
+"names": [
+"broom",
+"broomstick",
+"brush",
+"sweeping brush"
+]
+},
+{
+"id": "basket",
+"sprite": 124,
+"theme": "Home",
+"band": 2,
+"names": [
+"basket",
+"laundry basket",
+"picnic basket",
+"wicker basket",
+"hamper"
+]
+},
+{
+"id": "sponge",
+"sprite": 125,
+"theme": "Home",
+"band": 2,
+"names": [
+"sponge"
+]
+},
+{
+"id": "chair",
+"sprite": 126,
+"theme": "Home",
+"band": 2,
+"names": [
+"chair",
+"wooden chair",
+"seat",
+"stool"
+]
+},
+{
+"id": "bed",
+"sprite": 127,
+"theme": "Home",
+"band": 2,
+"names": [
+"bed"
+]
+},
+{
+"id": "bathtub",
+"sprite": 128,
+"theme": "Home",
+"band": 2,
+"names": [
+"bathtub",
+"bath",
+"tub",
+"bath tub"
+]
+},
+{
+"id": "toilet",
+"sprite": 129,
+"theme": "Home",
+"band": 2,
+"names": [
+"toilet",
+"loo",
+"lavatory",
+"wc",
+"commode",
+"potty",
+"john"
+]
+},
+{
+"id": "teddy-bear",
+"sprite": 130,
+"theme": "Toys",
+"band": 2,
+"names": [
+"teddy bear",
+"teddy",
+"bear",
+"stuffed bear",
+"stuffed animal",
+"toy bear",
+"plush",
+"plushie",
+"soft toy"
+]
+},
+{
+"id": "dice",
+"sprite": 131,
+"theme": "Toys",
+"band": 2,
+"names": [
+"dice",
+"die",
+"game die"
+]
+},
+{
+"id": "puzzle-piece",
+"sprite": 132,
+"theme": "Toys",
+"band": 2,
+"names": [
+"puzzle piece",
+"jigsaw",
+"jigsaw piece",
+"puzzle",
+"jigsaw puzzle"
+]
+},
+{
+"id": "kite",
+"sprite": 133,
+"theme": "Toys",
+"band": 2,
+"names": [
+"kite"
+]
+},
+{
+"id": "yoyo",
+"sprite": 134,
+"theme": "Toys",
+"band": 2,
+"names": [
+"yoyo",
+"yo yo"
+]
+},
+{
+"id": "hourglass",
+"sprite": 135,
+"theme": "Science",
+"band": 2,
+"names": [
+"hourglass",
+"sand timer",
+"egg timer",
+"sandglass",
+"timer",
+"hour glass"
+]
+},
+{
+"id": "compass",
+"sprite": 136,
+"theme": "Science",
+"band": 2,
+"names": [
+"compass"
+]
+},
+{
+"id": "telescope",
+"sprite": 137,
+"theme": "Space",
+"band": 2,
+"names": [
+"telescope"
+]
+},
+{
+"id": "planet",
+"sprite": 138,
+"theme": "Space",
+"band": 2,
+"names": [
+"planet",
+"saturn",
+"ringed planet",
+"gas giant"
+]
+},
+{
+"id": "comet",
+"sprite": 139,
+"theme": "Space",
+"band": 2,
+"names": [
+"comet",
+"meteor",
+"shooting star",
+"meteorite",
+"asteroid",
+"fireball"
+]
+},
+{
+"id": "ufo",
+"sprite": 140,
+"theme": "Space",
+"band": 2,
+"names": [
+"ufo",
+"flying saucer",
+"spaceship",
+"alien spaceship",
+"alien ship",
+"saucer",
+"space ship"
+]
+},
+{
+"id": "tent",
+"sprite": 141,
+"theme": "Nature",
+"band": 2,
+"names": [
+"tent",
+"camping tent"
+]
+},
+{
+"id": "volcano",
+"sprite": 142,
+"theme": "Nature",
+"band": 2,
+"names": [
+"volcano",
+"erupting volcano"
+]
+},
+{
+"id": "palm-tree",
+"sprite": 143,
+"theme": "Nature",
+"band": 2,
+"names": [
+"palm tree",
+"palm",
+"coconut tree"
+]
+},
+{
+"id": "maple-leaf",
+"sprite": 144,
+"theme": "Nature",
+"band": 2,
+"names": [
+"maple leaf",
+"leaf",
+"autumn leaf",
+"fall leaf",
+"maple"
+]
+},
+{
+"id": "rose",
+"sprite": 145,
+"theme": "Nature",
+"band": 2,
+"names": [
+"rose",
+"flower",
+"red rose"
+]
+},
+{
+"id": "tulip",
+"sprite": 146,
+"theme": "Nature",
+"band": 2,
+"names": [
+"tulip",
+"flower"
+]
+},
+{
+"id": "castle",
+"sprite": 147,
+"theme": "Places",
+"band": 2,
+"names": [
+"castle",
+"palace",
+"fort",
+"fortress"
+]
+},
+{
+"id": "train",
+"sprite": 148,
+"theme": "Vehicles",
+"band": 2,
+"names": [
+"train",
+"locomotive",
+"steam train",
+"steam engine",
+"engine",
+"steam locomotive"
+]
+},
+{
+"id": "helicopter",
+"sprite": 149,
+"theme": "Vehicles",
+"band": 2,
+"names": [
+"helicopter",
+"chopper",
+"heli"
+]
+},
+{
+"id": "sailboat",
+"sprite": 150,
+"theme": "Vehicles",
+"band": 2,
+"names": [
+"sailboat",
+"sailing boat",
+"boat",
+"yacht",
+"sail boat",
+"dinghy"
+]
+},
+{
+"id": "scooter",
+"sprite": 151,
+"theme": "Vehicles",
+"band": 2,
+"names": [
+"scooter",
+"kick scooter",
+"push scooter"
+]
+},
+{
+"id": "tractor",
+"sprite": 152,
+"theme": "Vehicles",
+"band": 2,
+"names": [
+"tractor"
+]
+},
+{
+"id": "fire-engine",
+"sprite": 153,
+"theme": "Vehicles",
+"band": 2,
+"names": [
+"fire engine",
+"fire truck",
+"firetruck",
+"fire engine truck",
+"truck"
+]
+},
+{
+"id": "ping-pong",
+"sprite": 154,
+"theme": "Sports",
+"band": 2,
+"names": [
+"ping pong",
+"table tennis",
+"paddle",
+"ping pong paddle",
+"bat",
+"ping pong bat",
+"table tennis bat"
+]
+},
+{
+"id": "bowling",
+"sprite": 155,
+"theme": "Sports",
+"band": 2,
+"names": [
+"bowling",
+"bowling ball",
+"bowling pins",
+"skittles",
+"pins",
+"ten pin bowling",
+"tenpin"
+]
+},
+{
+"id": "boxing-glove",
+"sprite": 156,
+"theme": "Sports",
+"band": 2,
+"names": [
+"boxing glove",
+"boxing gloves",
+"glove",
+"boxing"
+]
+},
+{
+"id": "skateboard",
+"sprite": 157,
+"theme": "Sports",
+"band": 2,
+"names": [
+"skateboard",
+"skate board",
+"skate"
+]
+},
+{
+"id": "american-football",
+"sprite": 158,
+"theme": "Sports",
+"band": 2,
+"names": [
+"american football",
+"football",
+"rugby ball",
+"rugby",
+"ball",
+"pigskin"
+]
+},
+{
+"id": "baseball",
+"sprite": 159,
+"theme": "Sports",
+"band": 2,
+"names": [
+"baseball",
+"ball",
+"softball"
+]
+},
+{
+"id": "tennis-ball",
+"sprite": 160,
+"theme": "Sports",
+"band": 2,
+"names": [
+"tennis ball",
+"tennis",
+"ball"
+]
+},
+{
+"id": "crown",
+"sprite": 161,
+"theme": "Clothing",
+"band": 2,
+"names": [
+"crown",
+"tiara"
+]
+},
+{
+"id": "ring",
+"sprite": 162,
+"theme": "Clothing",
+"band": 2,
+"names": [
+"ring",
+"diamond ring",
+"engagement ring",
+"wedding ring",
+"diamond"
+]
+},
+{
+"id": "gloves",
+"sprite": 163,
+"theme": "Clothing",
+"band": 2,
+"names": [
+"gloves",
+"glove",
+"mittens",
+"mitten",
+"mitts"
+]
+},
+{
+"id": "scarf",
+"sprite": 164,
+"theme": "Clothing",
+"band": 2,
+"names": [
+"scarf"
+]
+},
+{
+"id": "backpack",
+"sprite": 165,
+"theme": "Clothing",
+"band": 2,
+"names": [
+"backpack",
+"rucksack",
+"school bag",
+"schoolbag",
+"bag",
+"knapsack",
+"bookbag",
+"book bag"
+]
+},
+{
+"id": "t-shirt",
+"sprite": 166,
+"theme": "Clothing",
+"band": 2,
+"names": [
+"t shirt",
+"tshirt",
+"shirt",
+"tee",
+"tee shirt",
+"top"
+]
+},
+{
+"id": "jeans",
+"sprite": 167,
+"theme": "Clothing",
+"band": 2,
+"names": [
+"jeans",
+"pants",
+"trousers",
+"denim",
+"denims",
+"blue jeans"
+]
+},
+{
+"id": "camera",
+"sprite": 168,
+"theme": "Tech",
+"band": 2,
+"names": [
+"camera",
+"photo camera"
+]
+},
+{
+"id": "television",
+"sprite": 169,
+"theme": "Tech",
+"band": 2,
+"names": [
+"television",
+"tv",
+"telly",
+"tv set",
+"old tv"
+]
+},
+{
+"id": "laptop",
+"sprite": 170,
+"theme": "Tech",
+"band": 2,
+"names": [
+"laptop",
+"computer",
+"notebook",
+"macbook",
+"pc",
+"laptop computer"
+]
+},
+{
+"id": "watch",
+"sprite": 171,
+"theme": "Tech",
+"band": 2,
+"names": [
+"watch",
+"wristwatch",
+"wrist watch",
+"smartwatch",
+"smart watch",
+"clock"
+]
+},
+{
+"id": "headphones",
+"sprite": 172,
+"theme": "Tech",
+"band": 2,
+"names": [
+"headphones",
+"headset",
+"earphones",
+"headphone",
+"cans"
+]
+},
+{
+"id": "battery",
+"sprite": 173,
+"theme": "Tech",
+"band": 2,
+"names": [
+"battery"
+]
+},
+{
+"id": "plug",
+"sprite": 174,
+"theme": "Tech",
+"band": 2,
+"names": [
+"plug",
+"electric plug",
+"power plug",
+"cable",
+"power cord",
+"cord",
+"power cable",
+"charger"
+]
+},
+{
+"id": "paperclip",
+"sprite": 175,
+"theme": "Office",
+"band": 2,
+"names": [
+"paperclip",
+"paper clip",
+"clip"
+]
+},
+{
+"id": "pushpin",
+"sprite": 176,
+"theme": "Office",
+"band": 2,
+"names": [
+"pushpin",
+"pin",
+"thumbtack",
+"thumb tack",
+"drawing pin",
+"map pin"
+]
+},
+{
+"id": "envelope",
+"sprite": 177,
+"theme": "Office",
+"band": 2,
+"names": [
+"envelope",
+"letter",
+"mail",
+"email"
+]
+},
+{
+"id": "ruler",
+"sprite": 178,
+"theme": "Office",
+"band": 2,
+"names": [
+"ruler",
+"straight ruler",
+"rule"
+]
+},
+{
+"id": "crayon",
+"sprite": 179,
+"theme": "Office",
+"band": 2,
+"names": [
+"crayon",
+"wax crayon"
+]
+},
+{
+"id": "anchor",
+"sprite": 180,
+"theme": "Vehicles",
+"band": 2,
+"names": [
+"anchor"
+]
+},
+{
+"id": "coconut",
+"sprite": 181,
+"theme": "Fruit",
+"band": 3,
+"names": [
+"coconut"
+]
+},
+{
+"id": "kiwi",
+"sprite": 182,
+"theme": "Fruit",
+"band": 3,
+"names": [
+"kiwi",
+"kiwi fruit",
+"kiwifruit",
+"chinese gooseberry"
+]
+},
+{
+"id": "blueberries",
+"sprite": 183,
+"theme": "Fruit",
+"band": 3,
+"names": [
+"blueberries",
+"blueberry",
+"berries",
+"bilberry",
+"bilberries"
+]
+},
+{
+"id": "peach",
+"sprite": 184,
+"theme": "Fruit",
+"band": 3,
+"names": [
+"peach",
+"nectarine",
+"apricot"
+]
+},
+{
+"id": "mango",
+"sprite": 185,
+"theme": "Fruit",
+"band": 3,
+"names": [
+"mango"
+]
+},
+{
+"id": "bell-pepper",
+"sprite": 186,
+"theme": "Vegetables",
+"band": 3,
+"names": [
+"bell pepper",
+"pepper",
+"green pepper",
+"capsicum",
+"sweet pepper"
+]
+},
+{
+"id": "garlic",
+"sprite": 187,
+"theme": "Vegetables",
+"band": 3,
+"names": [
+"garlic",
+"garlic bulb",
+"bulb of garlic",
+"clove",
+"clove of garlic"
+]
+},
+{
+"id": "onion",
+"sprite": 188,
+"theme": "Vegetables",
+"band": 3,
+"names": [
+"onion",
+"brown onion",
+"yellow onion",
+"shallot"
+]
+},
+{
+"id": "cucumber",
+"sprite": 189,
+"theme": "Vegetables",
+"band": 3,
+"names": [
+"cucumber",
+"pickle",
+"gherkin",
+"zucchini",
+"courgette"
+]
+},
+{
+"id": "peanuts",
+"sprite": 190,
+"theme": "Food",
+"band": 3,
+"names": [
+"peanuts",
+"peanut",
+"nuts",
+"nut",
+"groundnut",
+"monkey nut",
+"peanut shell"
+]
+},
+{
+"id": "rice-ball",
+"sprite": 191,
+"theme": "Food",
+"band": 3,
+"names": [
+"rice ball",
+"onigiri",
+"riceball"
+]
+},
+{
+"id": "sushi",
+"sprite": 192,
+"theme": "Food",
+"band": 3,
+"names": [
+"sushi",
+"nigiri",
+"salmon sushi"
+]
+},
+{
+"id": "bagel",
+"sprite": 193,
+"theme": "Food",
+"band": 3,
+"names": [
+"bagel"
+]
+},
+{
+"id": "butter",
+"sprite": 194,
+"theme": "Food",
+"band": 3,
+"names": [
+"butter",
+"block of butter",
+"stick of butter",
+"margarine"
+]
+},
+{
+"id": "bacon",
+"sprite": 195,
+"theme": "Food",
+"band": 3,
+"names": [
+"bacon",
+"bacon strips",
+"rasher",
+"rashers",
+"strip of bacon"
+]
+},
+{
+"id": "teapot",
+"sprite": 196,
+"theme": "Kitchen",
+"band": 3,
+"names": [
+"teapot",
+"kettle",
+"tea pot",
+"tea kettle"
+]
+},
+{
+"id": "spoon",
+"sprite": 197,
+"theme": "Kitchen",
+"band": 3,
+"names": [
+"spoon",
+"teaspoon",
+"tablespoon"
+]
+},
+{
+"id": "salt",
+"sprite": 198,
+"theme": "Kitchen",
+"band": 3,
+"names": [
+"salt",
+"salt shaker",
+"salt cellar",
+"shaker",
+"salt pot",
+"salt pourer",
+"seasoning"
+]
+},
+{
+"id": "chopsticks",
+"sprite": 199,
+"theme": "Kitchen",
+"band": 3,
+"names": [
+"chopsticks",
+"chopstick"
+]
+},
+{
+"id": "sloth",
+"sprite": 200,
+"theme": "Animals",
+"band": 3,
+"names": [
+"sloth"
+]
+},
+{
+"id": "otter",
+"sprite": 201,
+"theme": "Animals",
+"band": 3,
+"names": [
+"otter",
+"sea otter",
+"river otter"
+]
+},
+{
+"id": "beaver",
+"sprite": 202,
+"theme": "Animals",
+"band": 3,
+"names": [
+"beaver"
+]
+},
+{
+"id": "kangaroo",
+"sprite": 203,
+"theme": "Animals",
+"band": 3,
+"names": [
+"kangaroo",
+"roo",
+"wallaby"
+]
+},
+{
+"id": "llama",
+"sprite": 204,
+"theme": "Animals",
+"band": 3,
+"names": [
+"llama",
+"alpaca"
+]
+},
+{
+"id": "hippo",
+"sprite": 205,
+"theme": "Animals",
+"band": 3,
+"names": [
+"hippo",
+"hippopotamus"
+]
+},
+{
+"id": "rhino",
+"sprite": 206,
+"theme": "Animals",
+"band": 3,
+"names": [
+"rhino",
+"rhinoceros"
+]
+},
+{
+"id": "hedgehog",
+"sprite": 207,
+"theme": "Animals",
+"band": 3,
+"names": [
+"hedgehog",
+"porcupine"
+]
+},
+{
+"id": "lizard",
+"sprite": 208,
+"theme": "Animals",
+"band": 3,
+"names": [
+"lizard",
+"gecko",
+"iguana",
+"newt",
+"salamander"
+]
+},
+{
+"id": "crocodile",
+"sprite": 209,
+"theme": "Animals",
+"band": 3,
+"names": [
+"crocodile",
+"alligator",
+"croc",
+"gator"
+]
+},
+{
+"id": "dinosaur",
+"sprite": 210,
+"theme": "Animals",
+"band": 3,
+"names": [
+"dinosaur",
+"sauropod",
+"brontosaurus",
+"brachiosaurus",
+"diplodocus",
+"apatosaurus",
+"dino",
+"long neck"
+]
+},
+{
+"id": "t-rex",
+"sprite": 211,
+"theme": "Animals",
+"band": 3,
+"names": [
+"t rex",
+"tyrannosaurus",
+"tyrannosaurus rex",
+"trex",
+"dinosaur",
+"dino",
+"tyrannosaur"
+]
+},
+{
+"id": "flamingo",
+"sprite": 212,
+"theme": "Birds",
+"band": 3,
+"names": [
+"flamingo"
+]
+},
+{
+"id": "peacock",
+"sprite": 213,
+"theme": "Birds",
+"band": 3,
+"names": [
+"peacock",
+"peafowl",
+"peahen"
+]
+},
+{
+"id": "parrot",
+"sprite": 214,
+"theme": "Birds",
+"band": 3,
+"names": [
+"parrot",
+"macaw",
+"parakeet"
+]
+},
+{
+"id": "swan",
+"sprite": 215,
+"theme": "Birds",
+"band": 3,
+"names": [
+"swan"
+]
+},
+{
+"id": "seal",
+"sprite": 216,
+"theme": "Sea life",
+"band": 3,
+"names": [
+"seal",
+"sea lion",
+"walrus"
+]
+},
+{
+"id": "jellyfish",
+"sprite": 217,
+"theme": "Sea life",
+"band": 3,
+"names": [
+"jellyfish",
+"jelly fish",
+"jelly",
+"medusa"
+]
+},
+{
+"id": "squid",
+"sprite": 218,
+"theme": "Sea life",
+"band": 3,
+"names": [
+"squid",
+"calamari",
+"cuttlefish"
+]
+},
+{
+"id": "shrimp",
+"sprite": 219,
+"theme": "Sea life",
+"band": 3,
+"names": [
+"shrimp",
+"prawn"
+]
+},
+{
+"id": "lobster",
+"sprite": 220,
+"theme": "Sea life",
+"band": 3,
+"names": [
+"lobster",
+"crayfish",
+"crawfish"
+]
+},
+{
+"id": "pufferfish",
+"sprite": 221,
+"theme": "Sea life",
+"band": 3,
+"names": [
+"pufferfish",
+"blowfish",
+"puffer fish",
+"puffer",
+"fugu",
+"balloonfish"
+]
+},
+{
+"id": "scorpion",
+"sprite": 222,
+"theme": "Bugs",
+"band": 3,
+"names": [
+"scorpion"
+]
+},
+{
+"id": "beetle",
+"sprite": 223,
+"theme": "Bugs",
+"band": 3,
+"names": [
+"beetle",
+"bug",
+"scarab",
+"dung beetle"
+]
+},
+{
+"id": "worm",
+"sprite": 224,
+"theme": "Bugs",
+"band": 3,
+"names": [
+"worm",
+"earthworm"
+]
+},
+{
+"id": "axe",
+"sprite": 225,
+"theme": "Tools",
+"band": 3,
+"names": [
+"axe",
+"hatchet"
+]
+},
+{
+"id": "screwdriver",
+"sprite": 226,
+"theme": "Tools",
+"band": 3,
+"names": [
+"screwdriver",
+"screw driver"
+]
+},
+{
+"id": "saw",
+"sprite": 227,
+"theme": "Tools",
+"band": 3,
+"names": [
+"saw",
+"handsaw",
+"hand saw",
+"wood saw"
+]
+},
+{
+"id": "nut-and-bolt",
+"sprite": 228,
+"theme": "Tools",
+"band": 3,
+"names": [
+"nut and bolt",
+"bolt",
+"nut",
+"screw",
+"bolt and nut"
+]
+},
+{
+"id": "gear",
+"sprite": 229,
+"theme": "Tools",
+"band": 3,
+"names": [
+"gear",
+"cog",
+"cogwheel",
+"gear wheel",
+"cog wheel",
+"sprocket"
+]
+},
+{
+"id": "hook",
+"sprite": 230,
+"theme": "Tools",
+"band": 3,
+"names": [
+"hook",
+"hanger"
+]
+},
+{
+"id": "ladder",
+"sprite": 231,
+"theme": "Tools",
+"band": 3,
+"names": [
+"ladder",
+"step ladder",
+"stepladder"
+]
+},
+{
+"id": "toolbox",
+"sprite": 232,
+"theme": "Tools",
+"band": 3,
+"names": [
+"toolbox",
+"tool box",
+"toolkit",
+"tool kit",
+"tool chest"
+]
+},
+{
+"id": "scale",
+"sprite": 233,
+"theme": "Science",
+"band": 3,
+"names": [
+"scale",
+"scales",
+"balance",
+"weighing scale",
+"scales of justice",
+"balance scale"
+]
+},
+{
+"id": "microscope",
+"sprite": 234,
+"theme": "Science",
+"band": 3,
+"names": [
+"microscope"
+]
+},
+{
+"id": "test-tube",
+"sprite": 235,
+"theme": "Science",
+"band": 3,
+"names": [
+"test tube",
+"vial",
+"tube"
+]
+},
+{
+"id": "dna",
+"sprite": 236,
+"theme": "Science",
+"band": 3,
+"names": [
+"dna",
+"double helix",
+"helix",
+"dna strand",
+"gene",
+"genes"
+]
+},
+{
+"id": "thermometer",
+"sprite": 237,
+"theme": "Science",
+"band": 3,
+"names": [
+"thermometer"
+]
+},
+{
+"id": "petri-dish",
+"sprite": 238,
+"theme": "Science",
+"band": 3,
+"names": [
+"petri dish",
+"petri",
+"culture dish",
+"agar plate"
+]
+},
+{
+"id": "accordion",
+"sprite": 239,
+"theme": "Music",
+"band": 3,
+"names": [
+"accordion",
+"squeezebox",
+"concertina"
+]
+},
+{
+"id": "saxophone",
+"sprite": 240,
+"theme": "Music",
+"band": 3,
+"names": [
+"saxophone",
+"sax"
+]
+},
+{
+"id": "banjo",
+"sprite": 241,
+"theme": "Music",
+"band": 3,
+"names": [
+"banjo"
+]
+},
+{
+"id": "maracas",
+"sprite": 242,
+"theme": "Music",
+"band": 3,
+"names": [
+"maracas",
+"maraca",
+"shaker",
+"rattle"
+]
+},
+{
+"id": "canoe",
+"sprite": 243,
+"theme": "Vehicles",
+"band": 3,
+"names": [
+"canoe",
+"kayak",
+"boat",
+"dugout"
+]
+},
+{
+"id": "cable-car",
+"sprite": 244,
+"theme": "Vehicles",
+"band": 3,
+"names": [
+"cable car",
+"gondola",
+"aerial tramway",
+"ski lift",
+"aerial lift"
+]
+},
+{
+"id": "curling-stone",
+"sprite": 245,
+"theme": "Sports",
+"band": 3,
+"names": [
+"curling stone",
+"curling",
+"curling rock",
+"stone"
+]
+},
+{
+"id": "badminton",
+"sprite": 246,
+"theme": "Sports",
+"band": 3,
+"names": [
+"badminton",
+"shuttlecock",
+"racket",
+"racquet",
+"birdie",
+"shuttle",
+"badminton racket"
+]
+},
+{
+"id": "snorkel",
+"sprite": 247,
+"theme": "Sports",
+"band": 3,
+"names": [
+"snorkel",
+"diving mask",
+"scuba mask",
+"mask",
+"goggles",
+"snorkel mask",
+"dive mask",
+"scuba"
+]
+},
+{
+"id": "parachute",
+"sprite": 248,
+"theme": "Sports",
+"band": 3,
+"names": [
+"parachute",
+"paraglider",
+"paragliding",
+"skydiving",
+"skydiver"
+]
+},
+{
+"id": "bow-and-arrow",
+"sprite": 249,
+"theme": "Sports",
+"band": 3,
+"names": [
+"bow and arrow",
+"bow",
+"archery",
+"arrow",
+"bow arrow"
+]
+},
+{
+"id": "yarn",
+"sprite": 250,
+"theme": "Home",
+"band": 3,
+"names": [
+"yarn",
+"ball of yarn",
+"wool",
+"ball of wool",
+"knitting",
+"yarn ball"
+]
+},
+{
+"id": "thread",
+"sprite": 251,
+"theme": "Home",
+"band": 3,
+"names": [
+"thread",
+"spool",
+"spool of thread",
+"cotton reel",
+"reel",
+"bobbin"
+]
+},
+{
+"id": "safety-pin",
+"sprite": 252,
+"theme": "Home",
+"band": 3,
+"names": [
+"safety pin",
+"pin",
+"nappy pin",
+"diaper pin"
+]
+},
+{
+"id": "mirror",
+"sprite": 253,
+"theme": "Home",
+"band": 3,
+"names": [
+"mirror",
+"looking glass",
+"hand mirror"
+]
+},
+{
+"id": "window",
+"sprite": 254,
+"theme": "Home",
+"band": 3,
+"names": [
+"window"
+]
+},
+{
+"id": "service-bell",
+"sprite": 255,
+"theme": "Home",
+"band": 3,
+"names": [
+"service bell",
+"bell",
+"desk bell",
+"reception bell",
+"call bell",
+"bellhop bell",
+"hotel bell",
+"counter bell"
+]
+},
+{
+"id": "toothbrush",
+"sprite": 256,
+"theme": "Home",
+"band": 3,
+"names": [
+"toothbrush",
+"tooth brush",
+"brush"
+]
+},
+{
+"id": "lotion",
+"sprite": 257,
+"theme": "Home",
+"band": 3,
+"names": [
+"lotion",
+"lotion bottle",
+"bottle",
+"pump bottle",
+"soap",
+"hand soap",
+"soap dispenser",
+"shampoo",
+"sunscreen",
+"moisturizer",
+"cream",
+"hand cream",
+"sun cream"
+]
+},
+{
+"id": "bucket",
+"sprite": 258,
+"theme": "Home",
+"band": 3,
+"names": [
+"bucket",
+"pail"
+]
+},
+{
+"id": "brick",
+"sprite": 259,
+"theme": "Home",
+"band": 3,
+"names": [
+"brick",
+"bricks",
+"brick wall",
+"wall"
+]
+},
+{
+"id": "fountain",
+"sprite": 260,
+"theme": "Places",
+"band": 3,
+"names": [
+"fountain",
+"water fountain"
+]
+},
+{
+"id": "moai",
+"sprite": 261,
+"theme": "Places",
+"band": 3,
+"names": [
+"moai",
+"easter island head",
+"easter island statue",
+"statue",
+"head",
+"stone head"
+]
+},
+{
+"id": "lantern",
+"sprite": 262,
+"theme": "Party",
+"band": 3,
+"names": [
+"lantern",
+"paper lantern",
+"red lantern",
+"chinese lantern"
+]
+},
+{
+"id": "crystal-ball",
+"sprite": 263,
+"theme": "Party",
+"band": 3,
+"names": [
+"crystal ball",
+"fortune ball",
+"orb",
+"magic ball",
+"ball"
+]
+},
+{
+"id": "magic-wand",
+"sprite": 264,
+"theme": "Party",
+"band": 3,
+"names": [
+"magic wand",
+"wand",
+"wizard wand"
+]
+},
+{
+"id": "bone",
+"sprite": 265,
+"theme": "Animals",
+"band": 3,
+"names": [
+"bone",
+"dog bone"
+]
+},
+{
+"id": "ice",
+"sprite": 266,
+"theme": "Weather",
+"band": 3,
+"names": [
+"ice",
+"ice cube",
+"ice cubes",
+"cube"
+]
+},
+{
+"id": "tornado",
+"sprite": 267,
+"theme": "Weather",
+"band": 3,
+"names": [
+"tornado",
+"twister",
+"cyclone",
+"whirlwind",
+"hurricane"
+]
+},
+{
+"id": "satellite-dish",
+"sprite": 268,
+"theme": "Space",
+"band": 3,
+"names": [
+"satellite dish",
+"dish",
+"antenna",
+"satellite antenna",
+"radar dish",
+"radar",
+"radio telescope"
+]
+},
+{
+"id": "satellite",
+"sprite": 269,
+"theme": "Space",
+"band": 3,
+"names": [
+"satellite",
+"space station",
+"probe"
+]
+},
+{
+"id": "printer",
+"sprite": 270,
+"theme": "Tech",
+"band": 3,
+"names": [
+"printer"
+]
+},
+{
+"id": "joystick",
+"sprite": 271,
+"theme": "Tech",
+"band": 3,
+"names": [
+"joystick",
+"joy stick",
+"controller",
+"game controller",
+"arcade stick"
+]
+},
+{
+"id": "floppy-disk",
+"sprite": 272,
+"theme": "Tech",
+"band": 3,
+"names": [
+"floppy disk",
+"floppy",
+"diskette",
+"disk",
+"save icon",
+"floppy disc"
+]
+},
+{
+"id": "wastebasket",
+"sprite": 273,
+"theme": "Office",
+"band": 3,
+"names": [
+"wastebasket",
+"trash can",
+"bin",
+"wastepaper basket",
+"waste basket",
+"rubbish bin",
+"trash",
+"garbage can",
+"waste bin",
+"trashcan",
+"dustbin"
+]
+},
+{
+"id": "set-square",
+"sprite": 274,
+"theme": "Office",
+"band": 3,
+"names": [
+"set square",
+"triangle",
+"triangle ruler",
+"triangular ruler",
+"protractor"
+]
+},
+{
+"id": "fountain-pen",
+"sprite": 275,
+"theme": "Office",
+"band": 3,
+"names": [
+"fountain pen",
+"pen",
+"ink pen",
+"nib",
+"quill"
+]
+}
+]
+}
