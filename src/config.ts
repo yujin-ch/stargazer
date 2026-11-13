@@ -22,8 +22,8 @@ export const CONFIG = {
     // startBlur: how out of focus it starts, in sprite pixels (0 = sharp, max 2.4); points / zoomedPoints.
     { startZoom: 1, pullBack: 0, startBlur: 0, points: 1, zoomedPoints: 1 },
     { startZoom: 2, pullBack: 3, startBlur: 0.6, points: 2, zoomedPoints: 3 },
-    { startZoom: 4, pullBack: 4, startBlur: 1.4, points: 3, zoomedPoints: 5 },
-    { startZoom: 4, pullBack: 4.5, startBlur: 1.6, points: 4, zoomedPoints: 6 },
+    { startZoom: 3, pullBack: 4, startBlur: 1.1, points: 3, zoomedPoints: 5 },
+    { startZoom: 3.5, pullBack: 4.5, startBlur: 1.3, points: 4, zoomedPoints: 6 },
   ],
   /** "Steady hand" combo: answers in a row without a skip. Extra points per answer at each threshold. */
   combo: [
@@ -31,8 +31,11 @@ export const CONFIG = {
     { at: 6, extra: 2 },
     { at: 10, extra: 3 },
   ],
-  /** Typo tolerance: one wrong, missing, extra or swapped letter on answers this long or longer. */
-  typoMinLength: 6,
+  /** Typo tolerance: one wrong, missing, extra or swapped letter on answers this long or longer
+   *  (what you typed may be one letter shorter). */
+  typoMinLength: 5,
+  /** After a correct answer, keys typed within this window that don't start a name for the new object are dropped. */
+  graceMs: 350,
   /** When a match is also the start of a longer listed name ("book"/"books"), wait this long before accepting. */
   longerNameWaitMs: 280,
   /** Same idea for a plain plural ("cake" while "cakes" is also fine): a shorter wait. */

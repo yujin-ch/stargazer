@@ -13,7 +13,7 @@
 🍋 | Fruit | 1 | lemon, citrus
 🍒 | Fruit | 1 | cherries, cherry
 🥕 | Vegetables | 1 | carrot
-🌽 | Vegetables | 1 | corn, corn on the cob, maize, sweetcorn, sweet corn, cob, ear of corn
+🌽 | Vegetables | 1 | corn, corn on the cob, maize, sweetcorn, sweet corn, cob, ear of corn, corn cob, corncob
 🍕 | Food | 1 | pizza, pizza slice, slice of pizza, slice
 🍔 | Food | 1 | burger, hamburger, cheeseburger
 🌭 | Food | 1 | hot dog, hotdog, frankfurter, sausage, frank, wiener
@@ -36,7 +36,7 @@
 🐢 | Animals | 1 | turtle, tortoise
 🐧 | Birds | 1 | penguin
 🦆 | Birds | 1 | duck, mallard, drake
-🐟 | Sea life | 1 | fish
+🐟 | Sea life | 1 | fish, goldfish, blue fish
 🐝 | Bugs | 1 | bee, honeybee, bumblebee, wasp, hornet
 🦋 | Bugs | 1 | butterfly, moth
 🌳 | Nature | 1 | tree, oak, oak tree
@@ -94,16 +94,16 @@
 🌮 | Food | 2 | taco, tacos
 🥞 | Food | 2 | pancakes, pancake, hotcakes, hotcake, flapjacks, flapjack, stack of pancakes, crepes
 🧇 | Food | 2 | waffle, waffles
-🍯 | Food | 2 | honey, honey pot, honeypot, jar of honey, honey jar
+🍯 | Food | 2 | honey, honey pot, honeypot, jar of honey, honey jar, beehive, hive, honey jar, pot
 🍟 | Food | 2 | fries, french fries, chips, frites, potato fries
 🥗 | Food | 2 | salad, green salad, bowl of salad, salad bowl
 🍝 | Food | 2 | spaghetti, pasta, noodles, spaghetti bolognese, bolognese
 🍭 | Food | 2 | lollipop, lolly, lollypop, sucker, candy, swirl lollipop
 🍫 | Food | 2 | chocolate, chocolate bar, candy bar, bar of chocolate
-🥛 | Kitchen | 2 | milk, glass of milk, glass
+🥛 | Kitchen | 2 | milk, glass of milk, glass, cup of milk, cup, milk glass
 🍳 | Kitchen | 2 | frying pan, pan, skillet, fried egg, egg, egg in a pan, fry pan, frypan, cooking
 🦀 | Sea life | 2 | crab
-🐙 | Sea life | 2 | octopus
+🐙 | Sea life | 2 | octopus, octopi
 🦈 | Sea life | 2 | shark
 🐳 | Sea life | 2 | whale, spouting whale, blue whale
 🐬 | Sea life | 2 | dolphin, porpoise
@@ -151,14 +151,14 @@
 ⛺ | Nature | 2 | tent, camping tent
 🌋 | Nature | 2 | volcano, erupting volcano
 🌴 | Nature | 2 | palm tree, palm, coconut tree
-🍁 | Nature | 2 | maple leaf, leaf, autumn leaf, fall leaf, maple
+🍁 | Nature | 2 | maple leaf, leaf, autumn leaf, fall leaf, maple, canada, canadian leaf
 🌹 | Nature | 2 | rose, flower, red rose
 🌷 | Nature | 2 | tulip, flower
 🏰 | Places | 2 | castle, palace, fort, fortress
 🚂 | Vehicles | 2 | train, locomotive, steam train, steam engine, engine, steam locomotive
 🚁 | Vehicles | 2 | helicopter, chopper, heli
 ⛵ | Vehicles | 2 | sailboat, sailing boat, boat, yacht, sail boat, dinghy
-🛴 | Vehicles | 2 | scooter, kick scooter, push scooter
+🛴 | Vehicles | 2 | scooter, kick scooter, push scooter, razor scooter
 🚜 | Vehicles | 2 | tractor
 🚒 | Vehicles | 2 | fire engine, fire truck, firetruck, fire engine truck, truck
 🏓 | Sports | 2 | ping pong, table tennis, paddle, ping pong paddle, bat, ping pong bat, table tennis bat
@@ -239,7 +239,7 @@
 🪚 | Tools | 3 | saw, handsaw, hand saw, wood saw
 🔩 | Tools | 3 | nut and bolt, bolt, nut, screw, bolt and nut
 ⚙️ | Tools | 3 | gear, cog, cogwheel, gear wheel, cog wheel, sprocket
-🪝 | Tools | 3 | hook, hanger
+🪝 | Tools | 3 | hook, hanger, fish hook, fishhook, fishing hook
 🪜 | Tools | 3 | ladder, step ladder, stepladder
 🧰 | Tools | 3 | toolbox, tool box, toolkit, tool kit, tool chest
 ⚖️ | Science | 3 | scale, scales, balance, weighing scale, scales of justice, balance scale
@@ -268,9 +268,9 @@
 🪥 | Home | 3 | toothbrush, tooth brush, brush
 🧴 | Home | 3 | lotion, lotion bottle, bottle, pump bottle, soap, hand soap, soap dispenser, shampoo, sunscreen, moisturizer, cream, hand cream, sun cream
 🪣 | Home | 3 | bucket, pail
-🧱 | Home | 3 | brick, bricks, brick wall, wall
+🧱 | Home | 3 | brick, bricks, brick wall, wall, red brick
 ⛲ | Places | 3 | fountain, water fountain
-🗿 | Places | 3 | moai, easter island head, easter island statue, statue, head, stone head
+🗿 | Places | 3 | moai, easter island head, easter island statue, statue, head, stone head, easter island, tiki, tiki head
 🏮 | Party | 3 | lantern, paper lantern, red lantern, chinese lantern
 🔮 | Party | 3 | crystal ball, fortune ball, orb, magic ball, ball
 🪄 | Party | 3 | magic wand, wand, wizard wand

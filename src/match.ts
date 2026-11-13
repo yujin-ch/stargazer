@@ -22,14 +22,17 @@ function fold(s: string): string {
     .replace(/our/g, "or")
     .replace(/yse/g, "yze")
     .replace(/ise/g, "ize")
-    .replace(/tre$/g, "ter")
     .replace(/ae/g, "e");
 }
+
+/** Words people put in front of a name that shouldn't stop it counting. */
+const DESCRIBERS = new Set(("red orange yellow green blue purple pink brown black white grey gray gold golden silver " +
+  "big small little giant tiny baby cute old toy wooden metal plastic shiny happy cartoon pet wild farm").split(" "));
 
 const IRREGULAR: Record<string, string[]> = {
   mouse: ["mice"], mice: ["mouse"], goose: ["geese"], tooth: ["teeth"], foot: ["feet"],
   person: ["people"], child: ["children"], die: ["dice"], dice: ["die"], cactus: ["cacti"],
-  fungus: ["fungi"], knife: ["knives"], leaf: ["leaves"], loaf: ["loaves"],
+  fungus: ["fungi"], octopus: ["octopi", "octopuses"], knife: ["knives"], leaf: ["leaves"], loaf: ["loaves"],
 };
 
 /** Accepted spellings of one alias: the alias itself plus plural and singular forms. */
@@ -100,7 +103,13 @@ export function makeMatcher(allNames: string[][]): Matcher {
       if (!t) return null;
       const mine = formsOf(names);
       if (mine.includes(t)) return { form: t, early: false };
-      if (t.length < CONFIG.typoMinLength) return null;
+      // "brown dog", "golden key": drop one leading describing word if the rest is a real name
+      const words = typed.toLowerCase().trim().split(/\s+/);
+      if (words.length > 1 && DESCRIBERS.has(words[0])) {
+        const rest = normalize(words.slice(1).join(" "));
+        if (mine.includes(rest)) return { form: rest, early: false };
+      }
+      if (t.length < CONFIG.typoMinLength - 1) return null;
       const mineSet = new Set(mine);
       if (everyForm.has(t) && !mineSet.has(t)) return null; // it's another object's real name
       for (const f of mine) if (f.length >= CONFIG.typoMinLength && withinOne(t, f)) return { form: f, early: t.length < f.length };

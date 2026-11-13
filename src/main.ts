@@ -62,6 +62,9 @@ interface Run {
   lastTick: number;
   combo: number;
   bestCombo: number;
+  /** Until this time, keys that don't start a name for the new object are dropped. */
+  graceUntil: number;
+  clearedBonus: number;
   /** A match waiting briefly in case a longer name is being typed. */
   pending: string | null;
 }
@@ -87,7 +90,7 @@ function playScreen() {
       <div class="pops" id="pops"></div>
     </section>
     <div class="label-row">
-      <div class="theme-label" id="label">&nbsp;</div>
+      <div class="theme-label" id="label"></div>
       <div class="bonus" id="bonus"><span>ZOOM BONUS</span><i id="bonusbar"></i></div>
       <div class="band" id="band">&nbsp;</div>
     </div>
@@ -128,7 +131,13 @@ function sizeViewer() {
 function wireInput() {
   const input = el.guess as HTMLInputElement;
   input.addEventListener("input", () => {
+    if (run.phase === "countdown") return; // keep it; it's checked when the first object appears
     if (run.phase !== "playing") { input.value = ""; return; }
+    if (performance.now() < run.graceUntil && input.value.trim() && !startsAName(run.sky[run.i], input.value)) {
+      input.value = ""; // the tail of the last answer ("cake| slice"), not a new guess
+      run.graceUntil = performance.now() + CONFIG.graceMs; // keep dropping while the tail is still being typed
+      return;
+    }
     if (input.value.trim()) run.attempt = input.value;
     onTyped(input);
   });
@@ -193,9 +202,18 @@ function onTyped(input: HTMLInputElement) {
     }
     const rest = value.startsWith(p) ? value.slice(p.length).replace(/^\s+/, "") : "";
     named(obj, p);
-    input.value = rest;
-    if (rest) onTyped(input);
+    // keep the extra letters only if they're the start of the next object's name
+    const nextObj = run.sky[run.i];
+    input.value = rest && nextObj && startsAName(nextObj, rest) ? rest : "";
+    if (input.value) onTyped(input);
   }
+}
+
+function startsAName(obj: SkyObject | undefined, typed: string): boolean {
+  if (!obj) return false;
+  const n = normalize(typed);
+  if (!n) return true;
+  return forms(obj).some((f) => f.startsWith(n));
 }
 
 function shake() {
@@ -210,7 +228,7 @@ function newRun(mode: Run["mode"]): Run {
   const streak = store.streakThrough(puzzle - 1);
   const tier = tierFor(streak);
   const sky = mode === "daily" ? dailySky(puzzle, tier) : practiceSky(tier);
-  return { mode, puzzle, date, tier, streak, sky, i: 0, phase: "ready", countdownAt: 0, startAt: 0, penalty: 0, score: 0, items: [], attempt: "", lastTick: 99, combo: 0, bestCombo: 0, pending: null };
+  return { mode, puzzle, date, tier, streak, sky, i: 0, phase: "ready", countdownAt: 0, startAt: 0, penalty: 0, score: 0, items: [], attempt: "", lastTick: 99, combo: 0, bestCombo: 0, graceUntil: 0, clearedBonus: 0, pending: null };
 }
 
 async function openPlay(mode: Run["mode"]) {
@@ -263,11 +281,18 @@ function startClock(now: number) {
   el.overlay.textContent = "";
   theme.sounds.start();
   showObject(now);
+  if ((el.guess as HTMLInputElement).value) onTyped(el.guess as HTMLInputElement);
 }
 
 function showObject(now: number) {
   const obj = run.sky[run.i];
-  if (!obj) return finish(now);
+  if (!obj) {
+    // the whole sky named early: every second left is a point
+    run.clearedBonus = Math.max(0, Math.floor(timeLeft(now)));
+    run.score += run.clearedBonus;
+    el.score.textContent = String(run.score);
+    return finish(now, true);
+  }
   viewer.show(obj, now);
   viewer.preload(run.sky.slice(run.i + 1, run.i + 3));
   run.attempt = "";
@@ -292,6 +317,7 @@ function named(obj: SkyObject, typed: string) {
   run.score += points;
   run.items.push({ id: obj.id, outcome: zoomed ? "zoomed" : "named", typed: typed.trim(), points });
   (el.guess as HTMLInputElement).value = "";
+  run.graceUntil = now + CONFIG.graceMs;
   el.score.textContent = String(run.score);
   el.score.parentElement!.classList.remove("bump"); void el.score.offsetWidth; el.score.parentElement!.classList.add("bump");
   pop(obj.names[0], `+${points}${zoomed ? " ZOOM" : ""}`, zoomed ? "gold" : "");
@@ -343,6 +369,7 @@ function buildResult(): RunResult {
     device: isTouch ? "touch" : "keyboard",
     tier: run.tier,
     bestCombo: run.bestCombo,
+    clearedBonus: run.clearedBonus || undefined,
   };
 }
 
@@ -385,7 +412,7 @@ function timeLeft(now: number) {
   return CONFIG.runSeconds - (now - run.startAt) / 1000 - run.penalty;
 }
 
-function finish(now: number) {
+function finish(now: number, cleared = false) {
   if (run.phase === "over") return;
   if (run.pending !== null) acceptPending(); // credit a match that was waiting on a longer name
   dropPending();
@@ -394,7 +421,8 @@ function finish(now: number) {
   viewer.dismiss("skipped", now);
   theme.sounds.end();
   el.time.textContent = "0";
-  el.overlay.textContent = "TIME!";
+  el.overlay.textContent = cleared ? "SKY CLEARED!" : "TIME!";
+  if (cleared) el.pops.textContent = "";
   el.overlay.className = "overlay big";
   (el.guess as HTMLInputElement).value = "";
   el.controls.classList.add("dim");
@@ -491,8 +519,10 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
         <span>${daily ? `NIGHT #${r.puzzle}` : "PRACTICE"}</span>
       </header>
       <p class="date">${daily ? `${fmtDate(r.date)} · ${CONFIG.tiers[tier].name} sky` : "Random objects, not scored"}</p>
-      <div class="final"><span>${r.score}</span><small>POINTS</small></div>
+      <div class="final"><span>${r.score}</span><small>POINTS${r.clearedBonus ? ` · SKY CLEARED +${r.clearedBonus}` : ""}</small></div>
+      ${r.partial ? `<p class="small">This run was cut short, so it counts as it stood.</p>` : ""}
       <canvas class="chart" id="chart" aria-label="Star chart of your run"></canvas>
+      <p class="caption">One star per object, in order. Lines join answers in a row.</p>
       <p class="legend"><i class="lg named"></i>named <i class="lg zoomed"></i>zoom bonus <i class="lg skipped"></i>skipped</p>
       <dl class="figures">
         <div><dt>NAMED</dt><dd>${r.named}</dd></div>

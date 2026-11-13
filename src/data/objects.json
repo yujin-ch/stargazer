@@ -106,7 +106,9 @@
 "sweetcorn",
 "sweet corn",
 "cob",
-"ear of corn"
+"ear of corn",
+"corn cob",
+"corncob"
 ],
 "hidden": []
 },
@@ -409,7 +411,9 @@
 "theme": "Sea life",
 "band": 1,
 "names": [
-"fish"
+"fish",
+"goldfish",
+"blue fish"
 ],
 "hidden": []
 },
@@ -1134,7 +1138,11 @@
 "honey pot",
 "honeypot",
 "jar of honey",
-"honey jar"
+"honey jar",
+"beehive",
+"hive",
+"honey jar",
+"pot"
 ],
 "hidden": []
 },
@@ -1215,7 +1223,10 @@
 "names": [
 "milk",
 "glass of milk",
-"glass"
+"glass",
+"cup of milk",
+"cup",
+"milk glass"
 ],
 "hidden": []
 },
@@ -1253,7 +1264,8 @@
 "theme": "Sea life",
 "band": 2,
 "names": [
-"octopus"
+"octopus",
+"octopi"
 ],
 "hidden": []
 },
@@ -1851,7 +1863,9 @@
 "leaf",
 "autumn leaf",
 "fall leaf",
-"maple"
+"maple",
+"canada",
+"canadian leaf"
 ],
 "hidden": []
 },
@@ -1941,7 +1955,8 @@
 "names": [
 "scooter",
 "kick scooter",
-"push scooter"
+"push scooter",
+"razor scooter"
 ],
 "hidden": []
 },
@@ -2946,7 +2961,10 @@
 "band": 3,
 "names": [
 "hook",
-"hanger"
+"hanger",
+"fish hook",
+"fishhook",
+"fishing hook"
 ],
 "hidden": []
 },
@@ -3334,7 +3352,8 @@
 "brick",
 "bricks",
 "brick wall",
-"wall"
+"wall",
+"red brick"
 ],
 "hidden": []
 },
@@ -3360,7 +3379,10 @@
 "easter island statue",
 "statue",
 "head",
-"stone head"
+"stone head",
+"easter island",
+"tiki",
+"tiki head"
 ],
 "hidden": []
 },
