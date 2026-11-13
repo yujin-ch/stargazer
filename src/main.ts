@@ -8,6 +8,7 @@ import { theme } from "./themes";
 import { setMuted, unlockAudio } from "./themes/chip";
 import { Viewer } from "./viewer";
 import { store, type ItemResult, type RunResult } from "./storage";
+import { crowdScores, beatShare, CROWD_IS_SIMULATED } from "./crowd";
 import { share, shareText } from "./share";
 
 const matcher = makeMatcher(OBJECTS.map((o) => o.names));
@@ -576,6 +577,9 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
   const tomorrow = next
     ? `${pips(streakNow - CONFIG.tiers[tier].minStreak, next.minStreak - CONFIG.tiers[tier].minStreak)} ${next.name} sky in ${Math.max(1, next.minStreak - streakNow)} more night${next.minStreak - streakNow === 1 ? "" : "s"}`
     : "You're on the hardest sky.";
+  const bandsSeen = [...new Set(r.items.map((it) => BY_ID.get(it.id)?.band).filter((b) => b !== undefined))].sort() as number[];
+  const crowdSky = daily ? dailySky(r.puzzle, tier) : run?.sky ?? [];
+  const crowd = crowdScores(crowdSky, daily ? r.puzzle * 10 + tier : 777);
   app.innerHTML = `
   <main class="results">
     <section class="log">
@@ -586,9 +590,11 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
       <p class="date">${daily ? `${fmtDate(r.date)} · ${themeName(dayTheme(r.puzzle))} · ${CONFIG.tiers[tier].name} sky` : "Random objects, not scored"}</p>
       <div class="final"><span>${r.score}</span><small>POINTS${r.clearedBonus ? ` · SKY CLEARED +${r.clearedBonus}` : ""}</small></div>
       ${r.partial ? `<p class="small">This run was cut short, so it counts as it stood.</p>` : ""}
-      <canvas class="chart" id="chart" aria-label="Star chart of your run"></canvas>
-      <p class="caption">One star per object, in order. Lines join answers in a row.</p>
-      <p class="legend"><i class="lg named"></i>named <i class="lg zoomed"></i>zoom bonus <i class="lg skipped"></i>skipped</p>
+      <canvas class="chart" id="chart" aria-label="Star chart of your run, with tonight's crowd on the hill"></canvas>
+      <div class="hill-axis"><span>◂ fewer points</span><span>more points ▸</span></div>
+      <p class="hill-line" id="hill-line"></p>
+      <p class="legend">${bandsSeen.map((b) => `<span><i class="lg" style="background:${theme.bandColors[b]}"></i>${theme.bandNames[b]}</span>`).join("")}<span><b class="lg-big">+</b>big star = zoom bonus</span><span><i class="lg skipped"></i>skipped</span></p>
+      <p class="caption">One star per object, coloured by difficulty. Lines join answers in a row.${CROWD_IS_SIMULATED ? " The crowd on the hill is simulated on tonight's sky until live scores arrive." : ""}</p>
       <dl class="figures">
         <div><dt>NAMED</dt><dd>${r.named}</dd></div>
         <div><dt>ZOOM</dt><dd>${r.zoomed}</dd></div>
@@ -613,13 +619,21 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
     <footer class="credits">${theme.credits}</footer>
   </main>`;
   lastFresh = 0;
-  drawChart(document.getElementById("chart") as HTMLCanvasElement, r);
+  const others = 12, beat = beatShare(crowd, r.score), rank = Math.round(beat * others);
+  drawChart(document.getElementById("chart") as HTMLCanvasElement, r, rank, others);
+  const median = crowd[Math.floor(crowd.length / 2)];
+  document.getElementById("hill-line")!.innerHTML =
+    rank >= others ? `You out-spotted <b>every stargazer</b> on the hill tonight.`
+    : rank === 0 ? `The whole hill saw more tonight. The sky comes back tomorrow.`
+    : `You out-spotted <b>${rank} of ${others}</b> stargazers on the hill.`
+    + `<br><small>A typical score tonight: ${median}</small>`;
   const list = document.getElementById("seen")!;
   for (const it of r.items) {
     const o = BY_ID.get(it.id);
     if (!o) continue;
     const li = document.createElement("li");
     li.className = it.outcome;
+    li.style.setProperty("--band", theme.bandColors[o.band]);
     li.tabIndex = 0;
     li.appendChild(viewer.spriteCanvas(o.sprite, 2));
     const others = shownNames(o).slice(0, 4).join(", ");
@@ -646,35 +660,34 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
 
 /**
  * Star chart: each object becomes a star at a spot seeded by the night and its position,
- * so everyone's chart for the same night has the same sky. Answers in a row join up into constellations.
+ * so everyone's chart for the same night has the same sky. Answers in a row join up into constellations,
+ * and each star takes its difficulty colour. Below, a hill of stargazers lined up by score
+ * (fewest points on the left), with you standing among them in gold.
  */
-function drawChart(c: HTMLCanvasElement, r: RunResult) {
-  const W = 160, H = 72, cols = 10, rows = 4;
+function drawChart(c: HTMLCanvasElement, r: RunResult, rank: number, others: number) {
+  const W = 160, H = 112, SKY = 72;
   c.width = W;
   c.height = H;
   const g = c.getContext("2d")!;
   g.fillStyle = "#0b0a18";
   g.fillRect(0, 0, W, H);
-  // faint glow
   for (let k = 4; k >= 1; k--) {
-    g.fillStyle = `rgba(32, 34, 67, ${0.35})`;
+    g.fillStyle = "rgba(32, 34, 67, 0.35)";
     g.beginPath();
-    g.ellipse(W / 2, H / 2, (W / 2) * (k / 4), (H / 2) * (k / 4), 0, 0, Math.PI * 2);
+    g.ellipse(W / 2, SKY / 2, (W / 2) * (k / 4), (SKY / 2) * (k / 4), 0, 0, Math.PI * 2);
     g.fill();
   }
-  // background dust
   const rand = mulberry32(r.puzzle * 7919 + 13);
   g.fillStyle = "#26294a";
-  for (let i = 0; i < 70; i++) g.fillRect(Math.floor(rand() * W), Math.floor(rand() * H), 1, 1);
-  // a seeded random walk: each answer in a row steps a short way from the last, a skip jumps elsewhere,
-  // so every run of answers becomes its own compact constellation (same layout for everyone that night)
-  const mx = Math.round(W * 0.08), my = Math.round(H * 0.1);
+  for (let i = 0; i < 80; i++) g.fillRect(Math.floor(rand() * W), Math.floor(rand() * H), 1, 1);
+  // a seeded random walk: each answer in a row steps a short way from the last, a skip jumps elsewhere
+  const mx = Math.round(W * 0.08), my = 7;
   const clampX = (v: number) => Math.max(mx, Math.min(W - mx, v));
-  const clampY = (v: number) => Math.max(my, Math.min(H - my, v));
-  let px = clampX(rand() * W), py = clampY(rand() * H);
+  const clampY = (v: number) => Math.max(my, Math.min(SKY - 10, v));
+  let px = clampX(rand() * W), py = clampY(rand() * SKY);
   const pos = r.items.map((it, i) => {
     if (i > 0) {
-      if (it.outcome === "skipped" || r.items[i - 1].outcome === "skipped") { px = clampX(rand() * W); py = clampY(rand() * H); }
+      if (it.outcome === "skipped" || r.items[i - 1].outcome === "skipped") { px = clampX(rand() * W); py = clampY(rand() * SKY); }
       else {
         const ang = rand() * Math.PI * 2, d = W * (0.1 + rand() * 0.08);
         px = clampX(px + Math.cos(ang) * d); py = clampY(py + Math.sin(ang) * d * 0.6);
@@ -682,24 +695,78 @@ function drawChart(c: HTMLCanvasElement, r: RunResult) {
     }
     return { x: Math.round(px), y: Math.round(py) };
   });
-  // dotted constellation lines
-  g.fillStyle = "#2b6f8a";
+  g.fillStyle = "#2b4a6f";
   for (let i = 1; i < r.items.length; i++) {
     if (r.items[i].outcome === "skipped" || r.items[i - 1].outcome === "skipped") continue;
     line(g, pos[i - 1].x, pos[i - 1].y, pos[i].x, pos[i].y, 2);
   }
+  let brightest = -1;
   r.items.forEach((it, i) => {
     const { x, y } = pos[i];
-    if (it.outcome === "skipped") { g.fillStyle = "#3a4466"; g.fillRect(x, y, 1, 1); }
-    else if (it.outcome === "zoomed") {
-      g.fillStyle = "#feae34"; g.fillRect(x - 1, y, 3, 1); g.fillRect(x, y - 1, 1, 3);
+    const o = BY_ID.get(it.id);
+    const col = theme.bandColors[o?.band ?? 0];
+    if (it.outcome === "skipped") { g.fillStyle = "#3a4466"; g.fillRect(x, y, 1, 1); return; }
+    if (brightest < 0 || (o?.band ?? 0) > (BY_ID.get(r.items[brightest].id)?.band ?? 0)) brightest = i;
+    g.fillStyle = col;
+    if (it.outcome === "zoomed") {
+      // a bigger four-point sparkle with a gold heart
+      g.fillRect(x - 2, y, 5, 1); g.fillRect(x, y - 2, 1, 5);
       g.fillStyle = "#fee761"; g.fillRect(x, y, 1, 1);
-    } else { g.fillStyle = "#2ce8f5"; g.fillRect(x, y, 1, 1); g.globalAlpha = 0.35; g.fillRect(x - 1, y, 3, 1); g.fillRect(x, y - 1, 1, 3); g.globalAlpha = 1; }
+    } else {
+      g.fillRect(x, y, 1, 1);
+      g.globalAlpha = 0.45; g.fillRect(x - 1, y, 3, 1); g.fillRect(x, y - 1, 1, 3); g.globalAlpha = 1;
+    }
   });
+
+  // the hill
+  const ground = (x: number) => Math.round(H - 10 - Math.sin((x / W) * Math.PI) * 9);
+  for (let x = 0; x < W; x++) {
+    const y0 = ground(x);
+    g.fillStyle = "#1b1d3a"; g.fillRect(x, y0, 1, H - y0);
+    g.fillStyle = "#2c3058"; g.fillRect(x, y0, 1, 1);
+  }
+  // grass tufts
+  g.fillStyle = "#24284a";
+  for (let i = 0; i < 26; i++) { const x = Math.floor(rand() * W); g.fillRect(x, ground(x) + 2 + Math.floor(rand() * 8), 1, 1); }
+
+  // stargazers: `others` people by score, you slotted in after `rank` of them
+  const n = others + 1, gap = (W - 20) / (n - 1);
+  let you = { x: 0, y: 0 };
+  for (let k = 0; k < n; k++) {
+    const x = Math.round(10 + k * gap), base = ground(x) + 1;
+    const isYou = k === rank;
+    const facing = x < W / 2 ? 1 : -1; // everyone leans in toward the middle of the sky
+    stargazer(g, x, base, facing, isYou ? "#fee761" : "#5a6988", isYou ? "#feae34" : "#3a4466", (k * 7) % 3);
+    if (isYou) you = { x, y: base };
+  }
+  // your beam up to your hardest catch, and a marker star over your head
+  if (brightest >= 0) {
+    const tx = you.x + 6 * (you.x < W / 2 ? 1 : -1), ty = you.y - 11;
+    g.fillStyle = "rgba(254, 231, 97, 0.35)";
+    line(g, tx, ty, pos[brightest].x, pos[brightest].y + 2, 3);
+  }
+  g.fillStyle = "#fee761";
+  g.fillRect(you.x, you.y - 17, 1, 3); g.fillRect(you.x - 1, you.y - 16, 3, 1);
+
   // compass mark
   g.fillStyle = "#5a6988";
   g.fillRect(W - 6, 3, 1, 5);
   g.fillRect(W - 7, 4, 3, 1);
+}
+
+/** A little stargazer (5x10) peering through a telescope on a tripod, feet at (x, base). */
+function stargazer(g: CanvasRenderingContext2D, x: number, base: number, dir: number, body: string, scope: string, hat: number) {
+  const px = (dx: number, dy: number, w = 1, h = 1) => g.fillRect(dir > 0 ? x + dx : x - dx - w + 1, base + dy, w, h);
+  g.fillStyle = body;
+  px(-1, -9, 3, 3); // head
+  if (hat === 1) px(-1, -10, 3, 1); // beanie
+  if (hat === 2) { px(-2, -9, 1, 1); px(-1, -10, 3, 1); } // hood
+  px(-1, -6, 3, 4); // coat
+  px(2, -6, 1, 1); // arm up to the eyepiece
+  px(-1, -2, 1, 2); px(1, -2, 1, 2); // legs
+  g.fillStyle = scope;
+  px(2, -8, 2, 1); px(4, -9, 2, 1); px(6, -10, 1, 1); // tube, angled up
+  px(4, -8, 1, 1); px(4, -7, 1, 7); px(3, -1, 1, 1); px(5, -1, 1, 1); // tripod
 }
 
 function line(g: CanvasRenderingContext2D, x0: number, y0: number, x1: number, y1: number, every = 1) {

@@ -16,6 +16,8 @@ export interface Theme {
   tagline: string;
   /** Names for the four difficulty bands. */
   bandNames: readonly [string, string, string, string];
+  /** One colour per band, used for labels, results and the star chart. */
+  bandColors: readonly [string, string, string, string];
   /** Emoji shown at the top of the share text. */
   shareIcon: string;
   /** Logical resolution of the viewer canvas (square); it is scaled up with crisp pixels. */

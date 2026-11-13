@@ -10,6 +10,11 @@
   --cyan: #2ce8f5;
   --red: #f6757a;
   --pink: #b55088;
+  /* difficulty bands: keep in step with bandColors in index.ts */
+  --b0: #dbe2ee;
+  --b1: #2ce8f5;
+  --b2: #e07ab8;
+  --b3: #feae34;
   --font-display: "Press Start 2P", ui-monospace, monospace;
   --font-body: "VT323", ui-monospace, monospace;
   --app-h: 100dvh;
@@ -78,10 +83,10 @@ a { color: var(--cyan); }
 .label-row { display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 52px; }
 .theme-label:empty { visibility: hidden; }
 .theme-label { font-family: var(--font-display); font-size: 14px; letter-spacing: 2px; color: var(--ink); padding: 6px 12px; border: 3px solid var(--panel-edge); background: var(--panel); box-shadow: 4px 4px 0 #000; }
-.band { font-size: 18px; height: 18px; color: var(--dim); }
-.band[data-band="1"] { color: var(--cyan); }
-.band[data-band="2"] { color: var(--pink); }
-.band[data-band="3"] { color: var(--accent-2); }
+.band { font-size: 18px; height: 18px; color: var(--b0); }
+.band[data-band="1"] { color: var(--b1); }
+.band[data-band="2"] { color: var(--b2); }
+.band[data-band="3"] { color: var(--b3); }
 .tier { font-family: var(--font-display); font-size: 10px; color: var(--cyan); margin: 0 0 4px; letter-spacing: 1px; }
 .tier span { font-family: var(--font-body); font-size: 18px; color: var(--dim); letter-spacing: 0; }
 .next { margin: 0 0 10px; }
@@ -139,6 +144,12 @@ a { color: var(--cyan); }
 .final small { font-family: var(--font-display); font-size: 9px; color: var(--dim); margin-top: 8px; }
 .chart { image-rendering: pixelated; width: 100%; max-width: 396px; height: auto; border: 2px solid var(--faint); display: block; margin: 0 auto; }
 .caption { margin: 6px 0 0; font-size: 16px; color: #6b7a99; }
+.hill-axis { display: flex; justify-content: space-between; max-width: 396px; margin: 3px auto 0; font-size: 15px; color: #6b7a99; }
+.hill-line { margin: 6px 0 0; font-size: 21px; color: var(--ink); }
+.hill-line b { color: var(--accent); font-weight: normal; }
+.hill-line small { font-size: 17px; color: var(--dim); }
+.legend span { display: inline-flex; align-items: center; }
+.lg-big { font-weight: normal; color: var(--ink); font-size: 22px; margin-right: 4px; line-height: 1; }
 .legend { margin: 6px 0 0; font-size: 17px; color: var(--dim); display: flex; gap: 6px 12px; justify-content: center; align-items: center; flex-wrap: wrap; }
 .lg { display: inline-block; width: 8px; height: 8px; margin-right: 4px; vertical-align: 1px; }
 .lg.named { background: var(--cyan); }
@@ -163,15 +174,14 @@ a { color: var(--cyan); }
 .results h2 small { font-family: var(--font-body); font-size: 16px; color: var(--faint); color: #6b7a99; }
 .seen { list-style: none; margin: 0; padding: 0; text-align: left; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
 .seen li { display: flex; gap: 8px; align-items: flex-start; padding: 6px 8px; background: var(--panel); border: 3px solid var(--panel-edge); box-shadow: 3px 3px 0 #000; cursor: pointer; min-width: 0; }
-.seen li.named { border-color: #2b6f8a; }
-.seen li.zoomed { border-color: var(--accent-2); }
-.seen li.skipped { border-color: var(--faint); }
+.seen li { border-color: color-mix(in srgb, var(--band, var(--panel-edge)) 70%, #181a35); }
+.seen li.skipped { border-color: var(--faint); border-left-color: color-mix(in srgb, var(--band, var(--faint)) 45%, #181a35); }
 .seen li:focus-visible { outline: 3px solid var(--cyan); outline-offset: 2px; }
 .seen li canvas { image-rendering: pixelated; flex: none; width: 40px; height: 40px; }
 .seen li.skipped canvas { opacity: 0.45; filter: grayscale(0.6); }
 .seen li > div { min-width: 0; flex: 1; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 6px; }
 .seen b { font-weight: normal; color: var(--ink); font-size: 21px; line-height: 1; overflow-wrap: anywhere; }
-.seen .pts { font-family: var(--font-display); font-size: 8px; color: var(--cyan); }
+.seen .pts { font-family: var(--font-display); font-size: 8px; color: var(--band, var(--cyan)); }
 .seen li.zoomed .pts { color: var(--accent); }
 .seen li.skipped .pts { color: var(--dim); }
 .seen li.skipped b { color: var(--dim); }

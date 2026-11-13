@@ -67,7 +67,9 @@ export const pixelSpace: Theme = {
   id: "pixel-space",
   title: "Stargazer",
   tagline: "One minute at the telescope. Name what drifts by.",
-  bandNames: ["Clear sky", "Distant", "Deep space", "Uncharted"],
+  bandNames: ["Full Moon", "Shooting Star", "Nebula", "Black Hole"],
+  // silver moonlight, comet cyan, nebula pink, the orange glow round a black hole
+  bandColors: ["#dbe2ee", "#2ce8f5", "#e07ab8", "#feae34"],
   shareIcon: "🔭",
   viewSize: V,
   spriteScale: 2,

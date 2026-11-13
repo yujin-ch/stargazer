@@ -14,17 +14,21 @@ export const CONFIG = {
    * (a band with fewer objects just gives what it has).
    */
   tiers: [
-    { name: "Stargazer", minStreak: 0, perBand: [6, 14, 18, 0] },
-    { name: "Astronomer", minStreak: 3, perBand: [3, 11, 22, 0] },
-    { name: "Deep-sky hunter", minStreak: 7, perBand: [0, 8, 26, 0] },
+    { name: "Stargazer", minStreak: 0, perBand: [3, 10, 25, 0] },
+    { name: "Astronomer", minStreak: 3, perBand: [2, 7, 28, 0] },
+    { name: "Deep-sky hunter", minStreak: 7, perBand: [1, 5, 28, 0] },
   ],
+  /** How fast the hard objects take over after the easy opener: the share of hard picks starts at
+   *  rampStart and grows by rampStep per object until every pick is hard (while any are left). */
+  rampStart: 0.3,
+  rampStep: 0.07,
   bands: [
     // startZoom: how far in the telescope starts; pullBack: seconds to reach full view;
     // startBlur: how out of focus it starts, in sprite pixels (0 = sharp, max 2.4); points / zoomedPoints.
-    { startZoom: 1.6, pullBack: 2, startBlur: 0.4, points: 1, zoomedPoints: 2 },
-    { startZoom: 2, pullBack: 3, startBlur: 0.6, points: 2, zoomedPoints: 3 },
-    { startZoom: 3, pullBack: 4, startBlur: 1.1, points: 3, zoomedPoints: 5 },
-    { startZoom: 3.5, pullBack: 4.5, startBlur: 1.3, points: 4, zoomedPoints: 6 },
+    { startZoom: 1.6, pullBack: 3, startBlur: 0.4, points: 1, zoomedPoints: 2 },
+    { startZoom: 2.2, pullBack: 4, startBlur: 0.7, points: 2, zoomedPoints: 3 },
+    { startZoom: 3, pullBack: 5, startBlur: 1.1, points: 3, zoomedPoints: 5 },
+    { startZoom: 3.5, pullBack: 5.5, startBlur: 1.3, points: 4, zoomedPoints: 6 },
   ],
   /** "Steady hand" combo: answers in a row without a skip. Extra points per answer at each threshold. */
   combo: [

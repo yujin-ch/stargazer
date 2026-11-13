@@ -73,11 +73,29 @@ export function dailySky(puzzle: number, tier = 0, pool: SkyObject[] = themePool
       sky.push(o);
     }
   });
-  return sky;
+  return ramp(sky);
+}
+
+/**
+ * Order a sky so it gets hard fast: the easy band opens, then medium and hard objects mix,
+ * with the hard share climbing each step (CONFIG.rampStart, rampStep) until it is all hard.
+ */
+export function ramp(sky: SkyObject[]): SkyObject[] {
+  const easy = sky.filter((o) => o.band === 0);
+  const mid = sky.filter((o) => o.band === 1);
+  const hard = sky.filter((o) => o.band >= 2).sort((a, b) => a.band - b.band);
+  const out = easy.slice();
+  let want = 0, took = 0;
+  for (let step = 0; mid.length || hard.length; step++) {
+    want += Math.min(1, CONFIG.rampStart + CONFIG.rampStep * step);
+    const pickHard = hard.length && (!mid.length || took + 1 <= want + 0.001);
+    if (pickHard) { out.push(hard.shift()!); took++; } else out.push(mid.shift()!);
+  }
+  return out;
 }
 
 /** A random sky for practice runs. */
 export function practiceSky(tier = 0, pool: SkyObject[] = themePool(THEMES[Math.floor(Math.random() * THEMES.length)])): SkyObject[] {
   const rand = mulberry32((Math.random() * 2 ** 32) >>> 0);
-  return CONFIG.tiers[tier].perBand.flatMap((k, band) => shuffled(pool.filter((o) => o.band === band), rand).slice(0, k));
+  return ramp(CONFIG.tiers[tier].perBand.flatMap((k, band) => shuffled(pool.filter((o) => o.band === band), rand).slice(0, k)));
 }
