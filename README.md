@@ -23,10 +23,13 @@ Vercel: import the repo, framework preset "Vite" (build `npm run build`, output 
 ## Where things live
 - `src/config.ts`: every tuning number (run length, skip cost, zoom, blur, points, launch date).
 - `data/objects.txt`: the object library, one line per object: emoji | theme label | band | accepted names. Edit names here.
-- `scripts/build_library.py`: turns `objects.txt` into `src/data/objects.json` and the sprite sheet. Needs the Twemoji SVGs (`npm pack @twemoji/svg`, unpack) plus `pip install cairosvg pillow`, then `python3 scripts/build_library.py <path-to-svgs>`.
+- `src/art/themes/<theme>.txt`: one file per daily theme. Each object is `@id | band | names` followed by shape lines in the drawing-board language (see `src/art/board.ts`). Themes take turns, one per day.
+- `/board.html` (`npm run dev`, then open it): the drawing board. Edit a theme file and watch every sprite redraw.
+- `scripts/themes/candidates.py <wordnet synset>`: lists candidate objects for a new theme with word-frequency scores (`pip install nltk wordfreq`).
+- `scripts/art/render.mts` + `scripts/art/sheet.py`: render a theme file to a labelled PNG contact sheet, for review or blind naming tests.
 - `src/match.ts`: answer matching (case, spaces, a/the, plurals, UK/US spellings, a leading colour/size word, one typo on listed names of 6+ letters). Names starting with `~` in objects.txt are accepted but never shown.
 - `src/daily.ts`: date to puzzle number and the day's 40 objects. Each band walks a shuffled deck so objects don't repeat until the band is used up.
 - `src/themes/`: the look. `pixel-space/` holds the palette, eyepiece drawing, starfield, sounds, CSS and sprite sheet. A new theme is a new folder plus one line in `src/themes/index.ts`.
 
 ## Credits
-Object art: [Twemoji](https://github.com/jdecked/twemoji) © Twitter, Inc. and other contributors, licensed [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/), pixelated for this game. Fonts: Press Start 2P and VT323 (SIL Open Font License).
+All object art is drawn for this game on the Stargazer drawing board. Fonts: Press Start 2P and VT323 (SIL Open Font License).

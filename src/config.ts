@@ -10,17 +10,18 @@ export const CONFIG = {
   launchDate: "2026-11-12",
   /**
    * Streak tiers. Your streak going into today picks your tier; everyone in the same tier
-   * gets the same sky. perBand = objects from each band, in order: clear, distant, deep space, uncharted.
+   * gets the same sky. perBand = objects from each band of the day's theme, in order: clear, distant, deep space, uncharted
+   * (a band with fewer objects just gives what it has).
    */
   tiers: [
-    { name: "Stargazer", minStreak: 0, perBand: [10, 15, 15, 0] },
-    { name: "Astronomer", minStreak: 3, perBand: [6, 12, 15, 7] },
-    { name: "Deep-sky hunter", minStreak: 7, perBand: [3, 9, 14, 14] },
+    { name: "Stargazer", minStreak: 0, perBand: [6, 14, 18, 0] },
+    { name: "Astronomer", minStreak: 3, perBand: [3, 11, 22, 0] },
+    { name: "Deep-sky hunter", minStreak: 7, perBand: [0, 8, 26, 0] },
   ],
   bands: [
     // startZoom: how far in the telescope starts; pullBack: seconds to reach full view;
     // startBlur: how out of focus it starts, in sprite pixels (0 = sharp, max 2.4); points / zoomedPoints.
-    { startZoom: 1, pullBack: 0, startBlur: 0, points: 1, zoomedPoints: 1 },
+    { startZoom: 1.6, pullBack: 2, startBlur: 0.4, points: 1, zoomedPoints: 2 },
     { startZoom: 2, pullBack: 3, startBlur: 0.6, points: 2, zoomedPoints: 3 },
     { startZoom: 3, pullBack: 4, startBlur: 1.1, points: 3, zoomedPoints: 5 },
     { startZoom: 3.5, pullBack: 4.5, startBlur: 1.3, points: 4, zoomedPoints: 6 },

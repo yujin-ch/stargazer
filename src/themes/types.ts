@@ -18,8 +18,6 @@ export interface Theme {
   bandNames: readonly [string, string, string, string];
   /** Emoji shown at the top of the share text. */
   shareIcon: string;
-  /** Sprite atlas URL (grid of SPRITE_SIZE squares, SPRITE_COLS wide). */
-  spriteSheet: string;
   /** Logical resolution of the viewer canvas (square); it is scaled up with crisp pixels. */
   viewSize: number;
   /** How many logical pixels one sprite pixel takes at full view. */

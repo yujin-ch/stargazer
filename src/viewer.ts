@@ -1,5 +1,5 @@
 import type { Theme } from "./themes/types";
-import { SPRITE_COLS, SPRITE_SIZE, type SkyObject } from "./library";
+import { SPRITE_COLS, SPRITE_SIZE, buildAtlas, type SkyObject } from "./library";
 import { CONFIG } from "./config";
 
 const PAD = 5; // transparent margin so blur can spread
@@ -33,7 +33,7 @@ const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 
 export class Viewer {
   private ctx: CanvasRenderingContext2D;
-  private atlas = new Image();
+  private atlas!: HTMLCanvasElement;
   private cache = new Map<number, Prepared>();
   private active: Active | null = null;
   private leaving: Leaving[] = [];
@@ -54,11 +54,8 @@ export class Viewer {
   }
 
   load(): Promise<void> {
-    return new Promise((res, rej) => {
-      this.atlas.onload = () => res();
-      this.atlas.onerror = rej;
-      this.atlas.src = this.theme.spriteSheet;
-    });
+    this.atlas = buildAtlas();
+    return Promise.resolve();
   }
 
   /** Draw one sprite (sharp) into a small canvas, for results lists. */

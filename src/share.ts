@@ -1,6 +1,8 @@
 import type { RunResult } from "./storage";
 import type { Theme } from "./themes/types";
 import { CONFIG } from "./config";
+import { themeName } from "./library";
+import { dayTheme } from "./daily";
 
 export function shareText(r: RunResult, theme: Theme, url: string): string {
   const sym = { named: "🔵", zoomed: "✨", skipped: "▪️" } as const;
@@ -9,7 +11,7 @@ export function shareText(r: RunResult, theme: Theme, url: string): string {
   for (let i = 0; i < marks.length; i += 10) rows.push(marks.slice(i, i + 10).join(""));
   const device = r.device === "touch" ? "📱" : "⌨️";
   return [
-    `${theme.shareIcon} ${theme.title} Night #${r.puzzle} · ${r.score} pts${r.tier ? ` · ${CONFIG.tiers[r.tier].name} sky` : ""}`,
+    `${theme.shareIcon} ${theme.title} Night #${r.puzzle} · ${themeName(dayTheme(r.puzzle))} · ${r.score} pts${r.tier ? ` · ${CONFIG.tiers[r.tier].name} sky` : ""}`,
     `${r.named} named · ${r.skipped} skipped${(r.bestCombo ?? 0) >= CONFIG.combo[0].at ? ` · steady hand ${r.bestCombo}` : ""} ${device}`,
     ...rows,
     url,

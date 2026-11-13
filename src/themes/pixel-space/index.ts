@@ -1,6 +1,5 @@
 import type { Theme, FrameState } from "../types";
 import { blip } from "../chip";
-import sheet from "./sprites.png";
 
 const V = 120; // logical viewer size
 const R = 52; // inner radius of the eyepiece glass
@@ -70,7 +69,6 @@ export const pixelSpace: Theme = {
   tagline: "One minute at the telescope. Name what drifts by.",
   bandNames: ["Clear sky", "Distant", "Deep space", "Uncharted"],
   shareIcon: "🔭",
-  spriteSheet: sheet,
   viewSize: V,
   spriteScale: 2,
   sparkColors: ["#fee761", "#feae34", "#2ce8f5", "#ffffff", "#f6757a"],
@@ -167,8 +165,5 @@ export const pixelSpace: Theme = {
     start: () => blip([440, 660, 880], 0.08),
   },
 
-  credits:
-    'Object art: <a href="https://github.com/jdecked/twemoji" target="_blank" rel="noopener">Twemoji</a> © Twitter, Inc. and other contributors, ' +
-    '<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC-BY 4.0</a>, pixelated for this game. ' +
-    "Fonts: Press Start 2P and VT323 (SIL Open Font License).",
+  credits: "Pixel art drawn for this game on the Stargazer drawing board. Fonts: Press Start 2P and VT323 (SIL Open Font License).",
 };

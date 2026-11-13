@@ -1,9 +1,9 @@
 import "@fontsource/press-start-2p";
 import "@fontsource/vt323";
 import { CONFIG, tierFor } from "./config";
-import { OBJECTS, BY_ID, shownNames, type SkyObject } from "./library";
+import { OBJECTS, BY_ID, shownNames, themeName, type SkyObject } from "./library";
 import { makeMatcher, normalize, forms as formsOf } from "./match";
-import { dailySky, practiceSky, localDateKey, puzzleNumber, mulberry32 } from "./daily";
+import { dailySky, practiceSky, localDateKey, puzzleNumber, mulberry32, dayTheme } from "./daily";
 import { theme } from "./themes";
 import { setMuted, unlockAudio } from "./themes/chip";
 import { Viewer } from "./viewer";
@@ -261,7 +261,7 @@ async function openPlay(mode: Run["mode"]) {
   el.hint.classList.add("hidden");
   app.querySelector(".play")!.classList.add("ready");
   el.overlay.className = "overlay wordmark";
-  el.overlay.innerHTML = `<div><b>${theme.title.toUpperCase()}</b><span>${mode === "daily" ? `NIGHT #${run.puzzle} · ${fmtDate(run.date).toUpperCase()}` : "PRACTICE SKY · NOT SCORED"}</span></div>`;
+  el.overlay.innerHTML = `<div><b>${theme.title.toUpperCase()}</b><span>${mode === "daily" ? `NIGHT #${run.puzzle} · ${fmtDate(run.date).toUpperCase()}` : "PRACTICE SKY · NOT SCORED"}</span><span>TONIGHT: ${themeName(run.sky[0]?.theme ?? dayTheme(run.puzzle)).toUpperCase()}</span></div>`;
   const c3 = CONFIG.combo[0];
   el.start.innerHTML = `
     ${tierLine(run.tier, run.streak)}
@@ -271,7 +271,7 @@ async function openPlay(mode: Run["mode"]) {
       <li><b>${c3.at} in a row</b> earns extra. ${isTouch ? "Skip" : "Tab skips"}${isTouch ? "" : ","} costs ${CONFIG.skipCost}s and breaks it.</li>
     </ul>
     <button class="btn primary" id="go">OPEN THE SHUTTER</button>
-    <p class="small">${CONFIG.runSeconds} seconds · ${mode === "daily" ? "same sky as everyone on your tier" : "random objects"}</p>`;
+    <p class="small">${CONFIG.runSeconds} seconds · ${mode === "daily" ? "same sky as everyone on your tier" : `random ${themeName(run.sky[0]?.theme ?? "").toLowerCase()}`}</p>`;
   document.getElementById("go")!.onclick = begin;
   sizeViewer();
   loop();
@@ -317,7 +317,7 @@ function showObject(now: number) {
   viewer.show(obj, now);
   viewer.preload(run.sky.slice(run.i + 1, run.i + 3));
   run.attempt = "";
-  el.label.textContent = obj.theme.toUpperCase();
+  el.label.textContent = themeName(obj.theme).toUpperCase();
   const band = CONFIG.bands[obj.band];
   el.band.textContent = `${theme.bandNames[obj.band].toUpperCase()} · ${band.points} PT${band.points > 1 ? "S" : ""}`;
   el.band.dataset.band = String(obj.band);
@@ -583,7 +583,7 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
         <span>OBSERVING LOG</span>
         <span>${daily ? `NIGHT #${r.puzzle}` : "PRACTICE"}</span>
       </header>
-      <p class="date">${daily ? `${fmtDate(r.date)} · ${CONFIG.tiers[tier].name} sky` : "Random objects, not scored"}</p>
+      <p class="date">${daily ? `${fmtDate(r.date)} · ${themeName(dayTheme(r.puzzle))} · ${CONFIG.tiers[tier].name} sky` : "Random objects, not scored"}</p>
       <div class="final"><span>${r.score}</span><small>POINTS${r.clearedBonus ? ` · SKY CLEARED +${r.clearedBonus}` : ""}</small></div>
       ${r.partial ? `<p class="small">This run was cut short, so it counts as it stood.</p>` : ""}
       <canvas class="chart" id="chart" aria-label="Star chart of your run"></canvas>
