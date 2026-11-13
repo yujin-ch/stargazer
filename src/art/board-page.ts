@@ -4,8 +4,11 @@ import { parseSheet, renderSprite, toRGBA, SIZE, PALETTE } from "./board";
 import animals from "./themes/animals.txt?raw";
 import birds from "./themes/birds.txt?raw";
 import bugs from "./themes/bugs.txt?raw";
+import library from "./themes/library.txt?raw";
+import teeth from "./themes/teeth.txt?raw";
+import secret from "./themes/secret.txt?raw";
 
-const SHEETS: Record<string, string> = { animals, birds, bugs };
+const SHEETS: Record<string, string> = { animals, birds, bugs, library, teeth, secret };
 const KEY = "stargazer-board-draft";
 
 const css = `

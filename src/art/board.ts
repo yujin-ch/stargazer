@@ -166,24 +166,78 @@ export function toRGBA(px: Px[]): Uint8ClampedArray {
   return out;
 }
 
-export interface SpriteDef { id: string; theme: string; band: number; names: string[]; src: string }
+export interface SpriteDef {
+  id: string;
+  theme: string;
+  band: number;
+  names: string[];
+  /** Shape code, if this entry draws its own picture. */
+  src: string;
+  /** Short "why it fits" line shown after the run (e.g. what an acronym stands for). */
+  note: string;
+  /** "= theme:id" reuses another entry's picture. */
+  use?: string;
+  /** "+ a, b" shows several pictures side by side as one rebus (sun + flower). */
+  parts?: string[];
+  /** "& a, b": several pictures that share one name (a flying bat and a baseball bat). */
+  pair?: string[];
+}
+
+export interface SheetMeta {
+  /** Display name, e.g. "Things with teeth". */
+  name?: string;
+  /** Words that count as finding the link in a Mystery link guess. */
+  keys: string[];
+  /** Hide the theme during play and ask for it at the end. */
+  mystery: boolean;
+  /** A sprite library, not a playable theme. */
+  library: boolean;
+  /** One line explaining the link, shown on reveal. */
+  about?: string;
+}
 
 /**
  * Parse a theme file:
- *   @fox | 1 | fox, red fox, vixen
- *   e 16 20 9 6 orange
- *   ...
+ *   % name: Things with teeth          (theme settings, before the first entry)
+ *   % keys: teeth, tooth, fangs
+ *   % mystery
+ *   @fox | 1 | fox, red fox, vixen | optional note
+ *   e 16 20 9 6 orange               (shapes)
+ *   = animals:shark                   (or reuse another picture)
+ *   + library:sun, library:flower     (or a rebus of several pictures)
+ *   & animals:bat, library:cricket-bat (or several pictures, one name)
  */
 export function parseSheet(text: string, theme: string): SpriteDef[] {
+  return parseTheme(text, theme).defs;
+}
+
+export function parseTheme(text: string, theme: string): { meta: SheetMeta; defs: SpriteDef[] } {
   const defs: SpriteDef[] = [];
+  const meta: SheetMeta = { keys: [], mystery: false, library: false };
   let cur: SpriteDef | null = null;
+  const ref = (s: string) => (s.includes(":") ? s : `${theme}:${s}`);
   for (const raw of text.split("\n")) {
     const line = raw.trimEnd();
+    const tl = line.trim();
+    if (!cur && tl.startsWith("%")) {
+      const m = tl.slice(1).trim().match(/^(\w+)\s*:?\s*(.*)$/);
+      if (!m) continue;
+      const [, k, v] = m;
+      if (k === "name") meta.name = v;
+      else if (k === "keys") meta.keys = v.split(",").map((s) => s.trim()).filter(Boolean);
+      else if (k === "about") meta.about = v;
+      else if (k === "mystery") meta.mystery = true;
+      else if (k === "library") meta.library = true;
+      continue;
+    }
     if (line.startsWith("@")) {
-      const [id, band, names] = line.slice(1).split("|").map((s) => s.trim());
-      cur = { id, theme, band: Number(band), names: names.split(",").map((s) => s.trim()).filter(Boolean), src: "" };
+      const [id, band, names, note] = line.slice(1).split("|").map((s) => s.trim());
+      cur = { id, theme, band: Number(band), names: names.split(",").map((s) => s.trim()).filter(Boolean), src: "", note: note ?? "" };
       defs.push(cur);
-    } else if (cur && line.trim() && !line.trim().startsWith("//")) cur.src += line + "\n";
+    } else if (cur && tl.startsWith("=")) cur.use = ref(tl.slice(1).trim());
+    else if (cur && tl.startsWith("+")) cur.parts = tl.slice(1).split(",").map((s) => ref(s.trim()));
+    else if (cur && tl.startsWith("&")) cur.pair = tl.slice(1).split(",").map((s) => ref(s.trim()));
+    else if (cur && tl && !tl.startsWith("//")) cur.src += line + "\n";
   }
-  return defs;
+  return { meta, defs };
 }

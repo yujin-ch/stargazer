@@ -253,3 +253,19 @@ a { color: var(--cyan); }
 .preview-tools { margin-top: 22px; }
 .preview-tools .btn { font-size: 9px; padding: 8px 10px; line-height: 1.5; }
 .preview-tools .btn small { font-family: var(--font-body); font-size: 15px; color: var(--dim); }
+
+/* Mystery link */
+.link-box { margin: 12px 0 4px; padding: 10px 12px; border: 3px dashed var(--accent); background: rgba(11, 10, 24, 0.7); text-align: center; }
+.link-box h3 { font-family: var(--font-display); font-size: 11px; color: var(--accent); margin: 0 0 6px; letter-spacing: 1px; }
+.link-box p { margin: 4px 0; }
+.link-box.found { border-style: solid; border-color: var(--cyan); }
+.link-box.found h3 { color: var(--cyan); }
+.link-box.missed { border-style: solid; border-color: var(--faint); }
+.link-name { font-family: var(--font-display); font-size: 14px; color: var(--ink); line-height: 1.5; }
+.link-form { display: flex; gap: 8px; margin: 8px 0 4px; }
+.link-form input { flex: 1; min-width: 0; font-family: var(--font-body); font-size: 22px; padding: 6px 10px; color: var(--ink); background: #0b0a18; border: 3px solid var(--panel-edge); outline: none; }
+.link-form input:focus { border-color: var(--accent); }
+.link-form .btn { font-size: 11px; padding: 8px 12px; }
+.link-skip { background: none; border: 0; color: var(--dim); font-size: 17px; text-decoration: underline; padding: 4px; }
+.seen .note { display: block; width: 100%; color: var(--accent); font-size: 16px; margin-top: 3px; line-height: 1.1; }
+.seen li canvas.wide { width: auto; height: 24px; max-width: 64px; align-self: center; }

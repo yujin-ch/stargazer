@@ -1,8 +1,8 @@
 import "@fontsource/press-start-2p";
 import "@fontsource/vt323";
 import { CONFIG, tierFor } from "./config";
-import { OBJECTS, BY_ID, shownNames, themeName, type SkyObject } from "./library";
-import { makeMatcher, normalize, forms as formsOf } from "./match";
+import { OBJECTS, BY_ID, shownNames, themeName, themeLabel, themeInfo, type SkyObject } from "./library";
+import { makeMatcher, normalize, forms as formsOf, linkMatches } from "./match";
 import { dailySky, practiceSky, localDateKey, puzzleNumber, mulberry32, dayTheme, dayCondition } from "./daily";
 import { theme } from "./themes";
 import { setMuted, unlockAudio } from "./themes/chip";
@@ -266,18 +266,20 @@ async function openPlay(mode: Run["mode"]) {
   el.hint.classList.add("hidden");
   app.querySelector(".play")!.classList.add("ready");
   el.overlay.className = "overlay wordmark";
-  el.overlay.innerHTML = `<div><b>${theme.title.toUpperCase()}</b><span>${mode === "daily" ? `NIGHT #${run.puzzle} · ${fmtDate(run.date).toUpperCase()}` : (PREVIEW_NIGHT ? `PREVIEW OF NIGHT #${PREVIEW_NIGHT} · NOT SAVED` : "PRACTICE SKY · NOT SCORED")}</span><span>TONIGHT: ${themeName(run.sky[0]?.theme ?? dayTheme(run.puzzle)).toUpperCase()}</span></div>`;
+  el.overlay.innerHTML = `<div><b>${theme.title.toUpperCase()}</b><span>${mode === "daily" ? `NIGHT #${run.puzzle} · ${fmtDate(run.date).toUpperCase()}` : (PREVIEW_NIGHT ? `PREVIEW OF NIGHT #${PREVIEW_NIGHT} · NOT SAVED` : "PRACTICE SKY · NOT SCORED")}</span><span>TONIGHT: ${themeLabel(run.sky[0]?.theme ?? dayTheme(run.puzzle)).toUpperCase()}</span></div>`;
   const c3 = CONFIG.combo[0];
   el.start.innerHTML = `
     ${tierLine(run.tier, run.streak)}
-    <p class="tonight"><b>${themeName(run.sky[0]?.theme ?? dayTheme(run.puzzle)).toUpperCase()}</b> under <b class="cond">${cond.name.toUpperCase()}</b><br><small>${cond.blurb}</small></p>
+    ${themeInfo(run.sky[0]?.theme ?? "")?.mystery
+      ? `<p class="tonight"><b>A MYSTERY LINK</b> under <b class="cond">${cond.name.toUpperCase()}</b><br><small>Everything tonight has something in common. Name what you see, then guess the link for +${CONFIG.linkBonus}. ${cond.id === "clear" ? "" : cond.blurb}</small></p>`
+      : `<p class="tonight"><b>${themeName(run.sky[0]?.theme ?? dayTheme(run.puzzle)).toUpperCase()}</b> under <b class="cond">${cond.name.toUpperCase()}</b><br><small>${cond.blurb}</small></p>`}
     <ul class="rules">
       <li><b>Type</b> what you see. It moves on by itself.</li>
       <li><b>Zoomed in?</b> Name it early for bonus points.</li>
       <li><b>${c3.at} in a row</b> earns extra. ${isTouch ? "Skip" : "Tab skips"}${isTouch ? "" : ","} costs ${CONFIG.skipCost}s and breaks it.</li>
     </ul>
     <button class="btn primary" id="go">OPEN THE SHUTTER</button>
-    <p class="small">${CONFIG.runSeconds} seconds · ${mode === "daily" ? "same sky as everyone on your tier" : `random ${themeName(run.sky[0]?.theme ?? "").toLowerCase()}`}</p>`;
+    <p class="small">${CONFIG.runSeconds} seconds · ${mode === "daily" ? "same sky as everyone on your tier" : `a preview, not saved`}</p>`;
   document.getElementById("go")!.onclick = begin;
   sizeViewer();
   loop();
@@ -323,7 +325,7 @@ function showObject(now: number) {
   viewer.show(obj, now);
   viewer.preload(run.sky.slice(run.i + 1, run.i + 3));
   run.attempt = "";
-  el.label.textContent = themeName(obj.theme).toUpperCase();
+  el.label.textContent = themeLabel(obj.theme).toUpperCase();
   const band = CONFIG.bands[obj.band];
   el.band.textContent = `${theme.bandNames[obj.band].toUpperCase()} · ${band.points} PT${band.points > 1 ? "S" : ""}`;
   el.band.dataset.band = String(obj.band);
@@ -603,6 +605,11 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
   const bandsSeen = [...new Set(r.items.map((it) => BY_ID.get(it.id)?.band).filter((b) => b !== undefined))].sort() as number[];
   const crowdSky = daily ? dailySky(r.puzzle, tier) : run?.sky ?? [];
   const crowd = crowdScores(crowdSky, daily ? r.puzzle * 10 + tier : 777, dayCondition(r.puzzle).id);
+  const themeId = crowdSky[0]?.theme ?? dayTheme(r.puzzle);
+  const info = themeInfo(themeId);
+  const mystery = !!info?.mystery;
+  const revealed = !mystery || !!r.link;
+  const shownTheme = revealed ? themeName(themeId) : "Mystery link";
   app.innerHTML = `
   <main class="results">
     <section class="log">
@@ -610,9 +617,10 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
         <span>OBSERVING LOG</span>
         <span>${daily ? `NIGHT #${r.puzzle}` : "PRACTICE"}</span>
       </header>
-      <p class="date">${daily ? `${fmtDate(r.date)} · ${themeName(dayTheme(r.puzzle))} · ${dayCondition(r.puzzle).name} · ${CONFIG.tiers[tier].name} sky` : "Random objects, not scored"}</p>
+      <p class="date">${daily ? `${fmtDate(r.date)} · ${shownTheme} · ${dayCondition(r.puzzle).name} · ${CONFIG.tiers[tier].name} sky` : `Preview · ${shownTheme} · ${dayCondition(r.puzzle).name}`}</p>
       <div class="final"><span>${r.score}</span><small>POINTS${r.clearedBonus ? ` · SKY CLEARED +${r.clearedBonus}` : ""}</small></div>
       ${r.partial ? `<p class="small">This run was cut short, so it counts as it stood.</p>` : ""}
+      ${mystery ? `<section class="link-box${r.link ? (r.link.ok ? " found" : " missed") : ""}" id="link-box"></section>` : ""}
       <canvas class="chart" id="chart" aria-label="Star chart of your run, with tonight's crowd on the hill"></canvas>
       <div class="hill-axis"><span>◂ fewer points</span><span>more points ▸</span></div>
       <p class="hill-line" id="hill-line"></p>
@@ -643,7 +651,7 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
     <footer class="credits">${theme.credits}</footer>
   </main>`;
   lastFresh = 0;
-  const others = 12, beat = beatShare(crowd, r.score), rank = Math.round(beat * others);
+  const others = 12, beat = beatShare(crowd, r.score - (r.link?.bonus ?? 0)), rank = Math.round(beat * others);
   drawChart(document.getElementById("chart") as HTMLCanvasElement, r, rank, others);
   const median = crowd[Math.floor(crowd.length / 2)];
   document.getElementById("hill-line")!.innerHTML =
@@ -651,6 +659,30 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
     : rank === 0 ? `The whole hill saw more tonight. The sky comes back tomorrow.`
     : `You out-spotted <b>${rank} of ${others}</b> stargazers on the hill.`
     + `<br><small>A typical score tonight: ${median}</small>`;
+  const box = document.getElementById("link-box");
+  if (box && info) {
+    if (!r.link) {
+      box.innerHTML = `<h3>THE MYSTERY LINK</h3><p>What did everything tonight have in common? One guess, +${CONFIG.linkBonus} if you get it.</p>
+        <form id="link-form" class="link-form" autocomplete="off"><input id="link-guess" type="text" maxlength="60" placeholder="they all…" aria-label="Your guess at the link" autocapitalize="none" spellcheck="false" />
+        <button class="btn primary" type="submit">GUESS</button></form><button class="link-skip" id="link-skip" type="button">I give up, show me</button>`;
+      const submit = (guess: string) => {
+        const ok = !!guess.trim() && linkMatches(guess, [...info.keys, info.name ?? ""]);
+        const bonus = ok ? CONFIG.linkBonus : 0;
+        const next: RunResult = { ...r, score: r.score + bonus, link: { guess: guess.trim(), ok, bonus } };
+        if (daily) store.save(next);
+        if (ok) theme.sounds.best();
+        void resultsScreen(next, mode);
+      };
+      (document.getElementById("link-form") as HTMLFormElement).onsubmit = (e) => { e.preventDefault(); submit((document.getElementById("link-guess") as HTMLInputElement).value); };
+      document.getElementById("link-skip")!.onclick = () => submit("");
+    } else {
+      box.innerHTML = `<h3>${r.link.ok ? `LINK FOUND · +${r.link.bonus}` : r.link.guess ? "NOT QUITE" : "THE LINK WAS"}</h3>
+        <p class="link-name">${esc((info.name ?? themeName(themeId)).toUpperCase())}</p>
+        ${info.about ? `<p>${esc(info.about)}</p>` : ""}
+        ${r.link.guess ? `<p class="small">You guessed “${esc(r.link.guess)}”</p>` : ""}
+        <p class="small">Tap any object below to see why it fits.</p>`;
+    }
+  }
   const list = document.getElementById("seen")!;
   for (const it of r.items) {
     const o = BY_ID.get(it.id);
@@ -659,11 +691,12 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
     li.className = it.outcome;
     li.style.setProperty("--band", theme.bandColors[o.band]);
     li.tabIndex = 0;
-    li.appendChild(viewer.spriteCanvas(o.sprite, 2));
+    li.appendChild(viewer.spriteCanvas(o, 2));
     const others = shownNames(o).slice(0, 4).join(", ");
     const typed = it.typed && normalize(it.typed) !== normalize(o.names[0]) ? `“${esc(it.typed)}”` : "";
     const div = document.createElement("div");
     div.innerHTML = `<b>${esc(o.names[0])}</b><span class="pts">${it.outcome === "skipped" ? "skip" : `+${it.points}${it.outcome === "zoomed" ? "★" : ""}`}</span>` +
+      (revealed && o.note ? `<small class="note">${esc(o.note)}</small>` : "") +
       `<small class="more">${it.outcome === "skipped" && it.typed ? `you tried ${typed || `“${esc(it.typed)}”`}<br>` : typed ? `you typed ${typed}<br>` : ""}${others ? `also: ${esc(others)}` : esc(theme.bandNames[o.band])}</small>`;
     li.appendChild(div);
     const toggle = () => li.classList.toggle("open");
@@ -688,10 +721,10 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
       for (const o of objs) {
         const li = document.createElement("li");
         li.style.setProperty("--band", theme.bandColors[b]);
-        li.appendChild(viewer.spriteCanvas(o.sprite, 2));
+        li.appendChild(viewer.spriteCanvas(o, 2));
         const others = shownNames(o).slice(0, 3).join(", ");
         const div = document.createElement("div");
-        div.innerHTML = `<b>${esc(o.names[0])}</b>${others ? `<small class="aka">${esc(others)}</small>` : ""}`;
+        div.innerHTML = `<b>${esc(o.names[0])}</b>${revealed && o.note ? `<small class="aka">${esc(o.note)}</small>` : others ? `<small class="aka">${esc(others)}</small>` : ""}`;
         li.appendChild(div);
         ul.appendChild(li);
       }

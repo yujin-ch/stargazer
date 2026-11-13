@@ -1,0 +1,126 @@
+% name: Things with teeth
+% keys: teeth, tooth, toothed, toothy, fang, fangs, tusk, tusks, serrated, jagged, bite, biting, chomp, chompers
+% about: Every one of tonight's objects has teeth, real or not.
+% mystery
+
+@comb | 1 | comb, hair comb | Combs have a row of teeth
+r 3 10 26 6 purple
+l purple! 4,16 4,25
+l purple! 7,16 7,25
+l purple! 10,16 10,25
+l purple! 13,16 13,25
+l purple! 16,16 16,25
+l purple! 19,16 19,25
+l purple! 22,16 22,25
+l purple! 25,16 25,25
+l purple! 28,16 28,25
+
+@saw | 1 | saw, handsaw, hand saw | A saw blade is all teeth
+p grey 2,12 24,8 24,20 2,24
+p black! 2,24 4,27 6,24 8,27 10,24 12,27 14,24 16,27 18,24 20,27 22,24 24,22 24,20
+p brown 23,6 31,4 31,20 23,20
+e 27 12 2 4 black!
+
+@shark | 1 | shark, great white | Rows and rows of them
+= animals:shark
+
+@crocodile | 1 | crocodile, alligator, croc, gator | All those teeth on show
+= animals:crocodile
+
+@zipper | 2 | zipper, zip, zip fastener, fly | The interlocking bits are called teeth
+r 6 2 8 28 blue
+r 18 2 8 28 blue
+d grey 14,4 17,6 14,8 17,10 14,12 17,14 14,16 17,18
+l grey! 15,4 15,18
+l grey! 16,5 16,19
+p grey 12,19 20,19 19,26 13,26
+r 14 25 4 5 grey
+l blue.d 14,21 17,21
+
+@key | 2 | key, door key, house key | The bumps on a key's blade are its teeth
+c 8 16 6 gold
+c 8 16 2 black!
+r 13 14 17 4 gold
+p gold 18,18 18,22 20,22 21,19 23,22 25,22 26,19 28,23 30,18
+
+@fork | 2 | fork | A fork's points are called tines, or teeth
+l grey! 16,16 16,30 3
+r 9 10 14 6 grey
+l grey! 10,10 10,2 2
+l grey! 14,10 14,2 2
+l grey! 18,10 18,2 2
+l grey! 22,10 22,2 2
+
+@rake | 2 | rake, garden rake | A rake's teeth comb the lawn
+l brown! 16,2 16,20 2
+r 4 20 25 3 slate
+l slate! 5,23 5,29
+l slate! 9,23 9,29
+l slate! 13,23 13,29
+l slate! 17,23 17,29
+l slate! 21,23 21,29
+l slate! 25,23 25,29
+l slate! 28,23 28,29
+
+@gear | 2 | gear, cog, cogwheel, gear wheel | Gears have teeth that mesh together
+c 16 16 11 slate
+r 14 1 5 5 slate
+r 14 26 5 5 slate
+r 1 14 5 5 slate
+r 26 14 5 5 slate
+p slate 5,7 8,4 11,7 7,11
+p slate 27,7 24,4 21,7 25,11
+p slate 5,25 8,28 11,25 7,21
+p slate 27,25 24,28 21,25 25,21
+c 16 16 4 black!
+
+@beaver | 2 | beaver | Front teeth that never stop growing
+= animals:beaver
+
+@grater | 3 | grater, cheese grater | Each little hole has a sharp tooth
+p grey 9,6 23,6 27,29 5,29
+r 12 2 8 4 black
+d black 10,11 14,11 18,11 22,11 9,15 13,15 17,15 21,15 25,15 8,19 12,19 16,19 20,19 24,19 8,23 12,23 16,23 20,23 24,23
+
+@pumpkin | 3 | jack-o'-lantern, jack o lantern, jackolantern, pumpkin, jack-o-lantern | Carved with a toothy grin
+e 16 18 13 11 orange
+l orange.d 12,9 12,28
+l orange.d 20,9 20,28
+r 14 4 4 5 green
+p black! 8,15 12,11 13,16
+p black! 24,15 20,11 19,16
+p black! 7,20 25,20 23,25 9,25
+r 12 20 3 2 orange
+r 18 23 3 2 orange
+d yellow 10,14 22,14
+
+@dinosaur | 3 | dinosaur, t-rex, t rex, trex, tyrannosaurus, tyrannosaurus rex | Teeth as long as bananas
+p green 16,8 29,7 30,13 22,15 22,20 18,21
+e 14 20 8 6 green
+p green 7,18 0,26 3,27 9,23
+d white 22,15 25,14 28,13
+r 12 25 3 6 green
+r 17 25 3 6 green
+l green! 21,18 24,21 2
+d black 24,9
+
+@hippo | 3 | hippo, hippopotamus | Those huge tusks are teeth
+= animals:hippo
+
+@walrus | 3 | walrus | Walrus tusks are giant teeth
+= animals:walrus
+
+@elephant | 4 | elephant | Tusks are teeth too: overgrown incisors
+= animals:elephant
+
+@narwhal | 4 | narwhal | That spiral horn is actually a tooth
+= animals:narwhal
+
+@piranha | 4 | piranha | Famous for razor-sharp teeth
+e 14 16 11 9 red
+p slate 22,15 30,8 29,16 30,24
+p slate 8,8 14,3 18,8
+e 14 12 10 6 slate
+p white 4,17 6,20 8,17 10,20 12,17 12,18 4,18
+d black 8,11
+d yellow 7,11

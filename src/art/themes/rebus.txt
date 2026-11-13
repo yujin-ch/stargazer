@@ -1,0 +1,51 @@
+% name: Two make one
+% keys: compound, compounds, compound word, compound words, rebus, two words, combined, put together, add up, sum
+% about: Every picture was two words added together: sun + flower = sunflower.
+% mystery
+
+@sunflower | 1 | sunflower, sun flower | sun + flower
++ library:sun, library:flower
+@starfish | 1 | starfish, star fish, sea star | star + fish
++ library:star, animals:fish
+@football | 1 | football, foot ball, soccer ball | foot + ball
++ library:foot, library:ball
+@cupcake | 1 | cupcake, cup cake | cup + cake
++ library:cup, library:cake
+@snowman | 1 | snowman, snow man | snow + man
++ library:snow, library:man
+@rainbow | 1 | rainbow, rain bow | rain + bow
++ library:rain, library:bow
+@butterfly | 2 | butterfly, butter fly | butter + fly
++ library:butter, bugs:fly
+@pancake | 2 | pancake, pancakes, pan cake | pan + cake
++ library:pan, library:cake
+@horseshoe | 2 | horseshoe, horse shoe | horse + shoe
++ animals:horse, library:shoe
+@toothbrush | 2 | toothbrush, tooth brush | tooth + brush
++ library:tooth, library:brush
+@doghouse | 2 | doghouse, dog house, kennel | dog + house
++ animals:dog, library:house
+@catfish | 2 | catfish, cat fish | cat + fish
++ animals:cat, animals:fish
+@firefly | 2 | firefly, fire fly | fire + fly
++ library:fire, bugs:fly
+@earring | 3 | earring, ear ring | ear + ring
++ library:ear, library:ring
+@bookworm | 3 | bookworm, book worm | book + worm
++ library:book, bugs:worm
+@lighthouse | 3 | lighthouse, light house | light + house
++ library:bulb, library:house
+@pineapple | 3 | pineapple, pine apple | pine + apple
++ library:pine, library:apple
+@eggplant | 3 | eggplant, egg plant | egg + plant
++ library:egg, library:plant
+@watermelon | 3 | watermelon, water melon | water + melon
++ library:water, library:melon
+@bathtub | 3 | bathtub, bath tub | bat + tub
++ animals:bat, library:tub
+@jellyfish | 3 | jellyfish, jelly fish | jelly + fish
++ library:jelly, animals:fish
+@sunfish | 4 | sunfish, sun fish | sun + fish
++ library:sun, animals:fish
+@cowboy | 4 | cowboy, cow boy | cow + boy
++ animals:cow, library:man

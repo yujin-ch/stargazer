@@ -1,0 +1,203 @@
+% library
+// Pictures used by other themes (rebus parts and the like). Not a playable theme.
+// @id | band | name
+
+@sun | 1 | sun
+c 16 16 8 yellow
+l orange! 16,1 16,5 2
+l orange! 16,27 16,31 2
+l orange! 1,16 5,16 2
+l orange! 27,16 31,16 2
+l orange! 5,5 8,8 2
+l orange! 24,24 27,27 2
+l orange! 27,5 24,8 2
+l orange! 5,27 8,24 2
+
+@flower | 1 | flower
+l green! 16,16 16,31 2
+p green 16,25 23,20 24,23 17,28
+c 16 6 4 pink
+c 10 11 4 pink
+c 22 11 4 pink
+c 12 18 4 pink
+c 20 18 4 pink
+c 16 13 4 yellow
+
+@star | 1 | star
+p yellow 16,2 20,12 30,12 22,19 25,29 16,23 7,29 10,19 2,12 12,12
+
+@foot | 1 | foot
+e 14 18 8 11 skin
+c 8 7 3 skin
+c 13 5 2 skin
+c 17 5 2 skin
+c 21 6 2 skin
+c 24 8 2 skin
+e 16 27 6 3 skin
+
+@ball | 1 | ball
+c 16 16 13 white
+p black 16,10 21,13 19,19 13,19 11,13
+l black! 16,10 16,4
+l black! 21,13 27,11
+l black! 19,19 23,25
+l black! 13,19 9,25
+l black! 11,13 5,11
+
+@cup | 1 | cup
+p white 5,8 25,8 23,26 7,26
+e 26 16 5 6 white
+e 26 16 2 3 black!
+r 5 8 20 3 sky
+e 15 28 12 2 grey
+
+@cake | 1 | cake
+r 4 16 24 12 tan
+r 4 16 24 4 cream
+d cream 6,20 9,21 13,20 18,21 22,20 26,21
+l pink! 4,23 27,23 2
+l red! 15,7 15,15 2
+d yellow 15,5 15,6
+
+@rain | 1 | rain, cloud
+c 10 12 6 grey
+c 18 9 7 grey
+c 24 13 5 grey
+r 6 12 22 6 grey
+l blue! 9,21 7,26
+l blue! 15,21 13,28
+l blue! 21,21 19,26
+l blue! 26,20 24,25
+
+@bow | 1 | bow, ribbon
+p red 15,15 3,6 3,24
+p red 17,15 29,6 29,24
+c 16 15 3 red
+l red! 14,17 9,30 2
+l red! 18,17 23,30 2
+
+@snow | 1 | snowflake, snow
+l sky! 16,2 16,30 2
+l sky! 4,9 28,23 2
+l sky! 4,23 28,9 2
+l sky! 12,4 16,8 20,4
+l sky! 12,28 16,24 20,28
+d white 16,16
+
+@man | 1 | man, person, boy
+c 16 7 5 skin
+r 10 13 12 10 blue
+l blue! 10,14 5,22 3
+l blue! 22,14 27,22 3
+r 11 22 4 8 navy
+r 17 22 4 8 navy
+d black 14,6 18,6
+l black 14,9 18,9
+
+@butter | 1 | butter
+p yellow 4,14 20,8 30,14 14,20
+p yellow.d 4,14 14,20 14,26 4,20
+p yellow 14,20 30,14 30,20 14,26
+r 3 25 28 3 white
+
+@pan | 1 | pan, frying pan
+e 13 18 11 7 black
+e 13 17 8 5 slate
+l brown! 23,15 31,10 3
+
+@shoe | 1 | shoe, sneaker
+p red 3,18 10,10 16,12 20,18 30,20 30,26 3,26
+r 3 25 28 3 white
+l white! 10,13 15,15
+l white! 9,16 15,18
+
+@tooth | 1 | tooth
+p white 6,6 12,3 16,6 20,3 26,6 25,16 22,29 18,29 16,19 14,29 10,29 7,16
+
+@brush | 1 | brush, hairbrush
+e 12 12 9 8 brown
+d black 7,9 10,9 13,9 16,9 8,13 11,13 14,13 17,13 9,17 13,17
+l brown! 18,18 29,29 4
+
+@ear | 1 | ear
+p skin 18,3 25,9 26,17 21,25 16,30 11,27 14,22 11,17 10,9
+p skin.d 18,8 21,12 21,18 18,20 16,16 16,11
+d skin.d 13,24
+
+@ring | 1 | ring
+c 16 19 9 gold
+c 16 19 6 black!
+p sky 12,4 20,4 22,8 16,12 10,8
+p white 13,5 16,5 14,8
+
+@book | 1 | book
+p red 4,8 15,6 15,26 4,28
+p red.d 28,8 17,6 17,26 28,28
+r 15 6 2 21 cream
+l white 6,12 13,11
+l white 19,11 26,12
+
+@bulb | 1 | light bulb, bulb, light
+c 16 12 9 yellow
+r 12 20 8 3 yellow
+r 12 22 8 6 grey
+l slate! 12,24 19,24
+l slate! 12,26 19,26
+d white 12,8 13,7
+
+@house | 1 | house
+r 6 15 20 14 tan
+p red 3,16 16,4 29,16
+r 14 21 5 8 brown
+r 8 18 4 4 sky
+r 21 18 4 4 sky
+
+@pine | 1 | pine tree, pine, tree
+p green 16,2 24,12 20,12 27,20 22,20 29,28 3,28 10,20 5,20 12,12 8,12
+r 14 27 4 4 brown
+
+@apple | 1 | apple
+c 16 18 11 red
+d red.l 10,12 11,11
+l brown! 16,7 17,3 2
+p green 18,6 24,3 22,8
+
+@egg | 1 | egg
+e 16 17 9 12 cream
+d white 11,9 12,8
+
+@plant | 1 | plant, potted plant
+p orange 9,20 23,20 21,30 11,30
+l green! 16,20 16,10 2
+p green 16,14 8,8 6,12 12,15
+p green 16,11 24,4 27,8 19,12
+
+@water | 1 | water, water drop, drop
+p blue 16,2 24,16 8,16
+c 16 19 8 blue
+d white 12,16 12,17 13,15
+
+@melon | 1 | melon, cantaloupe
+c 16 16 13 lime
+l lime.d 7,6 7,26
+l lime.d 12,4 12,28
+l lime.d 20,4 20,28
+l lime.d 25,6 25,26
+
+@tub | 1 | tub, bath
+e 16 18 13 5 white
+r 3 13 26 6 white
+r 5 13 22 3 sky
+r 6 23 3 6 gold
+r 23 23 3 6 gold
+
+@fire | 1 | fire, flame
+p red 16,2 24,14 26,22 22,29 10,29 6,22 8,14 12,16
+p orange 16,9 21,18 21,25 11,25 11,18 14,20
+p yellow 16,17 19,22 18,26 14,26 13,22
+
+@jelly | 1 | jelly, jam
+p sky.l 7,10 25,10 25,28 7,28
+r 8 14 16 13 purple
+r 6 5 20 5 red
+d white 10,16 10,17

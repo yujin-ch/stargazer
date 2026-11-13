@@ -1,5 +1,5 @@
 import type { Theme } from "./themes/types";
-import { SPRITE_COLS, SPRITE_SIZE, buildAtlas, type SkyObject } from "./library";
+import { SPRITE_SIZE, objectImage, type SkyObject } from "./library";
 import { CONFIG, type ConditionId } from "./config";
 
 const PAD = 5; // transparent margin so blur can spread
@@ -9,6 +9,11 @@ const ENTER_MS = 200;
 
 interface Prepared {
   levels: HTMLCanvasElement[]; // index 0 = sharp
+  /** Picture size without padding (a rebus is wider than one sprite). */
+  w: number;
+  h: number;
+  /** Shrink factor so wide pictures still fit the eyepiece. */
+  fit: number;
   focal: { x: number; y: number };
   opaque: { x: number; y: number; c: string }[];
 }
@@ -33,7 +38,6 @@ const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 
 export class Viewer {
   private ctx: CanvasRenderingContext2D;
-  private atlas!: HTMLCanvasElement;
   private cache = new Map<number, Prepared>();
   private active: Active | null = null;
   private leaving: Leaving[] = [];
@@ -57,62 +61,64 @@ export class Viewer {
   }
 
   load(): Promise<void> {
-    this.atlas = buildAtlas();
     return Promise.resolve();
   }
 
-  /** Draw one sprite (sharp) into a small canvas, for results lists. */
-  spriteCanvas(index: number, scale = 2): HTMLCanvasElement {
+  /** Draw an object's picture (sharp) into a small canvas, for results lists. */
+  spriteCanvas(o: SkyObject, scale = 2): HTMLCanvasElement {
+    const img = objectImage(o);
     const c = document.createElement("canvas");
-    c.width = c.height = SPRITE_SIZE * scale;
+    c.width = img.width * scale; c.height = img.height * scale;
     const g = c.getContext("2d")!;
     g.imageSmoothingEnabled = false;
-    const sx = (index % SPRITE_COLS) * SPRITE_SIZE, sy = Math.floor(index / SPRITE_COLS) * SPRITE_SIZE;
-    g.drawImage(this.atlas, sx, sy, SPRITE_SIZE, SPRITE_SIZE, 0, 0, c.width, c.height);
+    g.drawImage(img, 0, 0, c.width, c.height);
+    if (img.width > img.height) c.classList.add("wide");
     return c;
   }
 
-  prepare(index: number): Prepared {
-    const hit = this.cache.get(index);
+  prepare(o: SkyObject): Prepared {
+    const hit = this.cache.get(o.sprite);
     if (hit) return hit;
-    const S = SPRITE_SIZE, P = S + PAD * 2;
+    const img = objectImage(o);
+    const w = img.width, h = img.height, PW = w + PAD * 2, PH = h + PAD * 2;
     const base = document.createElement("canvas");
-    base.width = base.height = P;
+    base.width = PW; base.height = PH;
     const bg = base.getContext("2d")!;
-    bg.drawImage(this.atlas, (index % SPRITE_COLS) * S, Math.floor(index / SPRITE_COLS) * S, S, S, PAD, PAD, S, S);
-    const src = bg.getImageData(0, 0, P, P);
+    bg.drawImage(img, PAD, PAD);
+    const src = bg.getImageData(0, 0, PW, PH);
 
     // focal point = centre of mass of opaque pixels; also collect pixels for sparks
     let sx = 0, sy = 0, n = 0;
     const opaque: Prepared["opaque"] = [];
-    for (let y = 0; y < P; y++) for (let x = 0; x < P; x++) {
-      const i = (y * P + x) * 4;
+    for (let y = 0; y < PH; y++) for (let x = 0; x < PW; x++) {
+      const i = (y * PW + x) * 4;
       if (src.data[i + 3] > 128) {
         sx += x; sy += y; n++;
         if ((x + y * 3) % 5 === 0) opaque.push({ x: x - PAD, y: y - PAD, c: `rgb(${src.data[i]},${src.data[i + 1]},${src.data[i + 2]})` });
       }
     }
-    const focal = n ? { x: sx / n - PAD, y: sy / n - PAD } : { x: S / 2, y: S / 2 };
+    const focal = n ? { x: sx / n - PAD, y: sy / n - PAD } : { x: w / 2, y: h / 2 };
 
     const levels: HTMLCanvasElement[] = [base];
     for (let l = 1; l < BLUR_LEVELS; l++) {
       const sigma = (MAX_SIGMA * l) / (BLUR_LEVELS - 1);
       const c = document.createElement("canvas");
-      c.width = c.height = P;
-      c.getContext("2d")!.putImageData(gaussian(src, P, sigma), 0, 0);
+      c.width = PW; c.height = PH;
+      c.getContext("2d")!.putImageData(gaussian(src, PW, PH, sigma), 0, 0);
       levels.push(c);
     }
-    const prep = { levels, focal, opaque };
-    this.cache.set(index, prep);
+    const fit = Math.min(1, (SPRITE_SIZE * 1.45) / w);
+    const prep = { levels, focal, opaque, w, h, fit };
+    this.cache.set(o.sprite, prep);
     return prep;
   }
 
   show(obj: SkyObject, now: number) {
-    this.active = { obj, prep: this.prepare(obj.sprite), appear: now };
+    this.active = { obj, prep: this.prepare(obj), appear: now };
   }
 
   /** Warm the cache for the next few objects so there is no hitch. */
-  preload(objs: SkyObject[]) { for (const o of objs) this.prepare(o.sprite); }
+  preload(objs: SkyObject[]) { for (const o of objs) this.prepare(o); }
 
   clear() { this.active = null; this.leaving = []; this.sparks = []; }
 
@@ -132,9 +138,9 @@ export class Viewer {
     const a = this.active;
     this.leaving.push({ prep: a.prep, start: now, kind });
     if (kind === "named" && !REDUCED) {
-      const scale = this.theme.spriteScale, C = this.V / 2, S = SPRITE_SIZE;
+      const scale = this.theme.spriteScale * a.prep.fit, C = this.V / 2;
       for (const p of a.prep.opaque) {
-        const x = C + (p.x - S / 2) * scale, y = C + (p.y - S / 2) * scale;
+        const x = C + (p.x - a.prep.w / 2) * scale, y = C + (p.y - a.prep.h / 2) * scale;
         const ang = Math.atan2(y - C, x - C) + (Math.random() - 0.5) * 0.8;
         const sp = (0.03 + Math.random() * 0.07) * (big ? 1.6 : 1);
         this.sparks.push({ x, y, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp, c: Math.random() < 0.3 ? this.theme.sparkColors[Math.floor(Math.random() * this.theme.sparkColors.length)] : p.c, born: now, life: 450 + Math.random() * 350 });
@@ -147,17 +153,19 @@ export class Viewer {
   private conditioned(a: Active, level: number, lift: number, t: number, now: number): HTMLCanvasElement {
     const src = a.prep.levels[level];
     if (this.condition !== "eclipse" || lift >= 1) return src;
-    const P = src.width;
-    if (!this.scratch) { this.scratch = document.createElement("canvas"); this.scratch.width = this.scratch.height = P; }
-    const s = this.scratch, g = s.getContext("2d")!;
-    g.clearRect(0, 0, P, P);
+    const PW = src.width, PH = src.height;
+    if (!this.scratch) this.scratch = document.createElement("canvas");
+    const s = this.scratch;
+    if (s.width !== PW || s.height !== PH) { s.width = PW; s.height = PH; }
+    const g = s.getContext("2d")!;
+    g.clearRect(0, 0, PW, PH);
     g.globalCompositeOperation = "source-over";
     g.drawImage(src, 0, 0);
     // backlit silhouette: solid pale shape that gives way to colour as the eclipse passes
     g.globalCompositeOperation = "source-atop";
     g.globalAlpha = 1 - lift;
     g.fillStyle = "#d9def0";
-    g.fillRect(0, 0, P, P);
+    g.fillRect(0, 0, PW, PH);
     g.globalAlpha = 1;
     g.globalCompositeOperation = "source-over";
     void t; void now;
@@ -185,7 +193,7 @@ export class Viewer {
   }
 
   draw(now: number) {
-    const g = this.ctx, V = this.V, C = V / 2, S = SPRITE_SIZE, P = S + PAD * 2;
+    const g = this.ctx, V = this.V, C = V / 2;
     this.theme.drawBackdrop(g, now);
     const scale = this.theme.spriteScale;
 
@@ -193,16 +201,16 @@ export class Viewer {
     this.leaving = this.leaving.filter((l) => now - l.start < 400);
     for (const l of this.leaving) {
       const p = (now - l.start) / 400;
-      const img = l.prep.levels[0];
+      const img = l.prep.levels[0], k = scale * l.prep.fit;
       g.save();
       if (l.kind === "named") {
         g.globalAlpha = 1 - p;
-        const sz = P * scale * (1 + p * 0.4);
-        g.drawImage(img, Math.round(C - sz / 2), Math.round(C - sz / 2 - p * 30), sz, sz);
+        const sw = img.width * k * (1 + p * 0.4), sh = img.height * k * (1 + p * 0.4);
+        g.drawImage(img, Math.round(C - sw / 2), Math.round(C - sh / 2 - p * 30), sw, sh);
       } else {
         g.globalAlpha = (1 - p) * 0.6;
-        const sz = P * scale * (1 - p * 0.5);
-        g.drawImage(img, Math.round(C - sz / 2 - p * 50), Math.round(C - sz / 2 + p * 40), sz, sz);
+        const sw = img.width * k * (1 - p * 0.5), sh = img.height * k * (1 - p * 0.5);
+        g.drawImage(img, Math.round(C - sw / 2 - p * 50), Math.round(C - sh / 2 + p * 40), sw, sh);
       }
       g.restore();
     }
@@ -215,9 +223,9 @@ export class Viewer {
       const zoom = band.startZoom + (1 - band.startZoom) * e;
       const blur = band.startBlur * (1 - e);
       const level = Math.min(BLUR_LEVELS - 1, Math.round((blur / MAX_SIGMA) * (BLUR_LEVELS - 1)));
-      const fx = a.prep.focal.x + (S / 2 - a.prep.focal.x) * e;
-      const fy = a.prep.focal.y + (S / 2 - a.prep.focal.y) * e;
-      const px = scale * zoom; // logical px per sprite px
+      const fx = a.prep.focal.x + (a.prep.w / 2 - a.prep.focal.x) * e;
+      const fy = a.prep.focal.y + (a.prep.h / 2 - a.prep.focal.y) * e;
+      const px = scale * a.prep.fit * zoom; // logical px per sprite px
       const t = (now - a.appear) / 1000;
       const bobX = REDUCED ? 0 : Math.sin(t * 1.3) * 1.5, bobY = REDUCED ? 0 : Math.sin(t * 1.9 + 1) * 2;
       const slide = REDUCED ? 0 : (1 - ease(enter)) * 70;
@@ -228,8 +236,8 @@ export class Viewer {
       const cond = CONFIG.conditions.find((c) => c.id === this.condition)!;
       const settle = (ENTER_MS / 1000) + band.pullBack;
       const lift = cond.revealAfter ? clamp01((t - settle) / cond.revealAfter) : 1;
-      const W = Math.round(P * px);
       const img = this.conditioned(a, level, lift, t, now);
+      const DW = Math.round(img.width * px), DH = Math.round(img.height * px);
       g.globalAlpha = enter;
       if (this.condition === "keyhole" && lift < 1) {
         // a small window wanders over the object, then opens up
@@ -237,14 +245,14 @@ export class Viewer {
         const wx = C + Math.sin(t * 1.1 + a.obj.sprite) * V * 0.16, wy = C + Math.sin(t * 1.7 + a.obj.sprite * 2) * V * 0.13;
         g.save();
         g.beginPath(); g.arc(Math.round(wx), Math.round(wy), r, 0, Math.PI * 2); g.clip();
-        g.drawImage(img, Math.round(x), Math.round(y), W, W);
+        g.drawImage(img, Math.round(x), Math.round(y), DW, DH);
         g.restore();
         g.strokeStyle = "rgba(44, 232, 245, 0.35)"; g.lineWidth = 2;
         g.beginPath(); g.arc(Math.round(wx), Math.round(wy), r, 0, Math.PI * 2); g.stroke();
       } else if (this.condition === "meteor" && lift < 1) {
         // 4x4-pixel tiles start scattered and fall into place as the zoom pulls back
-        const T = 4, n = P / T, k = 1 - ease(clamp01(t / (settle + cond.revealAfter)));
-        for (let ty = 0; ty < n; ty++) for (let tx = 0; tx < n; tx++) {
+        const T = 4, k = 1 - ease(clamp01(t / (settle + cond.revealAfter)));
+        for (let ty = 0; ty < img.height / T; ty++) for (let tx = 0; tx < img.width / T; tx++) {
           const h = ((a.obj.sprite + 1) * 9301 + ty * 49297 + tx * 233280) % 1000 / 1000;
           const h2 = ((a.obj.sprite + 7) * 4513 + tx * 7919 + ty * 104729) % 1000 / 1000;
           const ox = (h - 0.5) * V * 1.1 * k, oy = (h2 - 0.65) * V * 1.1 * k;
@@ -252,7 +260,7 @@ export class Viewer {
           g.drawImage(img, sx, sy, T, T, Math.round(x + sx * px + ox), Math.round(y + sy * px + oy), Math.ceil(d), Math.ceil(d));
         }
       } else {
-        g.drawImage(img, Math.round(x), Math.round(y), W, W);
+        g.drawImage(img, Math.round(x), Math.round(y), DW, DH);
       }
       g.globalAlpha = 1;
     }
@@ -280,35 +288,35 @@ export class Viewer {
 }
 
 /** Separable gaussian blur on premultiplied RGBA. */
-function gaussian(src: ImageData, P: number, sigma: number): ImageData {
+function gaussian(src: ImageData, PW: number, PH: number, sigma: number): ImageData {
   const r = Math.ceil(sigma * 2.5);
   const k: number[] = [];
   let sum = 0;
   for (let i = -r; i <= r; i++) { const v = Math.exp(-(i * i) / (2 * sigma * sigma)); k.push(v); sum += v; }
   for (let i = 0; i < k.length; i++) k[i] /= sum;
-  const pm = new Float32Array(P * P * 4);
-  for (let i = 0; i < P * P; i++) {
+  const pm = new Float32Array(PW * PH * 4);
+  for (let i = 0; i < PW * PH; i++) {
     const a = src.data[i * 4 + 3] / 255;
     pm[i * 4] = src.data[i * 4] * a; pm[i * 4 + 1] = src.data[i * 4 + 1] * a; pm[i * 4 + 2] = src.data[i * 4 + 2] * a; pm[i * 4 + 3] = a;
   }
   const pass = (inp: Float32Array, dx: number, dy: number) => {
-    const out = new Float32Array(P * P * 4);
-    for (let y = 0; y < P; y++) for (let x = 0; x < P; x++) {
+    const out = new Float32Array(PW * PH * 4);
+    for (let y = 0; y < PH; y++) for (let x = 0; x < PW; x++) {
       let a0 = 0, a1 = 0, a2 = 0, a3 = 0;
       for (let j = -r; j <= r; j++) {
         const xx = x + j * dx, yy = y + j * dy;
-        if (xx < 0 || yy < 0 || xx >= P || yy >= P) continue;
-        const w = k[j + r], i = (yy * P + xx) * 4;
+        if (xx < 0 || yy < 0 || xx >= PW || yy >= PH) continue;
+        const w = k[j + r], i = (yy * PW + xx) * 4;
         a0 += inp[i] * w; a1 += inp[i + 1] * w; a2 += inp[i + 2] * w; a3 += inp[i + 3] * w;
       }
-      const o = (y * P + x) * 4;
+      const o = (y * PW + x) * 4;
       out[o] = a0; out[o + 1] = a1; out[o + 2] = a2; out[o + 3] = a3;
     }
     return out;
   };
   const res = pass(pass(pm, 1, 0), 0, 1);
-  const out = new ImageData(P, P);
-  for (let i = 0; i < P * P; i++) {
+  const out = new ImageData(PW, PH);
+  for (let i = 0; i < PW * PH; i++) {
     const a = res[i * 4 + 3];
     // posterize alpha a little to keep a pixel-art feel
     const qa = Math.round(a * 4) / 4;

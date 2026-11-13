@@ -121,3 +121,33 @@ export function makeMatcher(allNames: string[][]): Matcher {
     },
   };
 }
+
+const LINK_FILLER = new Set("the a an of and or with that they all are is it its things thing stuff tonights tonight objects object have has had who which what were was be for in on to".split(" "));
+
+/**
+ * Does a Mystery link guess find the theme? True when the guess contains one of the theme's key
+ * phrases, or any key word (ignoring filler like "things with"), allowing plurals and one typo on long words.
+ */
+export function linkMatches(guess: string, keys: string[]): boolean {
+  const words = (s: string) => normalizeWords(s).filter((w) => !LINK_FILLER.has(w));
+  const g = words(guess);
+  if (!g.length) return false;
+  const gs = " " + g.join(" ") + " ";
+  for (const k of keys) {
+    const kw = words(k);
+    if (!kw.length) continue;
+    if (kw.length > 1 && gs.includes(" " + kw.join(" ") + " ")) return true;
+    if (kw.length === 1) {
+      const kf = new Set(forms(kw[0]));
+      for (const w of g) {
+        if (forms(w).some((f) => kf.has(f))) return true;
+        if (w.length >= 6 && kw[0].length >= 6 && withinOne(w, kw[0])) return true;
+      }
+    }
+  }
+  return false;
+}
+
+function normalizeWords(s: string): string[] {
+  return s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim().split(" ").filter(Boolean);
+}

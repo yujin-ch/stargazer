@@ -13,6 +13,8 @@ export interface RunResult {
   tier?: number;
   /** Set while a daily run is still going (saved after every object). */
   partial?: boolean;
+  /** Mystery link nights: the one guess at what connected the sky, and whether it was right. */
+  link?: { guess: string; ok: boolean; bonus: number };
   /** Points for seconds left when the whole sky was named. */
   clearedBonus?: number;
   /** Longest run of answers without a skip. */

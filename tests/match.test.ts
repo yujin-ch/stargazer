@@ -88,3 +88,16 @@ describe("themes and conditions", () => {
     }
   });
 });
+
+describe("mystery link", () => {
+  it("accepts natural guesses and rejects wrong ones", async () => {
+    const { linkMatches } = await import("../src/match");
+    const teeth = ["teeth", "tooth", "fangs", "tusks", "things with teeth"];
+    for (const g of ["teeth", "they all have teeth", "Things with teeth!", "TOOTH", "they bite... teeth"]) expect(linkMatches(g, teeth), g).toBe(true);
+    for (const g of ["", "sharp things", "animals", "things"]) expect(linkMatches(g, teeth), g).toBe(false);
+    const secret = ["acronym", "named after", "eponym", "people"];
+    expect(linkMatches("acronyms and people's names", secret)).toBe(true);
+    expect(linkMatches("named after someone", secret)).toBe(true);
+    expect(linkMatches("food", secret)).toBe(false);
+  });
+});
