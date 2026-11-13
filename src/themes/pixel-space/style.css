@@ -155,7 +155,10 @@ a { color: var(--cyan); }
 .come-back b { color: var(--accent); font-weight: normal; }
 .come-back .small { margin: 2px 0; }
 .new { color: var(--cyan); }
-.pips { color: var(--accent); letter-spacing: 2px; }
+.pips { display: inline-flex; gap: 3px; vertical-align: 1px; margin-right: 4px; }
+.pips i { width: 8px; height: 8px; border: 2px solid var(--accent); }
+.pips i.on { background: var(--accent); }
+.play.tally .label-row, .play.tally .controls, .play.tally .hint { opacity: 0; transition: opacity 200ms steps(3); }
 .results h2 { font-family: var(--font-display); font-size: 11px; color: var(--dim); margin: 10px 0 0; text-align: left; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
 .results h2 small { font-family: var(--font-body); font-size: 16px; color: var(--faint); color: #6b7a99; }
 .seen { list-style: none; margin: 0; padding: 0; text-align: left; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }

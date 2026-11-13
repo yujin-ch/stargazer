@@ -94,7 +94,7 @@
 🌮 | Food | 2 | taco, tacos
 🥞 | Food | 2 | pancakes, pancake, hotcakes, hotcake, flapjacks, flapjack, stack of pancakes, crepes
 🧇 | Food | 2 | waffle, waffles
-🍯 | Food | 2 | honey, honey pot, honeypot, jar of honey, honey jar, beehive, hive, honey jar, pot
+🍯 | Food | 2 | honey, honey pot, honeypot, jar of honey, honey jar, beehive, hive, honey jar, pot, jar
 🍟 | Food | 2 | fries, french fries, chips, frites, potato fries
 🥗 | Food | 2 | salad, green salad, bowl of salad, salad bowl
 🍝 | Food | 2 | spaghetti, pasta, noodles, spaghetti bolognese, bolognese

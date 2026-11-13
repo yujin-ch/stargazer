@@ -66,6 +66,7 @@ interface Run {
   graceUntil: number;
   graceObj: SkyObject | null;
   graceText: string;
+  graceDropped: string;
   clearedBonus: number;
   /** A match waiting briefly in case a longer name is being typed. */
   pending: string | null;
@@ -138,10 +139,12 @@ function wireInput() {
     if (performance.now() < run.graceUntil && isTail(input.value)) {
       // the rest of the last answer ("book|s", "cake| slice"), not a new guess
       run.graceText += input.value;
+      run.graceDropped += input.value;
       input.value = "";
       run.graceUntil = performance.now() + CONFIG.graceMs;
       return;
     }
+    if (input.value) run.graceUntil = 0; // something was kept: never clear text the player can see
     if (input.value.trim()) run.attempt = input.value;
     onTyped(input);
   });
@@ -218,7 +221,7 @@ function isTail(value: string): boolean {
   const prev = run.graceObj;
   if (!prev || !value) return false;
   // "cake| slice": a new guess never starts with a space, and the keys right after it belong to it
-  if ((/^\s/.test(value) || /\s/.test(run.graceText.slice(-12))) && !startsAName(run.sky[run.i], value)) return true;
+  if ((/^\s/.test(value) || /\s/.test(run.graceDropped)) && !startsAName(run.sky[run.i], value)) return true;
   if (startsAName(run.sky[run.i], value)) return false;
   const joined = run.graceText + value;
   const n = normalize(joined);
@@ -245,7 +248,7 @@ function newRun(mode: Run["mode"]): Run {
   const streak = store.streakThrough(puzzle - 1);
   const tier = tierFor(streak);
   const sky = mode === "daily" ? dailySky(puzzle, tier) : practiceSky(tier);
-  return { mode, puzzle, date, tier, streak, sky, i: 0, phase: "ready", countdownAt: 0, startAt: 0, penalty: 0, score: 0, items: [], attempt: "", lastTick: 99, combo: 0, bestCombo: 0, graceUntil: 0, graceObj: null, graceText: "", clearedBonus: 0, pending: null };
+  return { mode, puzzle, date, tier, streak, sky, i: 0, phase: "ready", countdownAt: 0, startAt: 0, penalty: 0, score: 0, items: [], attempt: "", lastTick: 99, combo: 0, bestCombo: 0, graceUntil: 0, graceObj: null, graceText: "", graceDropped: "", clearedBonus: 0, pending: null };
 }
 
 async function openPlay(mode: Run["mode"]) {
@@ -338,6 +341,7 @@ function named(obj: SkyObject, typed: string) {
   run.graceUntil = now + CONFIG.graceMs;
   run.graceObj = obj;
   run.graceText = typed;
+  run.graceDropped = "";
   el.score.textContent = String(run.score);
   el.score.parentElement!.classList.remove("bump"); void el.score.offsetWidth; el.score.parentElement!.classList.add("bump");
   pop(obj.names[0], `+${points}${zoomed ? " ZOOM" : ""}`, zoomed ? "gold" : "");
@@ -446,7 +450,7 @@ function finish(now: number, cleared = false) {
   theme.sounds.end();
   if (!cleared) el.time.textContent = "0";
   el.overlay.textContent = cleared ? "SKY CLEARED!" : "TIME!";
-  if (cleared) el.pops.textContent = "";
+  el.pops.textContent = "";
   el.overlay.className = "overlay big";
   (el.guess as HTMLInputElement).value = "";
   el.controls.classList.add("dim");
@@ -461,6 +465,7 @@ function finish(now: number, cleared = false) {
   setTimeout(() => {
     if (!document.getElementById("eyepiece")) return;
     viewer.closeShutter(performance.now());
+    app.querySelector(".play")?.classList.add("tally");
     el.overlay.className = "overlay tally";
     el.overlay.innerHTML = `<div><b id="tally">0</b><span>POINTS</span>${newBest ? `<em id="best" class="hidden">NEW BEST</em>` : ""}</div>`;
     countUp(document.getElementById("tally")!, result.score, 900, true, () => {
@@ -473,7 +478,10 @@ function finish(now: number, cleared = false) {
 /** Count a number up for a little ceremony. */
 function countUp(node: HTMLElement, to: number, ms: number, ticks: boolean, done?: () => void) {
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (reduce || to <= 0) { node.textContent = String(to); done?.(); return; }
+  if (reduce || to <= 0 || document.hidden) { node.textContent = String(to); done?.(); return; }
+  let finished = false;
+  const end = () => { if (finished) return; finished = true; node.textContent = String(to); done?.(); };
+  setTimeout(end, ms + 600); // rAF stops in background tabs; don't leave the tally frozen
   const t0 = performance.now();
   let last = -1;
   const step = (now: number) => {
@@ -484,8 +492,9 @@ function countUp(node: HTMLElement, to: number, ms: number, ticks: boolean, done
       if (ticks && Math.floor(v / 3) !== Math.floor(last / 3)) theme.sounds.tick();
       last = v;
     }
+    if (finished) return;
     if (p < 1) requestAnimationFrame(step);
-    else done?.();
+    else end();
   };
   requestAnimationFrame(step);
 }
@@ -540,7 +549,7 @@ function tierLine(tier: number, streak: number): string {
 }
 
 function pips(have: number, need: number): string {
-  return `<span class="pips" aria-hidden="true">${"●".repeat(Math.max(0, have))}${"○".repeat(Math.max(0, need - have))}</span>`;
+  return `<span class="pips" aria-hidden="true">${"<i class=on></i>".repeat(Math.max(0, have))}${"<i></i>".repeat(Math.max(0, need - have))}</span>`;
 }
 
 // ---------------------------------------------------------------- results
@@ -605,7 +614,6 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
   </main>`;
   lastFresh = 0;
   drawChart(document.getElementById("chart") as HTMLCanvasElement, r);
-  countUp(app.querySelector(".final span") as HTMLElement, r.score, 700, false);
   const list = document.getElementById("seen")!;
   for (const it of r.items) {
     const o = BY_ID.get(it.id);
@@ -658,13 +666,21 @@ function drawChart(c: HTMLCanvasElement, r: RunResult) {
   const rand = mulberry32(r.puzzle * 7919 + 13);
   g.fillStyle = "#26294a";
   for (let i = 0; i < 70; i++) g.fillRect(Math.floor(rand() * W), Math.floor(rand() * H), 1, 1);
-  // one cell per star, cells visited in a seeded order, a little jitter inside each cell
-  const cells = Array.from({ length: cols * rows }, (_, i) => i);
-  for (let i = cells.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [cells[i], cells[j]] = [cells[j], cells[i]]; }
-  const cw = (W - 12) / cols, ch = (H - 12) / rows;
-  const pos = r.items.map((_, i) => {
-    const cell = cells[i % cells.length];
-    return { x: Math.round(6 + (cell % cols) * cw + 2 + rand() * (cw - 4)), y: Math.round(6 + Math.floor(cell / cols) * ch + 2 + rand() * (ch - 4)) };
+  // a seeded random walk: each answer in a row steps a short way from the last, a skip jumps elsewhere,
+  // so every run of answers becomes its own compact constellation (same layout for everyone that night)
+  const mx = Math.round(W * 0.08), my = Math.round(H * 0.1);
+  const clampX = (v: number) => Math.max(mx, Math.min(W - mx, v));
+  const clampY = (v: number) => Math.max(my, Math.min(H - my, v));
+  let px = clampX(rand() * W), py = clampY(rand() * H);
+  const pos = r.items.map((it, i) => {
+    if (i > 0) {
+      if (it.outcome === "skipped" || r.items[i - 1].outcome === "skipped") { px = clampX(rand() * W); py = clampY(rand() * H); }
+      else {
+        const ang = rand() * Math.PI * 2, d = W * (0.1 + rand() * 0.08);
+        px = clampX(px + Math.cos(ang) * d); py = clampY(py + Math.sin(ang) * d * 0.6);
+      }
+    }
+    return { x: Math.round(px), y: Math.round(py) };
   });
   // dotted constellation lines
   g.fillStyle = "#2b6f8a";
