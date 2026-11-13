@@ -10,7 +10,8 @@ import { Viewer } from "./viewer";
 import { store, type ItemResult, type RunResult } from "./storage";
 import { crowdScores, beatShare, CROWD_IS_SIMULATED } from "./crowd";
 import { share, shareText } from "./share";
-import { introScreen, atlasScreen, type AtlasStar } from "./atlas";
+import { atlasScreen, type AtlasStar } from "./atlas";
+import { introScreen } from "./intro";
 import { THEMES } from "./library";
 
 const matcher = makeMatcher(OBJECTS.map((o) => o.names));

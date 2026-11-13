@@ -282,10 +282,14 @@ a { color: var(--cyan); }
 /* ------------------------------------------------ intro: the telescope on the hill */
 .intro { position: fixed; inset: 0; overflow: hidden; }
 .intro-scene { position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; }
-.intro-scene.zoom { animation: intro-zoom 0.95s cubic-bezier(0.55, 0, 0.85, 0.35) forwards; }
-@keyframes intro-zoom { 0% { transform: scale(1); filter: brightness(1); } 70% { filter: brightness(1.2); } 100% { transform: scale(26); filter: brightness(0); } }
-.intro-ui { position: absolute; left: 0; right: 0; top: max(12vh, 60px); display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 0 16px; text-align: center; transition: opacity 250ms steps(3); }
-.intro.zooming .intro-ui { opacity: 0; }
+.intro-scene.intro-out { position: fixed; left: 0; top: 0; z-index: 60; pointer-events: none; transition: opacity 460ms cubic-bezier(0.2, 0.6, 0.3, 1); }
+.intro-scene.intro-out.gone { opacity: 0; }
+.intro-ui { position: absolute; left: 0; right: 0; top: max(12vh, 60px); display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 0 16px; text-align: center; pointer-events: none; }
+.intro-ui > * { pointer-events: auto; transition: transform 300ms cubic-bezier(0.55, 0, 0.9, 0.4), opacity 240ms ease-in; }
+/* the title lifts away first, then the line under it, then the button (a little squash as it goes) */
+.intro.zooming .wordmark { transform: translateY(-28px); opacity: 0; }
+.intro.zooming .intro-sub { transform: translateY(-20px); opacity: 0; transition-delay: 40ms; }
+.intro.zooming .intro-go { transform: translateY(-12px) scale(0.92, 0.86); opacity: 0; transition-delay: 80ms; animation: none; }
 .wordmark { font-family: var(--font-display); font-size: clamp(26px, 8vw, 46px); color: var(--accent); margin: 0; letter-spacing: 3px; text-shadow: 4px 4px 0 #000, 0 0 24px rgba(254, 231, 97, 0.25); }
 .intro-sub { margin: 0; color: var(--cyan); font-family: var(--font-display); font-size: 10px; letter-spacing: 1px; }
 .intro-go { margin-top: 18px; animation: go-glow 1.6s steps(4) infinite alternate; }
@@ -293,10 +297,14 @@ a { color: var(--cyan); }
 
 /* ------------------------------------------------ the star atlas */
 .atlas { position: fixed; inset: 0; overflow: hidden; touch-action: none; cursor: grab; background: #0b0a18; animation: fade-in 0.4s steps(4); }
+.atlas.arriving { animation: none; }
+.atlas.arriving .atlas-head, .atlas.arriving .atlas-tools, .atlas.arriving .atlas-foot { animation: rise-in 600ms 700ms cubic-bezier(0.2, 0.7, 0.3, 1) both; }
+.atlas.arriving .astar span { animation: fade-in 500ms 900ms ease-out both; }
+@keyframes rise-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 .atlas.dragging { cursor: grabbing; }
 .atlas.dragging .astar { pointer-events: none; }
 @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
-.atlas-map { position: absolute; left: 0; top: 0; width: 2000px; height: 2000px; transform-origin: 0 0; will-change: transform; }
+.atlas-map { -webkit-mask-image: radial-gradient(closest-side, #000 82%, transparent 100%); mask-image: radial-gradient(closest-side, #000 82%, transparent 100%); position: absolute; left: 0; top: 0; width: 2000px; height: 2000px; transform-origin: 0 0; will-change: transform; }
 .atlas-sky, .atlas-lines { position: absolute; inset: 0; width: 2000px; height: 2000px; image-rendering: pixelated; }
 .atlas.diving .atlas-map { transition: filter 0.9s steps(6); filter: brightness(1.6); }
 .atlas.diving::after { content: ""; position: absolute; inset: 0; background: #07060f; animation: dive-out 0.9s steps(6) forwards; pointer-events: none; }

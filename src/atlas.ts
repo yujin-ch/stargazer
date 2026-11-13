@@ -22,114 +22,11 @@ export interface AtlasStar {
   dim?: boolean;
 }
 
-const LINES = [
-  "PEER INTO THE UNIVERSE",
-  "LOOK UP",
-  "POINT THE TELESCOPE",
-  "OPEN THE DOME",
-  "FIND TONIGHT'S STAR",
-  "WIPE THE LENS",
-  "SEARCH THE SKY",
-  "CHART THE NIGHT",
-  "TAKE A LOOK",
-];
-
 const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const MAP = 2000;
 
-// ---------------------------------------------------------------- intro
-
-export function introScreen(app: HTMLElement, opts: { title: string; sub: string; onEnter: () => void }) {
-  app.innerHTML = `
-  <main class="intro">
-    <canvas class="intro-scene" id="intro-scene" aria-hidden="true"></canvas>
-    <div class="intro-ui">
-      <h1 class="wordmark">${opts.title.toUpperCase()}</h1>
-      <p class="intro-sub">${opts.sub}</p>
-      <button class="btn primary intro-go" id="intro-go">${LINES[Math.floor(Math.random() * LINES.length)]}</button>
-    </div>
-  </main>`;
-  const cv = document.getElementById("intro-scene") as HTMLCanvasElement;
-  const g = cv.getContext("2d")!;
-  const W = 160;
-  let H = 240, eye = { x: 0, y: 0 };
-  const size = () => {
-    H = Math.max(90, Math.round((W * window.innerHeight) / Math.max(1, window.innerWidth)));
-    cv.width = W; cv.height = H;
-  };
-  size();
-  const rand = mulberry32(7);
-  const stars = Array.from({ length: 90 }, () => ({ x: rand() * W, y: rand() * H * 0.75, p: rand() * 6.28, c: rand() < 0.15 ? "#fee761" : rand() < 0.3 ? "#2ce8f5" : "#c0cbdc" }));
-  let raf = 0, zoomAt = -1;
-  const draw = (t: number) => {
-    g.clearRect(0, 0, W, H);
-    // a few brighter twinkling stars over the page sky
-    for (const s of stars) {
-      g.globalAlpha = REDUCED ? 0.8 : 0.35 + 0.65 * ((Math.sin(t / 700 + s.p) + 1) / 2);
-      g.fillStyle = s.c;
-      g.fillRect(Math.floor(s.x), Math.floor(s.y), 1, 1);
-    }
-    g.globalAlpha = 1;
-    // moon
-    const mx = W * 0.82, my = H * 0.42;
-    g.fillStyle = "#fff4a3"; disc(g, mx, my, 8);
-    g.fillStyle = "#0e0d1f"; disc(g, mx + 4, my - 3, 7);
-    // hill
-    const base = Math.round(H * 0.84);
-    for (let x = 0; x < W; x++) {
-      const y = Math.round(base - Math.sin((x / W) * Math.PI) * 12);
-      g.fillStyle = "#181a35"; g.fillRect(x, y, 1, H - y);
-      g.fillStyle = "#2c3058"; g.fillRect(x, y, 1, 1);
-    }
-    // telescope on a tripod, in the middle of the hill
-    const cx = Math.round(W * 0.52), ground = Math.round(base - 12);
-    g.fillStyle = "#3a4466";
-    line(g, cx, ground - 30, cx - 17, ground + 1, 3);
-    line(g, cx, ground - 30, cx + 17, ground + 1, 3);
-    line(g, cx, ground - 30, cx + 3, ground + 2, 2);
-    g.fillStyle = "#8b9bb4"; g.fillRect(cx - 4, ground - 34, 8, 6);
-    // tube, pointing up and to the right
-    const x0 = cx - 26, y0 = ground - 22, x1 = cx + 34, y1 = ground - 70;
-    g.fillStyle = "#3a4466"; line(g, x0, y0 + 1, x1, y1 + 1, 11);
-    g.fillStyle = "#5a6988"; line(g, x0, y0, x1, y1, 9);
-    g.fillStyle = "#8b9bb4"; line(g, x0 + 1, y0 - 3, x1, y1 - 3, 2);
-    g.fillStyle = "#f2c14e"; line(g, x1 - 4, y1 + 4, x1 + 4, y1 - 5, 4); // brass ring at the front
-    g.fillStyle = "#c48a2c"; line(g, x0 + 10, y0 - 5, x0 + 13, y0 + 3, 2);
-    g.fillStyle = "#2a2d42"; line(g, x0 - 7, y0 + 4, x0 + 1, y0 - 2, 5); // eyepiece
-    eye = { x: x0 - 6, y: y0 + 3 };
-    // a little stargazer at the eyepiece
-    g.fillStyle = "#c48a2c"; g.fillRect(x0 - 17, y0 - 3, 5, 5);
-    g.fillStyle = "#b55088"; g.fillRect(x0 - 18, y0 + 2, 7, 10);
-    g.fillRect(x0 - 12, y0 + 3, 4, 2);
-    g.fillStyle = "#2a2d42"; g.fillRect(x0 - 17, y0 + 12, 2, ground - y0 - 11); g.fillRect(x0 - 14, y0 + 12, 2, ground - y0 - 11);
-    // a faint beam from the lens up into the sky
-    g.globalAlpha = 0.16;
-    g.fillStyle = "#fee761";
-    for (let k = 0; k < 90; k++) g.fillRect(Math.round(x1 + 3 + k * 1.25), Math.round(y1 - 3 - k), 2, 2);
-    g.globalAlpha = 1;
-    if (zoomAt < 0 && !REDUCED) raf = requestAnimationFrame(draw);
-  };
-  raf = requestAnimationFrame(draw);
-  const onResize = () => size();
-  window.addEventListener("resize", onResize);
-
-  const go = document.getElementById("intro-go") as HTMLButtonElement;
-  go.focus({ preventScroll: true });
-  go.onclick = () => {
-    if (zoomAt >= 0) return;
-    zoomAt = performance.now();
-    cancelAnimationFrame(raf);
-    window.removeEventListener("resize", onResize);
-    const intro = app.querySelector(".intro") as HTMLElement;
-    intro.classList.add("zooming");
-    // zoom in on the eyepiece: the scene scales up around it and fades to black
-    const ox = (eye.x / W) * 100, oy = (eye.y / H) * 100;
-    cv.style.transformOrigin = `${ox}% ${oy}%`;
-    if (REDUCED) { opts.onEnter(); return; }
-    cv.classList.add("zoom");
-    setTimeout(opts.onEnter, 950);
-  };
-}
+/** Set by the intro just before it hands over, so the atlas keeps the forward motion going. */
+export const arrival = { forward: false };
 
 // ---------------------------------------------------------------- atlas
 
@@ -183,13 +80,14 @@ export function atlasScreen(app: HTMLElement, stars: AtlasStar[], opts: { title:
   centerOn(startAt?.x ?? 1000, startAt?.y ?? 1000, home());
 
   let anim = 0;
-  const animateTo = (mx: number, my: number, s: number, ms: number, done?: () => void) => {
+  const easeInOut = (p: number) => (p < 0.5 ? 2 * p * p : 1 - (-2 * p + 2) ** 2 / 2);
+  const animateTo = (mx: number, my: number, s: number, ms: number, done?: () => void, ease = easeInOut) => {
     cancelAnimationFrame(anim);
     const from = { cx: (W() / 2 - view.x) / view.s, cy: (H() / 2 - view.y) / view.s, s: view.s };
     if (REDUCED) { centerOn(mx, my, s); done?.(); return; }
     const t0 = performance.now();
     const step = (now: number) => {
-      const p = Math.min(1, (now - t0) / ms), e = p < 0.5 ? 2 * p * p : 1 - (-2 * p + 2) ** 2 / 2;
+      const p = Math.min(1, (now - t0) / ms), e = ease(p);
       const ls = Math.exp(Math.log(from.s) + (Math.log(s) - Math.log(from.s)) * e);
       view.s = ls; view.x = W() / 2 - (from.cx + (mx - from.cx) * e) * ls; view.y = H() / 2 - (from.cy + (my - from.cy) * e) * ls;
       map.style.transform = `translate(${view.x}px, ${view.y}px) scale(${ls})`;
@@ -269,8 +167,21 @@ export function atlasScreen(app: HTMLElement, stars: AtlasStar[], opts: { title:
     if (!document.getElementById("atlas")) { document.removeEventListener("keydown", esc); return; }
     if (e.key === "Escape") closeCard();
   });
-  // arrive with a gentle pull-back from close in
-  if (!REDUCED) { const s0 = view.s; centerOn(startAt?.x ?? 1000, startAt?.y ?? 1000, s0 * 3); animateTo(startAt?.x ?? 1000, startAt?.y ?? 1000, s0, 1100); }
+  const fx = startAt?.x ?? 1000, fy = startAt?.y ?? 1000;
+  if (REDUCED) return;
+  if (arrival.forward) {
+    // straight out of the eyepiece: keep flying forward, slowing to a stop (ease-out)
+    arrival.forward = false;
+    root.classList.add("arriving");
+    const s0 = view.s;
+    centerOn(fx, fy, s0 * 0.5);
+    animateTo(fx, fy, s0, 1500, undefined, (p) => 1 - (1 - p) ** 4); // keep "arriving": removing it would replay the plain fade-in
+  } else {
+    // coming back from a game: a gentle pull-back from close in
+    const s0 = view.s;
+    centerOn(fx, fy, s0 * 3);
+    animateTo(fx, fy, s0, 1100);
+  }
 }
 
 // ---------------------------------------------------------------- map art
@@ -324,16 +235,4 @@ function drawLines(c: HTMLCanvasElement, stars: AtlasStar[]) {
 function dotted(g: CanvasRenderingContext2D, x0: number, y0: number, x1: number, y1: number, every: number) {
   const n = Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0));
   for (let i = 6; i <= n - 6; i += every) g.fillRect(Math.round(x0 + ((x1 - x0) * i) / n), Math.round(y0 + ((y1 - y0) * i) / n), 1, 1);
-}
-
-function disc(g: CanvasRenderingContext2D, cx: number, cy: number, r: number) {
-  for (let y = -r; y <= r; y++) { const w = Math.round(Math.sqrt(r * r - y * y)); g.fillRect(Math.round(cx - w), Math.round(cy + y), w * 2, 1); }
-}
-
-function line(g: CanvasRenderingContext2D, x0: number, y0: number, x1: number, y1: number, w: number) {
-  const n = Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0), 1);
-  for (let i = 0; i <= n; i++) {
-    const x = x0 + ((x1 - x0) * i) / n, y = y0 + ((y1 - y0) * i) / n;
-    g.fillRect(Math.round(x - w / 2), Math.round(y - w / 2), w, w);
-  }
 }
