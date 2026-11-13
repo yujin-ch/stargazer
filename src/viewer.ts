@@ -41,6 +41,8 @@ export class Viewer {
   private flashAt = -1e9;
   /** Set by the game each frame. */
   alert = false;
+  private shutterAt = -1;
+  closeShutter(now: number) { this.shutterAt = now; this.active = null; }
   readonly V: number;
 
   constructor(private canvas: HTMLCanvasElement, private theme: Theme) {
@@ -195,6 +197,14 @@ export class Viewer {
     }
     g.globalAlpha = 1;
 
+    if (this.shutterAt >= 0) {
+      // iris closes in six steps
+      const p = Math.min(1, Math.floor(((now - this.shutterAt) / 400) * 6) / 6);
+      g.fillStyle = "#07060f";
+      g.beginPath();
+      g.arc(V / 2, V / 2, (V / 2) * p, 0, Math.PI * 2);
+      g.fill();
+    }
     this.theme.drawFrame(g, now, { alert: this.alert, flash: Math.max(0, 1 - (now - this.flashAt) / 120) });
   }
 }

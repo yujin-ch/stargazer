@@ -3,7 +3,7 @@ import "@fontsource/vt323";
 import { CONFIG, tierFor } from "./config";
 import { OBJECTS, BY_ID, shownNames, type SkyObject } from "./library";
 import { makeMatcher, normalize, forms as formsOf } from "./match";
-import { dailySky, practiceSky, localDateKey, puzzleNumber } from "./daily";
+import { dailySky, practiceSky, localDateKey, puzzleNumber, mulberry32 } from "./daily";
 import { theme } from "./themes";
 import { setMuted, unlockAudio } from "./themes/chip";
 import { Viewer } from "./viewer";
@@ -64,6 +64,8 @@ interface Run {
   bestCombo: number;
   /** Until this time, keys that don't start a name for the new object are dropped. */
   graceUntil: number;
+  graceObj: SkyObject | null;
+  graceText: string;
   clearedBonus: number;
   /** A match waiting briefly in case a longer name is being typed. */
   pending: string | null;
@@ -133,9 +135,11 @@ function wireInput() {
   input.addEventListener("input", () => {
     if (run.phase === "countdown") return; // keep it; it's checked when the first object appears
     if (run.phase !== "playing") { input.value = ""; return; }
-    if (performance.now() < run.graceUntil && input.value.trim() && !startsAName(run.sky[run.i], input.value)) {
-      input.value = ""; // the tail of the last answer ("cake| slice"), not a new guess
-      run.graceUntil = performance.now() + CONFIG.graceMs; // keep dropping while the tail is still being typed
+    if (performance.now() < run.graceUntil && isTail(input.value)) {
+      // the rest of the last answer ("book|s", "cake| slice"), not a new guess
+      run.graceText += input.value;
+      input.value = "";
+      run.graceUntil = performance.now() + CONFIG.graceMs;
       return;
     }
     if (input.value.trim()) run.attempt = input.value;
@@ -209,6 +213,19 @@ function onTyped(input: HTMLInputElement) {
   }
 }
 
+/** Right after a match: is this text still the previous answer being finished? */
+function isTail(value: string): boolean {
+  const prev = run.graceObj;
+  if (!prev || !value) return false;
+  // "cake| slice": a new guess never starts with a space, and the keys right after it belong to it
+  if ((/^\s/.test(value) || /\s/.test(run.graceText.slice(-12))) && !startsAName(run.sky[run.i], value)) return true;
+  if (startsAName(run.sky[run.i], value)) return false;
+  const joined = run.graceText + value;
+  const n = normalize(joined);
+  // still spelling the last answer, or the last answer with its final letter ("brocoll|i")
+  return forms(prev).some((f) => f.startsWith(n)) || !!matcher.test(joined, prev.names);
+}
+
 function startsAName(obj: SkyObject | undefined, typed: string): boolean {
   if (!obj) return false;
   const n = normalize(typed);
@@ -228,7 +245,7 @@ function newRun(mode: Run["mode"]): Run {
   const streak = store.streakThrough(puzzle - 1);
   const tier = tierFor(streak);
   const sky = mode === "daily" ? dailySky(puzzle, tier) : practiceSky(tier);
-  return { mode, puzzle, date, tier, streak, sky, i: 0, phase: "ready", countdownAt: 0, startAt: 0, penalty: 0, score: 0, items: [], attempt: "", lastTick: 99, combo: 0, bestCombo: 0, graceUntil: 0, clearedBonus: 0, pending: null };
+  return { mode, puzzle, date, tier, streak, sky, i: 0, phase: "ready", countdownAt: 0, startAt: 0, penalty: 0, score: 0, items: [], attempt: "", lastTick: 99, combo: 0, bestCombo: 0, graceUntil: 0, graceObj: null, graceText: "", clearedBonus: 0, pending: null };
 }
 
 async function openPlay(mode: Run["mode"]) {
@@ -267,6 +284,7 @@ function begin() {
   input.value = "";
   input.focus(); // inside the click, so phones open the keyboard
   sizeViewer();
+  lastFresh = 0;
   run.phase = "countdown";
   run.countdownAt = performance.now();
   saveProgress();
@@ -318,6 +336,8 @@ function named(obj: SkyObject, typed: string) {
   run.items.push({ id: obj.id, outcome: zoomed ? "zoomed" : "named", typed: typed.trim(), points });
   (el.guess as HTMLInputElement).value = "";
   run.graceUntil = now + CONFIG.graceMs;
+  run.graceObj = obj;
+  run.graceText = typed;
   el.score.textContent = String(run.score);
   el.score.parentElement!.classList.remove("bump"); void el.score.offsetWidth; el.score.parentElement!.classList.add("bump");
   pop(obj.names[0], `+${points}${zoomed ? " ZOOM" : ""}`, zoomed ? "gold" : "");
@@ -375,7 +395,10 @@ function buildResult(): RunResult {
 
 /** The daily run counts from the moment the shutter opens, so a reload can't buy a second try. */
 function saveProgress() {
-  if (run.mode === "daily") store.save({ ...buildResult(), partial: true });
+  if (run.mode !== "daily") return;
+  store.save({ ...buildResult(), partial: true });
+  const last = run.items[run.items.length - 1];
+  if (last && last.outcome !== "skipped") lastFresh += store.addToCatalogue([last.id]);
 }
 
 /** One pop at a time: the object's name and what it earned. */
@@ -402,7 +425,7 @@ function renderCombo(broke: boolean) {
   if (broke) { e.textContent = "STEADY ×0"; e.classList.add("broke", "on"); return; }
   if (c >= CONFIG.combo[0].at) {
     const extra = CONFIG.combo.reduce((x, k) => (c >= k.at ? k.extra : x), 0);
-    e.textContent = `STEADY ×${c} +${extra}`;
+    e.innerHTML = `STEADY ×${c} <span class="cpips">${CONFIG.combo.map((k) => (c >= k.at ? "■" : "□")).join("")}</span>`;
     e.classList.add("on");
     if (c >= CONFIG.combo[1].at) e.classList.add("gold");
   } else e.textContent = "";
@@ -415,23 +438,56 @@ function timeLeft(now: number) {
 function finish(now: number, cleared = false) {
   if (run.phase === "over") return;
   if (run.pending !== null) acceptPending(); // credit a match that was waiting on a longer name
+  if ((run.phase as Run["phase"]) === "over") return; // that match cleared the sky and finished the run
   dropPending();
   run.phase = "over";
   announce("Time. Results coming up.");
   viewer.dismiss("skipped", now);
   theme.sounds.end();
-  el.time.textContent = "0";
+  if (!cleared) el.time.textContent = "0";
   el.overlay.textContent = cleared ? "SKY CLEARED!" : "TIME!";
   if (cleared) el.pops.textContent = "";
   el.overlay.className = "overlay big";
   (el.guess as HTMLInputElement).value = "";
   el.controls.classList.add("dim");
   const result = buildResult();
-  const fresh = store.addToCatalogue(run.items.filter((i) => i.outcome !== "skipped").map((i) => i.id));
-  lastFresh = fresh;
+  lastFresh += store.addToCatalogue(run.items.filter((i) => i.outcome !== "skipped").map((i) => i.id));
+  const prevBest = store.bestBefore(run.date);
   const prev = store.today(run.date);
   if (run.mode === "daily" && (!prev || prev.partial)) store.save(result);
-  setTimeout(() => { (el.guess as HTMLInputElement).blur(); resultsScreen(result, run.mode); }, 1400);
+  const newBest = run.mode === "daily" && result.score > prevBest && prevBest > 0;
+  (el.guess as HTMLInputElement).blur();
+  // the shutter closes, then the night's score counts up in the lens
+  setTimeout(() => {
+    if (!document.getElementById("eyepiece")) return;
+    viewer.closeShutter(performance.now());
+    el.overlay.className = "overlay tally";
+    el.overlay.innerHTML = `<div><b id="tally">0</b><span>POINTS</span>${newBest ? `<em id="best" class="hidden">NEW BEST</em>` : ""}</div>`;
+    countUp(document.getElementById("tally")!, result.score, 900, true, () => {
+      if (newBest) { document.getElementById("best")?.classList.remove("hidden"); theme.sounds.best(); }
+      setTimeout(() => resultsScreen(result, run.mode), newBest ? 1300 : 900);
+    });
+  }, 800);
+}
+
+/** Count a number up for a little ceremony. */
+function countUp(node: HTMLElement, to: number, ms: number, ticks: boolean, done?: () => void) {
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduce || to <= 0) { node.textContent = String(to); done?.(); return; }
+  const t0 = performance.now();
+  let last = -1;
+  const step = (now: number) => {
+    const p = Math.min(1, (now - t0) / ms);
+    const v = Math.round(to * (1 - (1 - p) * (1 - p)));
+    if (v !== last) {
+      node.textContent = String(v);
+      if (ticks && Math.floor(v / 3) !== Math.floor(last / 3)) theme.sounds.tick();
+      last = v;
+    }
+    if (p < 1) requestAnimationFrame(step);
+    else done?.();
+  };
+  requestAnimationFrame(step);
 }
 
 let lastFresh = 0;
@@ -549,6 +605,7 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
   </main>`;
   lastFresh = 0;
   drawChart(document.getElementById("chart") as HTMLCanvasElement, r);
+  countUp(app.querySelector(".final span") as HTMLElement, r.score, 700, false);
   const list = document.getElementById("seen")!;
   for (const it of r.items) {
     const o = BY_ID.get(it.id);
@@ -579,41 +636,59 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
   document.getElementById("daily")?.addEventListener("click", () => openPlay("daily"));
 }
 
-/** Star chart: one star per object in order, 10 to a row; answers in a row join into constellations. */
+/**
+ * Star chart: each object becomes a star at a spot seeded by the night and its position,
+ * so everyone's chart for the same night has the same sky. Answers in a row join up into constellations.
+ */
 function drawChart(c: HTMLCanvasElement, r: RunResult) {
-  const cols = 10, cell = 12, pad = 6;
-  const rows = Math.max(1, Math.ceil(r.items.length / cols));
-  c.width = cols * cell + pad * 2;
-  c.height = rows * cell + pad * 2;
+  const W = 160, H = 72, cols = 10, rows = 4;
+  c.width = W;
+  c.height = H;
   const g = c.getContext("2d")!;
   g.fillStyle = "#0b0a18";
-  g.fillRect(0, 0, c.width, c.height);
-  // faint grid
-  g.fillStyle = "#1b1a33";
-  for (let x = 0; x <= cols; x++) g.fillRect(pad + x * cell - 6, 0, 1, c.height);
-  // jitter each star a little so it reads as a sky, deterministic per index
+  g.fillRect(0, 0, W, H);
+  // faint glow
+  for (let k = 4; k >= 1; k--) {
+    g.fillStyle = `rgba(32, 34, 67, ${0.35})`;
+    g.beginPath();
+    g.ellipse(W / 2, H / 2, (W / 2) * (k / 4), (H / 2) * (k / 4), 0, 0, Math.PI * 2);
+    g.fill();
+  }
+  // background dust
+  const rand = mulberry32(r.puzzle * 7919 + 13);
+  g.fillStyle = "#26294a";
+  for (let i = 0; i < 70; i++) g.fillRect(Math.floor(rand() * W), Math.floor(rand() * H), 1, 1);
+  // one cell per star, cells visited in a seeded order, a little jitter inside each cell
+  const cells = Array.from({ length: cols * rows }, (_, i) => i);
+  for (let i = cells.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [cells[i], cells[j]] = [cells[j], cells[i]]; }
+  const cw = (W - 12) / cols, ch = (H - 12) / rows;
   const pos = r.items.map((_, i) => {
-    const j1 = ((i * 37) % 7) - 3, j2 = ((i * 53) % 5) - 2;
-    return { x: pad + (i % cols) * cell + 6 + Math.round(j1 / 2), y: pad + Math.floor(i / cols) * cell + 6 + Math.round(j2 / 2) };
+    const cell = cells[i % cells.length];
+    return { x: Math.round(6 + (cell % cols) * cw + 2 + rand() * (cw - 4)), y: Math.round(6 + Math.floor(cell / cols) * ch + 2 + rand() * (ch - 4)) };
   });
+  // dotted constellation lines
   g.fillStyle = "#2b6f8a";
   for (let i = 1; i < r.items.length; i++) {
     if (r.items[i].outcome === "skipped" || r.items[i - 1].outcome === "skipped") continue;
-    line(g, pos[i - 1].x, pos[i - 1].y, pos[i].x, pos[i].y);
+    line(g, pos[i - 1].x, pos[i - 1].y, pos[i].x, pos[i].y, 2);
   }
   r.items.forEach((it, i) => {
     const { x, y } = pos[i];
     if (it.outcome === "skipped") { g.fillStyle = "#3a4466"; g.fillRect(x, y, 1, 1); }
     else if (it.outcome === "zoomed") {
-      g.fillStyle = "#fee761"; g.fillRect(x - 1, y, 3, 1); g.fillRect(x, y - 1, 1, 3);
-      g.fillStyle = "#ffffff"; g.fillRect(x, y, 1, 1);
-    } else { g.fillStyle = "#2ce8f5"; g.fillRect(x, y, 2, 2); }
+      g.fillStyle = "#feae34"; g.fillRect(x - 1, y, 3, 1); g.fillRect(x, y - 1, 1, 3);
+      g.fillStyle = "#fee761"; g.fillRect(x, y, 1, 1);
+    } else { g.fillStyle = "#2ce8f5"; g.fillRect(x, y, 1, 1); g.globalAlpha = 0.35; g.fillRect(x - 1, y, 3, 1); g.fillRect(x, y - 1, 1, 3); g.globalAlpha = 1; }
   });
+  // compass mark
+  g.fillStyle = "#5a6988";
+  g.fillRect(W - 6, 3, 1, 5);
+  g.fillRect(W - 7, 4, 3, 1);
 }
 
-function line(g: CanvasRenderingContext2D, x0: number, y0: number, x1: number, y1: number) {
+function line(g: CanvasRenderingContext2D, x0: number, y0: number, x1: number, y1: number, every = 1) {
   const n = Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0));
-  for (let k = 0; k <= n; k++) g.fillRect(Math.round(x0 + ((x1 - x0) * k) / n), Math.round(y0 + ((y1 - y0) * k) / n), 1, 1);
+  for (let k = 0; k <= n; k += every) g.fillRect(Math.round(x0 + ((x1 - x0) * k) / n), Math.round(y0 + ((y1 - y0) * k) / n), 1, 1);
 }
 
 // ---------------------------------------------------------------- boot

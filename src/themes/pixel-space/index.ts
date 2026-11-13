@@ -159,6 +159,7 @@ export const pixelSpace: Theme = {
       if (bonus) blip([660, 880, 1320, 1760].map((f) => f * k), 0.05);
       else blip([660, 990].map((f) => f * k), 0.06);
     },
+    best: () => blip([784, 988, 1175, 1568], 0.09, "square", 0.09),
     comboBreak: () => blip([392, 330, 262], 0.06, "triangle", 0.1),
     skip: () => blip([300, 200], 0.07, "triangle", 0.12),
     tick: () => blip([1200], 0.03, "square", 0.04),

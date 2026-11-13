@@ -10,7 +10,7 @@ export function shareText(r: RunResult, theme: Theme, url: string): string {
   const device = r.device === "touch" ? "📱" : "⌨️";
   return [
     `${theme.shareIcon} ${theme.title} Night #${r.puzzle} · ${r.score} pts${r.tier ? ` · ${CONFIG.tiers[r.tier].name} sky` : ""}`,
-    `${r.named} named · steady hand ${r.bestCombo ?? 0} ${device}`,
+    `${r.named} named · ${r.skipped} skipped${(r.bestCombo ?? 0) >= CONFIG.combo[0].at ? ` · steady hand ${r.bestCombo}` : ""} ${device}`,
     ...rows,
     url,
   ].join("\n");

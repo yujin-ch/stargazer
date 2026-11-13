@@ -38,8 +38,9 @@ a { color: var(--cyan); }
 }
 .hud { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-family: var(--font-display); }
 .hud-left { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-.combo { font-size: 8px; color: var(--cyan); min-height: 8px; white-space: nowrap; }
+.combo { font-size: 10px; color: var(--cyan); min-height: 8px; white-space: nowrap; }
 .combo.gold { color: var(--accent); }
+.cpips { letter-spacing: 1px; }
 .combo.on { animation: bump 0.25s steps(3); }
 .combo.broke { color: var(--red); animation: blink 0.3s steps(2) 3; }
 .hud-score { display: flex; align-items: baseline; gap: 6px; font-size: 18px; color: var(--accent); }
@@ -57,7 +58,11 @@ a { color: var(--cyan); }
 .overlay { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; font-family: var(--font-display); color: var(--accent); text-shadow: 4px 4px 0 #000; }
 .overlay.big { font-size: 44px; }
 .overlay.wordmark div { display: flex; flex-direction: column; align-items: center; gap: 12px; }
-.overlay.wordmark b { font-weight: normal; font-size: clamp(18px, 6vw, 28px); letter-spacing: 2px; animation: rack 1.6s steps(8) both; }
+.overlay.wordmark b { font-weight: normal; font-size: clamp(18px, 6vw, 28px); letter-spacing: 2px; }
+.overlay.tally div { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.overlay.tally b { font-weight: normal; font-size: 48px; font-variant-numeric: tabular-nums; }
+.overlay.tally span { font-size: 10px; color: var(--dim); text-shadow: 2px 2px 0 #000; }
+.overlay.tally em { font-style: normal; font-size: 12px; color: #181425; background: var(--accent); padding: 6px 8px; box-shadow: 3px 3px 0 #000; transform: rotate(-4deg); animation: bump 0.3s steps(3); }
 .overlay.wordmark span { font-family: var(--font-body); font-size: 20px; color: var(--cyan); text-shadow: 2px 2px 0 #000; }
 .scope.jolt { animation: jolt 0.12s steps(3); }
 /* score pops sit near the top of the lens so they never cover the next object */

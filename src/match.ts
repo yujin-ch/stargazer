@@ -47,8 +47,8 @@ export function forms(alias: string): string[] {
   if (/fe$/.test(w)) out.add(w.slice(0, -2) + "ves");
   // singulars, only for longer words so short prefixes never auto-accept
   if (w.length >= 5 && /s$/.test(w) && !/(ss|us|is)$/.test(w)) {
-    out.add(w.slice(0, -1));
     if (/ies$/.test(w)) out.add(w.slice(0, -3) + "y");
+    else out.add(w.slice(0, -1));
     if (/(s|x|z|ch|sh)es$/.test(w)) out.add(w.slice(0, -2));
   }
   const last = w.split(" ").pop()!;
@@ -112,7 +112,11 @@ export function makeMatcher(allNames: string[][]): Matcher {
       if (t.length < CONFIG.typoMinLength - 1) return null;
       const mineSet = new Set(mine);
       if (everyForm.has(t) && !mineSet.has(t)) return null; // it's another object's real name
-      for (const f of mine) if (f.length >= CONFIG.typoMinLength && withinOne(t, f)) return { form: f, early: t.length < f.length };
+      // typo targets are the listed names only, not generated plurals ("swords" must not catch "words")
+      for (const n of names) {
+        const f = normalize(n);
+        if (f.length >= CONFIG.typoMinLength && withinOne(t, f)) return { form: f, early: t.length < f.length };
+      }
       return null;
     },
   };

@@ -31,9 +31,9 @@ export const CONFIG = {
     { at: 6, extra: 2 },
     { at: 10, extra: 3 },
   ],
-  /** Typo tolerance: one wrong, missing, extra or swapped letter on answers this long or longer
+  /** Typo tolerance: one wrong, missing, extra or swapped letter on listed names this long or longer
    *  (what you typed may be one letter shorter). */
-  typoMinLength: 5,
+  typoMinLength: 6,
   /** After a correct answer, keys typed within this window that don't start a name for the new object are dropped. */
   graceMs: 350,
   /** When a match is also the start of a longer listed name ("book"/"books"), wait this long before accepting. */

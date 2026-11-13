@@ -58,8 +58,11 @@ export const store = {
     while (have.has(puzzle - n)) n++;
     return n;
   },
+  bestBefore(date: string): number {
+    return Object.values(read().days).filter((d) => d.date !== date).reduce((m, d) => Math.max(m, d.score), 0);
+  },
   stats(today: number) {
-    const days = Object.values(read().days).filter((d) => !d.partial);
+    const days = Object.values(read().days);
     const best = days.reduce((m, d) => Math.max(m, d.score), 0);
     const streak = this.streakThrough(today) || this.streakThrough(today - 1);
     return { played: days.length, best, streak };

@@ -39,6 +39,17 @@ describe("matching", () => {
     expect(m.test("dog", names("cat"))).toBeNull();
     expect(m.test("cst", names("cat"))).toBeNull();
   });
+  it("rejects near-miss real words", () => {
+    const bad: [string, string][] = [["clown", "crown"], ["witch", "watch"], ["match", "watch"], ["beach", "peach"], ["skirt", "t-shirt"],
+      ["brain", "train"], ["funny", "rabbit"], ["words", "dagger"], ["round", "dog"], ["sound", "dog"]];
+    for (const [typed, id] of bad) expect(m.test(typed, names(id)), `${typed} -> ${id}`).toBeNull();
+  });
+  it("accepts describing words and short typos", () => {
+    expect(m.test("brown dog", names("dog"))).toBeTruthy();
+    expect(m.test("golden key", names("key"))).toBeTruthy();
+    expect(m.test("ancor", names("anchor"))).toBeTruthy();
+    expect(m.test("hamer", names("hammer"))).toBeTruthy();
+  });
   it("withinOne", () => {
     expect(withinOne("abcdef", "abdcef")).toBe(true);
     expect(withinOne("abcdef", "abcde")).toBe(true);
