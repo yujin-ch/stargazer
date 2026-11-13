@@ -214,3 +214,18 @@ a { color: var(--cyan); }
 @media (prefers-reduced-motion: reduce) {
   .pop, .hud-score.bump, .hud-time.hit, .hud-time.low, .entry.shake, .scope.jolt, .combo.on, .combo.broke, .overlay.wordmark b { animation: none; }
 }
+
+/* still out there: tonight's unreached objects, folded by difficulty */
+.missed { margin-top: 18px; text-align: left; }
+.missed h2 { margin-bottom: 8px; }
+.missed details { margin: 0 0 8px; background: var(--panel); border: 3px solid color-mix(in srgb, var(--band) 60%, #181a35); box-shadow: 3px 3px 0 #000; }
+.missed summary { cursor: pointer; list-style: none; padding: 8px 10px; font-family: var(--font-display); font-size: 10px; color: var(--band); display: flex; align-items: center; gap: 8px; }
+.missed summary::-webkit-details-marker { display: none; }
+.missed summary::after { content: "+"; margin-left: auto; font-size: 14px; color: var(--dim); }
+.missed details[open] summary::after { content: "–"; }
+.missed summary small { font-family: var(--font-body); font-size: 17px; color: var(--dim); }
+.missed .lg { margin: 0; }
+.seen.unseen { padding: 0 8px 8px; }
+.seen.unseen li { cursor: default; box-shadow: none; border-width: 2px; }
+.seen.unseen li > div { flex-direction: column; align-items: flex-start; gap: 2px; }
+.seen.unseen .aka { color: #6b7a99; font-size: 16px; }

@@ -605,7 +605,6 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
     <div class="actions">
       ${daily ? `<button class="btn primary" id="share">SHARE LOG</button>` : ""}
       ${!daily && !store.today(localDateKey()) ? `<button class="btn primary" id="daily">TONIGHT'S SKY</button>` : ""}
-      <button class="btn" id="practice">${daily ? "PRACTICE" : "AGAIN"}</button>
       ${!daily && store.today(localDateKey()) ? `<button class="btn" id="back">TONIGHT'S LOG</button>` : ""}
     </div>
     <p class="toast" id="toast" role="status"></p>
@@ -616,6 +615,7 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
     </section>
     <h2>WHAT YOU SAW <small>tap for other names</small></h2>
     <ol class="seen" id="seen"></ol>
+    <section class="missed" id="missed"></section>
     <footer class="credits">${theme.credits}</footer>
   </main>`;
   lastFresh = 0;
@@ -647,13 +647,40 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
     li.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); } });
     list.appendChild(li);
   }
+  // tonight's sky that the clock ran out on, one fold-out per difficulty
+  const reached = new Set(r.items.map((it) => it.id));
+  const unseen = crowdSky.filter((o) => !reached.has(o.id));
+  const missed = document.getElementById("missed")!;
+  if (unseen.length) {
+    missed.innerHTML = `<h2>STILL OUT THERE <small>${unseen.length} you didn't reach</small></h2>`;
+    for (const b of [0, 1, 2, 3]) {
+      const objs = unseen.filter((o) => o.band === b);
+      if (!objs.length) continue;
+      const d = document.createElement("details");
+      d.style.setProperty("--band", theme.bandColors[b]);
+      d.innerHTML = `<summary><i class="lg" style="background:${theme.bandColors[b]}"></i>${theme.bandNames[b]} <small>${objs.length} · ${CONFIG.bands[b].points} pt${CONFIG.bands[b].points > 1 ? "s" : ""} each</small></summary>`;
+      const ul = document.createElement("ul");
+      ul.className = "seen unseen";
+      for (const o of objs) {
+        const li = document.createElement("li");
+        li.style.setProperty("--band", theme.bandColors[b]);
+        li.appendChild(viewer.spriteCanvas(o.sprite, 2));
+        const others = shownNames(o).slice(0, 3).join(", ");
+        const div = document.createElement("div");
+        div.innerHTML = `<b>${esc(o.names[0])}</b>${others ? `<small class="aka">${esc(others)}</small>` : ""}`;
+        li.appendChild(div);
+        ul.appendChild(li);
+      }
+      d.appendChild(ul);
+      missed.appendChild(d);
+    }
+  }
   if (!r.items.length) list.innerHTML = `<li class="empty">Nothing this time. The sky will be back tomorrow.</li>`;
   const toast = (t: string) => { const e = document.getElementById("toast")!; e.textContent = t; };
   document.getElementById("share")?.addEventListener("click", async () => {
     const res = await share(shareText(r, theme, SITE_URL));
     toast(res === "copied" ? "Log copied. Paste it anywhere." : res === "shared" ? "" : "Couldn't share. Try again.");
   });
-  document.getElementById("practice")!.onclick = () => openPlay("practice");
   document.getElementById("back")?.addEventListener("click", () => resultsScreen(store.today(localDateKey())!, "daily"));
   document.getElementById("daily")?.addEventListener("click", () => openPlay("daily"));
 }
