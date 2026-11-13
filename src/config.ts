@@ -14,9 +14,9 @@ export const CONFIG = {
    * (a band with fewer objects just gives what it has).
    */
   tiers: [
-    { name: "Stargazer", minStreak: 0, perBand: [3, 10, 25, 0] },
-    { name: "Astronomer", minStreak: 3, perBand: [2, 7, 28, 0] },
-    { name: "Deep-sky hunter", minStreak: 7, perBand: [1, 5, 28, 0] },
+    { name: "Stargazer", minStreak: 0, perBand: [3, 8, 12, 6] },
+    { name: "Astronomer", minStreak: 3, perBand: [2, 7, 12, 9] },
+    { name: "Deep-sky hunter", minStreak: 7, perBand: [1, 5, 12, 12] },
   ],
   /** How fast the hard objects take over after the easy opener: the share of hard picks starts at
    *  rampStart and grows by rampStep per object until every pick is hard (while any are left). */
@@ -29,6 +29,16 @@ export const CONFIG = {
     { startZoom: 2.2, pullBack: 4, startBlur: 0.7, points: 2, zoomedPoints: 3 },
     { startZoom: 3, pullBack: 5, startBlur: 1.1, points: 3, zoomedPoints: 5 },
     { startZoom: 3.5, pullBack: 5.5, startBlur: 1.3, points: 4, zoomedPoints: 6 },
+  ],
+  /**
+   * Sky conditions: one per night, the same for everyone, picked by the night number.
+   * revealAfter: seconds after the zoom finishes before the condition lifts completely.
+   */
+  conditions: [
+    { id: "clear", name: "Clear skies", blurb: "Nothing in the way tonight.", revealAfter: 0 },
+    { id: "eclipse", name: "Eclipse", blurb: "Only silhouettes, until the light comes back.", revealAfter: 1.5 },
+    { id: "keyhole", name: "Keyhole", blurb: "A small window drifts across each one.", revealAfter: 2 },
+    { id: "meteor", name: "Meteor shower", blurb: "Each one falls in pieces and pulls itself together.", revealAfter: 0.5 },
   ],
   /** "Steady hand" combo: answers in a row without a skip. Extra points per answer at each threshold. */
   combo: [
@@ -48,6 +58,7 @@ export const CONFIG = {
 } as const;
 
 export type BandIndex = 0 | 1 | 2 | 3;
+export type ConditionId = (typeof CONFIG.conditions)[number]["id"];
 
 /** Tier index for a streak (days in a row played, not counting today). */
 export function tierFor(streak: number): number {

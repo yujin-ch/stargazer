@@ -1,4 +1,4 @@
-import { CONFIG } from "./config";
+import { CONFIG, type ConditionId } from "./config";
 import { mulberry32 } from "./daily";
 import type { SkyObject } from "./library";
 
@@ -18,13 +18,16 @@ function gauss(rand: () => number) {
   return Math.sqrt(-2 * Math.log(1 - rand())) * Math.cos(2 * Math.PI * rand());
 }
 
+/** How much longer people stare under each sky condition. */
+const SLOWER: Record<string, number> = { clear: 1, eclipse: 1.35, keyhole: 1.45, meteor: 1.25 };
+
 /** Score one simulated player against a sky. */
-function play(sky: SkyObject[], eye: number, speed: number, rand: () => number): number {
+function play(sky: SkyObject[], eye: number, speed: number, rand: () => number, slow: number): number {
   let t = 0, score = 0, combo = 0;
   for (const o of sky) {
     const band = CONFIG.bands[o.band];
     const know = Math.min(0.995, 1 - (1 - KNOW[o.band]) / eye);
-    const look = (LOOK[o.band] / speed) * (0.7 + rand() * 0.6);
+    const look = (LOOK[o.band] / speed) * (0.7 + rand() * 0.6) * slow;
     if (rand() < know) {
       const type = (0.35 + o.names[0].length * 0.16) / speed;
       const at = look + type;
@@ -44,13 +47,13 @@ function play(sky: SkyObject[], eye: number, speed: number, rand: () => number):
 }
 
 /** Sorted scores for a crowd of n players on this sky (same crowd for everyone on the same night). */
-export function crowdScores(sky: SkyObject[], seed: number, n = 400): number[] {
+export function crowdScores(sky: SkyObject[], seed: number, condition: ConditionId = "clear", n = 400): number[] {
   const rand = mulberry32(seed * 2654435761 + 97);
   const out: number[] = [];
   for (let i = 0; i < n; i++) {
     const eye = Math.exp(gauss(rand) * 0.45);
     const speed = Math.exp(gauss(rand) * 0.3);
-    out.push(play(sky, eye, speed, rand));
+    out.push(play(sky, eye, speed, rand, SLOWER[condition] ?? 1));
   }
   return out.sort((a, b) => a - b);
 }

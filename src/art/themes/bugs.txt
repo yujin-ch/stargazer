@@ -1,0 +1,358 @@
+// Bugs and creepy crawlies. @id | band (1 easy .. 4 niche) | accepted names (first = display name)
+
+@bee | 1 | bee, honeybee, honey bee, bumblebee, bumble bee
+e 13 9 4 5 sky
+e 19 8 4 5 sky
+p black 24,16 29,17 24,19
+e 16 17 9 6 yellow
+l black 13,12 13,22 2
+l black 18,12 18,22 2
+d black 9,15 9,16
+l black 8,13 5,8
+
+@butterfly | 1 | butterfly
+e 10 11 7 7 orange
+e 22 11 7 7 orange
+e 11 21 5 5 orange
+e 21 21 5 5 orange
+c 9 10 2 yellow!
+c 23 10 2 yellow!
+d black 6,6 26,6 5,13 27,13
+r 15 8 2 18 black!
+l black 15,8 12,3
+l black 16,8 20,3
+
+@ant | 1 | ant, ants, fire ant
+l black! 13,18 9,23 7,28
+l black! 16,18 16,24 15,29
+l black! 18,18 22,23 25,28
+e 24 17 6 5 black
+e 16 17 3 2 black
+c 8 15 4 black
+d white 22,15 7,13
+l black! 6,11 3,5
+l black! 9,11 11,5
+
+@ladybug | 1 | ladybug, ladybird, lady bug, lady beetle, ladybird beetle
+l black 9,20 4,22
+l black 9,14 4,12
+l black 23,20 28,22
+l black 23,14 28,12
+c 16 9 5 black
+l black 13,5 11,2
+l black 19,5 21,2
+c 16 18 10 red
+l black 16,8 16,28
+c 11 15 2 black!
+c 21 15 2 black!
+c 12 22 2 black!
+c 20 22 2 black!
+d white! 13,6 19,6
+
+@spider | 1 | spider, tarantula
+l black 12,14 6,8 3,12 2
+l black 12,17 4,16 2,20 2
+l black 20,14 26,8 29,12 2
+l black 20,17 28,16 30,20 2
+l black 12,19 7,23 6,28 2
+l black 20,19 25,23 26,28 2
+e 16 19 6 6 black
+c 16 11 4 black
+d red! 14,10 18,10
+d red! 15,11 17,11
+
+@snail | 1 | snail, garden snail
+p cream 2,26 28,26 30,22 24,22 8,22 4,15 2,18
+c 18 15 9 gold
+c 18 15 6 orange
+c 18 15 3 gold
+d brown! 18,15
+l cream 4,15 3,9
+l cream 6,16 7,9
+d black 3,9 7,9
+
+@caterpillar | 2 | caterpillar, larva, inchworm
+c 5 20 3 lime
+c 10 18 4 lime
+c 15 20 4 lime
+c 20 18 4 lime
+c 25 15 5 lime
+d green.d 10,22 15,24 20,22
+d black 23,14 27,14
+l black 22,10 21,6
+l black 27,10 29,6
+l red! 24,17 26,17
+
+@dragonfly | 2 | dragonfly
+l blue! 16,10 16,30 2
+c 16 8 3 blue
+d black 14,7 18,7
+e 8 13 7 2 sky
+e 24 13 7 2 sky
+e 8 18 6 2 sky
+e 24 18 6 2 sky
+
+@worm | 2 | worm, earthworm
+l pink 3,22 7,17 12,17 15,22 19,26 24,24 27,18 4
+l pink.d 8,16 8,20
+l pink.d 18,23 20,27
+e 27 15 3 3 pink
+d black 26,14 28,14
+
+@beetle | 2 | beetle
+c 16 7 3 black
+e 16 18 8 10 green
+l black! 16,9 16,28
+l black! 9,13 3,9
+l black! 9,19 3,19
+l black! 9,25 3,29
+l black! 23,13 29,9
+l black! 23,19 29,19
+l black! 23,25 29,29
+l black! 14,5 12,2
+l black! 18,5 20,2
+
+@scorpion | 3 | scorpion
+e 15 21 9 4 orange
+l orange! 22,21 27,16 28,8 22,5 2
+p red 19,4 23,2 22,7
+p orange 4,18 1,14 6,15
+p orange 4,24 1,28 6,27
+l brown! 8,24 6,28
+l brown! 12,24 11,28
+l brown! 17,24 18,28
+d black 9,20 11,20
+@grasshopper | 2 | grasshopper, cricket, locust
+e 15 18 10 4 lime
+c 6 16 4 lime
+d black 5,15
+p green 10,15 25,13 27,17 12,18
+l green! 16,18 24,10 30,24 2
+l green! 12,21 10,27
+l green! 16,21 16,27
+l lime! 5,12 2,3
+l lime! 7,12 9,3
+
+@fly | 2 | fly, housefly, house fly, bluebottle
+e 16 20 6 7 black
+c 16 11 5 black
+c 13 10 2 red
+c 19 10 2 red
+e 8 14 6 4 sky
+e 24 14 6 4 sky
+l black! 10,22 4,27
+l black! 22,22 28,27
+l black! 11,18 5,18
+l black! 21,18 27,18
+d slate 14,19 18,21 16,24
+
+@mosquito | 2 | mosquito, gnat, skeeter
+e 19 19 9 2 tan
+e 9 15 3 3 brown
+l black! 7,16 1,22
+d red 8,14
+e 14 10 6 2 sky
+e 18 8 6 2 sky
+l brown! 11,18 7,28
+l brown! 14,19 13,29
+l brown! 17,19 20,29
+l brown! 21,19 27,28
+
+@moth | 2 | moth
+p tan 15,12 2,6 1,17 15,18
+p tan 17,12 30,6 31,17 17,18
+p cream 15,17 5,19 7,26 15,20
+p cream 17,17 27,19 25,26 17,20
+c 8 12 2 brown
+c 24 12 2 brown
+e 16 16 2 7 brown
+l brown! 15,9 11,4
+l brown! 17,9 21,4
+d brown 10,4 22,4 11,3 21,3
+
+@firefly | 3 | firefly, lightning bug, glow worm
+c 16 25 7 yellow.l
+c 16 25 5 yellow
+e 16 15 5 8 black
+c 16 6 3 red
+l orange! 16,9 16,22
+e 9 12 5 3 sky
+e 23 12 5 3 sky
+l black! 14,4 11,0
+l black! 18,4 21,0
+d black 15,6 17,6
+
+@cockroach | 3 | cockroach, roach
+e 16 19 7 10 brown
+c 16 8 4 tan
+l brown.d 16,11 16,28
+l brown! 14,6 6,0
+l brown! 18,6 26,0
+l brown! 10,14 3,11
+l brown! 10,20 3,22
+l brown! 11,25 5,30
+l brown! 22,14 29,11
+l brown! 22,20 29,22
+l brown! 21,25 27,30
+
+@centipede | 3 | centipede
+l orange! 3,24 7,18 13,16 18,19 23,15 27,9 4
+c 28 7 3 red
+l black! 29,5 31,1
+l black! 27,5 25,1
+d black 29,7
+l red! 5,20 2,17
+l red! 6,24 3,27
+l red! 9,16 7,13
+l red! 11,20 10,23
+l red! 15,15 15,12
+l red! 15,20 15,24
+l red! 20,15 21,12
+l red! 20,21 22,23
+l red! 24,12 23,9
+l red! 26,15 29,16
+
+@wasp | 3 | wasp, hornet, yellowjacket, yellow jacket
+e 22 21 6 5 yellow
+l black! 20,17 20,25 2
+l black! 24,17 24,25 2
+p black 27,20 31,22 27,22
+e 14 17 3 3 black
+c 8 14 4 yellow
+d black 7,13
+l black! 6,10 3,5
+l black! 9,10 10,5
+e 15 10 6 2 sky
+e 19 12 5 2 sky
+l black! 12,20 10,27
+l black! 15,20 15,27
+
+@slug | 3 | slug, garden slug
+p brown 3,24 6,18 14,16 24,17 28,20 30,24
+e 24 19 5 3 brown.l
+l brown! 26,17 28,10
+l brown! 29,18 31,12
+d black 28,10 31,12
+d brown.d 10,21 16,20 21,22 14,23
+l sky! 2,26 10,26
+
+@cicada | 3 | cicada
+e 16 19 5 9 green
+c 16 8 5 green
+c 11 7 2 red
+c 21 7 2 red
+p sky 15,11 5,27 9,30 15,18
+p sky 17,11 27,27 23,30 17,18
+l slate! 15,13 7,27
+l slate! 17,13 25,27
+
+@mantis | 3 | praying mantis, mantis
+p green 20,8 25,6 26,10
+d black 23,7
+l green! 22,10 18,18 3
+p green 18,8 15,13 19,13 16,6
+l lime! 18,12 14,6 2
+l lime! 20,13 16,9 2
+e 13 22 9 3 green
+l green! 15,23 18,30
+l green! 10,23 7,30
+l green! 6,22 1,23
+
+@stick-insect | 4 | stick insect, stick bug, walking stick, phasmid
+l brown! 2,16 29,15 2
+c 29 15 1 brown
+l brown! 29,14 31,8
+l brown! 29,16 31,22
+l brown! 9,16 5,8 2,7
+l brown! 9,16 5,24 2,25
+l brown! 16,16 14,7
+l brown! 16,16 14,25
+l brown! 22,15 25,7
+l brown! 22,15 25,24
+d black 30,15
+
+@stag-beetle | 4 | stag beetle
+e 16 21 7 8 brown
+l brown.d 16,15 16,29
+c 16 11 4 brown.d
+p red 13,9 9,6 8,1 11,3 13,5 14,8
+p red 19,9 23,6 24,1 21,3 19,5 18,8
+d red 10,4 22,4
+l black! 9,17 3,14
+l black! 9,22 3,24
+l black! 10,27 5,30
+l black! 23,17 29,14
+l black! 23,22 29,24
+l black! 22,27 27,30
+
+@dung-beetle | 4 | dung beetle, scarab, scarab beetle
+c 11 17 9 brown
+d brown.d 6,13 10,11 14,15 8,20 13,22 16,18
+e 23 19 6 5 black
+c 28 16 2 black
+l black! 20,23 19,29
+l black! 24,23 25,29
+l black! 27,20 31,25
+l black! 21,15 18,10
+l slate! 1,27 31,27
+
+@water-strider | 4 | water strider, pond skater, water skater, water bug
+r 1 22 30 9 blue
+l sky! 1,22 30,22
+e 16 15 6 2 black
+c 23 14 2 black
+l black! 12,16 2,22
+l black! 14,16 8,22
+l black! 20,16 30,22
+l black! 18,16 24,22
+l black! 24,13 29,9
+d sky 2,23 8,23 24,23 30,23
+
+@weevil | 4 | weevil, snout beetle
+e 13 18 9 7 slate
+l slate.d 7,16 19,16
+c 22 15 4 slate
+l slate! 24,15 30,21 2
+l black! 27,18 29,13
+d black 21,14
+l black! 8,23 6,28
+l black! 13,24 13,29
+l black! 18,23 20,28
+
+@pill-bug | 4 | pill bug, woodlouse, roly poly, rolypoly, potato bug, sow bug
+e 16 18 13 9 slate
+l slate.d 8,10 8,26
+l slate.d 12,9 12,27
+l slate.d 16,9 16,27
+l slate.d 20,9 20,27
+l slate.d 24,10 24,26
+l black! 3,16 0,12
+l black! 3,19 0,23
+d black 5,17
+l black! 6,26 5,29
+l black! 12,27 12,30
+l black! 20,27 20,30
+l black! 26,26 27,29
+
+@millipede | 4 | millipede
+l brown! 2,26 6,21 12,19 18,21 23,18 27,12 5
+l black! 3,26 2,29
+l black! 5,23 4,27
+l black! 8,21 7,26
+l black! 11,20 11,25
+l black! 14,20 14,25
+l black! 17,21 18,26
+l black! 20,21 22,25
+l black! 23,19 26,23
+l black! 25,16 29,19
+l black! 6,20 5,16
+l black! 9,18 8,14
+l black! 12,17 12,13
+l black! 16,18 16,14
+l black! 20,18 21,14
+l black! 23,15 22,11
+l tan! 3,24 6,20 12,18 18,20 23,17 26,11
+d brown.d 5,23 8,21 11,21 14,21 17,22 20,21 23,19 25,16
+c 27 9 3 brown
+l black! 27,6 25,2
+l black! 29,7 31,3

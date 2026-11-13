@@ -3,7 +3,7 @@ import "@fontsource/vt323";
 import { CONFIG, tierFor } from "./config";
 import { OBJECTS, BY_ID, shownNames, themeName, type SkyObject } from "./library";
 import { makeMatcher, normalize, forms as formsOf } from "./match";
-import { dailySky, practiceSky, localDateKey, puzzleNumber, mulberry32, dayTheme } from "./daily";
+import { dailySky, practiceSky, localDateKey, puzzleNumber, mulberry32, dayTheme, dayCondition } from "./daily";
 import { theme } from "./themes";
 import { setMuted, unlockAudio } from "./themes/chip";
 import { Viewer } from "./viewer";
@@ -12,6 +12,8 @@ import { crowdScores, beatShare, CROWD_IS_SIMULATED } from "./crowd";
 import { share, shareText } from "./share";
 
 const matcher = makeMatcher(OBJECTS.map((o) => o.names));
+/** /?night=N plays night N's sky and condition as an unsaved preview (for trying themes and conditions). */
+let PREVIEW_NIGHT = Math.max(0, Math.floor(Number(new URLSearchParams(location.search).get("night")) || 0));
 const app = document.getElementById("app")!;
 const forms = (o: SkyObject) => o.names.flatMap(formsOf);
 const longerCache = new Map<string, string[]>();
@@ -248,24 +250,27 @@ function newRun(mode: Run["mode"]): Run {
   const puzzle = puzzleNumber(date);
   const streak = store.streakThrough(puzzle - 1);
   const tier = tierFor(streak);
-  const sky = mode === "daily" ? dailySky(puzzle, tier) : practiceSky(tier);
-  return { mode, puzzle, date, tier, streak, sky, i: 0, phase: "ready", countdownAt: 0, startAt: 0, penalty: 0, score: 0, items: [], attempt: "", lastTick: 99, combo: 0, bestCombo: 0, graceUntil: 0, graceObj: null, graceText: "", graceDropped: "", clearedBonus: 0, pending: null };
+  const sky = mode === "daily" ? dailySky(puzzle, tier) : PREVIEW_NIGHT ? dailySky(PREVIEW_NIGHT, tier) : practiceSky(tier);
+  return { mode, puzzle: mode === "daily" ? puzzle : PREVIEW_NIGHT || puzzle, date, tier, streak, sky, i: 0, phase: "ready", countdownAt: 0, startAt: 0, penalty: 0, score: 0, items: [], attempt: "", lastTick: 99, combo: 0, bestCombo: 0, graceUntil: 0, graceObj: null, graceText: "", graceDropped: "", clearedBonus: 0, pending: null };
 }
 
 async function openPlay(mode: Run["mode"]) {
   run = newRun(mode);
   playScreen();
+  const cond = dayCondition(run.puzzle);
   await viewer.load();
+  viewer.condition = cond.id;
   viewer.preload(run.sky.slice(0, 3));
   el.count.textContent = `0/${run.sky.length}`;
   el.controls.classList.add("hidden");
   el.hint.classList.add("hidden");
   app.querySelector(".play")!.classList.add("ready");
   el.overlay.className = "overlay wordmark";
-  el.overlay.innerHTML = `<div><b>${theme.title.toUpperCase()}</b><span>${mode === "daily" ? `NIGHT #${run.puzzle} · ${fmtDate(run.date).toUpperCase()}` : "PRACTICE SKY · NOT SCORED"}</span><span>TONIGHT: ${themeName(run.sky[0]?.theme ?? dayTheme(run.puzzle)).toUpperCase()}</span></div>`;
+  el.overlay.innerHTML = `<div><b>${theme.title.toUpperCase()}</b><span>${mode === "daily" ? `NIGHT #${run.puzzle} · ${fmtDate(run.date).toUpperCase()}` : (PREVIEW_NIGHT ? `PREVIEW OF NIGHT #${PREVIEW_NIGHT} · NOT SAVED` : "PRACTICE SKY · NOT SCORED")}</span><span>TONIGHT: ${themeName(run.sky[0]?.theme ?? dayTheme(run.puzzle)).toUpperCase()}</span></div>`;
   const c3 = CONFIG.combo[0];
   el.start.innerHTML = `
     ${tierLine(run.tier, run.streak)}
+    <p class="tonight"><b>${themeName(run.sky[0]?.theme ?? dayTheme(run.puzzle)).toUpperCase()}</b> under <b class="cond">${cond.name.toUpperCase()}</b><br><small>${cond.blurb}</small></p>
     <ul class="rules">
       <li><b>Type</b> what you see. It moves on by itself.</li>
       <li><b>Zoomed in?</b> Name it early for bonus points.</li>
@@ -322,6 +327,7 @@ function showObject(now: number) {
   const band = CONFIG.bands[obj.band];
   el.band.textContent = `${theme.bandNames[obj.band].toUpperCase()} · ${band.points} PT${band.points > 1 ? "S" : ""}`;
   el.band.dataset.band = String(obj.band);
+  blackHole(obj.band === 3);
   el.count.textContent = `${run.i + 1}/${run.sky.length}`;
 }
 
@@ -406,6 +412,22 @@ function saveProgress() {
   if (last && last.outcome !== "skipped") lastFresh += store.addToCatalogue([last.id]);
 }
 
+/** Black Hole objects darken the whole screen, ring the scope in orange and flash a warning. */
+function blackHole(on: boolean) {
+  const play = app.querySelector(".play");
+  if (!play) return;
+  const was = play.classList.contains("blackhole");
+  play.classList.toggle("blackhole", on);
+  if (!on || was) return;
+  theme.sounds.blackHole?.();
+  announce("Black hole");
+  const w = document.createElement("div");
+  w.className = "bh-warn";
+  w.innerHTML = `<span>! BLACK HOLE !</span><small>${CONFIG.bands[3].points} PTS · ${CONFIG.bands[3].zoomedPoints} IF YOU CATCH IT EARLY</small>`;
+  el.scope.appendChild(w);
+  setTimeout(() => w.remove(), 1400);
+}
+
 /** One pop at a time: the object's name and what it earned. */
 function pop(name: string, points: string, cls: string) {
   el.pops.textContent = "";
@@ -446,6 +468,7 @@ function finish(now: number, cleared = false) {
   if ((run.phase as Run["phase"]) === "over") return; // that match cleared the sky and finished the run
   dropPending();
   run.phase = "over";
+  blackHole(false);
   announce("Time. Results coming up.");
   viewer.dismiss("skipped", now);
   theme.sounds.end();
@@ -579,7 +602,7 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
     : "You're on the hardest sky.";
   const bandsSeen = [...new Set(r.items.map((it) => BY_ID.get(it.id)?.band).filter((b) => b !== undefined))].sort() as number[];
   const crowdSky = daily ? dailySky(r.puzzle, tier) : run?.sky ?? [];
-  const crowd = crowdScores(crowdSky, daily ? r.puzzle * 10 + tier : 777);
+  const crowd = crowdScores(crowdSky, daily ? r.puzzle * 10 + tier : 777, dayCondition(r.puzzle).id);
   app.innerHTML = `
   <main class="results">
     <section class="log">
@@ -587,7 +610,7 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
         <span>OBSERVING LOG</span>
         <span>${daily ? `NIGHT #${r.puzzle}` : "PRACTICE"}</span>
       </header>
-      <p class="date">${daily ? `${fmtDate(r.date)} · ${themeName(dayTheme(r.puzzle))} · ${CONFIG.tiers[tier].name} sky` : "Random objects, not scored"}</p>
+      <p class="date">${daily ? `${fmtDate(r.date)} · ${themeName(dayTheme(r.puzzle))} · ${dayCondition(r.puzzle).name} · ${CONFIG.tiers[tier].name} sky` : "Random objects, not scored"}</p>
       <div class="final"><span>${r.score}</span><small>POINTS${r.clearedBonus ? ` · SKY CLEARED +${r.clearedBonus}` : ""}</small></div>
       ${r.partial ? `<p class="small">This run was cut short, so it counts as it stood.</p>` : ""}
       <canvas class="chart" id="chart" aria-label="Star chart of your run, with tonight's crowd on the hill"></canvas>
@@ -616,6 +639,7 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
     <h2>WHAT YOU SAW <small>tap for other names</small></h2>
     <ol class="seen" id="seen"></ol>
     <section class="missed" id="missed"></section>
+    ${import.meta.env.VITE_PREVIEW_TOOLS ? `<section class="preview-tools"><h2>PREVIEW ONLY <small>try other nights, not saved</small></h2><div class="actions">${[1, 2, 3, 4, 5, 6].map((n) => `<button class="btn" data-night="${n}">#${n} ${themeName(dayTheme(n))}<br><small>${dayCondition(n).name}</small></button>`).join("")}</div></section>` : ""}
     <footer class="credits">${theme.credits}</footer>
   </main>`;
   lastFresh = 0;
@@ -682,7 +706,8 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
     toast(res === "copied" ? "Log copied. Paste it anywhere." : res === "shared" ? "" : "Couldn't share. Try again.");
   });
   document.getElementById("back")?.addEventListener("click", () => resultsScreen(store.today(localDateKey())!, "daily"));
-  document.getElementById("daily")?.addEventListener("click", () => openPlay("daily"));
+  document.getElementById("daily")?.addEventListener("click", () => { PREVIEW_NIGHT = 0; void openPlay("daily"); });
+  app.querySelectorAll<HTMLButtonElement>("[data-night]").forEach((b) => (b.onclick = () => { PREVIEW_NIGHT = Number(b.dataset.night); void openPlay("practice"); }));
 }
 
 /**
@@ -808,5 +833,6 @@ if (new URLSearchParams(location.search).has("debug"))
   (window as unknown as { __sg: unknown }).__sg = { answer: () => run?.sky[run.i]?.names[0], phase: () => run?.phase };
 
 const done = store.today(localDateKey());
-if (done) void resultsScreen(done, "daily");
+if (PREVIEW_NIGHT) void openPlay("practice");
+else if (done) void resultsScreen(done, "daily");
 else void openPlay("daily");

@@ -34,6 +34,8 @@ export interface Theme {
     /** combo = answers in a row, so the sound can climb. */
     correct(bonus: boolean, combo: number): void;
     comboBreak(): void;
+    /** A Black Hole object just appeared. */
+    blackHole?(): void;
     /** A new personal best. */
     best(): void;
     skip(): void;

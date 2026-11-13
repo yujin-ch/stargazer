@@ -2,8 +2,10 @@
 // Served at /board.html; the game itself never loads this file.
 import { parseSheet, renderSprite, toRGBA, SIZE, PALETTE } from "./board";
 import animals from "./themes/animals.txt?raw";
+import birds from "./themes/birds.txt?raw";
+import bugs from "./themes/bugs.txt?raw";
 
-const SHEETS: Record<string, string> = { animals };
+const SHEETS: Record<string, string> = { animals, birds, bugs };
 const KEY = "stargazer-board-draft";
 
 const css = `

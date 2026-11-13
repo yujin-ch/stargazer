@@ -62,7 +62,7 @@ describe("library", () => {
 describe("daily sky", () => {
   it("is drawn from one theme, stable, and never repeats within a day", () => {
     const s = dailySky(1);
-    expect(s.length).toBeGreaterThanOrEqual(36);
+    expect(s.length).toBeGreaterThanOrEqual(24);
     expect(new Set(s.map((o) => o.theme)).size).toBe(1);
     expect(dailySky(5).map((o) => o.id)).toEqual(dailySky(5).map((o) => o.id));
     for (let d = 1; d <= 1000; d++) for (const t of [0, 1, 2]) {
@@ -72,5 +72,19 @@ describe("daily sky", () => {
     // harder tiers lean on the harder bands
     const hard = (t: number) => dailySky(3, t).filter((o) => o.band >= 2).length;
     expect(hard(2)).toBeGreaterThan(hard(0));
+  });
+});
+
+describe("themes and conditions", () => {
+  it("rotates themes and never repeats a condition two nights running", async () => {
+    const { dayTheme, dayCondition } = await import("../src/daily");
+    expect(new Set([1, 2, 3].map(dayTheme)).size).toBe(3);
+    for (let d = 2; d < 400; d++) expect(dayCondition(d).id).not.toBe(dayCondition(d - 1).id);
+  });
+  it("puts a Black Hole object in every sky of a theme that has them", () => {
+    for (let d = 1; d <= 30; d++) {
+      const s = dailySky(d);
+      if (OBJECTS.some((o) => o.theme === s[0].theme && o.band === 3)) expect(s.some((o) => o.band === 3)).toBe(true);
+    }
   });
 });

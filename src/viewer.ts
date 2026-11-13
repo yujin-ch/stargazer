@@ -1,6 +1,6 @@
 import type { Theme } from "./themes/types";
 import { SPRITE_COLS, SPRITE_SIZE, buildAtlas, type SkyObject } from "./library";
-import { CONFIG } from "./config";
+import { CONFIG, type ConditionId } from "./config";
 
 const PAD = 5; // transparent margin so blur can spread
 const BLUR_LEVELS = 9;
@@ -41,6 +41,9 @@ export class Viewer {
   private flashAt = -1e9;
   /** Set by the game each frame. */
   alert = false;
+  /** Tonight's sky condition. */
+  condition: ConditionId = "clear";
+  private scratch: HTMLCanvasElement | null = null;
   private shutterAt = -1;
   closeShutter(now: number) { this.shutterAt = now; this.active = null; }
   readonly V: number;
@@ -140,6 +143,47 @@ export class Viewer {
     this.active = null;
   }
 
+  /** The sprite image for this frame, with tonight's condition applied. */
+  private conditioned(a: Active, level: number, lift: number, t: number, now: number): HTMLCanvasElement {
+    const src = a.prep.levels[level];
+    if (this.condition !== "eclipse" || lift >= 1) return src;
+    const P = src.width;
+    if (!this.scratch) { this.scratch = document.createElement("canvas"); this.scratch.width = this.scratch.height = P; }
+    const s = this.scratch, g = s.getContext("2d")!;
+    g.clearRect(0, 0, P, P);
+    g.globalCompositeOperation = "source-over";
+    g.drawImage(src, 0, 0);
+    // backlit silhouette: solid pale shape that gives way to colour as the eclipse passes
+    g.globalCompositeOperation = "source-atop";
+    g.globalAlpha = 1 - lift;
+    g.fillStyle = "#d9def0";
+    g.fillRect(0, 0, P, P);
+    g.globalAlpha = 1;
+    g.globalCompositeOperation = "source-over";
+    void t; void now;
+    return s;
+  }
+
+  /** A slowly turning accretion disc and a dark core behind a Black Hole object. */
+  private drawBlackHole(g: CanvasRenderingContext2D, now: number, C: number) {
+    const V = this.V, spin = REDUCED ? 0 : now / 900;
+    g.save();
+    g.fillStyle = "rgba(7, 6, 15, 0.55)";
+    g.beginPath(); g.arc(C, C, V * 0.47, 0, Math.PI * 2); g.fill();
+    const cols = ["#feae34", "#f77622", "#be4a2f", "#fee761"];
+    for (let ring = 0; ring < 3; ring++) {
+      const r = V * (0.3 + ring * 0.06), n = 26 + ring * 8;
+      for (let i = 0; i < n; i++) {
+        const ang = (i / n) * Math.PI * 2 + spin * (1 - ring * 0.25);
+        const x = C + Math.cos(ang) * r, y = C + Math.sin(ang) * r * 0.42;
+        g.globalAlpha = 0.25 + 0.35 * ((i + ring) % 3 === 0 ? 1 : 0.3);
+        g.fillStyle = cols[(i + ring) % cols.length];
+        g.fillRect(Math.round(x), Math.round(y), 3, 3);
+      }
+    }
+    g.restore();
+  }
+
   draw(now: number) {
     const g = this.ctx, V = this.V, C = V / 2, S = SPRITE_SIZE, P = S + PAD * 2;
     this.theme.drawBackdrop(g, now);
@@ -179,8 +223,37 @@ export class Viewer {
       const slide = REDUCED ? 0 : (1 - ease(enter)) * 70;
       const x = C - (fx + PAD) * px + bobX + slide;
       const y = C - (fy + PAD) * px + bobY;
+      if (a.obj.band === 3) this.drawBlackHole(g, now, C);
+      // how far the night's condition has lifted: 0 until the zoom ends, then up to 1 over revealAfter seconds
+      const cond = CONFIG.conditions.find((c) => c.id === this.condition)!;
+      const settle = (ENTER_MS / 1000) + band.pullBack;
+      const lift = cond.revealAfter ? clamp01((t - settle) / cond.revealAfter) : 1;
+      const W = Math.round(P * px);
+      const img = this.conditioned(a, level, lift, t, now);
       g.globalAlpha = enter;
-      g.drawImage(a.prep.levels[level], Math.round(x), Math.round(y), Math.round(P * px), Math.round(P * px));
+      if (this.condition === "keyhole" && lift < 1) {
+        // a small window wanders over the object, then opens up
+        const r = V * (0.17 + 0.5 * lift * lift);
+        const wx = C + Math.sin(t * 1.1 + a.obj.sprite) * V * 0.16, wy = C + Math.sin(t * 1.7 + a.obj.sprite * 2) * V * 0.13;
+        g.save();
+        g.beginPath(); g.arc(Math.round(wx), Math.round(wy), r, 0, Math.PI * 2); g.clip();
+        g.drawImage(img, Math.round(x), Math.round(y), W, W);
+        g.restore();
+        g.strokeStyle = "rgba(44, 232, 245, 0.35)"; g.lineWidth = 2;
+        g.beginPath(); g.arc(Math.round(wx), Math.round(wy), r, 0, Math.PI * 2); g.stroke();
+      } else if (this.condition === "meteor" && lift < 1) {
+        // 4x4-pixel tiles start scattered and fall into place as the zoom pulls back
+        const T = 4, n = P / T, k = 1 - ease(clamp01(t / (settle + cond.revealAfter)));
+        for (let ty = 0; ty < n; ty++) for (let tx = 0; tx < n; tx++) {
+          const h = ((a.obj.sprite + 1) * 9301 + ty * 49297 + tx * 233280) % 1000 / 1000;
+          const h2 = ((a.obj.sprite + 7) * 4513 + tx * 7919 + ty * 104729) % 1000 / 1000;
+          const ox = (h - 0.5) * V * 1.1 * k, oy = (h2 - 0.65) * V * 1.1 * k;
+          const sx = tx * T, sy = ty * T, d = T * px;
+          g.drawImage(img, sx, sy, T, T, Math.round(x + sx * px + ox), Math.round(y + sy * px + oy), Math.ceil(d), Math.ceil(d));
+        }
+      } else {
+        g.drawImage(img, Math.round(x), Math.round(y), W, W);
+      }
       g.globalAlpha = 1;
     }
 

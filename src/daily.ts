@@ -43,6 +43,29 @@ export function dayTheme(puzzle: number): string {
   return THEMES[(((puzzle - 1) % THEMES.length) + THEMES.length) % THEMES.length];
 }
 
+/** Tonight's sky condition (same for everyone). Never the same two nights running. */
+const condCache = new Map<number, number>();
+export function dayCondition(puzzle: number): (typeof CONFIG.conditions)[number] {
+  const list = CONFIG.conditions;
+  const idx = (n: number): number => {
+    if (n < 1) return -1;
+    const hit = condCache.get(n);
+    if (hit !== undefined) return hit;
+    // walk forward from the last cached night so deep nights never recurse far
+    let start = n;
+    while (start > 1 && !condCache.has(start - 1)) start--;
+    let prev = start > 1 ? condCache.get(start - 1)! : -1;
+    for (let k = start; k <= n; k++) {
+      let c = hash(`stargazer:cond:${k}`) % list.length;
+      if (c === prev) c = (c + 1) % list.length;
+      condCache.set(k, c);
+      prev = c;
+    }
+    return condCache.get(n)!;
+  };
+  return list[Math.max(0, idx(puzzle))];
+}
+
 /** The objects of one theme. */
 export const themePool = (themeId: string) => OBJECTS.filter((o) => o.theme === themeId);
 
@@ -83,7 +106,16 @@ export function dailySky(puzzle: number, tier = 0, pool: SkyObject[] = themePool
 export function ramp(sky: SkyObject[]): SkyObject[] {
   const easy = sky.filter((o) => o.band === 0);
   const mid = sky.filter((o) => o.band === 1);
-  const hard = sky.filter((o) => o.band >= 2).sort((a, b) => a.band - b.band);
+  // hard picks: Nebula objects with Black Holes sprinkled through, a little denser toward the end
+  const neb = sky.filter((o) => o.band === 2), bh = sky.filter((o) => o.band === 3);
+  const hard: SkyObject[] = [];
+  let acc = 0;
+  while (neb.length || bh.length) {
+    acc += bh.length / (neb.length + bh.length);
+    if (bh.length && (acc >= 0.999 || !neb.length) && hard.length >= 2) { hard.push(bh.shift()!); acc -= 1; }
+    else if (neb.length) hard.push(neb.shift()!);
+    else hard.push(bh.shift()!);
+  }
   const out = easy.slice();
   let want = 0, took = 0;
   for (let step = 0; mid.length || hard.length; step++) {

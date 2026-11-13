@@ -161,6 +161,7 @@ export const pixelSpace: Theme = {
     },
     best: () => blip([784, 988, 1175, 1568], 0.09, "square", 0.09),
     comboBreak: () => blip([392, 330, 262], 0.06, "triangle", 0.1),
+    blackHole: () => blip([220, 165, 110, 82], 0.09, "sawtooth", 0.07),
     skip: () => blip([300, 200], 0.07, "triangle", 0.12),
     tick: () => blip([1200], 0.03, "square", 0.04),
     end: () => blip([880, 660, 440, 330], 0.11, "triangle", 0.12),

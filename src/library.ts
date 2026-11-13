@@ -18,7 +18,7 @@ export interface SkyObject {
 }
 
 /** Display names for theme ids (file names). */
-export const THEME_NAMES: Record<string, string> = { animals: "Animals" };
+export const THEME_NAMES: Record<string, string> = { animals: "Animals", birds: "Birds", bugs: "Bugs" };
 
 const defs = Object.entries(SHEETS)
   .sort(([a], [b]) => a.localeCompare(b))

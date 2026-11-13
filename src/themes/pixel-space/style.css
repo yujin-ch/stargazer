@@ -229,3 +229,27 @@ a { color: var(--cyan); }
 .seen.unseen li { cursor: default; box-shadow: none; border-width: 2px; }
 .seen.unseen li > div { flex-direction: column; align-items: flex-start; gap: 2px; }
 .seen.unseen .aka { color: #6b7a99; font-size: 16px; }
+
+/* tonight's theme and sky condition on the start card */
+.tonight { margin: 0 0 10px; color: var(--ink); }
+.tonight b { font-family: var(--font-display); font-size: 11px; color: var(--accent); font-weight: normal; }
+.tonight b.cond { color: var(--cyan); }
+.tonight small { color: var(--dim); font-size: 18px; }
+
+/* Black Hole: the whole screen darkens toward the edges with an orange glow, and a warning flashes */
+.play::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: -1; opacity: 0; transition: opacity 300ms steps(3);
+  background: radial-gradient(ellipse at 50% 42%, transparent 30%, rgba(190, 74, 47, 0.22) 55%, rgba(7, 6, 15, 0.92) 85%); }
+.play.blackhole::before { opacity: 1; animation: bh-pulse 1.6s steps(4) infinite alternate; }
+.play.blackhole .theme-label { border-color: var(--b3); color: var(--b3); box-shadow: 4px 4px 0 #000, 0 0 0 3px rgba(254, 174, 52, 0.25); }
+.play.blackhole .scope canvas { filter: drop-shadow(0 0 22px rgba(247, 118, 34, 0.45)); }
+.bh-warn { position: absolute; left: 0; right: 0; bottom: 2%; display: flex; flex-direction: column; align-items: center; gap: 6px; pointer-events: none;
+  font-family: var(--font-display); color: var(--b3); text-shadow: 3px 3px 0 #000; animation: bh-warn 1.4s steps(14) forwards; }
+.bh-warn span { font-size: 16px; padding: 6px 10px; border: 3px solid var(--b3); background: rgba(7, 6, 15, 0.85); box-shadow: 4px 4px 0 #000; }
+.bh-warn small { font-size: 8px; color: var(--accent); }
+@keyframes bh-pulse { from { filter: brightness(0.9); } to { filter: brightness(1.25); } }
+@keyframes bh-warn { 0%, 12%, 36% { opacity: 1; } 6%, 24% { opacity: 0.2; } 80% { opacity: 1; } 100% { opacity: 0; transform: translateY(-8px); } }
+@media (prefers-reduced-motion: reduce) { .play.blackhole::before, .bh-warn { animation: none; } }
+
+.preview-tools { margin-top: 22px; }
+.preview-tools .btn { font-size: 9px; padding: 8px 10px; line-height: 1.5; }
+.preview-tools .btn small { font-family: var(--font-body); font-size: 15px; color: var(--dim); }

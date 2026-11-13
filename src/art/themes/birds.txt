@@ -1,0 +1,350 @@
+// Birds. @id | band (1 easy .. 4 niche) | accepted names (first = display name)
+
+@duck | 1 | duck, duckling, mallard, ducky, rubber duck
+e 17 21 10 7 yellow
+c 10 11 6 yellow
+p yellow 25,17 30,13 28,21
+p orange 2,12 5,10 6,14 2,14
+d black 9,9 9,10
+e 19 20 5 3 yellow.d
+
+@owl | 1 | owl, barn owl, hoot owl
+p brown 7,9 9,2 13,8
+p brown 25,9 23,2 19,8
+e 16 18 9 11 brown
+e 16 21 5 7 tan
+c 12 13 4 white
+c 20 13 4 white
+r 11 12 3 3 black!
+r 19 12 3 3 black!
+d white 11,12 19,12
+p orange 15,16 17,16 16,19
+d tan.d 14,21 18,22 15,24 17,25
+d orange 12,29 13,29 14,29 18,29 19,29 20,29
+
+@penguin | 1 | penguin, emperor penguin, king penguin
+p black 8,13 4,22 9,21
+p black 24,13 28,22 23,21
+e 16 17 8 12 black
+e 16 21 5 8 white
+e 16 10 5 4 white
+d black 14,10 14,9 18,10 18,9
+p orange 15,12 17,12 16,14
+e 12 29 3 1 orange
+e 20 29 3 1 orange
+
+@chicken | 1 | chicken, hen, rooster, cockerel, chick, ~cock
+p red 9,7 10,3 12,6 13,2 15,6 15,8
+e 17 19 10 8 white
+c 11 11 5 white
+p white 24,14 30,8 29,18
+p orange 2,11 6,9 6,13
+p red 5,14 8,13 8,18 6,18
+d black 10,10 10,11
+e 18 19 5 3 white.d
+l orange! 14,26 14,30 2
+l orange! 20,26 20,30 2
+
+@parrot | 1 | parrot, macaw, parakeet, budgie, cockatoo
+p blue 14,24 13,31 18,31 19,24
+p yellow 14,24 15,29 17,24
+e 16 18 7 8 red
+c 14 9 5 red
+e 19 17 4 6 blue
+l yellow 17,14 22,20 2
+p white 8,7 12,7 12,12 8,11
+p grey.d 7,8 4,10 6,14 9,11
+d black 11,8
+r 13 25 6 2 grey!
+
+@eagle | 1 | eagle, bald eagle, hawk, falcon, bird of prey, golden eagle
+p brown 4,14 14,12 16,22 6,24
+p brown 28,14 18,12 16,22 26,24
+e 16 18 6 8 brown
+c 16 9 5 white
+p yellow 16,9 22,10 19,13 17,12
+d black 18,8
+p white 13,25 19,25 16,30
+d yellow! 13,26 19,26
+
+@bird | 1 | bluebird, blue jay, jay, songbird, blue bird, sparrow, finch
+p blue 18,18 27,16 22,22
+p blue.d 24,20 31,23 29,26 23,23
+e 16 19 9 7 blue
+c 10 12 6 blue
+e 12 21 5 4 cream
+p orange 2,12 5,10 5,14
+d black 9,10 9,11
+l orange! 13,26 12,30
+l orange! 17,26 17,30
+
+@flamingo | 2 | flamingo
+e 18 13 8 5 pink
+p pink 24,10 30,9 26,15
+l pink 12,12 9,7 10,3 3
+c 13 3 3 pink
+p black 14,3 18,6 15,7
+d black 12,2
+l pink.d 18,18 18,30
+l pink.d 18,23 22,24 18,25
+e 19 13 4 2 pink.l
+
+@swan | 2 | swan, cygnet
+e 18 22 11 6 white
+p white 24,19 30,13 29,21
+l white 11,21 8,14 8,7 11,4 3
+c 12 5 3 white
+p orange 14,5 18,7 14,7
+d black 12,5
+l white.d 14,22 24,22
+e 18 29 11 1 sky
+
+@peacock | 2 | peacock, peafowl, peahen
+c 16 14 13 teal
+c 16 14 10 green
+d gold! 6,8 10,4 16,2 22,4 26,8 28,14 4,14 7,20 25,20
+d blue! 6,9 10,5 16,3 22,5 26,9 28,15 4,15 7,21 25,21
+e 16 20 4 8 blue
+c 16 10 3 blue
+d black 15,9
+p yellow 13,10 15,10 15,11
+l blue 16,7 16,4
+d blue 15,4 17,4
+l slate 14,28 13,31
+l slate 18,28 19,31
+
+@pelican | 2 | pelican
+e 13 19 8 6 white
+c 9 9 4 white
+p yellow 12,8 29,10 13,12
+p orange 13,12 27,11 18,18 13,16
+d black 9,8
+r 11 24 2 6 orange
+l slate! 15,17 21,21 2
+
+@toucan | 2 | toucan
+e 10 17 7 9 black
+c 11 11 5 black
+e 10 13 4 3 white
+p orange 15,8 30,10 26,15 15,14
+l yellow! 16,8 28,10
+l red! 28,10 30,11
+d black 10,10
+r 9 25 2 4 orange
+l brown! 4,29 18,29 2
+
+@ostrich | 2 | ostrich, emu
+e 16 15 9 6 black
+p white 22,12 27,10 25,16
+l pink! 9,13 6,3 3
+c 6 3 2 pink
+p yellow 3,2 1,4 4,4
+d black 6,2
+l pink! 13,20 13,30 2
+l pink! 19,20 20,30 2
+
+@woodpecker | 3 | woodpecker
+r 22 1 6 30 brown
+l brown.d 25,4 25,26
+e 16 17 5 8 black
+c 15 8 4 black
+p red 12,4 17,3 18,8 13,7
+p slate 11,8 4,9 11,10
+d white 14,8
+d black 14,8
+l white! 13,15 13,22
+@turkey | 2 | turkey, gobbler
+p brown 12,20 4,8 8,4 14,2 20,4 24,8 22,18
+p orange 9,9 13,5 18,5 21,9 17,16 12,16
+p red 10,11 14,8 18,10 16,15 12,15
+e 20 21 7 6 brown
+c 25 13 3 slate
+l red! 27,13 27,18 2
+p yellow 28,12 31,13 28,14
+d black 25,12
+l orange! 18,26 17,30
+l orange! 22,26 23,30
+
+@crow | 2 | crow, raven, blackbird, rook
+p black 4,22 12,18 12,23 2,26
+e 15 18 8 6 black
+c 22 12 5 black
+p slate 26,11 31,13 26,14
+d white 23,10
+e 14 17 5 3 black.l
+l slate! 13,24 12,29
+l slate! 17,24 18,29
+
+@puffin | 3 | puffin
+e 16 19 8 10 black
+e 16 21 5 7 white
+c 16 9 6 black
+e 16 10 4 3 white
+p orange 18,9 26,9 24,14 18,13
+l yellow! 19,10 23,10
+l red! 19,12 24,12
+d black 15,9
+r 12 28 3 2 orange
+r 18 28 3 2 orange
+
+@hummingbird | 3 | hummingbird, humming bird
+e 14 18 7 4 teal
+c 21 13 4 teal
+d red 18,16 19,16 20,16 21,17
+l black! 24,13 31,15
+d black 22,12
+p teal 8,18 1,23 3,24 9,21
+e 12 9 7 3 sky
+e 10 12 6 2 sky
+p magenta 26,24 29,20 31,24 29,28
+p green 28,25 28,30 30,30
+
+@pigeon | 3 | pigeon, dove, rock dove
+e 15 19 9 7 grey
+c 22 11 5 grey
+e 19 16 4 3 teal
+p slate 26,11 30,12 26,13
+d black 23,10
+d white 25,10
+e 13 19 6 3 slate
+l black! 6,19 10,22
+p grey 6,18 1,20 6,22
+l pink! 14,26 13,30
+l pink! 18,26 19,30
+
+@seagull | 3 | seagull, gull, sea gull
+e 15 18 9 6 white
+c 22 11 5 white
+p yellow 26,11 31,12 26,13
+d red 29,13
+d black 23,10
+p slate 6,14 18,13 15,19 6,19
+l black! 4,17 8,17 2
+l orange! 14,24 13,29
+l orange! 18,24 19,29
+
+@stork | 3 | stork, heron, crane, egret
+e 14 14 8 5 white
+p black 6,12 14,10 14,18 4,17
+l white! 20,12 23,4 3
+c 23 4 3 white
+l red! 25,4 31,9 2
+d black 23,3
+l red! 12,19 12,30
+l red! 17,19 17,30
+
+@vulture | 3 | vulture, buzzard, condor
+p brown 3,24 9,12 16,10 23,12 29,24 16,20
+e 16 16 6 7 brown
+r 13 6 6 3 cream
+c 16 5 3 pink
+p yellow 17,5 21,6 17,8
+d black 16,4
+l pink! 16,8 16,10
+
+@kiwi | 3 | kiwi, kiwi bird
+e 14 18 10 8 brown
+d brown.d 8,14 12,13 16,15 10,19 14,20 18,18 20,13 7,21
+c 22 15 4 brown
+l cream! 25,16 31,24
+d black 23,13
+l tan! 12,26 11,30
+l tan! 17,26 18,30
+
+@robin | 3 | robin, red robin, robin redbreast
+e 15 18 9 7 brown
+c 21 12 5 brown
+e 17 18 6 5 orange
+p tan 25,12 29,12 25,14
+d black 22,11
+p brown 6,16 1,12 3,20
+l tan! 14,25 13,29
+l tan! 18,25 19,29
+
+@hoopoe | 4 | hoopoe
+e 14 19 8 6 tan
+c 20 12 4 tan
+p orange 15,9 14,3 18,6 20,2 22,6 25,4 24,10
+d black 14,3 20,2 25,4
+l black! 23,12 30,18
+d black 20,11
+l black 7,17 13,21
+l white 8,19 12,21
+l black 9,15 14,18
+p black 6,18 1,20 6,22
+
+@cassowary | 4 | cassowary
+e 14 17 9 8 black
+l sky! 20,13 22,6 3
+c 22 5 3 sky
+p yellow 21,3 22,0 24,2
+l red! 21,9 20,13 2
+p slate 24,5 28,6 24,7
+d black 22,5
+l grey! 12,24 11,30 2
+l grey! 17,24 18,30 2
+
+@shoebill | 4 | shoebill, shoe-billed stork, whale-headed stork
+e 13 21 7 7 slate
+c 17 10 6 slate
+p tan 20,8 30,10 30,16 22,15
+l tan.d 21,12 30,13
+d yellow 16,8
+d black 16,8
+p slate 13,5 11,2 15,4
+l grey! 12,27 11,30
+l grey! 15,27 16,30
+
+@kingfisher | 4 | kingfisher
+e 13 18 8 6 blue
+c 19 12 5 blue
+p black 23,11 31,12 23,13
+e 17 19 5 4 orange
+l white! 18,14 21,14
+d black 19,11
+p blue 5,16 1,22 6,20
+l brown! 2,26 30,26 2
+l red! 14,24 14,25
+l red! 18,24 18,25
+
+@roadrunner | 4 | roadrunner, road runner
+e 14 17 9 4 brown
+p brown 4,17 0,10 2,9 8,16
+c 23 12 4 brown
+p slate 25,11 31,12 26,13
+p navy 21,8 19,3 23,7 22,2 25,8
+d red 24,13
+d black 24,11
+d cream 10,15 14,16 18,16
+l slate! 13,21 9,30
+l slate! 17,21 22,30
+
+@dodo | 4 | dodo, dodo bird
+e 15 19 11 9 slate
+c 21 11 5 grey
+p slate 24,8 31,12 29,17 24,15
+p yellow 26,9 31,12 27,13
+d black 21,10
+p white 3,17 1,13 6,16
+l yellow! 12,27 11,30 2
+l yellow! 18,27 19,30 2
+
+@spoonbill | 4 | spoonbill, roseate spoonbill
+e 13 16 8 6 pink
+l pink! 18,13 21,8 2
+c 21 7 3 pink
+l grey! 23,7 29,10
+c 30 11 2 grey
+d black 21,6
+l pink! 12,21 11,30
+l pink! 15,21 16,30
+
+@frigatebird | 4 | frigatebird, frigate bird, man-o'-war bird
+p black 1,6 12,11 16,9 20,11 31,6 20,14 12,14
+c 16 9 3 black
+p slate 18,8 23,10 18,10
+c 16 19 6 red
+c 14 17 2 red.l
+p black 14,12 16,22 18,12
+d white 16,8
+p black 14,16 16,30 18,16
