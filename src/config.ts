@@ -25,10 +25,18 @@ export const CONFIG = {
     { startZoom: 4, pullBack: 4, startBlur: 1.4, points: 3, zoomedPoints: 5 },
     { startZoom: 4, pullBack: 4.5, startBlur: 1.6, points: 4, zoomedPoints: 6 },
   ],
+  /** "Steady hand" combo: answers in a row without a skip. Extra points per answer at each threshold. */
+  combo: [
+    { at: 3, extra: 1 },
+    { at: 6, extra: 2 },
+    { at: 10, extra: 3 },
+  ],
   /** Typo tolerance: one wrong, missing, extra or swapped letter on answers this long or longer. */
   typoMinLength: 6,
   /** When a match is also the start of a longer listed name ("book"/"books"), wait this long before accepting. */
   longerNameWaitMs: 280,
+  /** Same idea for a plain plural ("cake" while "cakes" is also fine): a shorter wait. */
+  pluralWaitMs: 170,
 } as const;
 
 export type BandIndex = 0 | 1 | 2 | 3;

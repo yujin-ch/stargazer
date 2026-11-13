@@ -27,6 +27,7 @@ interface Leaving {
 
 interface Spark { x: number; y: number; vx: number; vy: number; c: string; born: number; life: number }
 
+const REDUCED = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const ease = (p: number) => 1 - (1 - p) * (1 - p); // fast at first, settles gently
 const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 
@@ -37,6 +38,9 @@ export class Viewer {
   private active: Active | null = null;
   private leaving: Leaving[] = [];
   private sparks: Spark[] = [];
+  private flashAt = -1e9;
+  /** Set by the game each frame. */
+  alert = false;
   readonly V: number;
 
   constructor(private canvas: HTMLCanvasElement, private theme: Theme) {
@@ -118,16 +122,19 @@ export class Viewer {
     return clamp01((now - this.active.appear - ENTER_MS) / (band.pullBack * 1000));
   }
 
-  dismiss(kind: "named" | "skipped", now: number) {
+  dismiss(how: "named" | "skipped" | "zoomed", now: number) {
+    const big = how === "zoomed";
+    if (big) this.flashAt = now;
+    const kind = big ? "named" : how;
     if (!this.active) return;
     const a = this.active;
     this.leaving.push({ prep: a.prep, start: now, kind });
-    if (kind === "named") {
+    if (kind === "named" && !REDUCED) {
       const scale = this.theme.spriteScale, C = this.V / 2, S = SPRITE_SIZE;
       for (const p of a.prep.opaque) {
         const x = C + (p.x - S / 2) * scale, y = C + (p.y - S / 2) * scale;
         const ang = Math.atan2(y - C, x - C) + (Math.random() - 0.5) * 0.8;
-        const sp = 0.03 + Math.random() * 0.07;
+        const sp = (0.03 + Math.random() * 0.07) * (big ? 1.6 : 1);
         this.sparks.push({ x, y, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp, c: Math.random() < 0.3 ? this.theme.sparkColors[Math.floor(Math.random() * this.theme.sparkColors.length)] : p.c, born: now, life: 450 + Math.random() * 350 });
       }
     }
@@ -169,8 +176,8 @@ export class Viewer {
       const fy = a.prep.focal.y + (S / 2 - a.prep.focal.y) * e;
       const px = scale * zoom; // logical px per sprite px
       const t = (now - a.appear) / 1000;
-      const bobX = Math.sin(t * 1.3) * 1.5, bobY = Math.sin(t * 1.9 + 1) * 2;
-      const slide = (1 - ease(enter)) * 70;
+      const bobX = REDUCED ? 0 : Math.sin(t * 1.3) * 1.5, bobY = REDUCED ? 0 : Math.sin(t * 1.9 + 1) * 2;
+      const slide = REDUCED ? 0 : (1 - ease(enter)) * 70;
       const x = C - (fx + PAD) * px + bobX + slide;
       const y = C - (fy + PAD) * px + bobY;
       g.globalAlpha = enter;
@@ -188,7 +195,7 @@ export class Viewer {
     }
     g.globalAlpha = 1;
 
-    this.theme.drawFrame(g, now);
+    this.theme.drawFrame(g, now, { alert: this.alert, flash: Math.max(0, 1 - (now - this.flashAt) / 120) });
   }
 }
 

@@ -48,11 +48,20 @@ export function dailySky(puzzle: number, tier = 0, pool: SkyObject[] = OBJECTS):
   CONFIG.tiers[tier].perBand.forEach((k, band) => {
     const items = pool.filter((o) => o.band === band).sort((a, b) => a.id.localeCompare(b.id));
     const L = items.length;
-    const deck = (cycle: number) => shuffled(items, mulberry32(hash(`stargazer:t${tier}:${band}:${cycle}`)));
+    const decks = new Map<number, SkyObject[]>();
+    const deck = (cycle: number) => {
+      let d = decks.get(cycle);
+      if (!d) { d = shuffled(items, mulberry32(hash(`stargazer:t${tier}:${band}:${cycle}`))); decks.set(cycle, d); }
+      return d;
+    };
     const take = Math.min(k, L);
-    for (let i = 0; i < take; i++) {
-      const pos = day * take + i;
-      sky.push(deck(Math.floor(pos / L))[pos % L]);
+    const used = new Set<string>();
+    // when a day straddles two decks, skip anything the day already has
+    for (let pos = day * take; used.size < take; pos++) {
+      const o = deck(Math.floor(pos / L))[pos % L];
+      if (used.has(o.id)) continue;
+      used.add(o.id);
+      sky.push(o);
     }
   });
   return sky;

@@ -2,6 +2,13 @@
  * A theme is everything about the look and sound. Game rules never read from it.
  * To add a theme: copy src/themes/pixel-space, change it, and point src/themes/index.ts at it.
  */
+export interface FrameState {
+  /** Under ten seconds left. */
+  alert: boolean;
+  /** 0..1 strength of a flash for a zoom answer. */
+  flash: number;
+}
+
 export interface Theme {
   id: string;
   /** Game name shown on screens and in the share text. */
@@ -20,11 +27,13 @@ export interface Theme {
   /** Paint the viewer background (inside the frame). */
   drawBackdrop(ctx: CanvasRenderingContext2D, timeMs: number): void;
   /** Paint the frame on top of everything and mask outside it. */
-  drawFrame(ctx: CanvasRenderingContext2D, timeMs: number): void;
+  drawFrame(ctx: CanvasRenderingContext2D, timeMs: number, state: FrameState): void;
   /** Animated page background, called once with a full-screen canvas. */
   startPageBackground(canvas: HTMLCanvasElement): void;
   sounds: {
-    correct(bonus: boolean): void;
+    /** combo = answers in a row, so the sound can climb. */
+    correct(bonus: boolean, combo: number): void;
+    comboBreak(): void;
     skip(): void;
     tick(): void;
     end(): void;

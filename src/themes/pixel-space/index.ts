@@ -1,4 +1,4 @@
-import type { Theme } from "../types";
+import type { Theme, FrameState } from "../types";
 import { blip } from "../chip";
 import sheet from "./sprites.png";
 
@@ -24,6 +24,44 @@ function disc(ctx: CanvasRenderingContext2D, r: number, color: string) {
     ctx.rect(C - w, C + y, w * 2, 1);
   }
   ctx.fill();
+}
+
+const rimCache = new Map<boolean, HTMLCanvasElement>();
+function rim(alert: boolean): HTMLCanvasElement {
+  const hit = rimCache.get(alert);
+  if (hit) return hit;
+  const c = document.createElement("canvas");
+  c.width = c.height = V;
+  const ctx = c.getContext("2d")!;
+  const ring = (r0: number, r1: number, col: string) => {
+    ctx.fillStyle = col;
+    for (let y = -r1; y < r1; y++) {
+      const yy = (y + 0.5) * (y + 0.5);
+      const wo = Math.floor(Math.sqrt(Math.max(0, r1 * r1 - yy)));
+      const wi = yy < r0 * r0 ? Math.floor(Math.sqrt(r0 * r0 - yy)) : 0;
+      if (wo <= wi) continue;
+      ctx.fillRect(C - wo, C + y, wo - wi, 1);
+      ctx.fillRect(C + wi, C + y, wo - wi, 1);
+    }
+  };
+  ring(R, R + 2, "#181425");
+  ring(R + 2, R + 5, alert ? "#a22633" : "#5a6988");
+  ring(R + 5, R + 6, alert ? "#e43b44" : "#8b9bb4");
+  ring(R + 6, R + 7, "#3a4466");
+  ring(R + 7, R + 8, "#181425");
+  // focus-ring notches, like the grip on a real eyepiece
+  ctx.fillStyle = alert ? "#73172a" : "#3a4466";
+  for (let a = 0; a < Math.PI * 2; a += Math.PI / 18) {
+    ctx.fillRect(Math.round(C + Math.cos(a) * (R + 3.5)), Math.round(C + Math.sin(a) * (R + 3.5)), 1, 1);
+  }
+  // highlight glint on the rim
+  ctx.fillStyle = "#c0cbdc";
+  for (let a = 3.6; a < 4.4; a += 0.03) ctx.fillRect(Math.round(C + Math.cos(a) * (R + 3.5)), Math.round(C + Math.sin(a) * (R + 3.5)), 1, 1);
+  // glass reflection
+  ctx.fillStyle = "rgba(255,255,255,0.10)";
+  for (let a = 3.75; a < 4.25; a += 0.02) ctx.fillRect(Math.round(C + Math.cos(a) * (R - 6)), Math.round(C + Math.sin(a) * (R - 6)), 2, 1);
+  rimCache.set(alert, c);
+  return c;
 }
 
 export const pixelSpace: Theme = {
@@ -59,39 +97,26 @@ export const pixelSpace: Theme = {
     ctx.globalAlpha = 1;
   },
 
-  drawFrame(ctx) {
+  drawFrame(ctx, t, state: FrameState) {
+    if (state.flash > 0) {
+      ctx.globalAlpha = 0.4 * state.flash;
+      disc(ctx, R, "#ffffff");
+      ctx.globalAlpha = 1;
+    }
+    // reticle ticks at the compass points
+    ctx.fillStyle = "#3a4466";
+    ctx.fillRect(C - 0.5, C - R + 3, 1, 5);
+    ctx.fillRect(C - 0.5, C + R - 8, 1, 5);
+    ctx.fillRect(C - R + 3, C - 0.5, 5, 1);
+    ctx.fillRect(C + R - 8, C - 0.5, 5, 1);
     // mask everything outside the glass
     ctx.save();
     ctx.globalCompositeOperation = "destination-in";
     disc(ctx, R, "#000");
     ctx.restore();
-    // metal rings, drawn as stepped annuli
-    const ring = (r0: number, r1: number, col: string) => {
-      ctx.fillStyle = col;
-      for (let y = -r1; y < r1; y++) {
-        const yy = (y + 0.5) * (y + 0.5);
-        const wo = Math.floor(Math.sqrt(Math.max(0, r1 * r1 - yy)));
-        const wi = yy < r0 * r0 ? Math.floor(Math.sqrt(r0 * r0 - yy)) : 0;
-        if (wo <= wi) continue;
-        ctx.fillRect(C - wo, C + y, wo - wi, 1);
-        ctx.fillRect(C + wi, C + y, wo - wi, 1);
-      }
-    };
-    ring(R, R + 2, "#181425");
-    ring(R + 2, R + 5, "#5a6988");
-    ring(R + 5, R + 6, "#8b9bb4");
-    ring(R + 6, R + 7, "#3a4466");
-    ring(R + 7, R + 8, "#181425");
-    // highlight glint on the rim
-    ctx.fillStyle = "#c0cbdc";
-    for (let a = 3.6; a < 4.4; a += 0.03) {
-      ctx.fillRect(Math.round(C + Math.cos(a) * (R + 3.5)), Math.round(C + Math.sin(a) * (R + 3.5)), 1, 1);
-    }
-    // glass reflection
-    ctx.fillStyle = "rgba(255,255,255,0.10)";
-    for (let a = 3.75; a < 4.25; a += 0.02) {
-      ctx.fillRect(Math.round(C + Math.cos(a) * (R - 6)), Math.round(C + Math.sin(a) * (R - 6)), 2, 1);
-    }
+    // metal rim: drawn once per colour state into an offscreen canvas, then stamped each frame
+    const pulse = state.alert && Math.floor(t / 500) % 2 === 0;
+    ctx.drawImage(rim(pulse), 0, 0);
   },
 
   startPageBackground(canvas) {
@@ -129,7 +154,12 @@ export const pixelSpace: Theme = {
   },
 
   sounds: {
-    correct: (bonus) => (bonus ? blip([660, 880, 1320, 1760], 0.05) : blip([660, 990], 0.06)),
+    correct: (bonus, combo) => {
+      const k = 2 ** (Math.min(combo, 12) / 12); // climbs a semitone per answer in a row
+      if (bonus) blip([660, 880, 1320, 1760].map((f) => f * k), 0.05);
+      else blip([660, 990].map((f) => f * k), 0.06);
+    },
+    comboBreak: () => blip([392, 330, 262], 0.06, "triangle", 0.1),
     skip: () => blip([300, 200], 0.07, "triangle", 0.12),
     tick: () => blip([1200], 0.03, "square", 0.04),
     end: () => blip([880, 660, 440, 330], 0.11, "triangle", 0.12),

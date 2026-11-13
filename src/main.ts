@@ -1,7 +1,7 @@
 import "@fontsource/press-start-2p";
 import "@fontsource/vt323";
 import { CONFIG, tierFor } from "./config";
-import { OBJECTS, BY_ID, type SkyObject } from "./library";
+import { OBJECTS, BY_ID, shownNames, type SkyObject } from "./library";
 import { makeMatcher, normalize, forms as formsOf } from "./match";
 import { dailySky, practiceSky, localDateKey, puzzleNumber } from "./daily";
 import { theme } from "./themes";
@@ -34,7 +34,6 @@ function fitViewport() {
   sizeViewer();
 }
 window.visualViewport?.addEventListener("resize", fitViewport);
-window.visualViewport?.addEventListener("scroll", () => window.scrollTo(0, 0));
 window.addEventListener("resize", fitViewport);
 
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
@@ -61,6 +60,8 @@ interface Run {
   items: ItemResult[];
   attempt: string;
   lastTick: number;
+  combo: number;
+  bestCombo: number;
   /** A match waiting briefly in case a longer name is being typed. */
   pending: string | null;
 }
@@ -70,7 +71,10 @@ function playScreen() {
   app.innerHTML = `
   <main class="play">
     <header class="hud">
-      <div class="hud-score"><span id="score">0</span><small>PTS</small></div>
+      <div class="hud-left">
+        <div class="hud-score"><span id="score">0</span><small>PTS</small></div>
+        <div class="combo" id="combo"></div>
+      </div>
       <div class="hud-time" id="time">${CONFIG.runSeconds}</div>
       <div class="hud-right">
         <button class="mute" id="mute" aria-label="Toggle sound"></button>
@@ -90,30 +94,33 @@ function playScreen() {
     <div class="controls" id="controls">
       <div class="entry">
         <input id="guess" type="text" inputmode="text" enterkeyhint="go" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" placeholder="type what you see" aria-label="Your guess" maxlength="40" />
-        <button class="clear" id="clear" aria-label="Clear" tabindex="-1">×</button>
+        <button class="clear" id="clear" aria-label="Clear" tabindex="-1"><i></i></button>
       </div>
       <button class="skip" id="skip" tabindex="-1">SKIP <small>-${CONFIG.skipCost}s</small></button>
     </div>
     <div class="hint" id="hint">${isTouch ? "" : "Tab = skip · Esc = clear · no Enter needed"}</div>
     <div class="start" id="start"></div>
+    <div class="sr-only" id="live" aria-live="polite"></div>
   </main>`;
-  for (const id of ["score", "time", "count", "scope", "overlay", "pops", "label", "band", "bonus", "bonusbar", "controls", "guess", "clear", "skip", "hint", "start", "mute"])
+  for (const id of ["score", "time", "count", "scope", "overlay", "pops", "label", "band", "bonus", "bonusbar", "controls", "guess", "clear", "skip", "hint", "start", "mute", "combo"])
     el[id] = document.getElementById(id)!;
   viewer = new Viewer(document.getElementById("eyepiece") as HTMLCanvasElement, theme);
   renderMute();
-  el.mute.onclick = () => { store.muted = !store.muted; setMuted(store.muted); renderMute(); };
   wireInput();
   fitViewport();
 }
 
-function renderMute() { el.mute.textContent = store.muted ? "SOUND OFF" : "SOUND ON"; }
+function renderMute() {
+  el.mute.textContent = store.muted ? "♪ OFF" : "♪ ON";
+  el.mute.setAttribute("aria-pressed", String(!store.muted));
+}
 
 function sizeViewer() {
   const scope = el.scope;
   if (!scope || !viewer) return;
   const avail = Math.min(scope.clientWidth, scope.clientHeight);
   let k = avail / viewer.V;
-  k = k >= 2 ? Math.floor(k * 2) / 2 : Math.max(1, k);
+  k = k >= 2 ? Math.floor(k * 2) / 2 : Math.max(0.75, k);
   const canvas = scope.querySelector("canvas")!;
   canvas.style.width = canvas.style.height = `${Math.floor(viewer.V * k)}px`;
 }
@@ -127,10 +134,12 @@ function wireInput() {
   });
   input.addEventListener("keydown", (e) => {
     if (e.key === "Tab") { e.preventDefault(); if (run.phase === "playing") skip(); }
-    else if (e.key === "Escape") { input.value = ""; }
+    else if (e.key === "Escape") { input.value = ""; dropPending(); }
     else if (e.key === "Enter") {
       e.preventDefault();
-      if (run.phase === "playing" && input.value.trim()) { shake(); input.value = ""; }
+      if (run.phase !== "playing") return;
+      if (run.pending !== null) acceptPending();
+      else if (input.value.trim()) { shake(); input.value = ""; }
     }
   });
   // buttons must not steal focus (that would close the phone keyboard)
@@ -139,7 +148,8 @@ function wireInput() {
     b.addEventListener("click", (e) => { if (e.detail === 0) fn(); }); // keyboard activation
   };
   noFocus(el.skip, () => { if (run.phase === "playing") skip(); });
-  noFocus(el.clear, () => { input.value = ""; input.focus(); });
+  noFocus(el.clear, () => { input.value = ""; dropPending(); input.focus(); });
+  noFocus(el.mute, () => { store.muted = !store.muted; setMuted(store.muted); renderMute(); });
   el.scope.addEventListener("pointerdown", (e) => { if (run.phase === "playing" || run.phase === "countdown") { e.preventDefault(); input.focus(); } });
 }
 
@@ -150,6 +160,11 @@ function wireInput() {
  * and carries the extra letters over to the next object.
  */
 let pendingTimer = 0;
+function dropPending() { clearTimeout(pendingTimer); run.pending = null; }
+function acceptPending() {
+  const p = run.pending, obj = run.sky[run.i];
+  if (p !== null && obj && run.phase === "playing") named(obj, p);
+}
 function onTyped(input: HTMLInputElement) {
   const obj = run.sky[run.i];
   if (!obj) return;
@@ -159,9 +174,12 @@ function onTyped(input: HTMLInputElement) {
   const m = matcher.test(value, obj.names);
   if (m) {
     const n = normalize(value);
-    if (m.early || longerNames(obj).some((f) => f.length > n.length && f.startsWith(n))) {
+    const longer = m.early || longerNames(obj).some((f) => f.length > n.length && f.startsWith(n));
+    // a generated plural ("cake" -> "cakes") gets a shorter wait, so a trailing "s" doesn't spill over
+    const plural = !longer && forms(obj).some((f) => f.length > n.length && f.startsWith(n));
+    if (longer || plural) {
       run.pending = value;
-      pendingTimer = window.setTimeout(() => { if (run.pending === value && run.sky[run.i] === obj) named(obj, value); }, CONFIG.longerNameWaitMs);
+      pendingTimer = window.setTimeout(acceptPending, longer ? CONFIG.longerNameWaitMs : CONFIG.pluralWaitMs);
       return;
     }
     return named(obj, value);
@@ -170,7 +188,7 @@ function onTyped(input: HTMLInputElement) {
     const n = normalize(value);
     if (value.startsWith(p) && [...longerNames(obj), ...forms(obj)].some((f) => f.startsWith(n))) {
       // still heading towards a longer name: keep waiting, but accept the shorter one if they stop
-      pendingTimer = window.setTimeout(() => { if (run.sky[run.i] === obj && run.phase === "playing") named(obj, p); }, CONFIG.longerNameWaitMs);
+      pendingTimer = window.setTimeout(acceptPending, CONFIG.longerNameWaitMs);
       return;
     }
     const rest = value.startsWith(p) ? value.slice(p.length).replace(/^\s+/, "") : "";
@@ -192,7 +210,7 @@ function newRun(mode: Run["mode"]): Run {
   const streak = store.streakThrough(puzzle - 1);
   const tier = tierFor(streak);
   const sky = mode === "daily" ? dailySky(puzzle, tier) : practiceSky(tier);
-  return { mode, puzzle, date, tier, streak, sky, i: 0, phase: "ready", countdownAt: 0, startAt: 0, penalty: 0, score: 0, items: [], attempt: "", lastTick: 99, pending: null };
+  return { mode, puzzle, date, tier, streak, sky, i: 0, phase: "ready", countdownAt: 0, startAt: 0, penalty: 0, score: 0, items: [], attempt: "", lastTick: 99, combo: 0, bestCombo: 0, pending: null };
 }
 
 async function openPlay(mode: Run["mode"]) {
@@ -203,33 +221,38 @@ async function openPlay(mode: Run["mode"]) {
   el.count.textContent = `0/${run.sky.length}`;
   el.controls.classList.add("hidden");
   el.hint.classList.add("hidden");
-  const title = mode === "daily" ? `${theme.title.toUpperCase()} #${run.puzzle}` : "PRACTICE SKY";
-  const b = CONFIG.bands;
+  app.querySelector(".play")!.classList.add("ready");
+  el.overlay.className = "overlay wordmark";
+  el.overlay.innerHTML = `<div><b>${theme.title.toUpperCase()}</b><span>${mode === "daily" ? `NIGHT #${run.puzzle} · ${fmtDate(run.date).toUpperCase()}` : "PRACTICE SKY · NOT SCORED"}</span></div>`;
+  const c3 = CONFIG.combo[0];
   el.start.innerHTML = `
-    <h1>${title}</h1>
-    <p class="date">${mode === "daily" ? fmtDate(run.date) : "Random objects, not scored"}</p>
     ${tierLine(run.tier, run.streak)}
     <ul class="rules">
-      <li><b>Type</b> the name of what you see. No Enter needed.</li>
-      <li><b>${isTouch ? "Skip" : "Tab"}</b> moves on, but costs ${CONFIG.skipCost} seconds.</li>
-      <li>Far-off objects start <b>zoomed in</b>. Name them before the view pulls back for <b>${b[1].zoomedPoints}</b> or <b>${b[2].zoomedPoints}</b> points.</li>
+      <li><b>Type</b> what you see. It moves on by itself.</li>
+      <li><b>Zoomed in?</b> Name it early for bonus points.</li>
+      <li><b>${c3.at} in a row</b> earns extra. ${isTouch ? "Skip" : "Tab skips"}${isTouch ? "" : ","} costs ${CONFIG.skipCost}s and breaks it.</li>
     </ul>
-    <button class="btn primary" id="go">START</button>
-    <p class="small">${CONFIG.runSeconds} seconds · ${run.sky.length} objects · ${mode === "daily" ? "same sky for everyone on your streak tier" : "practice"}</p>`;
+    <button class="btn primary" id="go">OPEN THE SHUTTER</button>
+    <p class="small">${CONFIG.runSeconds} seconds · ${mode === "daily" ? "same sky as everyone on your tier" : "random objects"}</p>`;
   document.getElementById("go")!.onclick = begin;
+  sizeViewer();
   loop();
 }
 
 function begin() {
   unlockAudio();
   el.start.classList.add("hidden");
+  app.querySelector(".play")!.classList.remove("ready");
   el.controls.classList.remove("hidden");
   el.hint.classList.remove("hidden");
   const input = el.guess as HTMLInputElement;
   input.value = "";
   input.focus(); // inside the click, so phones open the keyboard
+  sizeViewer();
   run.phase = "countdown";
   run.countdownAt = performance.now();
+  saveProgress();
+  el.overlay.innerHTML = "";
   theme.sounds.tick();
   setTimeout(fitViewport, 350);
 }
@@ -256,25 +279,34 @@ function showObject(now: number) {
 }
 
 function named(obj: SkyObject, typed: string) {
+  if (run.phase !== "playing") return;
   const now = performance.now();
   clearTimeout(pendingTimer);
   run.pending = null;
   const band = CONFIG.bands[obj.band];
   const zoomed = band.pullBack > 0 && viewer.pullProgress(now) < 1;
-  const points = zoomed ? band.zoomedPoints : band.points;
+  run.combo++;
+  run.bestCombo = Math.max(run.bestCombo, run.combo);
+  const extra = CONFIG.combo.reduce((x, c) => (run.combo >= c.at ? c.extra : x), 0);
+  const points = (zoomed ? band.zoomedPoints : band.points) + extra;
   run.score += points;
   run.items.push({ id: obj.id, outcome: zoomed ? "zoomed" : "named", typed: typed.trim(), points });
   (el.guess as HTMLInputElement).value = "";
   el.score.textContent = String(run.score);
   el.score.parentElement!.classList.remove("bump"); void el.score.offsetWidth; el.score.parentElement!.classList.add("bump");
-  pop(zoomed ? `+${points} ZOOM!` : `+${points}`, zoomed ? "gold" : "");
-  theme.sounds.correct(zoomed);
-  viewer.dismiss("named", now);
+  pop(obj.names[0], `+${points}${zoomed ? " ZOOM" : ""}`, zoomed ? "gold" : "");
+  theme.sounds.correct(zoomed, run.combo);
+  viewer.dismiss(zoomed ? "zoomed" : "named", now);
+  announce(`${obj.names[0]}, ${points} points`);
+  saveProgress();
+  if (zoomed) { el.scope.classList.remove("jolt"); void el.scope.offsetWidth; el.scope.classList.add("jolt"); }
+  renderCombo(false);
   run.i++;
   showObject(now);
 }
 
 function skip() {
+  if (run.phase !== "playing") return;
   const now = performance.now();
   clearTimeout(pendingTimer);
   run.pending = null;
@@ -283,20 +315,70 @@ function skip() {
   run.penalty += CONFIG.skipCost;
   run.items.push({ id: obj.id, outcome: "skipped", typed: run.attempt.trim(), points: 0 });
   (el.guess as HTMLInputElement).value = "";
-  pop(`-${CONFIG.skipCost}s`, "red");
+  const broke = run.combo >= CONFIG.combo[0].at;
+  run.combo = 0;
+  renderCombo(broke);
+  if (broke) theme.sounds.comboBreak();
+  pop(obj.names[0], `-${CONFIG.skipCost}s`, "red");
   el.time.classList.remove("hit"); void el.time.offsetWidth; el.time.classList.add("hit");
   theme.sounds.skip();
   viewer.dismiss("skipped", now);
+  announce(`Skipped ${obj.names[0]}`);
+  saveProgress();
   run.i++;
   showObject(now);
 }
 
-function pop(text: string, cls: string) {
+function announce(t: string) { const a = document.getElementById("live"); if (a) a.textContent = t; }
+
+function buildResult(): RunResult {
+  return {
+    puzzle: run.puzzle,
+    date: run.date,
+    score: run.score,
+    named: run.items.filter((i) => i.outcome !== "skipped").length,
+    zoomed: run.items.filter((i) => i.outcome === "zoomed").length,
+    skipped: run.items.filter((i) => i.outcome === "skipped").length,
+    items: run.items.slice(),
+    device: isTouch ? "touch" : "keyboard",
+    tier: run.tier,
+    bestCombo: run.bestCombo,
+  };
+}
+
+/** The daily run counts from the moment the shutter opens, so a reload can't buy a second try. */
+function saveProgress() {
+  if (run.mode === "daily") store.save({ ...buildResult(), partial: true });
+}
+
+/** One pop at a time: the object's name and what it earned. */
+function pop(name: string, points: string, cls: string) {
+  el.pops.textContent = "";
   const p = document.createElement("div");
   p.className = `pop ${cls}`;
-  p.textContent = text;
+  const n = document.createElement("span");
+  n.className = "pop-name";
+  n.textContent = name.toUpperCase();
+  const pts = document.createElement("span");
+  pts.className = "pop-pts";
+  pts.textContent = points;
+  p.append(n, pts);
   el.pops.appendChild(p);
   setTimeout(() => p.remove(), 900);
+}
+
+function renderCombo(broke: boolean) {
+  const c = run.combo;
+  const e = el.combo;
+  e.classList.remove("broke", "gold", "on");
+  void e.offsetWidth;
+  if (broke) { e.textContent = "STEADY ×0"; e.classList.add("broke", "on"); return; }
+  if (c >= CONFIG.combo[0].at) {
+    const extra = CONFIG.combo.reduce((x, k) => (c >= k.at ? k.extra : x), 0);
+    e.textContent = `STEADY ×${c} +${extra}`;
+    e.classList.add("on");
+    if (c >= CONFIG.combo[1].at) e.classList.add("gold");
+  } else e.textContent = "";
 }
 
 function timeLeft(now: number) {
@@ -305,7 +387,10 @@ function timeLeft(now: number) {
 
 function finish(now: number) {
   if (run.phase === "over") return;
+  if (run.pending !== null) acceptPending(); // credit a match that was waiting on a longer name
+  dropPending();
   run.phase = "over";
+  announce("Time. Results coming up.");
   viewer.dismiss("skipped", now);
   theme.sounds.end();
   el.time.textContent = "0";
@@ -313,22 +398,15 @@ function finish(now: number) {
   el.overlay.className = "overlay big";
   (el.guess as HTMLInputElement).value = "";
   el.controls.classList.add("dim");
-  const named = run.items.filter((i) => i.outcome !== "skipped").length;
-  const result: RunResult = {
-    puzzle: run.puzzle,
-    date: run.date,
-    score: run.score,
-    named,
-    zoomed: run.items.filter((i) => i.outcome === "zoomed").length,
-    skipped: run.items.filter((i) => i.outcome === "skipped").length,
-    items: run.items,
-    device: isTouch ? "touch" : "keyboard",
-    tier: run.tier,
-  };
-  if (run.mode === "daily" && !store.today(run.date)) store.save(result);
+  const result = buildResult();
+  const fresh = store.addToCatalogue(run.items.filter((i) => i.outcome !== "skipped").map((i) => i.id));
+  lastFresh = fresh;
+  const prev = store.today(run.date);
+  if (run.mode === "daily" && (!prev || prev.partial)) store.save(result);
   setTimeout(() => { (el.guess as HTMLInputElement).blur(); resultsScreen(result, run.mode); }, 1400);
 }
 
+let lastFresh = 0;
 let raf = 0;
 function loop() {
   cancelAnimationFrame(raf);
@@ -346,10 +424,11 @@ function loop() {
     }
     if (run.phase === "playing") {
       const t = timeLeft(now);
+      viewer.alert = t <= 10;
       if (t <= 0) finish(now);
       else {
         const s = Math.ceil(t);
-        el.time.textContent = String(s);
+        if (el.time.textContent !== String(s)) el.time.textContent = String(s);
         el.time.classList.toggle("low", s <= 10);
         if (s <= 5 && s < run.lastTick) { run.lastTick = s; theme.sounds.tick(); }
         const obj = run.sky[run.i];
@@ -358,7 +437,9 @@ function loop() {
         el.bonus.classList.toggle("on", zooming);
         if (zooming) {
           el.bonusbar.style.transform = `scaleX(${1 - p})`;
-          (el.bonus.firstElementChild as HTMLElement).textContent = `ZOOM BONUS ${CONFIG.bands[obj.band].zoomedPoints}`;
+          const label = `ZOOM BONUS ${CONFIG.bands[obj.band].zoomedPoints}`;
+          const span = el.bonus.firstElementChild as HTMLElement;
+          if (span.textContent !== label) span.textContent = label;
         }
       }
     } else el.bonus.classList.remove("on");
@@ -370,9 +451,12 @@ function loop() {
 
 function tierLine(tier: number, streak: number): string {
   const t = CONFIG.tiers[tier], next = CONFIG.tiers[tier + 1];
-  const streakTxt = streak ? `${streak}-day streak` : "No streak yet";
-  const nextTxt = next ? `Play ${next.minStreak - streak} more day${next.minStreak - streak === 1 ? "" : "s"} in a row for the ${next.name} sky.` : "The hardest sky there is.";
-  return `<p class="tier">${t.name.toUpperCase()} SKY · ${streakTxt}</p><p class="small next">${nextTxt}</p>`;
+  const streakTxt = streak ? `${streak}-night streak` : "no streak yet";
+  return `<p class="tier">${t.name.toUpperCase()} SKY <span>· ${streakTxt}</span></p>${next ? `<p class="small next">${pips(streak - t.minStreak, next.minStreak - t.minStreak)} ${next.name} sky in ${next.minStreak - streak} more night${next.minStreak - streak === 1 ? "" : "s"}</p>` : `<p class="small next">The hardest sky there is.</p>`}`;
+}
+
+function pips(have: number, need: number): string {
+  return `<span class="pips" aria-hidden="true">${"●".repeat(Math.max(0, have))}${"○".repeat(Math.max(0, need - have))}</span>`;
 }
 
 // ---------------------------------------------------------------- results
@@ -382,60 +466,124 @@ function nextSkyIn(): string {
   const next = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
   const ms = next.getTime() - now.getTime();
   const h = Math.floor(ms / 3600000), m = Math.floor((ms % 3600000) / 60000);
-  return `${h}h ${String(m).padStart(2, "0")}m`;
+  return h ? `${h}h ${String(m).padStart(2, "0")}m` : m ? `${m}m` : "a moment";
 }
 
 async function resultsScreen(r: RunResult, mode: Run["mode"]) {
   cancelAnimationFrame(raf);
   if (!viewer) { viewer = new Viewer(document.createElement("canvas"), theme); }
   await viewer.load();
-  const stats = store.stats(puzzleNumber(localDateKey()));
+  const today = puzzleNumber(localDateKey());
+  const stats = store.stats(today);
   const daily = mode === "daily";
+  const cat = store.catalogue().size;
+  const tier = r.tier ?? 0;
+  const streakNow = store.streakThrough(today);
+  const next = CONFIG.tiers[tier + 1];
+  const tomorrow = next
+    ? `${pips(streakNow - CONFIG.tiers[tier].minStreak, next.minStreak - CONFIG.tiers[tier].minStreak)} ${next.name} sky in ${Math.max(1, next.minStreak - streakNow)} more night${next.minStreak - streakNow === 1 ? "" : "s"}`
+    : "You're on the hardest sky.";
   app.innerHTML = `
   <main class="results">
-    <h1>${daily ? `${theme.title.toUpperCase()} #${r.puzzle}` : "PRACTICE SKY"}</h1>
-    <p class="date">${daily ? fmtDate(r.date) : "Not scored"}</p>
-    ${daily ? `<p class="tier">${CONFIG.tiers[r.tier ?? 0].name.toUpperCase()} SKY</p>` : ""}
-    <div class="final"><span>${r.score}</span><small>POINTS</small></div>
-    <p class="line">${r.named} named · ${r.zoomed} zoom bonus${r.zoomed === 1 ? "" : "es"} · ${r.skipped} skipped</p>
+    <section class="log">
+      <header class="log-head">
+        <span>OBSERVING LOG</span>
+        <span>${daily ? `NIGHT #${r.puzzle}` : "PRACTICE"}</span>
+      </header>
+      <p class="date">${daily ? `${fmtDate(r.date)} · ${CONFIG.tiers[tier].name} sky` : "Random objects, not scored"}</p>
+      <div class="final"><span>${r.score}</span><small>POINTS</small></div>
+      <canvas class="chart" id="chart" aria-label="Star chart of your run"></canvas>
+      <p class="legend"><i class="lg named"></i>named <i class="lg zoomed"></i>zoom bonus <i class="lg skipped"></i>skipped</p>
+      <dl class="figures">
+        <div><dt>NAMED</dt><dd>${r.named}</dd></div>
+        <div><dt>ZOOM</dt><dd>${r.zoomed}</dd></div>
+        <div><dt>STEADY</dt><dd>${r.bestCombo ?? 0}</dd></div>
+        <div><dt>SKIPPED</dt><dd>${r.skipped}</dd></div>
+      </dl>
+    </section>
     <div class="actions">
-      ${daily ? `<button class="btn primary" id="share">SHARE</button>` : ""}
-      <button class="btn" id="practice">${daily ? "PRACTICE SKY" : "AGAIN"}</button>
-      ${!daily && store.today(localDateKey()) ? `<button class="btn" id="back">TODAY'S RESULT</button>` : ""}
-      ${!daily && !store.today(localDateKey()) ? `<button class="btn primary" id="daily">PLAY TODAY'S SKY</button>` : ""}
+      ${daily ? `<button class="btn primary" id="share">SHARE LOG</button>` : ""}
+      ${!daily && !store.today(localDateKey()) ? `<button class="btn primary" id="daily">TONIGHT'S SKY</button>` : ""}
+      <button class="btn" id="practice">${daily ? "PRACTICE" : "AGAIN"}</button>
+      ${!daily && store.today(localDateKey()) ? `<button class="btn" id="back">TONIGHT'S LOG</button>` : ""}
     </div>
-    <p class="toast" id="toast"></p>
-    ${daily ? `<p class="stats">Played ${stats.played} · Best ${stats.best} · Streak ${stats.streak}<br>Next sky in ${nextSkyIn()}</p>` : ""}
-    <h2>WHAT YOU SAW</h2>
+    <p class="toast" id="toast" role="status"></p>
+    <section class="come-back">
+      ${daily ? `<p>Next sky in <b>${nextSkyIn()}</b></p><p class="small">${tomorrow}</p>` : ""}
+      <p class="small">Catalogue <b>${cat}</b> / ${OBJECTS.length} objects${lastFresh ? ` <span class="new">+${lastFresh} new</span>` : ""}</p>
+      ${daily ? `<p class="small">Best ${stats.best} · Streak ${stats.streak}</p>` : ""}
+    </section>
+    <h2>WHAT YOU SAW <small>tap for other names</small></h2>
     <ol class="seen" id="seen"></ol>
     <footer class="credits">${theme.credits}</footer>
   </main>`;
+  lastFresh = 0;
+  drawChart(document.getElementById("chart") as HTMLCanvasElement, r);
   const list = document.getElementById("seen")!;
   for (const it of r.items) {
     const o = BY_ID.get(it.id);
     if (!o) continue;
     const li = document.createElement("li");
     li.className = it.outcome;
+    li.tabIndex = 0;
     li.appendChild(viewer.spriteCanvas(o.sprite, 2));
-    const others = o.names.slice(1, 4).join(", ");
-    const what =
-      it.outcome === "skipped"
-        ? `<span class="tag skip">skipped</span>${it.typed ? ` you tried “${esc(it.typed)}”` : ""}`
-        : `<span class="tag ${it.outcome}">+${it.points}${it.outcome === "zoomed" ? " ★" : ""}</span> “${esc(it.typed)}”`;
+    const others = shownNames(o).slice(0, 4).join(", ");
+    const typed = it.typed && normalize(it.typed) !== normalize(o.names[0]) ? `“${esc(it.typed)}”` : "";
     const div = document.createElement("div");
-    div.innerHTML = `<b>${esc(o.names[0])}</b> <small>${esc(theme.bandNames[o.band])}</small><br>${what}${others ? `<br><small class="aka">also: ${esc(others)}</small>` : ""}`;
+    div.innerHTML = `<b>${esc(o.names[0])}</b><span class="pts">${it.outcome === "skipped" ? "skip" : `+${it.points}${it.outcome === "zoomed" ? "★" : ""}`}</span>` +
+      `<small class="more">${it.outcome === "skipped" && it.typed ? `you tried ${typed || `“${esc(it.typed)}”`}<br>` : typed ? `you typed ${typed}<br>` : ""}${others ? `also: ${esc(others)}` : esc(theme.bandNames[o.band])}</small>`;
     li.appendChild(div);
+    const toggle = () => li.classList.toggle("open");
+    li.addEventListener("click", toggle);
+    li.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); } });
     list.appendChild(li);
   }
   if (!r.items.length) list.innerHTML = `<li class="empty">Nothing this time. The sky will be back tomorrow.</li>`;
   const toast = (t: string) => { const e = document.getElementById("toast")!; e.textContent = t; };
   document.getElementById("share")?.addEventListener("click", async () => {
     const res = await share(shareText(r, theme, SITE_URL));
-    toast(res === "copied" ? "Copied to clipboard" : res === "shared" ? "" : "Could not share");
+    toast(res === "copied" ? "Log copied. Paste it anywhere." : res === "shared" ? "" : "Couldn't share. Try again.");
   });
   document.getElementById("practice")!.onclick = () => openPlay("practice");
   document.getElementById("back")?.addEventListener("click", () => resultsScreen(store.today(localDateKey())!, "daily"));
   document.getElementById("daily")?.addEventListener("click", () => openPlay("daily"));
+}
+
+/** Star chart: one star per object in order, 10 to a row; answers in a row join into constellations. */
+function drawChart(c: HTMLCanvasElement, r: RunResult) {
+  const cols = 10, cell = 12, pad = 6;
+  const rows = Math.max(1, Math.ceil(r.items.length / cols));
+  c.width = cols * cell + pad * 2;
+  c.height = rows * cell + pad * 2;
+  const g = c.getContext("2d")!;
+  g.fillStyle = "#0b0a18";
+  g.fillRect(0, 0, c.width, c.height);
+  // faint grid
+  g.fillStyle = "#1b1a33";
+  for (let x = 0; x <= cols; x++) g.fillRect(pad + x * cell - 6, 0, 1, c.height);
+  // jitter each star a little so it reads as a sky, deterministic per index
+  const pos = r.items.map((_, i) => {
+    const j1 = ((i * 37) % 7) - 3, j2 = ((i * 53) % 5) - 2;
+    return { x: pad + (i % cols) * cell + 6 + Math.round(j1 / 2), y: pad + Math.floor(i / cols) * cell + 6 + Math.round(j2 / 2) };
+  });
+  g.fillStyle = "#2b6f8a";
+  for (let i = 1; i < r.items.length; i++) {
+    if (r.items[i].outcome === "skipped" || r.items[i - 1].outcome === "skipped") continue;
+    line(g, pos[i - 1].x, pos[i - 1].y, pos[i].x, pos[i].y);
+  }
+  r.items.forEach((it, i) => {
+    const { x, y } = pos[i];
+    if (it.outcome === "skipped") { g.fillStyle = "#3a4466"; g.fillRect(x, y, 1, 1); }
+    else if (it.outcome === "zoomed") {
+      g.fillStyle = "#fee761"; g.fillRect(x - 1, y, 3, 1); g.fillRect(x, y - 1, 1, 3);
+      g.fillStyle = "#ffffff"; g.fillRect(x, y, 1, 1);
+    } else { g.fillStyle = "#2ce8f5"; g.fillRect(x, y, 2, 2); }
+  });
+}
+
+function line(g: CanvasRenderingContext2D, x0: number, y0: number, x1: number, y1: number) {
+  const n = Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0));
+  for (let k = 0; k <= n; k++) g.fillRect(Math.round(x0 + ((x1 - x0) * k) / n), Math.round(y0 + ((y1 - y0) * k) / n), 1, 1);
 }
 
 // ---------------------------------------------------------------- boot

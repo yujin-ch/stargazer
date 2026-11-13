@@ -38,7 +38,10 @@ out = []
 for i, o in enumerate(objs):
     sp = pixelate(svg_for(o["emoji"]), SIZE)
     sheet.paste(sp, ((i % COLS) * SIZE, (i // COLS) * SIZE))
-    out.append({"id": o["id"], "sprite": i, "theme": o["theme"], "band": o["band"], "names": o["names"]})
+    # names starting with "~" are accepted but never shown to players
+    hidden = [n[1:].strip() for n in o["names"] if n.startswith("~")]
+    names = [n.lstrip("~").strip() for n in o["names"]]
+    out.append({"id": o["id"], "sprite": i, "theme": o["theme"], "band": o["band"], "names": names, "hidden": hidden})
 
 os.makedirs(os.path.join(ROOT, "src/data"), exist_ok=True)
 os.makedirs(os.path.join(ROOT, "src/themes/pixel-space"), exist_ok=True)

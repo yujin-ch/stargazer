@@ -11,7 +11,8 @@
 "banana",
 "bananas",
 "peeled banana"
-]
+],
+"hidden": []
 },
 {
 "id": "apple",
@@ -21,7 +22,8 @@
 "names": [
 "apple",
 "red apple"
-]
+],
+"hidden": []
 },
 {
 "id": "strawberry",
@@ -31,7 +33,8 @@
 "names": [
 "strawberry",
 "berry"
-]
+],
+"hidden": []
 },
 {
 "id": "grapes",
@@ -43,7 +46,8 @@
 "grape",
 "bunch of grapes",
 "purple grapes"
-]
+],
+"hidden": []
 },
 {
 "id": "watermelon",
@@ -55,7 +59,8 @@
 "melon",
 "watermelon slice",
 "slice of watermelon"
-]
+],
+"hidden": []
 },
 {
 "id": "lemon",
@@ -65,7 +70,8 @@
 "names": [
 "lemon",
 "citrus"
-]
+],
+"hidden": []
 },
 {
 "id": "cherries",
@@ -75,7 +81,8 @@
 "names": [
 "cherries",
 "cherry"
-]
+],
+"hidden": []
 },
 {
 "id": "carrot",
@@ -84,7 +91,8 @@
 "band": 1,
 "names": [
 "carrot"
-]
+],
+"hidden": []
 },
 {
 "id": "corn",
@@ -99,7 +107,8 @@
 "sweet corn",
 "cob",
 "ear of corn"
-]
+],
+"hidden": []
 },
 {
 "id": "pizza",
@@ -111,7 +120,8 @@
 "pizza slice",
 "slice of pizza",
 "slice"
-]
+],
+"hidden": []
 },
 {
 "id": "burger",
@@ -122,7 +132,8 @@
 "burger",
 "hamburger",
 "cheeseburger"
-]
+],
+"hidden": []
 },
 {
 "id": "hot-dog",
@@ -136,7 +147,8 @@
 "sausage",
 "frank",
 "wiener"
-]
+],
+"hidden": []
 },
 {
 "id": "doughnut",
@@ -146,7 +158,8 @@
 "names": [
 "doughnut",
 "donut"
-]
+],
+"hidden": []
 },
 {
 "id": "cookie",
@@ -158,7 +171,8 @@
 "biscuit",
 "chocolate chip cookie",
 "choc chip cookie"
-]
+],
+"hidden": []
 },
 {
 "id": "cake",
@@ -168,7 +182,8 @@
 "names": [
 "cake",
 "birthday cake"
-]
+],
+"hidden": []
 },
 {
 "id": "ice-cream",
@@ -185,7 +200,8 @@
 "gelato",
 "frozen yogurt",
 "froyo"
-]
+],
+"hidden": []
 },
 {
 "id": "cheese",
@@ -197,7 +213,8 @@
 "wedge of cheese",
 "cheese wedge",
 "swiss cheese"
-]
+],
+"hidden": []
 },
 {
 "id": "bread",
@@ -208,7 +225,8 @@
 "bread",
 "loaf",
 "loaf of bread"
-]
+],
+"hidden": []
 },
 {
 "id": "egg",
@@ -217,7 +235,8 @@
 "band": 1,
 "names": [
 "egg"
-]
+],
+"hidden": []
 },
 {
 "id": "coffee",
@@ -239,7 +258,8 @@
 "hot chocolate",
 "cocoa",
 "latte"
-]
+],
+"hidden": []
 },
 {
 "id": "cat",
@@ -254,7 +274,8 @@
 "tabby",
 "tabby cat",
 "ginger cat"
-]
+],
+"hidden": []
 },
 {
 "id": "dog",
@@ -269,7 +290,8 @@
 "doggo",
 "hound",
 "pooch"
-]
+],
+"hidden": []
 },
 {
 "id": "pig",
@@ -284,7 +306,8 @@
 "sow",
 "boar",
 "piglet"
-]
+],
+"hidden": []
 },
 {
 "id": "cow",
@@ -297,7 +320,8 @@
 "dairy cow",
 "bull",
 "calf"
-]
+],
+"hidden": []
 },
 {
 "id": "elephant",
@@ -306,7 +330,8 @@
 "band": 1,
 "names": [
 "elephant"
-]
+],
+"hidden": []
 },
 {
 "id": "giraffe",
@@ -315,7 +340,8 @@
 "band": 1,
 "names": [
 "giraffe"
-]
+],
+"hidden": []
 },
 {
 "id": "horse",
@@ -330,7 +356,8 @@
 "stallion",
 "mare",
 "galloping horse"
-]
+],
+"hidden": []
 },
 {
 "id": "frog",
@@ -340,7 +367,8 @@
 "names": [
 "frog",
 "toad"
-]
+],
+"hidden": []
 },
 {
 "id": "turtle",
@@ -350,7 +378,8 @@
 "names": [
 "turtle",
 "tortoise"
-]
+],
+"hidden": []
 },
 {
 "id": "penguin",
@@ -359,7 +388,8 @@
 "band": 1,
 "names": [
 "penguin"
-]
+],
+"hidden": []
 },
 {
 "id": "duck",
@@ -370,7 +400,8 @@
 "duck",
 "mallard",
 "drake"
-]
+],
+"hidden": []
 },
 {
 "id": "fish",
@@ -379,7 +410,8 @@
 "band": 1,
 "names": [
 "fish"
-]
+],
+"hidden": []
 },
 {
 "id": "bee",
@@ -392,7 +424,8 @@
 "bumblebee",
 "wasp",
 "hornet"
-]
+],
+"hidden": []
 },
 {
 "id": "butterfly",
@@ -402,7 +435,8 @@
 "names": [
 "butterfly",
 "moth"
-]
+],
+"hidden": []
 },
 {
 "id": "tree",
@@ -413,7 +447,8 @@
 "tree",
 "oak",
 "oak tree"
-]
+],
+"hidden": []
 },
 {
 "id": "cactus",
@@ -424,7 +459,8 @@
 "cactus",
 "cacti",
 "saguaro"
-]
+],
+"hidden": []
 },
 {
 "id": "sunflower",
@@ -434,7 +470,8 @@
 "names": [
 "sunflower",
 "flower"
-]
+],
+"hidden": []
 },
 {
 "id": "mushroom",
@@ -446,7 +483,8 @@
 "toadstool",
 "fungus",
 "fungi"
-]
+],
+"hidden": []
 },
 {
 "id": "rainbow",
@@ -455,7 +493,8 @@
 "band": 1,
 "names": [
 "rainbow"
-]
+],
+"hidden": []
 },
 {
 "id": "snowflake",
@@ -467,7 +506,8 @@
 "snow",
 "flake",
 "ice crystal"
-]
+],
+"hidden": []
 },
 {
 "id": "snowman",
@@ -477,7 +517,8 @@
 "names": [
 "snowman",
 "snow man"
-]
+],
+"hidden": []
 },
 {
 "id": "fire",
@@ -489,7 +530,8 @@
 "flame",
 "flames",
 "blaze"
-]
+],
+"hidden": []
 },
 {
 "id": "sun",
@@ -500,7 +542,8 @@
 "sun",
 "sunshine",
 "star"
-]
+],
+"hidden": []
 },
 {
 "id": "moon",
@@ -512,7 +555,8 @@
 "crescent moon",
 "crescent",
 "half moon"
-]
+],
+"hidden": []
 },
 {
 "id": "star",
@@ -522,7 +566,8 @@
 "names": [
 "star",
 "gold star"
-]
+],
+"hidden": []
 },
 {
 "id": "rocket",
@@ -537,7 +582,8 @@
 "space ship",
 "spacecraft",
 "space rocket"
-]
+],
+"hidden": []
 },
 {
 "id": "earth",
@@ -551,7 +597,8 @@
 "planet earth",
 "planet",
 "the world"
-]
+],
+"hidden": []
 },
 {
 "id": "car",
@@ -565,7 +612,8 @@
 "red car",
 "sedan",
 "vehicle"
-]
+],
+"hidden": []
 },
 {
 "id": "bicycle",
@@ -579,7 +627,8 @@
 "push bike",
 "pushbike",
 "pedal bike"
-]
+],
+"hidden": []
 },
 {
 "id": "bus",
@@ -590,7 +639,8 @@
 "bus",
 "school bus",
 "coach"
-]
+],
+"hidden": []
 },
 {
 "id": "airplane",
@@ -605,7 +655,8 @@
 "aircraft",
 "airliner",
 "jet plane"
-]
+],
+"hidden": []
 },
 {
 "id": "house",
@@ -616,7 +667,8 @@
 "house",
 "home",
 "cottage"
-]
+],
+"hidden": []
 },
 {
 "id": "key",
@@ -626,7 +678,8 @@
 "names": [
 "key",
 "door key"
-]
+],
+"hidden": []
 },
 {
 "id": "candle",
@@ -637,7 +690,8 @@
 "candle",
 "candlestick",
 "wax candle"
-]
+],
+"hidden": []
 },
 {
 "id": "alarm-clock",
@@ -648,7 +702,8 @@
 "alarm clock",
 "clock",
 "alarm"
-]
+],
+"hidden": []
 },
 {
 "id": "light-bulb",
@@ -662,7 +717,8 @@
 "light",
 "lamp",
 "idea"
-]
+],
+"hidden": []
 },
 {
 "id": "phone",
@@ -681,7 +737,8 @@
 "android",
 "telephone",
 "cell"
-]
+],
+"hidden": []
 },
 {
 "id": "glasses",
@@ -694,7 +751,8 @@
 "spectacles",
 "specs",
 "sunglasses"
-]
+],
+"hidden": []
 },
 {
 "id": "sneaker",
@@ -712,7 +770,8 @@
 "athletic shoe",
 "kicks",
 "runner"
-]
+],
+"hidden": []
 },
 {
 "id": "top-hat",
@@ -725,7 +784,8 @@
 "magician hat",
 "tophat",
 "stovepipe hat"
-]
+],
+"hidden": []
 },
 {
 "id": "socks",
@@ -737,7 +797,8 @@
 "sock",
 "pair of socks",
 "stocking"
-]
+],
+"hidden": []
 },
 {
 "id": "scissors",
@@ -748,7 +809,8 @@
 "scissors",
 "shears",
 "pair of scissors"
-]
+],
+"hidden": []
 },
 {
 "id": "pencil",
@@ -757,7 +819,8 @@
 "band": 1,
 "names": [
 "pencil"
-]
+],
+"hidden": []
 },
 {
 "id": "books",
@@ -770,7 +833,8 @@
 "stack of books",
 "pile of books",
 "textbooks"
-]
+],
+"hidden": []
 },
 {
 "id": "umbrella",
@@ -781,7 +845,8 @@
 "umbrella",
 "brolly",
 "parasol"
-]
+],
+"hidden": []
 },
 {
 "id": "guitar",
@@ -793,7 +858,8 @@
 "electric guitar",
 "bass",
 "bass guitar"
-]
+],
+"hidden": []
 },
 {
 "id": "soccer-ball",
@@ -805,7 +871,8 @@
 "football",
 "soccer",
 "ball"
-]
+],
+"hidden": []
 },
 {
 "id": "basketball",
@@ -816,7 +883,8 @@
 "basketball",
 "ball",
 "basket ball"
-]
+],
+"hidden": []
 },
 {
 "id": "balloon",
@@ -826,7 +894,8 @@
 "names": [
 "balloon",
 "red balloon"
-]
+],
+"hidden": []
 },
 {
 "id": "gift",
@@ -840,7 +909,8 @@
 "wrapped gift",
 "wrapped present",
 "birthday present"
-]
+],
+"hidden": []
 },
 {
 "id": "pumpkin",
@@ -854,7 +924,8 @@
 "halloween pumpkin",
 "carved pumpkin",
 "gourd"
-]
+],
+"hidden": []
 },
 {
 "id": "bell",
@@ -866,7 +937,8 @@
 "golden bell",
 "church bell",
 "jingle bell"
-]
+],
+"hidden": []
 },
 {
 "id": "pineapple",
@@ -876,7 +948,8 @@
 "names": [
 "pineapple",
 "ananas"
-]
+],
+"hidden": []
 },
 {
 "id": "pear",
@@ -885,7 +958,8 @@
 "band": 2,
 "names": [
 "pear"
-]
+],
+"hidden": []
 },
 {
 "id": "orange",
@@ -899,7 +973,8 @@
 "clementine",
 "satsuma",
 "citrus"
-]
+],
+"hidden": []
 },
 {
 "id": "avocado",
@@ -909,7 +984,8 @@
 "names": [
 "avocado",
 "avo"
-]
+],
+"hidden": []
 },
 {
 "id": "broccoli",
@@ -919,7 +995,8 @@
 "names": [
 "broccoli",
 "brocoli"
-]
+],
+"hidden": []
 },
 {
 "id": "eggplant",
@@ -930,7 +1007,8 @@
 "eggplant",
 "aubergine",
 "brinjal"
-]
+],
+"hidden": []
 },
 {
 "id": "potato",
@@ -941,7 +1019,8 @@
 "potato",
 "spud",
 "tater"
-]
+],
+"hidden": []
 },
 {
 "id": "chili",
@@ -959,7 +1038,8 @@
 "pepper",
 "jalapeno",
 "cayenne"
-]
+],
+"hidden": []
 },
 {
 "id": "croissant",
@@ -968,7 +1048,8 @@
 "band": 2,
 "names": [
 "croissant"
-]
+],
+"hidden": []
 },
 {
 "id": "pretzel",
@@ -977,7 +1058,8 @@
 "band": 2,
 "names": [
 "pretzel"
-]
+],
+"hidden": []
 },
 {
 "id": "cupcake",
@@ -989,7 +1071,8 @@
 "muffin",
 "fairy cake",
 "cup cake"
-]
+],
+"hidden": []
 },
 {
 "id": "popcorn",
@@ -999,7 +1082,8 @@
 "names": [
 "popcorn",
 "pop corn"
-]
+],
+"hidden": []
 },
 {
 "id": "taco",
@@ -1009,7 +1093,8 @@
 "names": [
 "taco",
 "tacos"
-]
+],
+"hidden": []
 },
 {
 "id": "pancakes",
@@ -1025,7 +1110,8 @@
 "flapjack",
 "stack of pancakes",
 "crepes"
-]
+],
+"hidden": []
 },
 {
 "id": "waffle",
@@ -1035,7 +1121,8 @@
 "names": [
 "waffle",
 "waffles"
-]
+],
+"hidden": []
 },
 {
 "id": "honey",
@@ -1048,7 +1135,8 @@
 "honeypot",
 "jar of honey",
 "honey jar"
-]
+],
+"hidden": []
 },
 {
 "id": "fries",
@@ -1061,7 +1149,8 @@
 "chips",
 "frites",
 "potato fries"
-]
+],
+"hidden": []
 },
 {
 "id": "salad",
@@ -1073,7 +1162,8 @@
 "green salad",
 "bowl of salad",
 "salad bowl"
-]
+],
+"hidden": []
 },
 {
 "id": "spaghetti",
@@ -1086,7 +1176,8 @@
 "noodles",
 "spaghetti bolognese",
 "bolognese"
-]
+],
+"hidden": []
 },
 {
 "id": "lollipop",
@@ -1100,7 +1191,8 @@
 "sucker",
 "candy",
 "swirl lollipop"
-]
+],
+"hidden": []
 },
 {
 "id": "chocolate",
@@ -1112,7 +1204,8 @@
 "chocolate bar",
 "candy bar",
 "bar of chocolate"
-]
+],
+"hidden": []
 },
 {
 "id": "milk",
@@ -1123,7 +1216,8 @@
 "milk",
 "glass of milk",
 "glass"
-]
+],
+"hidden": []
 },
 {
 "id": "frying-pan",
@@ -1140,7 +1234,8 @@
 "fry pan",
 "frypan",
 "cooking"
-]
+],
+"hidden": []
 },
 {
 "id": "crab",
@@ -1149,7 +1244,8 @@
 "band": 2,
 "names": [
 "crab"
-]
+],
+"hidden": []
 },
 {
 "id": "octopus",
@@ -1158,7 +1254,8 @@
 "band": 2,
 "names": [
 "octopus"
-]
+],
+"hidden": []
 },
 {
 "id": "shark",
@@ -1167,7 +1264,8 @@
 "band": 2,
 "names": [
 "shark"
-]
+],
+"hidden": []
 },
 {
 "id": "whale",
@@ -1178,7 +1276,8 @@
 "whale",
 "spouting whale",
 "blue whale"
-]
+],
+"hidden": []
 },
 {
 "id": "dolphin",
@@ -1188,7 +1287,8 @@
 "names": [
 "dolphin",
 "porpoise"
-]
+],
+"hidden": []
 },
 {
 "id": "shell",
@@ -1202,7 +1302,8 @@
 "conch",
 "spiral shell",
 "snail shell"
-]
+],
+"hidden": []
 },
 {
 "id": "owl",
@@ -1211,7 +1312,8 @@
 "band": 2,
 "names": [
 "owl"
-]
+],
+"hidden": []
 },
 {
 "id": "rooster",
@@ -1222,8 +1324,11 @@
 "rooster",
 "chicken",
 "cockerel",
-"cock",
-"hen"
+"hen",
+"cock"
+],
+"hidden": [
+"cock"
 ]
 },
 {
@@ -1237,7 +1342,8 @@
 "hawk",
 "falcon",
 "bird of prey"
-]
+],
+"hidden": []
 },
 {
 "id": "fox",
@@ -1247,7 +1353,8 @@
 "names": [
 "fox",
 "red fox"
-]
+],
+"hidden": []
 },
 {
 "id": "squirrel",
@@ -1257,7 +1364,8 @@
 "names": [
 "squirrel",
 "chipmunk"
-]
+],
+"hidden": []
 },
 {
 "id": "zebra",
@@ -1266,7 +1374,8 @@
 "band": 2,
 "names": [
 "zebra"
-]
+],
+"hidden": []
 },
 {
 "id": "camel",
@@ -1276,7 +1385,8 @@
 "names": [
 "camel",
 "dromedary"
-]
+],
+"hidden": []
 },
 {
 "id": "rabbit",
@@ -1288,7 +1398,8 @@
 "bunny",
 "hare",
 "bunny rabbit"
-]
+],
+"hidden": []
 },
 {
 "id": "mouse",
@@ -1299,7 +1410,8 @@
 "mouse",
 "mice",
 "rat"
-]
+],
+"hidden": []
 },
 {
 "id": "snail",
@@ -1309,7 +1421,8 @@
 "names": [
 "snail",
 "slug"
-]
+],
+"hidden": []
 },
 {
 "id": "ladybug",
@@ -1324,7 +1437,8 @@
 "ladybird beetle",
 "beetle",
 "bug"
-]
+],
+"hidden": []
 },
 {
 "id": "spider",
@@ -1334,7 +1448,8 @@
 "names": [
 "spider",
 "tarantula"
-]
+],
+"hidden": []
 },
 {
 "id": "violin",
@@ -1346,7 +1461,8 @@
 "fiddle",
 "viola",
 "cello"
-]
+],
+"hidden": []
 },
 {
 "id": "trumpet",
@@ -1358,7 +1474,8 @@
 "horn",
 "bugle",
 "cornet"
-]
+],
+"hidden": []
 },
 {
 "id": "drum",
@@ -1372,7 +1489,8 @@
 "snare",
 "drum kit",
 "drumsticks"
-]
+],
+"hidden": []
 },
 {
 "id": "piano",
@@ -1387,7 +1505,8 @@
 "synthesizer",
 "synth",
 "piano keys"
-]
+],
+"hidden": []
 },
 {
 "id": "microphone",
@@ -1398,7 +1517,8 @@
 "microphone",
 "mic",
 "mike"
-]
+],
+"hidden": []
 },
 {
 "id": "hammer",
@@ -1407,7 +1527,8 @@
 "band": 2,
 "names": [
 "hammer"
-]
+],
+"hidden": []
 },
 {
 "id": "wrench",
@@ -1417,7 +1538,8 @@
 "names": [
 "wrench",
 "spanner"
-]
+],
+"hidden": []
 },
 {
 "id": "magnet",
@@ -1427,7 +1549,8 @@
 "names": [
 "magnet",
 "horseshoe magnet"
-]
+],
+"hidden": []
 },
 {
 "id": "flashlight",
@@ -1437,7 +1560,8 @@
 "names": [
 "flashlight",
 "torch"
-]
+],
+"hidden": []
 },
 {
 "id": "fire-extinguisher",
@@ -1447,7 +1571,8 @@
 "names": [
 "fire extinguisher",
 "extinguisher"
-]
+],
+"hidden": []
 },
 {
 "id": "broom",
@@ -1459,7 +1584,8 @@
 "broomstick",
 "brush",
 "sweeping brush"
-]
+],
+"hidden": []
 },
 {
 "id": "basket",
@@ -1472,7 +1598,8 @@
 "picnic basket",
 "wicker basket",
 "hamper"
-]
+],
+"hidden": []
 },
 {
 "id": "sponge",
@@ -1481,7 +1608,8 @@
 "band": 2,
 "names": [
 "sponge"
-]
+],
+"hidden": []
 },
 {
 "id": "chair",
@@ -1493,7 +1621,8 @@
 "wooden chair",
 "seat",
 "stool"
-]
+],
+"hidden": []
 },
 {
 "id": "bed",
@@ -1502,7 +1631,8 @@
 "band": 2,
 "names": [
 "bed"
-]
+],
+"hidden": []
 },
 {
 "id": "bathtub",
@@ -1514,7 +1644,8 @@
 "bath",
 "tub",
 "bath tub"
-]
+],
+"hidden": []
 },
 {
 "id": "toilet",
@@ -1529,7 +1660,8 @@
 "commode",
 "potty",
 "john"
-]
+],
+"hidden": []
 },
 {
 "id": "teddy-bear",
@@ -1546,7 +1678,8 @@
 "plush",
 "plushie",
 "soft toy"
-]
+],
+"hidden": []
 },
 {
 "id": "dice",
@@ -1557,7 +1690,8 @@
 "dice",
 "die",
 "game die"
-]
+],
+"hidden": []
 },
 {
 "id": "puzzle-piece",
@@ -1570,7 +1704,8 @@
 "jigsaw piece",
 "puzzle",
 "jigsaw puzzle"
-]
+],
+"hidden": []
 },
 {
 "id": "kite",
@@ -1579,7 +1714,8 @@
 "band": 2,
 "names": [
 "kite"
-]
+],
+"hidden": []
 },
 {
 "id": "yoyo",
@@ -1589,7 +1725,8 @@
 "names": [
 "yoyo",
 "yo yo"
-]
+],
+"hidden": []
 },
 {
 "id": "hourglass",
@@ -1603,7 +1740,8 @@
 "sandglass",
 "timer",
 "hour glass"
-]
+],
+"hidden": []
 },
 {
 "id": "compass",
@@ -1612,7 +1750,8 @@
 "band": 2,
 "names": [
 "compass"
-]
+],
+"hidden": []
 },
 {
 "id": "telescope",
@@ -1621,7 +1760,8 @@
 "band": 2,
 "names": [
 "telescope"
-]
+],
+"hidden": []
 },
 {
 "id": "planet",
@@ -1633,7 +1773,8 @@
 "saturn",
 "ringed planet",
 "gas giant"
-]
+],
+"hidden": []
 },
 {
 "id": "comet",
@@ -1647,7 +1788,8 @@
 "meteorite",
 "asteroid",
 "fireball"
-]
+],
+"hidden": []
 },
 {
 "id": "ufo",
@@ -1662,7 +1804,8 @@
 "alien ship",
 "saucer",
 "space ship"
-]
+],
+"hidden": []
 },
 {
 "id": "tent",
@@ -1672,7 +1815,8 @@
 "names": [
 "tent",
 "camping tent"
-]
+],
+"hidden": []
 },
 {
 "id": "volcano",
@@ -1682,7 +1826,8 @@
 "names": [
 "volcano",
 "erupting volcano"
-]
+],
+"hidden": []
 },
 {
 "id": "palm-tree",
@@ -1693,7 +1838,8 @@
 "palm tree",
 "palm",
 "coconut tree"
-]
+],
+"hidden": []
 },
 {
 "id": "maple-leaf",
@@ -1706,7 +1852,8 @@
 "autumn leaf",
 "fall leaf",
 "maple"
-]
+],
+"hidden": []
 },
 {
 "id": "rose",
@@ -1717,7 +1864,8 @@
 "rose",
 "flower",
 "red rose"
-]
+],
+"hidden": []
 },
 {
 "id": "tulip",
@@ -1727,7 +1875,8 @@
 "names": [
 "tulip",
 "flower"
-]
+],
+"hidden": []
 },
 {
 "id": "castle",
@@ -1739,7 +1888,8 @@
 "palace",
 "fort",
 "fortress"
-]
+],
+"hidden": []
 },
 {
 "id": "train",
@@ -1753,7 +1903,8 @@
 "steam engine",
 "engine",
 "steam locomotive"
-]
+],
+"hidden": []
 },
 {
 "id": "helicopter",
@@ -1764,7 +1915,8 @@
 "helicopter",
 "chopper",
 "heli"
-]
+],
+"hidden": []
 },
 {
 "id": "sailboat",
@@ -1778,7 +1930,8 @@
 "yacht",
 "sail boat",
 "dinghy"
-]
+],
+"hidden": []
 },
 {
 "id": "scooter",
@@ -1789,7 +1942,8 @@
 "scooter",
 "kick scooter",
 "push scooter"
-]
+],
+"hidden": []
 },
 {
 "id": "tractor",
@@ -1798,7 +1952,8 @@
 "band": 2,
 "names": [
 "tractor"
-]
+],
+"hidden": []
 },
 {
 "id": "fire-engine",
@@ -1811,7 +1966,8 @@
 "firetruck",
 "fire engine truck",
 "truck"
-]
+],
+"hidden": []
 },
 {
 "id": "ping-pong",
@@ -1826,7 +1982,8 @@
 "bat",
 "ping pong bat",
 "table tennis bat"
-]
+],
+"hidden": []
 },
 {
 "id": "bowling",
@@ -1841,7 +1998,8 @@
 "pins",
 "ten pin bowling",
 "tenpin"
-]
+],
+"hidden": []
 },
 {
 "id": "boxing-glove",
@@ -1853,7 +2011,8 @@
 "boxing gloves",
 "glove",
 "boxing"
-]
+],
+"hidden": []
 },
 {
 "id": "skateboard",
@@ -1864,7 +2023,8 @@
 "skateboard",
 "skate board",
 "skate"
-]
+],
+"hidden": []
 },
 {
 "id": "american-football",
@@ -1878,7 +2038,8 @@
 "rugby",
 "ball",
 "pigskin"
-]
+],
+"hidden": []
 },
 {
 "id": "baseball",
@@ -1889,7 +2050,8 @@
 "baseball",
 "ball",
 "softball"
-]
+],
+"hidden": []
 },
 {
 "id": "tennis-ball",
@@ -1900,7 +2062,8 @@
 "tennis ball",
 "tennis",
 "ball"
-]
+],
+"hidden": []
 },
 {
 "id": "crown",
@@ -1910,7 +2073,8 @@
 "names": [
 "crown",
 "tiara"
-]
+],
+"hidden": []
 },
 {
 "id": "ring",
@@ -1923,7 +2087,8 @@
 "engagement ring",
 "wedding ring",
 "diamond"
-]
+],
+"hidden": []
 },
 {
 "id": "gloves",
@@ -1936,7 +2101,8 @@
 "mittens",
 "mitten",
 "mitts"
-]
+],
+"hidden": []
 },
 {
 "id": "scarf",
@@ -1945,7 +2111,8 @@
 "band": 2,
 "names": [
 "scarf"
-]
+],
+"hidden": []
 },
 {
 "id": "backpack",
@@ -1961,7 +2128,8 @@
 "knapsack",
 "bookbag",
 "book bag"
-]
+],
+"hidden": []
 },
 {
 "id": "t-shirt",
@@ -1975,7 +2143,8 @@
 "tee",
 "tee shirt",
 "top"
-]
+],
+"hidden": []
 },
 {
 "id": "jeans",
@@ -1989,7 +2158,8 @@
 "denim",
 "denims",
 "blue jeans"
-]
+],
+"hidden": []
 },
 {
 "id": "camera",
@@ -1999,7 +2169,8 @@
 "names": [
 "camera",
 "photo camera"
-]
+],
+"hidden": []
 },
 {
 "id": "television",
@@ -2012,7 +2183,8 @@
 "telly",
 "tv set",
 "old tv"
-]
+],
+"hidden": []
 },
 {
 "id": "laptop",
@@ -2026,7 +2198,8 @@
 "macbook",
 "pc",
 "laptop computer"
-]
+],
+"hidden": []
 },
 {
 "id": "watch",
@@ -2040,7 +2213,8 @@
 "smartwatch",
 "smart watch",
 "clock"
-]
+],
+"hidden": []
 },
 {
 "id": "headphones",
@@ -2053,7 +2227,8 @@
 "earphones",
 "headphone",
 "cans"
-]
+],
+"hidden": []
 },
 {
 "id": "battery",
@@ -2062,7 +2237,8 @@
 "band": 2,
 "names": [
 "battery"
-]
+],
+"hidden": []
 },
 {
 "id": "plug",
@@ -2078,7 +2254,8 @@
 "cord",
 "power cable",
 "charger"
-]
+],
+"hidden": []
 },
 {
 "id": "paperclip",
@@ -2089,7 +2266,8 @@
 "paperclip",
 "paper clip",
 "clip"
-]
+],
+"hidden": []
 },
 {
 "id": "pushpin",
@@ -2103,7 +2281,8 @@
 "thumb tack",
 "drawing pin",
 "map pin"
-]
+],
+"hidden": []
 },
 {
 "id": "envelope",
@@ -2115,7 +2294,8 @@
 "letter",
 "mail",
 "email"
-]
+],
+"hidden": []
 },
 {
 "id": "ruler",
@@ -2126,7 +2306,8 @@
 "ruler",
 "straight ruler",
 "rule"
-]
+],
+"hidden": []
 },
 {
 "id": "crayon",
@@ -2136,16 +2317,18 @@
 "names": [
 "crayon",
 "wax crayon"
-]
+],
+"hidden": []
 },
 {
 "id": "anchor",
 "sprite": 180,
-"theme": "Vehicles",
+"theme": "Sea life",
 "band": 2,
 "names": [
 "anchor"
-]
+],
+"hidden": []
 },
 {
 "id": "coconut",
@@ -2154,7 +2337,8 @@
 "band": 3,
 "names": [
 "coconut"
-]
+],
+"hidden": []
 },
 {
 "id": "kiwi",
@@ -2166,7 +2350,8 @@
 "kiwi fruit",
 "kiwifruit",
 "chinese gooseberry"
-]
+],
+"hidden": []
 },
 {
 "id": "blueberries",
@@ -2179,7 +2364,8 @@
 "berries",
 "bilberry",
 "bilberries"
-]
+],
+"hidden": []
 },
 {
 "id": "peach",
@@ -2190,7 +2376,8 @@
 "peach",
 "nectarine",
 "apricot"
-]
+],
+"hidden": []
 },
 {
 "id": "mango",
@@ -2199,7 +2386,8 @@
 "band": 3,
 "names": [
 "mango"
-]
+],
+"hidden": []
 },
 {
 "id": "bell-pepper",
@@ -2212,7 +2400,8 @@
 "green pepper",
 "capsicum",
 "sweet pepper"
-]
+],
+"hidden": []
 },
 {
 "id": "garlic",
@@ -2225,7 +2414,8 @@
 "bulb of garlic",
 "clove",
 "clove of garlic"
-]
+],
+"hidden": []
 },
 {
 "id": "onion",
@@ -2237,7 +2427,8 @@
 "brown onion",
 "yellow onion",
 "shallot"
-]
+],
+"hidden": []
 },
 {
 "id": "cucumber",
@@ -2250,7 +2441,8 @@
 "gherkin",
 "zucchini",
 "courgette"
-]
+],
+"hidden": []
 },
 {
 "id": "peanuts",
@@ -2265,7 +2457,8 @@
 "groundnut",
 "monkey nut",
 "peanut shell"
-]
+],
+"hidden": []
 },
 {
 "id": "rice-ball",
@@ -2276,7 +2469,8 @@
 "rice ball",
 "onigiri",
 "riceball"
-]
+],
+"hidden": []
 },
 {
 "id": "sushi",
@@ -2287,7 +2481,8 @@
 "sushi",
 "nigiri",
 "salmon sushi"
-]
+],
+"hidden": []
 },
 {
 "id": "bagel",
@@ -2296,7 +2491,8 @@
 "band": 3,
 "names": [
 "bagel"
-]
+],
+"hidden": []
 },
 {
 "id": "butter",
@@ -2308,7 +2504,8 @@
 "block of butter",
 "stick of butter",
 "margarine"
-]
+],
+"hidden": []
 },
 {
 "id": "bacon",
@@ -2321,7 +2518,8 @@
 "rasher",
 "rashers",
 "strip of bacon"
-]
+],
+"hidden": []
 },
 {
 "id": "teapot",
@@ -2333,7 +2531,8 @@
 "kettle",
 "tea pot",
 "tea kettle"
-]
+],
+"hidden": []
 },
 {
 "id": "spoon",
@@ -2344,7 +2543,8 @@
 "spoon",
 "teaspoon",
 "tablespoon"
-]
+],
+"hidden": []
 },
 {
 "id": "salt",
@@ -2359,7 +2559,8 @@
 "salt pot",
 "salt pourer",
 "seasoning"
-]
+],
+"hidden": []
 },
 {
 "id": "chopsticks",
@@ -2369,7 +2570,8 @@
 "names": [
 "chopsticks",
 "chopstick"
-]
+],
+"hidden": []
 },
 {
 "id": "sloth",
@@ -2378,7 +2580,8 @@
 "band": 3,
 "names": [
 "sloth"
-]
+],
+"hidden": []
 },
 {
 "id": "otter",
@@ -2389,7 +2592,8 @@
 "otter",
 "sea otter",
 "river otter"
-]
+],
+"hidden": []
 },
 {
 "id": "beaver",
@@ -2398,7 +2602,8 @@
 "band": 3,
 "names": [
 "beaver"
-]
+],
+"hidden": []
 },
 {
 "id": "kangaroo",
@@ -2409,7 +2614,8 @@
 "kangaroo",
 "roo",
 "wallaby"
-]
+],
+"hidden": []
 },
 {
 "id": "llama",
@@ -2419,7 +2625,8 @@
 "names": [
 "llama",
 "alpaca"
-]
+],
+"hidden": []
 },
 {
 "id": "hippo",
@@ -2429,7 +2636,8 @@
 "names": [
 "hippo",
 "hippopotamus"
-]
+],
+"hidden": []
 },
 {
 "id": "rhino",
@@ -2439,7 +2647,8 @@
 "names": [
 "rhino",
 "rhinoceros"
-]
+],
+"hidden": []
 },
 {
 "id": "hedgehog",
@@ -2449,7 +2658,8 @@
 "names": [
 "hedgehog",
 "porcupine"
-]
+],
+"hidden": []
 },
 {
 "id": "lizard",
@@ -2462,7 +2672,8 @@
 "iguana",
 "newt",
 "salamander"
-]
+],
+"hidden": []
 },
 {
 "id": "crocodile",
@@ -2474,7 +2685,8 @@
 "alligator",
 "croc",
 "gator"
-]
+],
+"hidden": []
 },
 {
 "id": "dinosaur",
@@ -2490,7 +2702,8 @@
 "apatosaurus",
 "dino",
 "long neck"
-]
+],
+"hidden": []
 },
 {
 "id": "t-rex",
@@ -2505,7 +2718,8 @@
 "dinosaur",
 "dino",
 "tyrannosaur"
-]
+],
+"hidden": []
 },
 {
 "id": "flamingo",
@@ -2514,7 +2728,8 @@
 "band": 3,
 "names": [
 "flamingo"
-]
+],
+"hidden": []
 },
 {
 "id": "peacock",
@@ -2525,7 +2740,8 @@
 "peacock",
 "peafowl",
 "peahen"
-]
+],
+"hidden": []
 },
 {
 "id": "parrot",
@@ -2536,7 +2752,8 @@
 "parrot",
 "macaw",
 "parakeet"
-]
+],
+"hidden": []
 },
 {
 "id": "swan",
@@ -2545,7 +2762,8 @@
 "band": 3,
 "names": [
 "swan"
-]
+],
+"hidden": []
 },
 {
 "id": "seal",
@@ -2556,7 +2774,8 @@
 "seal",
 "sea lion",
 "walrus"
-]
+],
+"hidden": []
 },
 {
 "id": "jellyfish",
@@ -2568,7 +2787,8 @@
 "jelly fish",
 "jelly",
 "medusa"
-]
+],
+"hidden": []
 },
 {
 "id": "squid",
@@ -2579,7 +2799,8 @@
 "squid",
 "calamari",
 "cuttlefish"
-]
+],
+"hidden": []
 },
 {
 "id": "shrimp",
@@ -2589,7 +2810,8 @@
 "names": [
 "shrimp",
 "prawn"
-]
+],
+"hidden": []
 },
 {
 "id": "lobster",
@@ -2600,7 +2822,8 @@
 "lobster",
 "crayfish",
 "crawfish"
-]
+],
+"hidden": []
 },
 {
 "id": "pufferfish",
@@ -2609,12 +2832,14 @@
 "band": 3,
 "names": [
 "pufferfish",
+"fish",
 "blowfish",
 "puffer fish",
 "puffer",
 "fugu",
 "balloonfish"
-]
+],
+"hidden": []
 },
 {
 "id": "scorpion",
@@ -2623,7 +2848,8 @@
 "band": 3,
 "names": [
 "scorpion"
-]
+],
+"hidden": []
 },
 {
 "id": "beetle",
@@ -2635,7 +2861,8 @@
 "bug",
 "scarab",
 "dung beetle"
-]
+],
+"hidden": []
 },
 {
 "id": "worm",
@@ -2645,7 +2872,8 @@
 "names": [
 "worm",
 "earthworm"
-]
+],
+"hidden": []
 },
 {
 "id": "axe",
@@ -2655,7 +2883,8 @@
 "names": [
 "axe",
 "hatchet"
-]
+],
+"hidden": []
 },
 {
 "id": "screwdriver",
@@ -2665,7 +2894,8 @@
 "names": [
 "screwdriver",
 "screw driver"
-]
+],
+"hidden": []
 },
 {
 "id": "saw",
@@ -2677,7 +2907,8 @@
 "handsaw",
 "hand saw",
 "wood saw"
-]
+],
+"hidden": []
 },
 {
 "id": "nut-and-bolt",
@@ -2690,7 +2921,8 @@
 "nut",
 "screw",
 "bolt and nut"
-]
+],
+"hidden": []
 },
 {
 "id": "gear",
@@ -2704,7 +2936,8 @@
 "gear wheel",
 "cog wheel",
 "sprocket"
-]
+],
+"hidden": []
 },
 {
 "id": "hook",
@@ -2714,7 +2947,8 @@
 "names": [
 "hook",
 "hanger"
-]
+],
+"hidden": []
 },
 {
 "id": "ladder",
@@ -2725,7 +2959,8 @@
 "ladder",
 "step ladder",
 "stepladder"
-]
+],
+"hidden": []
 },
 {
 "id": "toolbox",
@@ -2738,7 +2973,8 @@
 "toolkit",
 "tool kit",
 "tool chest"
-]
+],
+"hidden": []
 },
 {
 "id": "scale",
@@ -2752,7 +2988,8 @@
 "weighing scale",
 "scales of justice",
 "balance scale"
-]
+],
+"hidden": []
 },
 {
 "id": "microscope",
@@ -2761,7 +2998,8 @@
 "band": 3,
 "names": [
 "microscope"
-]
+],
+"hidden": []
 },
 {
 "id": "test-tube",
@@ -2772,7 +3010,8 @@
 "test tube",
 "vial",
 "tube"
-]
+],
+"hidden": []
 },
 {
 "id": "dna",
@@ -2786,7 +3025,8 @@
 "dna strand",
 "gene",
 "genes"
-]
+],
+"hidden": []
 },
 {
 "id": "thermometer",
@@ -2795,7 +3035,8 @@
 "band": 3,
 "names": [
 "thermometer"
-]
+],
+"hidden": []
 },
 {
 "id": "petri-dish",
@@ -2807,7 +3048,8 @@
 "petri",
 "culture dish",
 "agar plate"
-]
+],
+"hidden": []
 },
 {
 "id": "accordion",
@@ -2818,7 +3060,8 @@
 "accordion",
 "squeezebox",
 "concertina"
-]
+],
+"hidden": []
 },
 {
 "id": "saxophone",
@@ -2828,7 +3071,8 @@
 "names": [
 "saxophone",
 "sax"
-]
+],
+"hidden": []
 },
 {
 "id": "banjo",
@@ -2837,7 +3081,8 @@
 "band": 3,
 "names": [
 "banjo"
-]
+],
+"hidden": []
 },
 {
 "id": "maracas",
@@ -2849,7 +3094,8 @@
 "maraca",
 "shaker",
 "rattle"
-]
+],
+"hidden": []
 },
 {
 "id": "canoe",
@@ -2861,7 +3107,8 @@
 "kayak",
 "boat",
 "dugout"
-]
+],
+"hidden": []
 },
 {
 "id": "cable-car",
@@ -2874,7 +3121,8 @@
 "aerial tramway",
 "ski lift",
 "aerial lift"
-]
+],
+"hidden": []
 },
 {
 "id": "curling-stone",
@@ -2886,7 +3134,8 @@
 "curling",
 "curling rock",
 "stone"
-]
+],
+"hidden": []
 },
 {
 "id": "badminton",
@@ -2901,7 +3150,8 @@
 "birdie",
 "shuttle",
 "badminton racket"
-]
+],
+"hidden": []
 },
 {
 "id": "snorkel",
@@ -2917,7 +3167,8 @@
 "snorkel mask",
 "dive mask",
 "scuba"
-]
+],
+"hidden": []
 },
 {
 "id": "parachute",
@@ -2930,7 +3181,8 @@
 "paragliding",
 "skydiving",
 "skydiver"
-]
+],
+"hidden": []
 },
 {
 "id": "bow-and-arrow",
@@ -2943,7 +3195,8 @@
 "archery",
 "arrow",
 "bow arrow"
-]
+],
+"hidden": []
 },
 {
 "id": "yarn",
@@ -2957,7 +3210,8 @@
 "ball of wool",
 "knitting",
 "yarn ball"
-]
+],
+"hidden": []
 },
 {
 "id": "thread",
@@ -2971,7 +3225,8 @@
 "cotton reel",
 "reel",
 "bobbin"
-]
+],
+"hidden": []
 },
 {
 "id": "safety-pin",
@@ -2983,7 +3238,8 @@
 "pin",
 "nappy pin",
 "diaper pin"
-]
+],
+"hidden": []
 },
 {
 "id": "mirror",
@@ -2994,7 +3250,8 @@
 "mirror",
 "looking glass",
 "hand mirror"
-]
+],
+"hidden": []
 },
 {
 "id": "window",
@@ -3003,7 +3260,8 @@
 "band": 3,
 "names": [
 "window"
-]
+],
+"hidden": []
 },
 {
 "id": "service-bell",
@@ -3019,7 +3277,8 @@
 "bellhop bell",
 "hotel bell",
 "counter bell"
-]
+],
+"hidden": []
 },
 {
 "id": "toothbrush",
@@ -3030,7 +3289,8 @@
 "toothbrush",
 "tooth brush",
 "brush"
-]
+],
+"hidden": []
 },
 {
 "id": "lotion",
@@ -3051,7 +3311,8 @@
 "cream",
 "hand cream",
 "sun cream"
-]
+],
+"hidden": []
 },
 {
 "id": "bucket",
@@ -3061,7 +3322,8 @@
 "names": [
 "bucket",
 "pail"
-]
+],
+"hidden": []
 },
 {
 "id": "brick",
@@ -3073,7 +3335,8 @@
 "bricks",
 "brick wall",
 "wall"
-]
+],
+"hidden": []
 },
 {
 "id": "fountain",
@@ -3083,7 +3346,8 @@
 "names": [
 "fountain",
 "water fountain"
-]
+],
+"hidden": []
 },
 {
 "id": "moai",
@@ -3097,7 +3361,8 @@
 "statue",
 "head",
 "stone head"
-]
+],
+"hidden": []
 },
 {
 "id": "lantern",
@@ -3109,7 +3374,8 @@
 "paper lantern",
 "red lantern",
 "chinese lantern"
-]
+],
+"hidden": []
 },
 {
 "id": "crystal-ball",
@@ -3122,7 +3388,8 @@
 "orb",
 "magic ball",
 "ball"
-]
+],
+"hidden": []
 },
 {
 "id": "magic-wand",
@@ -3133,7 +3400,8 @@
 "magic wand",
 "wand",
 "wizard wand"
-]
+],
+"hidden": []
 },
 {
 "id": "bone",
@@ -3143,7 +3411,8 @@
 "names": [
 "bone",
 "dog bone"
-]
+],
+"hidden": []
 },
 {
 "id": "ice",
@@ -3155,7 +3424,8 @@
 "ice cube",
 "ice cubes",
 "cube"
-]
+],
+"hidden": []
 },
 {
 "id": "tornado",
@@ -3168,7 +3438,8 @@
 "cyclone",
 "whirlwind",
 "hurricane"
-]
+],
+"hidden": []
 },
 {
 "id": "satellite-dish",
@@ -3183,7 +3454,8 @@
 "radar dish",
 "radar",
 "radio telescope"
-]
+],
+"hidden": []
 },
 {
 "id": "satellite",
@@ -3194,7 +3466,8 @@
 "satellite",
 "space station",
 "probe"
-]
+],
+"hidden": []
 },
 {
 "id": "printer",
@@ -3203,7 +3476,8 @@
 "band": 3,
 "names": [
 "printer"
-]
+],
+"hidden": []
 },
 {
 "id": "joystick",
@@ -3216,7 +3490,8 @@
 "controller",
 "game controller",
 "arcade stick"
-]
+],
+"hidden": []
 },
 {
 "id": "floppy-disk",
@@ -3230,7 +3505,8 @@
 "disk",
 "save icon",
 "floppy disc"
-]
+],
+"hidden": []
 },
 {
 "id": "wastebasket",
@@ -3249,7 +3525,8 @@
 "waste bin",
 "trashcan",
 "dustbin"
-]
+],
+"hidden": []
 },
 {
 "id": "set-square",
@@ -3262,7 +3539,8 @@
 "triangle ruler",
 "triangular ruler",
 "protractor"
-]
+],
+"hidden": []
 },
 {
 "id": "fountain-pen",
@@ -3275,7 +3553,8 @@
 "ink pen",
 "nib",
 "quill"
-]
+],
+"hidden": []
 },
 {
 "id": "dodo",
@@ -3285,7 +3564,8 @@
 "names": [
 "dodo",
 "dodo bird"
-]
+],
+"hidden": []
 },
 {
 "id": "turkey",
@@ -3294,7 +3574,8 @@
 "band": 4,
 "names": [
 "turkey"
-]
+],
+"hidden": []
 },
 {
 "id": "goose",
@@ -3305,7 +3586,8 @@
 "goose",
 "geese",
 "gander"
-]
+],
+"hidden": []
 },
 {
 "id": "mammoth",
@@ -3317,7 +3599,8 @@
 "woolly mammoth",
 "wooly mammoth",
 "mastodon"
-]
+],
+"hidden": []
 },
 {
 "id": "bison",
@@ -3327,7 +3610,8 @@
 "names": [
 "bison",
 "buffalo"
-]
+],
+"hidden": []
 },
 {
 "id": "skunk",
@@ -3336,7 +3620,8 @@
 "band": 4,
 "names": [
 "skunk"
-]
+],
+"hidden": []
 },
 {
 "id": "badger",
@@ -3346,7 +3631,8 @@
 "names": [
 "badger",
 "honey badger"
-]
+],
+"hidden": []
 },
 {
 "id": "moose",
@@ -3356,7 +3642,8 @@
 "names": [
 "moose",
 "elk"
-]
+],
+"hidden": []
 },
 {
 "id": "donkey",
@@ -3367,6 +3654,9 @@
 "donkey",
 "mule",
 "burro",
+"ass"
+],
+"hidden": [
 "ass"
 ]
 },
@@ -3379,7 +3669,8 @@
 "goat",
 "billy goat",
 "nanny goat"
-]
+],
+"hidden": []
 },
 {
 "id": "deer",
@@ -3392,7 +3683,8 @@
 "reindeer",
 "buck",
 "elk"
-]
+],
+"hidden": []
 },
 {
 "id": "leopard",
@@ -3403,7 +3695,8 @@
 "leopard",
 "cheetah",
 "jaguar"
-]
+],
+"hidden": []
 },
 {
 "id": "coral",
@@ -3413,7 +3706,8 @@
 "names": [
 "coral",
 "coral reef"
-]
+],
+"hidden": []
 },
 {
 "id": "oyster",
@@ -3426,7 +3720,8 @@
 "pearl",
 "mussel",
 "oyster with pearl"
-]
+],
+"hidden": []
 },
 {
 "id": "lotus",
@@ -3438,7 +3733,8 @@
 "water lily",
 "waterlily",
 "lotus flower"
-]
+],
+"hidden": []
 },
 {
 "id": "hyacinth",
@@ -3450,8 +3746,11 @@
 "lavender",
 "lupine",
 "lupin",
-"bluebell"
-]
+"bluebell",
+"flower",
+"purple flower"
+],
+"hidden": []
 },
 {
 "id": "rock",
@@ -3463,7 +3762,8 @@
 "stone",
 "boulder",
 "pebble"
-]
+],
+"hidden": []
 },
 {
 "id": "log",
@@ -3476,7 +3776,8 @@
 "firewood",
 "timber",
 "tree trunk"
-]
+],
+"hidden": []
 },
 {
 "id": "ginger",
@@ -3487,7 +3788,8 @@
 "ginger",
 "ginger root",
 "root ginger"
-]
+],
+"hidden": []
 },
 {
 "id": "pea-pod",
@@ -3501,7 +3803,8 @@
 "peapod",
 "green beans",
 "edamame"
-]
+],
+"hidden": []
 },
 {
 "id": "bok-choy",
@@ -3518,7 +3821,8 @@
 "kale",
 "greens",
 "spinach"
-]
+],
+"hidden": []
 },
 {
 "id": "olive",
@@ -3529,7 +3833,8 @@
 "olive",
 "olives",
 "green olive"
-]
+],
+"hidden": []
 },
 {
 "id": "mooncake",
@@ -3539,7 +3844,8 @@
 "names": [
 "mooncake",
 "moon cake"
-]
+],
+"hidden": []
 },
 {
 "id": "falafel",
@@ -3548,7 +3854,8 @@
 "band": 4,
 "names": [
 "falafel"
-]
+],
+"hidden": []
 },
 {
 "id": "fortune-cookie",
@@ -3557,7 +3864,8 @@
 "band": 4,
 "names": [
 "fortune cookie"
-]
+],
+"hidden": []
 },
 {
 "id": "dango",
@@ -3568,7 +3876,8 @@
 "dango",
 "mochi",
 "skewer"
-]
+],
+"hidden": []
 },
 {
 "id": "pie",
@@ -3579,7 +3888,8 @@
 "pie",
 "apple pie",
 "tart"
-]
+],
+"hidden": []
 },
 {
 "id": "fondue",
@@ -3589,7 +3899,8 @@
 "names": [
 "fondue",
 "cheese fondue"
-]
+],
+"hidden": []
 },
 {
 "id": "mate",
@@ -3601,7 +3912,8 @@
 "yerba mate",
 "maté",
 "gourd"
-]
+],
+"hidden": []
 },
 {
 "id": "jar",
@@ -3612,12 +3924,13 @@
 "jar",
 "mason jar",
 "glass jar"
-]
+],
+"hidden": []
 },
 {
 "id": "amphora",
 "sprite": 306,
-"theme": "Places",
+"theme": "History",
 "band": 4,
 "names": [
 "amphora",
@@ -3625,7 +3938,8 @@
 "urn",
 "jug",
 "pot"
-]
+],
+"hidden": []
 },
 {
 "id": "nesting-doll",
@@ -3634,12 +3948,14 @@
 "band": 4,
 "names": [
 "nesting doll",
+"doll",
 "nesting dolls",
 "matryoshka",
 "russian doll",
 "babushka doll",
 "russian dolls"
-]
+],
+"hidden": []
 },
 {
 "id": "abacus",
@@ -3649,7 +3965,8 @@
 "names": [
 "abacus",
 "counting frame"
-]
+],
+"hidden": []
 },
 {
 "id": "flute",
@@ -3661,7 +3978,8 @@
 "recorder",
 "pipe",
 "fife"
-]
+],
+"hidden": []
 },
 {
 "id": "djembe",
@@ -3675,7 +3993,8 @@
 "conga",
 "long drum",
 "hand drum"
-]
+],
+"hidden": []
 },
 {
 "id": "postal-horn",
@@ -3688,7 +4007,8 @@
 "post horn",
 "bugle",
 "french horn"
-]
+],
+"hidden": []
 },
 {
 "id": "radio",
@@ -3699,7 +4019,8 @@
 "radio",
 "transistor radio",
 "boombox"
-]
+],
+"hidden": []
 },
 {
 "id": "telephone",
@@ -3712,7 +4033,8 @@
 "landline",
 "rotary phone",
 "old phone"
-]
+],
+"hidden": []
 },
 {
 "id": "pager",
@@ -3722,7 +4044,8 @@
 "names": [
 "pager",
 "beeper"
-]
+],
+"hidden": []
 },
 {
 "id": "stopwatch",
@@ -3733,7 +4056,8 @@
 "stopwatch",
 "stop watch",
 "timer"
-]
+],
+"hidden": []
 },
 {
 "id": "wheel",
@@ -3744,7 +4068,8 @@
 "wheel",
 "tire",
 "tyre"
-]
+],
+"hidden": []
 },
 {
 "id": "roller-skate",
@@ -3757,7 +4082,8 @@
 "rollerskate",
 "skate",
 "quad skate"
-]
+],
+"hidden": []
 },
 {
 "id": "ice-skate",
@@ -3769,7 +4095,8 @@
 "ice skates",
 "skate",
 "figure skate"
-]
+],
+"hidden": []
 },
 {
 "id": "frisbee",
@@ -3780,7 +4107,8 @@
 "frisbee",
 "flying disc",
 "disc"
-]
+],
+"hidden": []
 },
 {
 "id": "fishing-rod",
@@ -3792,7 +4120,8 @@
 "fishing pole",
 "rod",
 "fishing"
-]
+],
+"hidden": []
 },
 {
 "id": "cricket",
@@ -3803,7 +4132,8 @@
 "cricket",
 "cricket bat",
 "bat"
-]
+],
+"hidden": []
 },
 {
 "id": "lacrosse",
@@ -3813,7 +4143,8 @@
 "names": [
 "lacrosse",
 "lacrosse stick"
-]
+],
+"hidden": []
 },
 {
 "id": "skis",
@@ -3824,27 +4155,30 @@
 "skis",
 "ski",
 "skiing"
-]
+],
+"hidden": []
 },
 {
 "id": "shield",
 "sprite": 324,
-"theme": "Toys",
+"theme": "History",
 "band": 4,
 "names": [
 "shield"
-]
+],
+"hidden": []
 },
 {
 "id": "dagger",
 "sprite": 325,
-"theme": "Toys",
+"theme": "History",
 "band": 4,
 "names": [
 "dagger",
 "knife",
 "sword"
-]
+],
+"hidden": []
 },
 {
 "id": "helmet",
@@ -3855,7 +4189,8 @@
 "helmet",
 "army helmet",
 "military helmet"
-]
+],
+"hidden": []
 },
 {
 "id": "graduation-cap",
@@ -3866,8 +4201,11 @@
 "graduation cap",
 "mortarboard",
 "grad cap",
-"cap"
-]
+"cap",
+"hat",
+"graduation hat"
+],
+"hidden": []
 },
 {
 "id": "hiking-boot",
@@ -3879,7 +4217,8 @@
 "boot",
 "boots",
 "walking boot"
-]
+],
+"hidden": []
 },
 {
 "id": "flip-flop",
@@ -3889,9 +4228,13 @@
 "names": [
 "flip flop",
 "flip flops",
-"thong",
 "sandal",
-"jandal"
+"jandal",
+"thong",
+"shoe"
+],
+"hidden": [
+"thong"
 ]
 },
 {
@@ -3904,8 +4247,11 @@
 "ballet shoe",
 "ballet slippers",
 "pointe shoes",
-"ballet flats"
-]
+"ballet flats",
+"shoes",
+"slippers"
+],
+"hidden": []
 },
 {
 "id": "briefcase",
@@ -3918,7 +4264,8 @@
 "attache case",
 "bag",
 "portfolio"
-]
+],
+"hidden": []
 },
 {
 "id": "suitcase",
@@ -3929,7 +4276,8 @@
 "suitcase",
 "luggage",
 "baggage"
-]
+],
+"hidden": []
 },
 {
 "id": "fan",
@@ -3940,7 +4288,8 @@
 "fan",
 "folding fan",
 "hand fan"
-]
+],
+"hidden": []
 },
 {
 "id": "stethoscope",
@@ -3949,7 +4298,8 @@
 "band": 4,
 "names": [
 "stethoscope"
-]
+],
+"hidden": []
 },
 {
 "id": "bandage",
@@ -3962,7 +4312,8 @@
 "plaster",
 "sticking plaster",
 "bandaid"
-]
+],
+"hidden": []
 },
 {
 "id": "syringe",
@@ -3975,7 +4326,8 @@
 "injection",
 "shot",
 "vaccine"
-]
+],
+"hidden": []
 },
 {
 "id": "clamp",
@@ -3987,7 +4339,8 @@
 "vise",
 "vice",
 "c clamp"
-]
+],
+"hidden": []
 },
 {
 "id": "pickaxe",
@@ -3999,7 +4352,8 @@
 "pick",
 "pick axe",
 "mattock"
-]
+],
+"hidden": []
 },
 {
 "id": "firecracker",
@@ -4010,6 +4364,9 @@
 "firecracker",
 "dynamite",
 "cracker",
+"banger"
+],
+"hidden": [
 "banger"
 ]
 },
@@ -4022,7 +4379,8 @@
 "disco ball",
 "mirror ball",
 "glitter ball"
-]
+],
+"hidden": []
 },
 {
 "id": "diya",
@@ -4034,7 +4392,8 @@
 "oil lamp",
 "diwali lamp",
 "lamp"
-]
+],
+"hidden": []
 },
 {
 "id": "red-envelope",
@@ -4047,23 +4406,25 @@
 "red packet",
 "hongbao",
 "lai see"
-]
+],
+"hidden": []
 },
 {
 "id": "coin",
 "sprite": 343,
-"theme": "Party",
+"theme": "Treasure",
 "band": 4,
 "names": [
 "coin",
 "gold coin",
 "money"
-]
+],
+"hidden": []
 },
 {
 "id": "gem",
 "sprite": 344,
-"theme": "Party",
+"theme": "Treasure",
 "band": 4,
 "names": [
 "gem",
@@ -4071,7 +4432,8 @@
 "jewel",
 "gemstone",
 "crystal"
-]
+],
+"hidden": []
 },
 {
 "id": "hut",
@@ -4082,7 +4444,8 @@
 "hut",
 "cabin",
 "shack"
-]
+],
+"hidden": []
 },
 {
 "id": "torii",
@@ -4095,7 +4458,8 @@
 "shrine gate",
 "gate",
 "shrine"
-]
+],
+"hidden": []
 }
 ]
 }

@@ -66,6 +66,10 @@ describe("daily sky", () => {
       expect(s.some((o) => o.band === 3)).toBe(true);
     }
     expect(dailySky(5).map((o) => o.id)).toEqual(dailySky(5).map((o) => o.id));
+    for (let d = 1; d <= 1000; d++) for (const t of [0, 1, 2]) {
+      const ids = dailySky(d, t).map((o) => o.id);
+      expect(new Set(ids).size, `day ${d} tier ${t}`).toBe(ids.length);
+    }
     const week = Array.from({ length: 7 }, (_, i) => dailySky(i + 1).filter((o) => o.band === 0).map((o) => o.id)).flat();
     // band 1 has 70+ objects, 10 per day: a week never repeats
     expect(new Set(week).size).toBe(week.length);
