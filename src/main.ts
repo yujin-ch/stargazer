@@ -10,6 +10,8 @@ import { Viewer } from "./viewer";
 import { store, type ItemResult, type RunResult } from "./storage";
 import { crowdScores, beatShare, CROWD_IS_SIMULATED } from "./crowd";
 import { share, shareText } from "./share";
+import { introScreen, atlasScreen, type AtlasStar } from "./atlas";
+import { THEMES } from "./library";
 
 const matcher = makeMatcher(OBJECTS.map((o) => o.names));
 /** /?night=N plays night N's sky and condition as an unsaved preview (for trying themes and conditions). */
@@ -279,8 +281,10 @@ async function openPlay(mode: Run["mode"]) {
       <li><b>${c3.at} in a row</b> earns extra. ${isTouch ? "Skip" : "Tab skips"}${isTouch ? "" : ","} costs ${CONFIG.skipCost}s and breaks it.</li>
     </ul>
     <button class="btn primary" id="go">OPEN THE SHUTTER</button>
+    <button class="link-skip" id="back-atlas" type="button">back to the star atlas</button>
     <p class="small">${CONFIG.runSeconds} seconds · ${mode === "daily" ? "same sky as everyone on your tier" : `a preview, not saved`}</p>`;
   document.getElementById("go")!.onclick = begin;
+  document.getElementById("back-atlas")!.onclick = () => { cancelAnimationFrame(raf); showAtlas(); };
   sizeViewer();
   loop();
 }
@@ -496,9 +500,54 @@ function finish(now: number, cleared = false) {
     el.overlay.innerHTML = `<div><b id="tally">0</b><span>POINTS</span>${newBest ? `<em id="best" class="hidden">NEW BEST</em>` : ""}</div>`;
     countUp(document.getElementById("tally")!, result.score, 900, true, () => {
       if (newBest) { document.getElementById("best")?.classList.remove("hidden"); theme.sounds.best(); }
-      setTimeout(() => resultsScreen(result, run.mode), newBest ? 1300 : 900);
+      const info = themeInfo(run.sky[0]?.theme ?? "");
+      setTimeout(() => (info?.mystery ? finalQuestion(result, run.mode) : resultsScreen(result, run.mode)), newBest ? 1300 : 900);
     });
   }, 800);
+}
+
+/** Score a Mystery link guess onto a result (and save it for a daily run). */
+function applyLink(r: RunResult, guess: string, mode: Run["mode"], themeId: string): RunResult {
+  const info = themeInfo(themeId);
+  const ok = !!info && !!guess.trim() && linkMatches(guess, [...info.keys, info.name ?? ""]);
+  const bonus = ok ? CONFIG.linkBonus : 0;
+  const next: RunResult = { ...r, score: r.score + bonus, link: { guess: guess.trim(), ok, bonus } };
+  if (mode === "daily") store.save(next);
+  if (ok) theme.sounds.best();
+  return next;
+}
+
+/** On Mystery link nights the run ends with one last question in the lens: what linked tonight's sky? */
+function finalQuestion(result: RunResult, mode: Run["mode"]) {
+  if (!document.getElementById("eyepiece")) return;
+  const themeId = run.sky[0]?.theme ?? "";
+  el.overlay.className = "overlay final-q";
+  el.overlay.innerHTML = `<div><b>?</b><span>ONE LAST QUESTION</span></div>`;
+  el.start.className = "start final-card";
+  el.start.innerHTML = `
+    <h1>WHAT LINKED TONIGHT'S SKY?</h1>
+    <p class="small">Everything you saw had something in common. One guess, +${CONFIG.linkBonus} if you get it.</p>
+    <form id="final-form" class="link-form" autocomplete="off">
+      <input id="final-guess" type="text" maxlength="60" placeholder="they all…" aria-label="Your guess at the link" autocapitalize="none" spellcheck="false" enterkeyhint="done" />
+      <button class="btn primary" type="submit">GUESS</button>
+    </form>
+    <button class="link-skip" id="final-skip" type="button">I give up, show me</button>`;
+  const input = document.getElementById("final-guess") as HTMLInputElement;
+  setTimeout(() => input.focus(), 50);
+  let done = false;
+  const submit = (guess: string) => {
+    if (done) return;
+    done = true;
+    const next = applyLink(result, guess, mode, themeId);
+    el.start.classList.add("hidden");
+    el.overlay.className = "overlay final-q " + (next.link!.ok ? "found" : "missed");
+    el.overlay.innerHTML = next.link!.ok
+      ? `<div><b>+${next.link!.bonus}</b><span>LINK FOUND</span></div>`
+      : `<div><b>✕</b><span>${guess.trim() ? "NOT QUITE" : "THE LINK WAS…"}</span></div>`;
+    setTimeout(() => resultsScreen(next, mode), 1100);
+  };
+  (document.getElementById("final-form") as HTMLFormElement).onsubmit = (e) => { e.preventDefault(); submit(input.value); };
+  document.getElementById("final-skip")!.onclick = () => submit("");
 }
 
 /** Count a number up for a little ceremony. */
@@ -635,6 +684,7 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
     </section>
     <div class="actions">
       ${daily ? `<button class="btn primary" id="share">SHARE LOG</button>` : ""}
+      <button class="btn" id="to-atlas">STAR ATLAS</button>
       ${!daily && !store.today(localDateKey()) ? `<button class="btn primary" id="daily">TONIGHT'S SKY</button>` : ""}
       ${!daily && store.today(localDateKey()) ? `<button class="btn" id="back">TONIGHT'S LOG</button>` : ""}
     </div>
@@ -665,14 +715,7 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
       box.innerHTML = `<h3>THE MYSTERY LINK</h3><p>What did everything tonight have in common? One guess, +${CONFIG.linkBonus} if you get it.</p>
         <form id="link-form" class="link-form" autocomplete="off"><input id="link-guess" type="text" maxlength="60" placeholder="they all…" aria-label="Your guess at the link" autocapitalize="none" spellcheck="false" />
         <button class="btn primary" type="submit">GUESS</button></form><button class="link-skip" id="link-skip" type="button">I give up, show me</button>`;
-      const submit = (guess: string) => {
-        const ok = !!guess.trim() && linkMatches(guess, [...info.keys, info.name ?? ""]);
-        const bonus = ok ? CONFIG.linkBonus : 0;
-        const next: RunResult = { ...r, score: r.score + bonus, link: { guess: guess.trim(), ok, bonus } };
-        if (daily) store.save(next);
-        if (ok) theme.sounds.best();
-        void resultsScreen(next, mode);
-      };
+      const submit = (guess: string) => void resultsScreen(applyLink(r, guess, mode, themeId), mode);
       (document.getElementById("link-form") as HTMLFormElement).onsubmit = (e) => { e.preventDefault(); submit((document.getElementById("link-guess") as HTMLInputElement).value); };
       document.getElementById("link-skip")!.onclick = () => submit("");
     } else {
@@ -738,6 +781,7 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
     const res = await share(shareText(r, theme, SITE_URL));
     toast(res === "copied" ? "Log copied. Paste it anywhere." : res === "shared" ? "" : "Couldn't share. Try again.");
   });
+  document.getElementById("to-atlas")!.onclick = () => showAtlas();
   document.getElementById("back")?.addEventListener("click", () => resultsScreen(store.today(localDateKey())!, "daily"));
   document.getElementById("daily")?.addEventListener("click", () => { PREVIEW_NIGHT = 0; void openPlay("daily"); });
   app.querySelectorAll<HTMLButtonElement>("[data-night]").forEach((b) => (b.onclick = () => { PREVIEW_NIGHT = Number(b.dataset.night); void openPlay("practice"); }));
@@ -865,7 +909,79 @@ function line(g: CanvasRenderingContext2D, x0: number, y0: number, x1: number, y
 if (new URLSearchParams(location.search).has("debug"))
   (window as unknown as { __sg: unknown }).__sg = { answer: () => run?.sky[run.i]?.names[0], phase: () => run?.phase };
 
-const done = store.today(localDateKey());
+// ---------------------------------------------------------------- front door: intro, then the star atlas
+
+const THEME_COLORS = ["#2ce8f5", "#e07ab8", "#9bd34a", "#feae34", "#a884d8", "#7cc6f5", "#f6757a", "#fee761"];
+
+function nextNightFor(themeId: string, from: number): number {
+  for (let n = from; n < from + 400; n++) if (dayTheme(n) === themeId) return n;
+  return from;
+}
+
+function dateOfNight(n: number): string {
+  const [y, m, d] = CONFIG.launchDate.split("-").map(Number);
+  const dt = new Date(y, m - 1, d + n - 1);
+  return dt.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
+}
+
+function showAtlas(focus = "tonight") {
+  cancelAnimationFrame(raf);
+  const today = puzzleNumber(localDateKey());
+  const done = store.today(localDateKey());
+  const tonightTheme = dayTheme(today);
+  const cond = dayCondition(today);
+  const stats = store.stats(today);
+  const cat = store.catalogue();
+  const stars: AtlasStar[] = [];
+  stars.push({
+    id: "tonight", x: 1000, y: 1000, size: "huge", color: "#fee761",
+    label: "TONIGHT'S SKY",
+    sub: done && !done.partial ? `Seen · ${done.score} pts` : `Night #${today} · ${themeLabel(tonightTheme)} · ${cond.name}`,
+    open: () => (done ? resultsScreen(done, "daily") : openPlay("daily")),
+  });
+  THEMES.forEach((id, i) => {
+    const ang = -Math.PI / 2 + ((i + 0.5) / THEMES.length) * Math.PI * 2;
+    const n = nextNightFor(id, today), info = themeInfo(id);
+    const pool = OBJECTS.filter((o) => o.theme === id);
+    const found = pool.filter((o) => cat.has(o.id)).length;
+    const name = info?.mystery && !(id === tonightTheme && done?.link) ? "Mystery link" : themeName(id);
+    stars.push({
+      id: `theme:${id}`, x: 1000 + Math.cos(ang) * 330, y: 1000 + Math.sin(ang) * 290, size: "mid", color: THEME_COLORS[i % THEME_COLORS.length],
+      label: name.toUpperCase(), sub: n === today ? "tonight" : `night #${n}`,
+      card: () => `<h2>${esc(name)}</h2>
+        <p>${info?.mystery ? "A Mystery link sky: the theme stays hidden until your final guess." : `${pool.length} objects, from easy to Black Hole.`}</p>
+        <p class="small">${n === today ? "This is tonight's sky." : `Rises next on <b>night #${n}</b> · ${dateOfNight(n)}`}</p>
+        <p class="small">Catalogued <b>${found}</b> / ${pool.length}</p>
+        ${import.meta.env.VITE_PREVIEW_TOOLS ? `<button class="btn" data-preview="${n}">PREVIEW THIS SKY</button>` : ""}`,
+      wire: (c) => { const b = c.querySelector<HTMLButtonElement>("[data-preview]"); if (b) b.onclick = () => { PREVIEW_NIGHT = Number(b.dataset.preview); void openPlay("practice"); }; },
+    });
+  });
+  const menu: AtlasStar[] = [
+    { id: "how", x: 650, y: 590, size: "big", color: "#2ce8f5", label: "HOW TO PLAY", card: () => `<h2>How to play</h2>
+      <ul class="rules"><li><b>Type</b> what you see in the telescope. It moves on by itself.</li>
+      <li><b>Zoomed in?</b> Name it before it pulls back for bonus points.</li>
+      <li><b>${CONFIG.combo[0].at} in a row</b> earns extra. A skip costs ${CONFIG.skipCost}s.</li>
+      <li><b>One sky a night</b>, the same for everyone. Some nights hide their theme: guess the <b>Mystery link</b> at the end.</li>
+      <li>Difficulty runs Full Moon, Shooting Star, Nebula, then <b>Black Hole</b>.</li></ul>` },
+    { id: "log", x: 1350, y: 590, size: "big", color: "#e07ab8", label: "OBSERVING LOG", card: () => `<h2>Observing log</h2>
+      <dl class="figures"><div><dt>NIGHTS</dt><dd>${stats.played}</dd></div><div><dt>BEST</dt><dd>${stats.best}</dd></div><div><dt>STREAK</dt><dd>${stats.streak}</dd></div><div><dt>CATALOGUE</dt><dd>${cat.size}</dd></div></dl>
+      ${done ? `<button class="btn" id="card-log">TONIGHT'S LOG</button>` : `<p class="small">Tonight's sky is still waiting.</p>`}`,
+      wire: (c) => { const b = c.querySelector<HTMLButtonElement>("#card-log"); if (b) b.onclick = () => resultsScreen(done!, "daily"); } },
+    { id: "settings", x: 660, y: 1420, size: "big", color: "#9bd34a", label: "SETTINGS", card: () => `<h2>Settings</h2>
+      <p><button class="btn" id="card-sound">SOUND: ${store.muted ? "OFF" : "ON"}</button></p>
+      <p class="small">Motion follows your device's reduced-motion setting.</p>`,
+      wire: (c) => { const b = c.querySelector<HTMLButtonElement>("#card-sound")!; b.onclick = () => { store.muted = !store.muted; setMuted(store.muted); b.textContent = `SOUND: ${store.muted ? "OFF" : "ON"}`; }; } },
+    { id: "credits", x: 1340, y: 1420, size: "big", color: "#feae34", label: "CREDITS", card: () => `<h2>Credits</h2><p>${theme.credits}</p><p class="small">Made with a pixel drawing board, one shape at a time.</p>` },
+    { id: "community", x: 1640, y: 1180, size: "small", color: "#5a6988", dim: true, label: "COMMUNITY SKIES", sub: "coming soon",
+      card: () => `<h2>Community skies</h2><p>Soon: skies drawn and themed by other stargazers, out here on the edge of the map.</p>` },
+  ];
+  stars.push(...menu);
+  atlasScreen(app, stars, { title: "STAR ATLAS", footer: `Night #${today} · ${fmtDate(localDateKey())}`, focus });
+}
+
 if (PREVIEW_NIGHT) void openPlay("practice");
-else if (done) void resultsScreen(done, "daily");
-else void openPlay("daily");
+else introScreen(app, {
+  title: theme.title,
+  sub: `Night #${puzzleNumber(localDateKey())} · ${fmtDate(localDateKey())}`,
+  onEnter: () => showAtlas(),
+});

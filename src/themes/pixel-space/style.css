@@ -269,3 +269,74 @@ a { color: var(--cyan); }
 .link-skip { background: none; border: 0; color: var(--dim); font-size: 17px; text-decoration: underline; padding: 4px; }
 .seen .note { display: block; width: 100%; color: var(--accent); font-size: 16px; margin-top: 3px; line-height: 1.1; }
 .seen li canvas.wide { width: auto; height: 24px; max-width: 64px; align-self: center; }
+
+/* the last question on Mystery link nights */
+.final-card h1 { font-size: 13px; line-height: 1.5; }
+.final-card .link-form input { font-size: 24px; }
+.overlay.final-q div { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.overlay.final-q b { font-weight: normal; font-size: 44px; color: var(--accent); }
+.overlay.final-q span { font-size: 10px; color: var(--cyan); }
+.overlay.final-q.found b { color: var(--cyan); }
+.overlay.final-q.missed b { color: var(--red); }
+
+/* ------------------------------------------------ intro: the telescope on the hill */
+.intro { position: fixed; inset: 0; overflow: hidden; }
+.intro-scene { position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; }
+.intro-scene.zoom { animation: intro-zoom 0.95s cubic-bezier(0.55, 0, 0.85, 0.35) forwards; }
+@keyframes intro-zoom { 0% { transform: scale(1); filter: brightness(1); } 70% { filter: brightness(1.2); } 100% { transform: scale(26); filter: brightness(0); } }
+.intro-ui { position: absolute; left: 0; right: 0; top: max(12vh, 60px); display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 0 16px; text-align: center; transition: opacity 250ms steps(3); }
+.intro.zooming .intro-ui { opacity: 0; }
+.wordmark { font-family: var(--font-display); font-size: clamp(26px, 8vw, 46px); color: var(--accent); margin: 0; letter-spacing: 3px; text-shadow: 4px 4px 0 #000, 0 0 24px rgba(254, 231, 97, 0.25); }
+.intro-sub { margin: 0; color: var(--cyan); font-family: var(--font-display); font-size: 10px; letter-spacing: 1px; }
+.intro-go { margin-top: 18px; animation: go-glow 1.6s steps(4) infinite alternate; }
+@keyframes go-glow { from { box-shadow: 4px 4px 0 #000; } to { box-shadow: 4px 4px 0 #000, 0 0 18px rgba(254, 231, 97, 0.55); } }
+
+/* ------------------------------------------------ the star atlas */
+.atlas { position: fixed; inset: 0; overflow: hidden; touch-action: none; cursor: grab; background: #0b0a18; animation: fade-in 0.4s steps(4); }
+.atlas.dragging { cursor: grabbing; }
+.atlas.dragging .astar { pointer-events: none; }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+.atlas-map { position: absolute; left: 0; top: 0; width: 2000px; height: 2000px; transform-origin: 0 0; will-change: transform; }
+.atlas-sky, .atlas-lines { position: absolute; inset: 0; width: 2000px; height: 2000px; image-rendering: pixelated; }
+.atlas.diving .atlas-map { transition: filter 0.9s steps(6); filter: brightness(1.6); }
+.atlas.diving::after { content: ""; position: absolute; inset: 0; background: #07060f; animation: dive-out 0.9s steps(6) forwards; pointer-events: none; }
+@keyframes dive-out { 0%, 55% { opacity: 0; } 100% { opacity: 1; } }
+
+.astar { position: absolute; width: 0; height: 0; padding: 0; border: 0; background: none; transform: scale(var(--inv, 1)); display: block; }
+.astar i { position: absolute; left: 0; top: 0; translate: -50% -50%; width: 8px; height: 8px; background: var(--c); box-shadow: 0 0 0 2px #000, 0 0 16px 4px color-mix(in srgb, var(--c) 55%, transparent); }
+.astar i::before, .astar i::after { content: ""; position: absolute; background: var(--c); opacity: 0.7; }
+.astar i::before { left: 50%; top: -10px; width: 2px; height: calc(100% + 20px); translate: -50% 0; }
+.astar i::after { top: 50%; left: -10px; height: 2px; width: calc(100% + 20px); translate: 0 -50%; }
+.astar.small i { width: 4px; height: 4px; }
+.astar.small i::before, .astar.small i::after { display: none; }
+.astar.big i { width: 10px; height: 10px; }
+.astar.huge i { width: 18px; height: 18px; animation: pulse 1.4s steps(4) infinite alternate; }
+.astar.huge i::before { top: -26px; height: calc(100% + 52px); }
+.astar.huge i::after { left: -26px; width: calc(100% + 52px); }
+@keyframes pulse { from { box-shadow: 0 0 0 2px #000, 0 0 18px 6px rgba(254, 231, 97, 0.45); } to { box-shadow: 0 0 0 2px #000, 0 0 34px 14px rgba(254, 231, 97, 0.7); } }
+.astar span { position: absolute; left: 0; top: 18px; translate: -50% 0; white-space: nowrap; font-family: var(--font-display); font-size: 9px; color: var(--c); text-shadow: 2px 2px 0 #000; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.astar.huge span { top: 36px; font-size: 13px; }
+.astar span small { font-family: var(--font-body); font-size: 17px; color: var(--ink); text-shadow: 2px 2px 0 #000; }
+.astar.dim { opacity: 0.6; }
+.astar:hover span, .astar:focus-visible span, .astar.on span { text-decoration: underline; text-underline-offset: 4px; }
+.astar:focus-visible { outline: none; }
+.astar:focus-visible i { outline: 3px solid var(--cyan); outline-offset: 6px; }
+.astar::before { content: ""; position: absolute; left: -26px; top: -26px; width: 52px; height: 52px; } /* bigger tap target */
+.astar.huge::before { left: -44px; top: -44px; width: 88px; height: 88px; }
+
+.atlas-head { position: absolute; left: 0; right: 0; top: 0; padding: max(10px, env(safe-area-inset-top)) 16px 8px; display: flex; flex-direction: column; align-items: center; gap: 2px; pointer-events: none; background: linear-gradient(#0b0a18, transparent); }
+.atlas-head span { font-family: var(--font-display); font-size: 12px; color: var(--accent); letter-spacing: 2px; text-shadow: 2px 2px 0 #000; }
+.atlas-head small { color: var(--dim); font-size: 16px; }
+.atlas-tools { position: absolute; right: 12px; bottom: max(12px, env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 6px; }
+.atlas-tools .btn { width: 40px; height: 40px; padding: 0; font-size: 16px; }
+.atlas-foot { position: absolute; left: 12px; bottom: max(8px, env(safe-area-inset-bottom)); margin: 0; color: var(--dim); font-size: 16px; pointer-events: none; }
+.atlas-card { position: absolute; left: 50%; bottom: max(64px, calc(env(safe-area-inset-bottom) + 56px)); translate: -50% 0; width: min(420px, calc(100% - 32px)); max-height: 60%; overflow: auto; background: var(--panel); border: 3px solid var(--panel-edge); box-shadow: 6px 6px 0 #000; padding: 14px 16px; cursor: auto; animation: fade-in 0.2s steps(3); }
+.atlas-card h2 { font-family: var(--font-display); font-size: 13px; color: var(--accent); margin: 0 30px 8px 0; line-height: 1.4; }
+.atlas-card p { margin: 6px 0; }
+.atlas-card .small b { color: var(--accent); font-weight: normal; }
+.atlas-card .rules { margin: 0; }
+.atlas-card .figures { margin-top: 4px; }
+.card-x { position: absolute; right: 8px; top: 6px; background: none; border: 0; color: var(--dim); font-size: 20px; padding: 4px 8px; }
+.start .link-skip { display: block; margin: 8px auto 0; }
+@media (prefers-reduced-motion: reduce) { .astar.huge i, .intro-go { animation: none; } }
+.atlas.card-open .atlas-tools { display: none; }
