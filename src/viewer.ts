@@ -1,5 +1,5 @@
 import type { Theme } from "./themes/types";
-import { SPRITE_SIZE, objectImage, type SkyObject } from "./library";
+import { SPRITE_SIZE, objectImage, photoStage, picturesReady, PHOTO_STAGES, PHOTO_TILE, type SkyObject } from "./library";
 import { CONFIG, type ConditionId } from "./config";
 
 const PAD = 5; // transparent margin so blur can spread
@@ -15,6 +15,8 @@ interface Prepared {
   /** Shrink factor so wide pictures still fit the eyepiece. */
   fit: number;
   focal: { x: number; y: number };
+  /** Photo plates reveal by depixelating through fixed stages instead of blurring. */
+  photo: boolean;
   opaque: { x: number; y: number; c: string }[];
 }
 
@@ -60,15 +62,19 @@ export class Viewer {
     this.ctx.imageSmoothingEnabled = false;
   }
 
-  load(): Promise<void> {
-    return Promise.resolve();
+  /** Coarsest photo stage each band starts from (index into the plate: 7 = 6 px ... 3 = 24 px). */
+  private static PHOTO_START = [4, 5, 6, 7];
+
+  load(objs: SkyObject[] = []): Promise<void> {
+    return picturesReady(objs);
   }
 
   /** Draw an object's picture (sharp) into a small canvas, for results lists. */
   spriteCanvas(o: SkyObject, scale = 2): HTMLCanvasElement {
     const img = objectImage(o);
     const c = document.createElement("canvas");
-    c.width = img.width * scale; c.height = img.height * scale;
+    const k = o.kind === "photo" ? SPRITE_SIZE / PHOTO_TILE * 1.25 : 1;
+    c.width = Math.round(img.width * scale * k); c.height = Math.round(img.height * scale * k);
     const g = c.getContext("2d")!;
     g.imageSmoothingEnabled = false;
     g.drawImage(img, 0, 0, c.width, c.height);
@@ -94,21 +100,29 @@ export class Viewer {
       const i = (y * PW + x) * 4;
       if (src.data[i + 3] > 128) {
         sx += x; sy += y; n++;
-        if ((x + y * 3) % 5 === 0) opaque.push({ x: x - PAD, y: y - PAD, c: `rgb(${src.data[i]},${src.data[i + 1]},${src.data[i + 2]})` });
+        if (o.kind === "photo" ? x % 3 === 0 && y % 3 === 0 && (x + y) % 2 === 0 : (x + y * 3) % 5 === 0) opaque.push({ x: x - PAD, y: y - PAD, c: `rgb(${src.data[i]},${src.data[i + 1]},${src.data[i + 2]})` });
       }
     }
     const focal = n ? { x: sx / n - PAD, y: sy / n - PAD } : { x: w / 2, y: h / 2 };
 
     const levels: HTMLCanvasElement[] = [base];
-    for (let l = 1; l < BLUR_LEVELS; l++) {
+    const photo = o.kind === "photo";
+    if (photo) for (let l = 1; l < PHOTO_STAGES; l++) {
+      const c = document.createElement("canvas");
+      c.width = PW; c.height = PH;
+      c.getContext("2d")!.drawImage(photoStage(o, l), PAD, PAD);
+      levels.push(c);
+    }
+    else for (let l = 1; l < BLUR_LEVELS; l++) {
       const sigma = (MAX_SIGMA * l) / (BLUR_LEVELS - 1);
       const c = document.createElement("canvas");
       c.width = PW; c.height = PH;
       c.getContext("2d")!.putImageData(gaussian(src, PW, PH, sigma), 0, 0);
       levels.push(c);
     }
-    const fit = Math.min(1, (SPRITE_SIZE * 1.45) / w);
-    const prep = { levels, focal, opaque, w, h, fit };
+    // a photo plate shows a little bigger than a drawing, at one photo pixel per screen pixel
+    const fit = photo ? 0.5 : Math.min(1, (SPRITE_SIZE * 1.45) / w);
+    const prep = { levels, focal, opaque, w, h, fit, photo };
     this.cache.set(o.sprite, prep);
     return prep;
   }
@@ -222,7 +236,10 @@ export class Viewer {
       const e = ease(this.pullProgress(now));
       const zoom = band.startZoom + (1 - band.startZoom) * e;
       const blur = band.startBlur * (1 - e);
-      const level = Math.min(BLUR_LEVELS - 1, Math.round((blur / MAX_SIGMA) * (BLUR_LEVELS - 1)));
+      // drawings sharpen out of a blur; photo plates depixelate, one stage at a time
+      const level = a.prep.photo
+        ? Math.round((1 - e) * Viewer.PHOTO_START[a.obj.band])
+        : Math.min(BLUR_LEVELS - 1, Math.round((blur / MAX_SIGMA) * (BLUR_LEVELS - 1)));
       const fx = a.prep.focal.x + (a.prep.w / 2 - a.prep.focal.x) * e;
       const fy = a.prep.focal.y + (a.prep.h / 2 - a.prep.focal.y) * e;
       const px = scale * a.prep.fit * zoom; // logical px per sprite px

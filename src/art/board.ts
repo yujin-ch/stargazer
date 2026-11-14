@@ -192,6 +192,8 @@ export interface SheetMeta {
   mystery: boolean;
   /** A sprite library, not a playable theme. */
   library: boolean;
+  /** Pictures are photo plates from src/art/photos/<id>.png instead of drawings. */
+  photo?: boolean;
   /** One line explaining the link, shown on reveal. */
   about?: string;
 }
@@ -228,6 +230,7 @@ export function parseTheme(text: string, theme: string): { meta: SheetMeta; defs
       else if (k === "about") meta.about = v;
       else if (k === "mystery") meta.mystery = true;
       else if (k === "library") meta.library = true;
+      else if (k === "photo") meta.photo = true;
       continue;
     }
     if (line.startsWith("@")) {

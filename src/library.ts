@@ -9,7 +9,12 @@ import { parseTheme, renderSprite, toRGBA, SIZE, type SheetMeta, type SpriteDef 
  */
 const SHEETS = import.meta.glob("./art/themes/*.txt", { query: "?raw", import: "default", eager: true }) as Record<string, string>;
 
-export type ItemKind = "single" | "rebus" | "pair";
+/** Photo plates: one strip per object, 8 tiles of PHOTO_TILE px (final photo, then coarser and coarser). */
+const PHOTO_URLS = import.meta.glob("./art/photos/*.png", { query: "?url", import: "default", eager: true }) as Record<string, string>;
+export const PHOTO_TILE = 80;
+export const PHOTO_STAGES = 8;
+
+export type ItemKind = "single" | "rebus" | "pair" | "photo";
 
 export interface SkyObject {
   id: string;
@@ -52,11 +57,12 @@ export const THEME_INFO: ThemeInfo[] = parsed.filter((p) => !p.meta.library).map
 const INFO = new Map(THEME_INFO.map((t) => [t.id, t]));
 
 export const SPRITE_SIZE = SIZE;
+const photoThemes = new Set(parsed.filter((p) => p.meta.photo).map((p) => p.defs[0]?.theme));
 export const OBJECTS: SkyObject[] = parsed
   .filter((p) => !p.meta.library)
   .flatMap((p) => p.defs)
   .map((d, i) => {
-    const kind: ItemKind = d.parts ? "rebus" : d.pair ? "pair" : "single";
+    const kind: ItemKind = d.parts ? "rebus" : d.pair ? "pair" : photoThemes.has(d.theme) ? "photo" : "single";
     const parts = (d.parts ?? d.pair ?? [`${d.theme}:${d.id}`]).map((k) => resolve(k));
     return {
       id: `${d.theme}:${d.id}`,
@@ -83,6 +89,36 @@ export const BY_ID = new Map(OBJECTS.map((o) => [o.id, o]));
 
 // ---------------------------------------------------------------- pictures (browser only)
 
+const photoImgs = new Map<string, HTMLImageElement>();
+function photoImg(id: string): HTMLImageElement {
+  let img = photoImgs.get(id);
+  if (!img) {
+    const url = PHOTO_URLS[`./art/photos/${id.split(":")[1]}.png`];
+    if (!url) throw new Error(`no photo for "${id}"`);
+    img = new Image();
+    img.src = url;
+    photoImgs.set(id, img);
+  }
+  return img;
+}
+/** Wait until these objects' photo plates are decoded (drawings are always ready). */
+export function picturesReady(objs: SkyObject[]): Promise<void> {
+  return Promise.all(objs.filter((o) => o.kind === "photo").map((o) => photoImg(o.id).decode().catch(() => undefined))).then(() => undefined);
+}
+/** Stage k of a photo plate (0 = the developed photo, 7 = coarsest), as its own canvas. */
+export function photoStage(o: SkyObject, k: number): HTMLCanvasElement {
+  const key = `${o.id}#${k}`;
+  let c = objectCache.get(key);
+  if (c) return c;
+  c = document.createElement("canvas");
+  c.width = c.height = PHOTO_TILE;
+  const img = photoImg(o.id);
+  const draw = () => c!.getContext("2d")!.drawImage(img, k * PHOTO_TILE, 0, PHOTO_TILE, PHOTO_TILE, 0, 0, PHOTO_TILE, PHOTO_TILE);
+  if (img.complete && img.naturalWidth) draw(); else img.addEventListener("load", draw, { once: true });
+  objectCache.set(key, c);
+  return c;
+}
+
 const pictureCache = new Map<string, HTMLCanvasElement>();
 function picture(key: string): HTMLCanvasElement {
   let c = pictureCache.get(key);
@@ -103,6 +139,7 @@ const GAP = 9;
 const objectCache = new Map<string, HTMLCanvasElement>();
 /** The full picture for an object: one sprite, or several side by side (with plus signs for a rebus). */
 export function objectImage(o: SkyObject): HTMLCanvasElement {
+  if (o.kind === "photo") return photoStage(o, 0);
   let c = objectCache.get(o.id);
   if (c) return c;
   const pics = o.parts.map(picture);

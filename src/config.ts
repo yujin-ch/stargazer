@@ -7,7 +7,7 @@ export const CONFIG = {
   /** Countdown before the clock starts. */
   countdownSeconds: 3,
   /** Themes take turns in this order, one per night (any theme file not listed joins the end). */
-  themeOrder: ["animals", "teeth", "birds", "rebus", "bugs", "secret"],
+  themeOrder: ["animals", "teeth", "birds", "rebus", "bugs", "secret", "photos"],
   /** Puzzle #1 is this local date. */
   launchDate: "2026-11-12",
   /**

@@ -261,7 +261,7 @@ async function openPlay(mode: Run["mode"]) {
   run = newRun(mode);
   playScreen();
   const cond = dayCondition(run.puzzle);
-  await viewer.load();
+  await viewer.load(run.sky);
   viewer.condition = cond.id;
   viewer.preload(run.sky.slice(0, 3));
   el.count.textContent = `0/${run.sky.length}`;
@@ -641,7 +641,7 @@ function nextSkyIn(): string {
 async function resultsScreen(r: RunResult, mode: Run["mode"]) {
   cancelAnimationFrame(raf);
   if (!viewer) { viewer = new Viewer(document.createElement("canvas"), theme); }
-  await viewer.load();
+  await viewer.load(OBJECTS.filter((o) => o.kind === "photo"));
   const today = puzzleNumber(localDateKey());
   const stats = store.stats(today);
   const daily = mode === "daily";
