@@ -36,6 +36,8 @@ export const CONFIG = {
    * Sky conditions: one per night, the same for everyone, picked by the night number.
    * revealAfter: seconds after the zoom finishes before the condition lifts completely.
    */
+  /** Sky conditions are switched off for now (yujin, 11-14): every night is clear and none is shown. */
+  conditionsOn: false,
   conditions: [
     { id: "clear", name: "Clear skies", blurb: "Nothing in the way tonight.", revealAfter: 0 },
     { id: "eclipse", name: "Eclipse", blurb: "Only silhouettes, until the light comes back.", revealAfter: 1.5 },

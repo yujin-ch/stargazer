@@ -47,6 +47,7 @@ export function dayTheme(puzzle: number): string {
 const condCache = new Map<number, number>();
 export function dayCondition(puzzle: number): (typeof CONFIG.conditions)[number] {
   const list = CONFIG.conditions;
+  if (!CONFIG.conditionsOn) return list[0];
   const idx = (n: number): number => {
     if (n < 1) return -1;
     const hit = condCache.get(n);

@@ -274,8 +274,8 @@ async function openPlay(mode: Run["mode"]) {
   el.start.innerHTML = `
     ${tierLine(run.tier, run.streak)}
     ${themeInfo(run.sky[0]?.theme ?? "")?.mystery
-      ? `<p class="tonight"><b>A MYSTERY LINK</b> under <b class="cond">${cond.name.toUpperCase()}</b><br><small>Everything tonight has something in common. Name what you see, then guess the link for +${CONFIG.linkBonus}. ${cond.id === "clear" ? "" : cond.blurb}</small></p>`
-      : `<p class="tonight"><b>${themeName(run.sky[0]?.theme ?? dayTheme(run.puzzle)).toUpperCase()}</b> under <b class="cond">${cond.name.toUpperCase()}</b><br><small>${cond.blurb}</small></p>`}
+      ? `<p class="tonight"><b>A MYSTERY LINK</b>${CONFIG.conditionsOn ? ` under <b class="cond">${cond.name.toUpperCase()}</b>` : ""}<br><small>Everything tonight has something in common. Name what you see, then guess the link for +${CONFIG.linkBonus}. ${cond.id === "clear" ? "" : cond.blurb}</small></p>`
+      : `<p class="tonight"><b>${themeName(run.sky[0]?.theme ?? dayTheme(run.puzzle)).toUpperCase()}</b>${CONFIG.conditionsOn ? ` under <b class="cond">${cond.name.toUpperCase()}</b><br><small>${cond.blurb}</small>` : ""}</p>`}
     <ul class="rules">
       <li><b>Type</b> what you see. It moves on by itself.</li>
       <li><b>Zoomed in?</b> Name it early for bonus points.</li>
@@ -667,7 +667,7 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
         <span>OBSERVING LOG</span>
         <span>${daily ? `NIGHT #${r.puzzle}` : "PRACTICE"}</span>
       </header>
-      <p class="date">${daily ? `${fmtDate(r.date)} · ${shownTheme} · ${dayCondition(r.puzzle).name} · ${CONFIG.tiers[tier].name} sky` : `Preview · ${shownTheme} · ${dayCondition(r.puzzle).name}`}</p>
+      <p class="date">${daily ? `${fmtDate(r.date)} · ${shownTheme}${CONFIG.conditionsOn ? ` · ${dayCondition(r.puzzle).name}` : ""} · ${CONFIG.tiers[tier].name} sky` : `Preview · ${shownTheme}${CONFIG.conditionsOn ? ` · ${dayCondition(r.puzzle).name}` : ""}`}</p>
       <div class="final"><span>${r.score}</span><small>POINTS${r.clearedBonus ? ` · SKY CLEARED +${r.clearedBonus}` : ""}</small></div>
       ${r.partial ? `<p class="small">This run was cut short, so it counts as it stood.</p>` : ""}
       ${mystery ? `<section class="link-box${r.link ? (r.link.ok ? " found" : " missed") : ""}" id="link-box"></section>` : ""}
@@ -937,7 +937,7 @@ function showAtlas(focus = "tonight") {
   stars.push({
     id: "tonight", x: 1000, y: 1000, size: "huge", color: "#fee761",
     label: "TONIGHT'S SKY",
-    sub: done && !done.partial ? `Seen · ${done.score} pts` : `Night #${today} · ${themeLabel(tonightTheme)} · ${cond.name}`,
+    sub: done && !done.partial ? `Seen · ${done.score} pts` : `Night #${today} · ${themeLabel(tonightTheme)}${CONFIG.conditionsOn ? ` · ${cond.name}` : ""}`,
     open: () => (done ? resultsScreen(done, "daily") : openPlay("daily")),
   });
   THEMES.forEach((id, i) => {

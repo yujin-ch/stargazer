@@ -79,7 +79,9 @@ describe("themes and conditions", () => {
   it("rotates themes and never repeats a condition two nights running", async () => {
     const { dayTheme, dayCondition } = await import("../src/daily");
     expect(new Set([1, 2, 3].map(dayTheme)).size).toBe(3);
-    for (let d = 2; d < 400; d++) expect(dayCondition(d).id).not.toBe(dayCondition(d - 1).id);
+    const { CONFIG } = await import("../src/config");
+    if (CONFIG.conditionsOn) for (let d = 2; d < 400; d++) expect(dayCondition(d).id).not.toBe(dayCondition(d - 1).id);
+    else for (let d = 1; d < 50; d++) expect(dayCondition(d).id).toBe("clear");
   });
   it("puts a Black Hole object in every sky of a theme that has them", () => {
     for (let d = 1; d <= 30; d++) {

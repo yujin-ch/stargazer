@@ -64,6 +64,36 @@ def outline(rgba):
     return rgba
 
 
+def is_greenscreen(img):
+    a = np.asarray(img).astype(int)
+    edge = np.concatenate([a[0], a[-1], a[:, 0], a[:, -1]])
+    return np.median(edge[:, 1] - np.maximum(edge[:, 0], edge[:, 2])) > 60
+
+
+def chroma_key(img):
+    """Greenscreen cut-out: drop pixels where green clearly dominates, keep only the parts
+    connected to the main object, then remove green spill from the edges that remain."""
+    from scipy import ndimage
+    rgb = np.asarray(img).astype(float)
+    r, g, b = rgb[..., 0], rgb[..., 1], rgb[..., 2]
+    greenness = g - np.maximum(r, b)
+    keep = greenness < 40
+    keep = ndimage.binary_opening(keep, iterations=1)
+    lab_, n = ndimage.label(keep)
+    if n:
+        sizes = ndimage.sum(keep, lab_, range(1, n + 1))
+        big = 1 + np.flatnonzero(sizes >= max(200, sizes.max() * 0.002))
+        keep = np.isin(lab_, big)
+    keep = ndimage.binary_fill_holes(keep) & (greenness < 40) | (keep & (greenness < 40))
+    # despill: green may not exceed the larger of red and blue
+    out = rgb.copy()
+    out[..., 1] = np.minimum(g, np.maximum(r, b) + 6)
+    rgba = np.zeros(rgb.shape[:2] + (4,), np.uint8)
+    rgba[..., :3] = out.clip(0, 255).astype(np.uint8)
+    rgba[..., 3] = np.where(keep, 255, 0)
+    return Image.fromarray(rgba, "RGBA")
+
+
 def add_thin_parts(img, cut):
     """The cut-out model drops thin parts (antennas, wires, pendulum rods). Add back sharp detail
     that touches the object: pixels that differ strongly from their blurred neighbourhood, kept only
@@ -122,7 +152,7 @@ def main():
         if want and sid not in want:
             continue
         img = Image.open(f).convert("RGB")
-        cut = add_thin_parts(img, remove(img, session=sess))
+        cut = chroma_key(img) if is_greenscreen(img) else add_thin_parts(img, remove(img, session=sess))
         a = np.asarray(cut)[..., 3] > 128
         ys, xs = np.where(a)
         x0, x1, y0, y1 = np.percentile(xs, 0.3), np.percentile(xs, 99.7), np.percentile(ys, 0.3), np.percentile(ys, 99.7)

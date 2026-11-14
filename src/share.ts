@@ -11,7 +11,7 @@ export function shareText(r: RunResult, theme: Theme, url: string): string {
   for (let i = 0; i < marks.length; i += 10) rows.push(marks.slice(i, i + 10).join(""));
   const device = r.device === "touch" ? "📱" : "⌨️";
   return [
-    `${theme.shareIcon} ${theme.title} Night #${r.puzzle} · ${themeInfo(dayTheme(r.puzzle))?.mystery ? "Mystery link" : themeName(dayTheme(r.puzzle))} · ${dayCondition(r.puzzle).name} · ${r.score} pts${r.tier ? ` · ${CONFIG.tiers[r.tier].name} sky` : ""}`,
+    `${theme.shareIcon} ${theme.title} Night #${r.puzzle} · ${themeInfo(dayTheme(r.puzzle))?.mystery ? "Mystery link" : themeName(dayTheme(r.puzzle))}${CONFIG.conditionsOn ? ` · ${dayCondition(r.puzzle).name}` : ""} · ${r.score} pts${r.tier ? ` · ${CONFIG.tiers[r.tier].name} sky` : ""}`,
     ...(r.link ? [r.link.ok ? "🔗 Found the mystery link" : "🔗 Missed the mystery link"] : []),
     `${r.named} named · ${r.skipped} skipped${(r.bestCombo ?? 0) >= CONFIG.combo[0].at ? ` · steady hand ${r.bestCombo}` : ""} ${device}`,
     ...rows,
