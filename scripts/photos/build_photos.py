@@ -64,6 +64,35 @@ def outline(rgba):
     return rgba
 
 
+def add_thin_parts(img, cut):
+    """The cut-out model drops thin parts (antennas, wires, pendulum rods). Add back sharp detail
+    that touches the object: pixels that differ strongly from their blurred neighbourhood, kept only
+    if connected to the main cut-out. Soft shadows have no sharp edges, so they stay out."""
+    from scipy import ndimage
+    rgb = np.asarray(img).astype(float)
+    base = np.asarray(cut)[..., 3] > 128
+    blur = ndimage.gaussian_filter(rgb, (6, 6, 0))
+    hf = np.abs(rgb - blur).max(-1) > 14
+    hf = ndimage.binary_closing(hf, iterations=2)
+    cand = hf | base
+    lab_, _ = ndimage.label(cand)
+    keep = np.isin(lab_, np.unique(lab_[base]))
+    keep &= lab_ > 0
+    # drop anything that is just the backdrop showing through (gaps, fringes): close to the
+    # background colour estimated from the pixels around the object
+    w = (~base).astype(float)
+    bg = ndimage.gaussian_filter(rgb * w[..., None], (40, 40, 0)) / np.maximum(ndimage.gaussian_filter(w, 40), 1e-3)[..., None]
+    like_bg = np.abs(rgb - bg).max(-1) < 16
+    # ...but a thin dark line (wire, rod) on a light backdrop is real even when faint
+    like_bg &= ~(hf & (rgb.mean(-1) < bg.mean(-1) - 8))
+    m = (keep | base) & ~like_bg
+    m = ndimage.binary_opening(m, iterations=1) | (m & hf)
+    out = np.asarray(cut).copy()
+    out[..., :3] = np.asarray(img)
+    out[..., 3] = np.where(m, 255, 0)
+    return Image.fromarray(out, "RGBA")
+
+
 def stage(cut, n, final=False):
     inner = n - 2  # leave room for the outline
     im = cut.resize((inner, inner), Image.LANCZOS if final else Image.BOX)
@@ -73,12 +102,13 @@ def stage(cut, n, final=False):
         g = rgb.mean(-1, keepdims=True)
         rgb = np.clip(g + (rgb - g) * 1.2, 0, 255)
         k = 5 if n <= 8 else 8 if n <= 12 else 12 if n <= 24 else 16
-        mask = a > 127
+        mask = a > (28 if n >= 24 else 90)
         if mask.any():
             rgb[mask] = snap(rgb[mask][None], k)[0]
     out = np.zeros((n, n, 4), np.uint8)
     out[1:-1, 1:-1, :3] = rgb.astype(np.uint8)
-    out[1:-1, 1:-1, 3] = np.where(a > 127, 255, 0)
+    # a low threshold keeps thin parts (antennas, rods) from vanishing when shrunk
+    out[1:-1, 1:-1, 3] = np.where(a > (60 if final else 28 if n >= 24 else 90), 255, 0)
     return Image.fromarray(outline(out), "RGBA").resize((T, T), Image.NEAREST)
 
 
@@ -92,7 +122,7 @@ def main():
         if want and sid not in want:
             continue
         img = Image.open(f).convert("RGB")
-        cut = remove(img, session=sess)
+        cut = add_thin_parts(img, remove(img, session=sess))
         a = np.asarray(cut)[..., 3] > 128
         ys, xs = np.where(a)
         x0, x1, y0, y1 = np.percentile(xs, 0.3), np.percentile(xs, 99.7), np.percentile(ys, 0.3), np.percentile(ys, 99.7)

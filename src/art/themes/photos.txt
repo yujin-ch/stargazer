@@ -3,17 +3,11 @@
 % photo
 
 // Photo plates live in src/art/photos/<id>.png (built by scripts/photos/build_photos.py).
-// Test set: generated with FLUX.2 dev. Metronome and abacus have known flaws (pendulum hangs
-// down; too many beads) and should be replaced by better generations.
+// Test set: Qwen-Image + Lightning on yujin's laptop, neutral light-grey studio prompt.
+// Known flaws: abacus bead counts aren't exactly 10 per rod; theremin antenna has a ring on top.
 
-@frenchpress | 1 | french press, cafetiere, coffee press, press pot, coffee plunger | Plunge after four minutes
-@stethoscope | 1 | stethoscope | Invented in 1816 so a doctor wouldn't have to press an ear to a patient's chest
-@gramophone | 1 | gramophone, phonograph, record player, victrola | The horn is the speaker
-@axolotl | 2 | axolotl, mexican walking fish, salamander | Keeps its baby gills its whole life
-@bagpipes | 2 | bagpipes, bagpipe, pipes, highland pipes | The bag keeps the sound going while the piper breathes
-@fondue | 2 | fondue, fondue pot, fondue set | Lose your bread in the pot and you pay a forfeit
-@metronome | 2 | metronome | Ticks the tempo for practising musicians
-@sextant | 3 | sextant | Measures the angle between a star and the horizon
+@metronome | 1 | metronome | Ticks the tempo for practising musicians
+@sextant | 2 | sextant | Measures the angle between a star and the horizon
 @okapi | 3 | okapi, forest giraffe, zebra giraffe | A giraffe's closest living relative, despite the zebra legs
 @pangolin | 3 | pangolin, scaly anteater | The only mammal covered in scales
 @abacus | 3 | abacus, counting frame | Still faster than a calculator in the right hands
