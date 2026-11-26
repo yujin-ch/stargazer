@@ -1,0 +1,371 @@
+{
+ "date": "2026-11-26",
+ "theme": "photos",
+ "items": [
+  {
+   "id": "teapot",
+   "band": 1,
+   "names": [
+    "teapot",
+    "tea pot",
+    "kettle"
+   ],
+   "note": "Steep for three to five minutes"
+  },
+  {
+   "id": "umbrella",
+   "band": 1,
+   "names": [
+    "umbrella",
+    "brolly",
+    "parasol"
+   ],
+   "note": "Folded, it doubles as a walking stick"
+  },
+  {
+   "id": "bicycle",
+   "band": 1,
+   "names": [
+    "bicycle",
+    "bike",
+    "cycle",
+    "push bike"
+   ],
+   "note": "The most efficient way humans have found to travel"
+  },
+  {
+   "id": "guitar",
+   "band": 1,
+   "names": [
+    "guitar",
+    "acoustic guitar"
+   ],
+   "note": "Six strings, usually tuned E A D G B E"
+  },
+  {
+   "id": "rubberduck",
+   "band": 1,
+   "names": [
+    "rubber duck",
+    "rubber ducky",
+    "duck",
+    "bath duck"
+   ],
+   "note": "Programmers explain bugs to them"
+  },
+  {
+   "id": "alarmclock",
+   "band": 1,
+   "names": [
+    "alarm clock",
+    "clock",
+    "alarm"
+   ],
+   "note": "The hammer hits two bells"
+  },
+  {
+   "id": "sneaker",
+   "band": 1,
+   "names": [
+    "sneaker",
+    "shoe",
+    "trainer",
+    "high top",
+    "high-top",
+    "sneakers"
+   ],
+   "note": "Canvas and rubber since 1917"
+  },
+  {
+   "id": "hammer",
+   "band": 1,
+   "names": [
+    "hammer",
+    "claw hammer"
+   ],
+   "note": "The claw pulls nails back out"
+  },
+  {
+   "id": "scissors",
+   "band": 1,
+   "names": [
+    "scissors",
+    "shears"
+   ],
+   "note": "Two levers sharing one pivot"
+  },
+  {
+   "id": "banana",
+   "band": 1,
+   "names": [
+    "banana"
+   ],
+   "note": "Botanically a berry"
+  },
+  {
+   "id": "donut",
+   "band": 1,
+   "names": [
+    "donut",
+    "doughnut"
+   ],
+   "note": "The hole helps it cook evenly"
+  },
+  {
+   "id": "hotairballoon",
+   "band": 1,
+   "names": [
+    "hot air balloon",
+    "balloon",
+    "hot-air balloon"
+   ],
+   "note": "First passengers: a sheep, a duck and a rooster (1783)"
+  },
+  {
+   "id": "giraffe",
+   "band": 1,
+   "names": [
+    "giraffe"
+   ],
+   "note": "Same number of neck bones as you: seven"
+  },
+  {
+   "id": "teddybear",
+   "band": 1,
+   "names": [
+    "teddy bear",
+    "teddy",
+    "bear",
+    "stuffed bear"
+   ],
+   "note": "Named after Theodore Roosevelt"
+  },
+  {
+   "id": "accordion",
+   "band": 2,
+   "names": [
+    "accordion",
+    "piano accordion",
+    "squeezebox"
+   ],
+   "note": "Air from the bellows plays reeds inside"
+  },
+  {
+   "id": "binoculars",
+   "band": 2,
+   "names": [
+    "binoculars",
+    "field glasses"
+   ],
+   "note": "Prisms fold the light path to keep them short"
+  },
+  {
+   "id": "typewriter",
+   "band": 2,
+   "names": [
+    "typewriter"
+   ],
+   "note": "QWERTY was laid out on these"
+  },
+  {
+   "id": "rollerskate",
+   "band": 2,
+   "names": [
+    "roller skate",
+    "rollerskate",
+    "skate",
+    "quad skate",
+    "roller skates"
+   ],
+   "note": "Two pairs of wheels side by side"
+  },
+  {
+   "id": "saxophone",
+   "band": 2,
+   "names": [
+    "saxophone",
+    "sax",
+    "alto sax",
+    "alto saxophone"
+   ],
+   "note": "Made of brass but counted as a woodwind"
+  },
+  {
+   "id": "microscope",
+   "band": 2,
+   "names": [
+    "microscope"
+   ],
+   "note": "Look closer"
+  },
+  {
+   "id": "flamingo",
+   "band": 2,
+   "names": [
+    "flamingo"
+   ],
+   "note": "Pink from the shrimp it eats"
+  },
+  {
+   "id": "hedgehog",
+   "band": 2,
+   "names": [
+    "hedgehog",
+    "hedgehogs"
+   ],
+   "note": "About 5,000 spines each"
+  },
+  {
+   "id": "harmonica",
+   "band": 2,
+   "names": [
+    "harmonica",
+    "mouth organ",
+    "harp",
+    "blues harp"
+   ],
+   "note": "Plays a note whether you blow or draw"
+  },
+  {
+   "id": "padlock",
+   "band": 2,
+   "names": [
+    "padlock",
+    "lock"
+   ],
+   "note": "Shackle up, shackle down"
+  },
+  {
+   "id": "pocketwatch",
+   "band": 2,
+   "names": [
+    "pocket watch",
+    "watch",
+    "pocketwatch",
+    "fob watch"
+   ],
+   "note": "Railways ran on them"
+  },
+  {
+   "id": "ukulele",
+   "band": 2,
+   "names": [
+    "ukulele",
+    "uke"
+   ],
+   "note": "Four strings, from Hawaii by way of Portugal"
+  },
+  {
+   "id": "tapir",
+   "band": 3,
+   "names": [
+    "tapir",
+    "malayan tapir"
+   ],
+   "note": "Its short trunk is a nose and upper lip"
+  },
+  {
+   "id": "armadillo",
+   "band": 3,
+   "names": [
+    "armadillo"
+   ],
+   "note": "Almost always gives birth to identical quadruplets"
+  },
+  {
+   "id": "frenchhorn",
+   "band": 3,
+   "names": [
+    "french horn",
+    "horn"
+   ],
+   "note": "About 3.7 metres of tubing, coiled"
+  },
+  {
+   "id": "mortarpestle",
+   "band": 3,
+   "names": [
+    "mortar and pestle",
+    "pestle and mortar",
+    "mortar",
+    "pestle"
+   ],
+   "note": "One of the oldest tools in the kitchen"
+  },
+  {
+   "id": "gyroscope",
+   "band": 3,
+   "names": [
+    "gyroscope",
+    "gyro"
+   ],
+   "note": "A spinning wheel that refuses to tip"
+  },
+  {
+   "id": "nautilus",
+   "band": 3,
+   "names": [
+    "nautilus",
+    "nautilus shell",
+    "shell",
+    "chambered nautilus"
+   ],
+   "note": "A living fossil that floats using its chambers"
+  },
+  {
+   "id": "spinningwheel",
+   "band": 3,
+   "names": [
+    "spinning wheel"
+   ],
+   "note": "Turns fibre into yarn"
+  },
+  {
+   "id": "sundial",
+   "band": 3,
+   "names": [
+    "sundial",
+    "sun dial"
+   ],
+   "note": "Only works on sunny days"
+  },
+  {
+   "id": "divinghelmet",
+   "band": 3,
+   "names": [
+    "diving helmet",
+    "diving bell helmet",
+    "dive helmet",
+    "helmet"
+   ],
+   "note": "Air was pumped down from the surface"
+  },
+  {
+   "id": "okapi",
+   "band": 3,
+   "names": [
+    "okapi",
+    "forest giraffe",
+    "zebra giraffe"
+   ],
+   "note": "A giraffe's closest living relative, despite the zebra legs"
+  },
+  {
+   "id": "pangolin",
+   "band": 3,
+   "names": [
+    "pangolin",
+    "scaly anteater"
+   ],
+   "note": "The only mammal covered in scales"
+  },
+  {
+   "id": "theremin",
+   "band": 4,
+   "names": [
+    "theremin"
+   ],
+   "note": "Played without touching it"
+  }
+ ]
+}

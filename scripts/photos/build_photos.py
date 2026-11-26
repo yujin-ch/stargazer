@@ -74,7 +74,8 @@ def outline(rgba):
 def is_greenscreen(img):
     """Mostly green image (the border can be a stray white frame the model drew)."""
     a = np.asarray(img.resize((64, 64))).astype(int)
-    return ((a[..., 1] - np.maximum(a[..., 0], a[..., 2])) > 60).mean() > 0.3
+    m = np.maximum(a[..., 0], a[..., 2])
+    return ((a[..., 1] > m * 1.3 + 10) & (a[..., 1] - m > 30)).mean() > 0.3
 
 
 def chroma_key(img):
@@ -84,21 +85,24 @@ def chroma_key(img):
     rgb = np.asarray(img).astype(float)
     r, g, b = rgb[..., 0], rgb[..., 1], rgb[..., 2]
     greenness = g - np.maximum(r, b)
-    keep = greenness < 40
-    keep = ndimage.binary_opening(keep, iterations=1)
+    # backdrop = green clearly ahead of red and blue, relative to brightness, so the darker green of
+    # floor shadows goes too (objects are never green by prompt rule)
+    fg = ~((g > np.maximum(r, b) * 1.12 + 6) & (greenness > 8))
+    keep = ndimage.binary_opening(fg, iterations=1)
     lab_, n = ndimage.label(keep)
     if n:
         sizes = ndimage.sum(keep, lab_, range(1, n + 1))
-        # drop anything touching the image edge (stray frames the model sometimes draws)
-        border = set(np.unique(np.concatenate([lab_[0], lab_[-1], lab_[:, 0], lab_[:, -1]]))) - {0}
-        inner = [i for i in range(1, n + 1) if i not in border]
+        # drop stray frames the model sometimes draws: parts touching three or four image edges
+        sides = [set(np.unique(e)) - {0} for e in (lab_[0], lab_[-1], lab_[:, 0], lab_[:, -1])]
+        frame = {i for i in range(1, n + 1) if sum(i in sd for sd in sides) >= 3}
+        inner = [i for i in range(1, n + 1) if i not in frame]
         if inner:
             m = max(sizes[i - 1] for i in inner)
             big = [i for i in inner if sizes[i - 1] >= max(200, m * 0.002)]
         else:
             big = 1 + np.flatnonzero(sizes >= max(200, sizes.max() * 0.002))
         keep = np.isin(lab_, big)
-    keep = ndimage.binary_fill_holes(keep) & (greenness < 40) | (keep & (greenness < 40))
+    keep = ndimage.binary_fill_holes(keep) & fg
     # despill: green may not exceed the larger of red and blue
     out = rgb.copy()
     out[..., 1] = np.minimum(g, (r + b) / 2 + 4)
