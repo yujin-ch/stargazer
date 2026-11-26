@@ -1,0 +1,30 @@
+@font-face { font-family: "Press Start 2P"; src: url(/fonts/press-start-2p.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "VT323"; src: url(/fonts/vt323.woff2) format("woff2"); font-display: swap; }
+:root { --ink: #0e0b1e; --plum: #231c3c; --edge: #4f4066; --text: #f3ead8; --dim: #a39bb8; --gold: #fee761; --brass: #f2d38a; --cyan: #2ce8f5; }
+* { box-sizing: border-box; }
+html { background: var(--ink); }
+body { margin: 0; min-height: 100vh; color: var(--text); font: 22px/1.45 "VT323", ui-monospace, monospace;
+  background: radial-gradient(ellipse at 50% 120%, rgba(224, 122, 184, 0.18), transparent 60%), linear-gradient(#0e0b1e, #1c1232 70%, #2a1838);
+  background-attachment: fixed; }
+body::before { content: ""; position: fixed; inset: 0; pointer-events: none; opacity: 0.55;
+  background-image: radial-gradient(1px 1px at 12% 18%, #d8cfe6, transparent), radial-gradient(1px 1px at 72% 9%, #fee761, transparent), radial-gradient(1px 1px at 34% 62%, #9a93b4, transparent), radial-gradient(1px 1px at 88% 44%, #2ce8f5, transparent), radial-gradient(1px 1px at 52% 84%, #d8cfe6, transparent), radial-gradient(1px 1px at 8% 76%, #9a93b4, transparent); }
+main { position: relative; max-width: 720px; margin: 0 auto; padding: 32px 16px 56px; }
+.top { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 22px; }
+.top a.home { font: 12px "Press Start 2P", monospace; color: var(--gold); text-decoration: none; letter-spacing: 2px; text-shadow: 3px 3px 0 #000; }
+.top nav a { color: var(--dim); margin-left: 14px; }
+.card { background: linear-gradient(180deg, #231c3c, #1a1530 60%); border: 3px solid var(--edge); box-shadow: 6px 6px 0 #000, inset 0 2px 0 rgba(242, 211, 138, 0.12); padding: 22px 24px; }
+h1 { font: 20px/1.4 "Press Start 2P", monospace; color: var(--gold); margin: 0 0 6px; text-shadow: 3px 3px 0 #000; }
+h2 { font: 12px/1.6 "Press Start 2P", monospace; color: var(--brass); margin: 26px 0 8px; }
+p, li { margin: 8px 0; }
+.lead { color: var(--dim); margin-top: 0; }
+a { color: var(--cyan); }
+b { color: var(--brass); font-weight: normal; }
+ul { padding-left: 22px; }
+.bands { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; }
+.bands li { margin: 0; padding: 8px 10px; border: 2px solid var(--c); background: rgba(0, 0, 0, 0.25); }
+.bands li i { display: inline-block; width: 10px; height: 10px; background: var(--c); margin-right: 8px; }
+.play { display: inline-block; margin-top: 18px; padding: 12px 16px; font: 11px "Press Start 2P", monospace; color: #2a1a0c; background: var(--gold); text-decoration: none; box-shadow: 4px 4px 0 #000; }
+dt { color: var(--brass); margin-top: 14px; }
+dd { margin: 2px 0 0; }
+footer { margin-top: 24px; color: var(--dim); font-size: 18px; text-align: center; }
+footer a { color: var(--dim); }

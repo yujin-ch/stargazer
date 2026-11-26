@@ -1556,6 +1556,7 @@ function frontPage(returning = false) {
     links: [{ id: "how", label: "HOW TO PLAY" }, { id: "settings", label: "SETTINGS" }, { id: "credits", label: "CREDITS" }],
     onLink: menuSheet,
   });
+  app.querySelector(".intro")?.insertAdjacentHTML("beforeend", `<p class="intro-foot"><a href="/about">About</a><i>·</i><a href="/privacy">Privacy</a></p>`);
 }
 
 if (PREVIEW_NIGHT) void openPlay("practice");
