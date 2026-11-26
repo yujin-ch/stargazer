@@ -87,8 +87,38 @@ export function skyBlackHole(on: boolean) { fx.bhOn = on; }
 /** A wave of coloured light rolls out from the telescope across the whole sky; stronger for harder finds. */
 export function skyPulse(color: string, strength: number) { fx.pulses.push({ color, born: performance.now(), strength }); }
 
+/** Travelling: stars stream past from the telescope outward, with a rush each time a new object swings into view. */
+const warp = { on: false, speed: 0, boost: 0, last: 0, stars: [] as { x: number; y: number; z: number }[] };
+export function skyTravel(on: boolean) { warp.on = on; }
+export function skyBoost(k = 1) { warp.boost = Math.min(2.5, warp.boost + k); }
+
+function drawWarp(g: CanvasRenderingContext2D, t: number, w: number, h: number, cx: number, cy: number) {
+  const dt = Math.min(50, t - (warp.last || t)); warp.last = t;
+  const target = warp.on ? 0.22 + warp.boost : 0;
+  warp.speed += (target - warp.speed) * 0.08;
+  warp.boost *= 0.93;
+  if (warp.speed < 0.005) return;
+  if (!warp.stars.length) for (let i = 0; i < 160; i++) warp.stars.push({ x: Math.random() * 2 - 1, y: Math.random() * 2 - 1, z: Math.random() });
+  const sc = Math.max(w, h) * 0.5;
+  for (const st of warp.stars) {
+    const z0 = st.z;
+    st.z -= warp.speed * dt * 0.0005;
+    const x1 = cx + (st.x / Math.max(0.02, st.z)) * sc * 0.25, y1 = cy + (st.y / Math.max(0.02, st.z)) * sc * 0.25;
+    if (st.z <= 0.02 || x1 < -10 || x1 > w + 10 || y1 < -10 || y1 > h + 10) { st.x = Math.random() * 2 - 1; st.y = Math.random() * 2 - 1; st.z = 1; continue; }
+    const x0 = cx + (st.x / z0) * sc * 0.25, y0 = cy + (st.y / z0) * sc * 0.25;
+    const near = 1 - st.z;
+    g.globalAlpha = Math.min(1, near * 1.3) * Math.min(1, warp.speed * 3);
+    g.fillStyle = near > 0.7 ? "#fff6dc" : near > 0.4 ? "#c9b8f0" : "#6a6488";
+    // a streak from where it was to where it is: longer when we're moving fast
+    const n = Math.max(1, Math.min(14, Math.round(Math.hypot(x1 - x0, y1 - y0))));
+    for (let k = 0; k <= n; k++) g.fillRect(Math.round(x0 + ((x1 - x0) * k) / n), Math.round(y0 + ((y1 - y0) * k) / n), near > 0.8 ? 2 : 1, 1);
+  }
+  g.globalAlpha = 1;
+}
+
 function drawFx(g: CanvasRenderingContext2D, t: number, w: number, h: number) {
   const cx = fx.cx < 0 ? w / 2 : fx.cx / SCALE, cy = fx.cy < 0 ? h * 0.45 : fx.cy / SCALE;
+  drawWarp(g, t, w, h, cx, cy);
   fx.bh += ((fx.bhOn ? 1 : 0) - fx.bh) * 0.04;
   if (fx.bh > 0.01) {
     const k = fx.bh, R = Math.min(w, h) * 0.6, spin = t / 1400;

@@ -13,7 +13,7 @@ import { crowdScores, beatShare, liveCrowd, MIN_LIVE } from "./crowd";
 import { share, shareText, nightTitle, type Standing } from "./share";
 import { atlasScreen, type AtlasStar } from "./atlas";
 import { introScreen } from "./intro";
-import { skyCenter, skyBlackHole, skyPulse } from "./themes/pixel-space/sky";
+import { skyCenter, skyBlackHole, skyPulse, skyTravel, skyBoost } from "./themes/pixel-space/sky";
 import { THEMES } from "./library";
 
 let matcher = makeMatcher(OBJECTS.map((o) => o.names));
@@ -294,7 +294,7 @@ async function openPlay(mode: Run["mode"]) {
     <button class="btn primary" id="go">OPEN THE SHUTTER</button>
     ${mode === "daily" ? `<p class="small tier-mini">${CONFIG.tiers[run.tier].name} sky${run.streak ? ` · ${run.streak}-night streak` : ""}</p>` : ""}`;
   document.getElementById("go")!.onclick = begin;
-  el.backbtn.onclick = () => { cancelAnimationFrame(raf); showAtlas(); };
+  el.backbtn.onclick = () => { cancelAnimationFrame(raf); skyTravel(false); showAtlas(); };
   sizeViewer();
   loop();
 }
@@ -321,6 +321,7 @@ function begin() {
 function startClock(now: number) {
   run.phase = "playing";
   run.startAt = now;
+  skyTravel(true);
   el.overlay.textContent = "";
   theme.sounds.start();
   showObject(now);
@@ -337,6 +338,7 @@ function showObject(now: number) {
     return finish(now, true);
   }
   viewer.show(obj, now);
+  skyBoost(obj.band === 3 ? 0.4 : 1.2); // swing across space to the next object (a black hole pulls you up short)
   viewer.preload(run.sky.slice(run.i + 1, run.i + 3));
   warmth((el.guess as HTMLInputElement).value);
   run.attempt = "";
@@ -557,6 +559,7 @@ function finish(now: number, cleared = false) {
   dropPending();
   run.phase = "over";
   blackHole(false);
+  skyTravel(false);
   announce("Time. Results coming up.");
   viewer.dismiss("skipped", now);
   theme.sounds.end();
@@ -780,6 +783,7 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
   const shownTheme = revealed ? themeName(themeId) : "Mystery link";
   app.innerHTML = `
   <main class="results">
+   <div class="res-main">
     <section class="log">
       <header class="log-head">
         <span>OBSERVING LOG</span>
@@ -798,8 +802,8 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
       </section>
       <section class="sb-block">
         <h3 class="sb-title">ON THE HILL TONIGHT</h3>
-        <canvas class="chart hill-chart" id="hill" aria-label="Tonight's stargazers lined up by score, with you in gold"></canvas>
-        <div class="hill-axis"><span>◂ fewer points</span><span>more points ▸</span></div>
+        <canvas class="chart hill-chart" id="hill" aria-label="Tonight's scores as a bell-shaped hill, with you standing in gold at your score"></canvas>
+        <div class="hill-axis" id="hill-axis"></div>
         <p class="hill-line" id="hill-line"></p>
         <p class="caption" id="crowd-note">The hill is simulated on tonight's sky until enough live scores arrive.</p>
       </section>
@@ -823,9 +827,12 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
       <p class="small"><button class="link-btn" id="to-cat">Catalogue <b>${cat}</b> / ${OBJECTS.length} objects</button>${lastFresh ? ` <span class="new">+${lastFresh} new</span>` : ""}</p>
       ${daily ? `<p class="small">Best ${stats.best} · Streak ${stats.streak}</p>` : ""}
     </section>
-    <h2>WHAT YOU SAW <small>tap for other names</small></h2>
+   </div>
+   <div class="res-side">
+    <h2>WHAT YOU SAW <small>${r.items.length} objects · tap one for more</small></h2>
     <ol class="seen" id="seen"></ol>
     <section class="missed" id="missed"></section>
+   </div>
     ${import.meta.env.VITE_PREVIEW_TOOLS ? `<section class="preview-tools"><h2>PREVIEW ONLY <small>try other nights, not saved</small></h2><div class="actions">${[1, 2, 3, 4, 5, 6].map((n) => `<button class="btn" data-night="${n}">#${n} ${themeName(dayTheme(n))}<br><small>${dayCondition(n).name}</small></button>`).join("")}</div></section>` : ""}
   </main>`;
   lastFresh = 0;
@@ -851,16 +858,17 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
     requestAnimationFrame(step);
   }
   const paintHill = (scores: number[], live: boolean) => {
-    const others = 12, beat = beatShare(scores, r.score - (r.link?.bonus ?? 0)), rank = Math.round(beat * others);
+    const mine = r.score - (r.link?.bonus ?? 0), beat = beatShare(scores, mine);
     standing = { beat, live, players: scores.length };
     sharePreview();
-    drawHill(hill, r.puzzle, rank, others);
-    const median = scores[Math.floor(scores.length / 2)];
+    const ax = drawHill(hill, scores, mine);
+    const pct = Math.round(beat * 100);
+    document.getElementById("hill-axis")!.innerHTML = `<span>${ax.lo}</span><span>typical ${ax.mean}</span><span>${ax.hi}</span>`;
     document.getElementById("hill-line")!.innerHTML =
-      (rank >= others ? `You out-spotted <b>every stargazer</b> on the hill tonight.`
-      : rank === 0 ? `The whole hill saw more tonight. The sky comes back tomorrow.`
-      : `You out-spotted <b>${rank} of ${others}</b> stargazers on the hill.`)
-      + `<br><small>${live ? `Better than ${Math.min(99, Math.round(beat * 100))}% of ${scores.length} players tonight · typical score ${median}` : `A typical score tonight: ${median}`}</small>`;
+      (pct >= 99 ? `You out-spotted <b>everyone on the hill</b> tonight.`
+      : pct <= 1 ? `The whole hill saw more tonight. The sky comes back tomorrow.`
+      : `You out-spotted <b>${pct}%</b> of tonight's stargazers.`)
+      + `<br><small>${live ? `${scores.length} players on your sky tonight` : `Your gold slope is everyone you out-spotted.`}</small>`;
     if (live) document.getElementById("crowd-note")!.textContent = `These are tonight's real players on the ${CONFIG.tiers[tier].name} sky.`;
   };
   paintHill(crowd, false);
@@ -892,11 +900,11 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
     li.className = it.outcome;
     li.style.setProperty("--band", theme.bandColors[o.band]);
     li.tabIndex = 0;
-    li.appendChild(viewer.spriteCanvas(o, 2));
+    li.appendChild(lens(viewer.spriteCanvas(o, 2)));
     const others = shownNames(o).slice(0, 4).join(", ");
     const typed = it.typed && normalize(it.typed) !== normalize(o.names[0]) ? `“${esc(it.typed)}”` : "";
     const div = document.createElement("div");
-    div.innerHTML = `<b>${esc(o.names[0])}</b><span class="pts">${it.outcome === "skipped" ? "skip" : `+${it.points}${it.outcome === "zoomed" ? "★" : ""}`}</span>` +
+    div.innerHTML = `<b>${esc(o.names[0])}</b><span class="pts">${it.outcome === "skipped" ? "skipped" : `+${it.points}`}</span>${it.outcome === "zoomed" ? `<span class="zoom-tag">ZOOM</span>` : ""}<span class="sp-band">${esc(theme.bandNames[o.band])}</span>` +
       (revealed && o.note ? `<small class="note">${esc(o.note)}</small>` : "") +
       `<small class="more">${it.outcome === "skipped" && it.typed ? `you tried ${typed || `“${esc(it.typed)}”`}<br>` : typed ? `you typed ${typed}<br>` : ""}${others ? `also: ${esc(others)}` : esc(theme.bandNames[o.band])}</small>`;
     li.appendChild(div);
@@ -910,22 +918,23 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
   const unseen = crowdSky.filter((o) => !reached.has(o.id));
   const missed = document.getElementById("missed")!;
   if (unseen.length) {
-    missed.innerHTML = `<h2>STILL OUT THERE <small>${unseen.length} you didn't reach</small></h2>`;
+    missed.innerHTML = `<h2>STILL OUT THERE <small>${unseen.length} the clock ran out on</small></h2>`;
     for (const b of [0, 1, 2, 3]) {
       const objs = unseen.filter((o) => o.band === b);
       if (!objs.length) continue;
       const d = document.createElement("details");
       d.style.setProperty("--band", theme.bandColors[b]);
-      d.innerHTML = `<summary><i class="lg" style="background:${theme.bandColors[b]}"></i>${theme.bandNames[b]} <small>${objs.length} · ${CONFIG.bands[b].points} pt${CONFIG.bands[b].points > 1 ? "s" : ""} each</small></summary>`;
+      d.innerHTML = `<summary><i class="lg" style="background:${theme.bandColors[b]}"></i><span>${theme.bandNames[b]}</span><small>${objs.length} left · ${objs.length * CONFIG.bands[b].points} pts were waiting</small></summary>`;
       const ul = document.createElement("ul");
-      ul.className = "seen unseen";
+      ul.className = "unseen-grid";
       for (const o of objs) {
         const li = document.createElement("li");
         li.style.setProperty("--band", theme.bandColors[b]);
-        li.appendChild(viewer.spriteCanvas(o, 2));
+        li.appendChild(lens(viewer.spriteCanvas(o, 2)));
         const others = shownNames(o).slice(0, 3).join(", ");
         const div = document.createElement("div");
-        div.innerHTML = `<b>${esc(o.names[0])}</b>${revealed && o.note ? `<small class="aka">${esc(o.note)}</small>` : others ? `<small class="aka">${esc(others)}</small>` : ""}`;
+        div.innerHTML = `<b>${esc(o.names[0])}</b>`;
+        if (revealed && o.note) li.title = o.note; else if (others) li.title = `also: ${others}`;
         li.appendChild(div);
         ul.appendChild(li);
       }
@@ -970,6 +979,14 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
  * and each star takes its difficulty colour. Below, a hill of stargazers lined up by score
  * (fewest points on the left), with you standing among them in gold.
  */
+/** A picture in a little round brass eyepiece, for the lists. */
+function lens(c: HTMLCanvasElement): HTMLElement {
+  const d = document.createElement("div");
+  d.className = "lens";
+  d.appendChild(c);
+  return d;
+}
+
 /** Your best find of the night: the hardest object named, a zoom answer beating a plain one. -1 if none. */
 function bestFind(r: RunResult): number {
   let best = -1, bestScore = -1;
@@ -1066,30 +1083,69 @@ function drawConstellation(c: HTMLCanvasElement, r: RunResult, best: number, upt
   }
 }
 
-/** Tonight's stargazers on a hill, lined up by score (fewest on the left), you in gold with a star over your head. */
-function drawHill(c: HTMLCanvasElement, puzzle: number, rank: number, others: number) {
-  const W = 200, H = 40;
+/** Standard normal CDF (Abramowitz-Stegun erf approximation). */
+function ncdf(z: number): number {
+  const t = 1 / (1 + 0.3275911 * Math.abs(z) / Math.SQRT2);
+  const y = 1 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-(z * z) / 2);
+  return z >= 0 ? (1 + y) / 2 : (1 - y) / 2;
+}
+/** z for a given share of the bell curve (binary search on the CDF). */
+function nInv(p: number): number {
+  let lo = -4, hi = 4;
+  for (let i = 0; i < 40; i++) { const m = (lo + hi) / 2; if (ncdf(m) < p) lo = m; else hi = m; }
+  return (lo + hi) / 2;
+}
+
+/**
+ * Tonight's crowd as a hill shaped like a bell curve (from the crowd's mean and spread): stargazers stand along it,
+ * thickest in the middle where most scores fall. You stand in gold at your score, and the slope you out-spotted glows.
+ */
+function drawHill(c: HTMLCanvasElement, scores: number[], mine: number): { lo: number; hi: number; mean: number } {
+  const W = 240, H = 96, base = H - 12, amp = 58;
   c.width = W; c.height = H;
   const g = c.getContext("2d")!;
+  const n = scores.length || 1;
+  const mean = scores.reduce((a, b) => a + b, 0) / n;
+  const sd = Math.max(1, Math.sqrt(scores.reduce((a, b) => a + (b - mean) ** 2, 0) / n));
+  const lo = Math.max(0, Math.min(mine, mean - 2.8 * sd)), hi = Math.max(mine, mean + 2.8 * sd);
+  const X = (v: number) => 10 + ((v - lo) / (hi - lo || 1)) * (W - 20);
+  const V = (x: number) => lo + ((x - 10) / (W - 20)) * (hi - lo);
+  const top = (x: number) => Math.round(base - amp * Math.exp(-((V(x) - mean) ** 2) / (2 * sd * sd)));
   g.fillStyle = "#0d0a1a"; g.fillRect(0, 0, W, H);
-  const rand = mulberry32(puzzle * 7919 + 13);
+  const rand = mulberry32(Math.round(mean) * 31 + n);
   g.fillStyle = "#2c2648";
-  for (let i = 0; i < 30; i++) g.fillRect(Math.floor(rand() * W), Math.floor(rand() * 20), 1, 1);
-  const ground = (x: number) => Math.round(H - 7 - Math.sin((x / W) * Math.PI) * 8);
+  for (let i = 0; i < 40; i++) g.fillRect(Math.floor(rand() * W), Math.floor(rand() * (H - 30)), 1, 1);
+  const youX = Math.round(X(mine));
+  // the hill: a bell curve; the part you out-spotted is lit warm
   for (let x = 0; x < W; x++) {
-    const y0 = ground(x);
-    g.fillStyle = "#1e1934"; g.fillRect(x, y0, 1, H - y0);
-    g.fillStyle = "#3a2f52"; g.fillRect(x, y0, 1, 1);
-  }
-  const n = others + 1, gap = (W - 24) / (n - 1);
-  for (let k = 0; k < n; k++) {
-    const x = Math.round(12 + k * gap), base = ground(x) + 1, isYou = k === rank;
-    stargazer(g, x, base, x < W / 2 ? 1 : -1, isYou ? "#fee761" : "#6a5f88", isYou ? "#feae34" : "#463d5e", (k * 7) % 3);
-    if (isYou) {
-      g.fillStyle = "rgba(254, 231, 97, 0.18)"; g.fillRect(x - 5, base - 14, 11, 14);
-      g.fillStyle = "#fee761"; g.fillRect(x, base - 19, 1, 3); g.fillRect(x - 1, base - 18, 3, 1);
+    const y0 = top(x), beat = x < youX;
+    for (let y = y0; y < base; y++) {
+      const d = (y - y0) / Math.max(1, base - y0);
+      g.fillStyle = beat ? (d < 0.15 ? "#6a4a3a" : (x + y) % 3 === 0 ? "#3e2c38" : "#33253a") : d < 0.15 ? "#3a2f52" : (x + y) % 3 === 0 ? "#231c3c" : "#1e1934";
+      g.fillRect(x, y, 1, 1);
     }
+    g.fillStyle = beat ? "#c99a4a" : "#5a4a70"; g.fillRect(x, y0, 1, 1);
   }
+  g.fillStyle = "#3a2f52"; g.fillRect(0, base, W, 1);
+  // typical score: a dotted line down from the peak
+  const mx = Math.round(X(mean));
+  g.fillStyle = "#8a7f9e";
+  for (let y = top(mx) + 2; y < base; y += 3) g.fillRect(mx, y, 1, 1);
+  // stargazers at evenly spaced shares of the crowd, so they bunch up in the middle like real scores do
+  const people = 15;
+  for (let k = 0; k < people; k++) {
+    const x = Math.round(X(mean + nInv((k + 0.5) / people) * sd));
+    if (x < 4 || x > W - 4 || Math.abs(x - youX) < 4) continue;
+    stargazer(g, x, top(x) + 1, x < mx ? 1 : -1, "#6a5f88", "#463d5e", (k * 7) % 3);
+  }
+  // you
+  const yy = top(youX) + 1;
+  g.fillStyle = "rgba(254, 231, 97, 0.16)"; g.fillRect(youX - 6, yy - 15, 13, 15);
+  stargazer(g, youX, yy, youX < mx ? 1 : -1, "#fee761", "#feae34", 0);
+  g.fillStyle = "#fee761";
+  g.fillRect(youX, yy - 21, 1, 5); g.fillRect(youX - 2, yy - 19, 5, 1);
+  for (let y = base + 2; y < H; y += 2) g.fillRect(youX, y, 1, 1);
+  return { lo: Math.round(lo), hi: Math.round(hi), mean: Math.round(mean) };
 }
 
 /** Where the points came from: each difficulty, then zoom, steady-hand and end bonuses. */
