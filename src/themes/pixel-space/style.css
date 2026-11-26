@@ -620,3 +620,5 @@ body:has(.play.gliding) { overflow: hidden; }
 .intro-foot a:hover, .intro-foot a:focus-visible { color: var(--accent); text-decoration: underline; }
 .intro-foot i { font-style: normal; margin: 0 10px; opacity: 0.6; }
 .intro.zooming .intro-foot { opacity: 0; pointer-events: none; }
+/* arriving from the front page: the card and HUD settle in once the telescope has landed */
+.play.arriving .start, .play.arriving .hud, .play.arriving .back-btn { animation: rise-in 500ms 420ms cubic-bezier(0.2, 0.7, 0.3, 1) both; }

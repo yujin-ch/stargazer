@@ -167,7 +167,7 @@ const ROLL_END = -Math.PI / 2 - Math.atan2(N.y, N.x);
 
 interface Star { x: number; y: number; f: number; c: string; ph: number; big: boolean }
 
-export function introScreen(app: HTMLElement, opts: { title: string; sub: string; onEnter: (to: "go" | "alt") => void;
+export function introScreen(app: HTMLElement, opts: { title: string; sub: string; onEnter: (to: "go" | "alt") => void | Promise<unknown>;
   /** A second way in (the star atlas), flying through the same eyepiece. */ alt?: string; links?: { id: string; label: string }[]; onLink?: (id: string) => void; returning?: boolean;
   /** What the game is, in a line (HTML). */ pitch?: string; /** A friend's score from a shared link (HTML). */ note?: string; /** The button's words; a random line if left out. */ go?: string }) {
   app.innerHTML = `
@@ -228,7 +228,7 @@ export function introScreen(app: HTMLElement, opts: { title: string; sub: string
   let shoot = { at: 2200, x: 0, y: 0 };
 
   // camera and timeline
-  let go0 = -1, fade0 = -1, raf = 0, prevLz = 0, prevT = 0, vel = 0, done = false;
+  let go0 = -1, fade0 = -1, raf = 0, prevLz = 0, prevT = 0, vel = 0, done = false, handed = false;
   // coming back from the atlas: start inside the eyepiece and pull back out to the hill
   let back0 = opts.returning && !REDUCED ? -2 : -1;
   const cam = (t: number): Cam & { z: number; p: number } => {
@@ -610,7 +610,7 @@ export function introScreen(app: HTMLElement, opts: { title: string; sub: string
           streak(x, y, 0.55, col);
         }
         // tonight's star, waiting right in the middle
-        const b = lod(14, 40);
+        const b = target === "alt" ? lod(14, 40) : 0;
         if (b > 0) {
           const arm = Math.round(2 + b * Math.min(14, Apx * 0.05));
           const gold = rgb(C.gold), glow = rgb(C.orange);
@@ -643,7 +643,7 @@ export function introScreen(app: HTMLElement, opts: { title: string; sub: string
     R.flush();
     if (!done && !REDUCED) raf = requestAnimationFrame(draw);
     // hand over once the glass fills the screen
-    if (go0 >= 0 && fade0 < 0 && t - go0 >= ANTICIPATE + ZOOM) handOver(t);
+    if (go0 >= 0 && !handed && t - go0 >= ANTICIPATE + ZOOM) handOver();
     if (fade0 >= 0 && t - fade0 > FADE + 60) stop();
   };
 
@@ -654,16 +654,19 @@ export function introScreen(app: HTMLElement, opts: { title: string; sub: string
     cv.remove();
   };
   // the canvas stays on top (in <body>) and fades out while the atlas arrives underneath
-  const handOver = (t: number) => {
-    fade0 = t;
+  // the next screen is built underneath first; only once it's drawn does the glass fade away,
+  // so nothing half-made ever shows through
+  const handOver = () => {
+    handed = true;
     document.body.appendChild(cv);
     cv.classList.add("intro-out");
-    arrival.forward = true;
-    opts.onEnter(target);
-    requestAnimationFrame(() => cv.classList.add("gone"));
+    arrival.forward = target === "alt";
+    Promise.resolve(opts.onEnter(target)).catch(() => {}).then(() => {
+      requestAnimationFrame(() => requestAnimationFrame((t) => { fade0 = t; cv.classList.add("gone"); }));
+    });
   };
   const skip = () => {
-    if (go0 < 0 || fade0 >= 0) return;
+    if (go0 < 0 || handed) return;
     go0 = performance.now() - ANTICIPATE - ZOOM;
   };
 

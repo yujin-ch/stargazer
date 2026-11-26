@@ -356,6 +356,20 @@ function glideScope(change: () => void) {
   ).finished.then(done, done);
 }
 
+/** Coming out of the front page's eyepiece: the ready telescope settles from filling the screen into its place. */
+function arriveScope() {
+  if (REDUCED_MOTION) return;
+  const lens = el.scope?.querySelector("canvas") as HTMLCanvasElement | null;
+  if (!lens) return;
+  const r = lens.getBoundingClientRect();
+  const k = (Math.hypot(window.innerWidth, window.innerHeight) * 0.9) / Math.max(1, r.width);
+  const dx = window.innerWidth / 2 - (r.left + r.width / 2), dy = window.innerHeight / 2 - (r.top + r.height / 2);
+  const play = app.querySelector(".play")!;
+  play.classList.add("gliding", "arriving");
+  const done = () => play.classList.remove("gliding", "arriving");
+  lens.animate([{ transform: `translate(${dx}px, ${dy}px) scale(${k})` }, { transform: "none" }], { duration: 900, easing: "cubic-bezier(0.16, 0.84, 0.3, 1)" }).finished.then(done, done);
+}
+
 function begin() {
   unlockAudio();
   const input = el.guess as HTMLInputElement;
@@ -1552,7 +1566,10 @@ function frontPage(returning = false) {
     go: played ? "TONIGHT'S LOG" : "TONIGHT'S SKY",
     alt: "STAR ATLAS",
     // the main button goes straight to tonight's sky (or its log once seen); the atlas is its own button
-    onEnter: (to) => { document.querySelector(".sheet-wrap")?.remove(); void tonightPack.then(() => (to === "alt" ? showAtlas() : played ? resultsScreen(done!, "daily") : openPlay("daily"))); },
+    onEnter: (to) => {
+      document.querySelector(".sheet-wrap")?.remove();
+      return tonightPack.then(() => (to === "alt" ? showAtlas() : played ? resultsScreen(done!, "daily") : openPlay("daily").then(arriveScope)));
+    },
     links: [{ id: "how", label: "HOW TO PLAY" }, { id: "settings", label: "SETTINGS" }, { id: "credits", label: "CREDITS" }],
     onLink: menuSheet,
   });
