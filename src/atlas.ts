@@ -32,7 +32,7 @@ export const arrival = { forward: false };
 
 // ---------------------------------------------------------------- atlas
 
-export function atlasScreen(app: HTMLElement, stars: AtlasStar[], opts: { title: string; footer: string; focus?: string }) {
+export function atlasScreen(app: HTMLElement, stars: AtlasStar[], opts: { title: string; footer: string; focus?: string; onBack?: () => void }) {
   app.innerHTML = `
   <main class="atlas" id="atlas">
     <div class="atlas-map" id="atlas-map">
@@ -40,6 +40,7 @@ export function atlasScreen(app: HTMLElement, stars: AtlasStar[], opts: { title:
       <canvas class="atlas-lines" id="atlas-lines" width="500" height="500" aria-hidden="true"></canvas>
     </div>
     <canvas class="atlas-meteors" id="atlas-meteors" aria-hidden="true"></canvas>
+    ${opts.onBack ? `<button class="btn back-btn atlas-back" id="atlas-back" type="button" aria-label="Back to the front page">&lt; FRONT PAGE</button>` : ""}
     <header class="atlas-head"><span>${opts.title}</span><small>drag to look around · pinch or scroll to zoom</small></header>
     <div class="atlas-tools">
       <button class="btn" id="atlas-out" aria-label="Zoom out">−</button>
@@ -51,6 +52,8 @@ export function atlasScreen(app: HTMLElement, stars: AtlasStar[], opts: { title:
   </main>`;
   const root = document.getElementById("atlas")!;
   const map = document.getElementById("atlas-map")!;
+  const back = document.getElementById("atlas-back");
+  if (back && opts.onBack) back.onclick = opts.onBack;
   drawSky(document.getElementById("atlas-sky") as HTMLCanvasElement);
   drawLines(document.getElementById("atlas-lines") as HTMLCanvasElement, stars);
   if (!REDUCED) shootingStars(document.getElementById("atlas-meteors") as HTMLCanvasElement);

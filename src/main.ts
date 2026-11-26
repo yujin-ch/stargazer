@@ -1353,42 +1353,19 @@ function showAtlas(focus = "tonight") {
     },
   });
   const menu: AtlasStar[] = [
-    { id: "how", x: 650, y: 590, size: "big", color: "#2ce8f5", label: "HOW TO PLAY", card: () => `<h2>How to play</h2>
-      <ul class="rules"><li><b>Type</b> what you see in the telescope. It moves on by itself.</li>
-      <li><b>Zoomed in?</b> Name it before it pulls back for bonus points.</li>
-      <li><b>Harder finds</b> are worth far more: ${CONFIG.bands.map((b) => b.points).join(" / ")} points by difficulty.</li>
-      <li><b>${CONFIG.combo[0].at} in a row</b> multiplies your points, up to ×${CONFIG.combo[CONFIG.combo.length - 1].mult}. A skip costs ${CONFIG.skipCost}s.</li>
-      <li><b>One sky a night</b>, the same for everyone. Some nights hide their theme: guess the <b>Mystery link</b> at the end.</li>
-      <li>Difficulty goes outward: ${theme.bandNames.slice(0, 3).join(", ")}, then <b>${theme.bandNames[3]}</b>.</li></ul>` },
-    { id: "log", x: 1350, y: 590, size: "big", color: "#e07ab8", label: "OBSERVING LOG", card: () => `<h2>Observing log</h2>
+    { id: "log", x: 1320, y: 720, size: "big", color: "#e07ab8", label: "OBSERVING LOG", card: () => `<h2>Observing log</h2>
       <dl class="figures"><div><dt>NIGHTS</dt><dd>${stats.played}</dd></div><div><dt>BEST</dt><dd>${stats.best}</dd></div><div><dt>STREAK</dt><dd>${stats.streak}</dd></div><div><dt>CATALOGUE</dt><dd>${cat.size}</dd></div></dl>
       ${done ? `<button class="btn" id="card-log">TONIGHT'S LOG</button>` : `<p class="small">Tonight's sky is still waiting.</p>`}`,
       wire: (c) => { const b = c.querySelector<HTMLButtonElement>("#card-log"); if (b) b.onclick = () => resultsScreen(done!, "daily"); } },
-    { id: "settings", x: 660, y: 1420, size: "big", color: "#9bd34a", label: "SETTINGS", card: () => `<h2>Settings</h2>
-      <div class="settings">
-        <button class="btn" id="card-sound">SOUND: ${store.muted ? "OFF" : "ON"}</button>
-        <button class="btn" id="card-amb">NIGHT SOUNDS: ${store.ambience ? "ON" : "OFF"}</button>
-        ${isTouch && "vibrate" in navigator ? `<button class="btn" id="card-buzz">VIBRATION: ${store.haptics ? "ON" : "OFF"}</button>` : ""}
-      </div>
-      <p class="small">Night sounds are wind and crickets under the game. Motion follows your device's reduced-motion setting.</p>`,
-      wire: (c) => {
-        const b = c.querySelector<HTMLButtonElement>("#card-sound")!;
-        b.onclick = () => { store.muted = !store.muted; setMuted(store.muted); b.textContent = `SOUND: ${store.muted ? "OFF" : "ON"}`; };
-        const a = c.querySelector<HTMLButtonElement>("#card-amb")!;
-        a.onclick = () => { store.ambience = !store.ambience; setAmbience(store.ambience); a.textContent = `NIGHT SOUNDS: ${store.ambience ? "ON" : "OFF"}`; };
-        const v = c.querySelector<HTMLButtonElement>("#card-buzz");
-        if (v) v.onclick = () => { store.haptics = !store.haptics; v.textContent = `VIBRATION: ${store.haptics ? "ON" : "OFF"}`; if (store.haptics) navigator.vibrate?.(15); };
-      } },
-    { id: "catalogue", x: 1000, y: 700, size: "big", color: "#f2d38a", label: "CATALOGUE", sub: `${cat.size} found`, card: () => `<h2>Catalogue</h2>
+    { id: "catalogue", x: 680, y: 720, size: "big", color: "#f2d38a", label: "CATALOGUE", sub: `${cat.size} found`, card: () => `<h2>Catalogue</h2>
       <p>Your collection book: everything you've ever named, by theme. The rest wait as shadows.</p>
       <div class="card-actions"><button class="btn primary" id="card-cat">OPEN THE BOOK</button></div>`,
       wire: (c) => { c.querySelector<HTMLButtonElement>("#card-cat")!.onclick = () => void catalogueScreen(() => showAtlas("catalogue")); } },
-    { id: "credits", x: 1340, y: 1420, size: "big", color: "#feae34", label: "CREDITS", card: () => `<h2>Credits</h2><p>${theme.credits}</p><p class="small">Photographs generated with Qwen-Image, cut out and pixelated for the telescope.</p>` },
     { id: "community", x: 1640, y: 1180, size: "small", color: "#5a6988", dim: true, label: "COMMUNITY SKIES", sub: "coming soon",
       card: () => `<h2>Community skies</h2><p>Soon: skies drawn and themed by other stargazers, out here on the edge of the map.</p>` },
   ];
   stars.push(...menu);
-  atlasScreen(app, stars, { title: "STAR ATLAS", footer: fmtDate(localDateKey()), focus });
+  atlasScreen(app, stars, { title: "STAR ATLAS", footer: fmtDate(localDateKey()), focus, onBack: () => frontPage() });
 }
 
 // tonight's own photo set, if one has been published (falls back to the rotating themes)
@@ -1400,9 +1377,62 @@ const tonightPack = Promise.all([
   usePack(PACK_DATE || localDateKey()),
 ]);
 
+// ---------------------------------------------------------------- the front page: the main menu
+
+const MENU_CARDS: Record<string, { html: () => string; wire?: (c: HTMLElement) => void }> = {
+  how: { html: () => `<h2>How to play</h2>
+      <ul class="rules"><li><b>Type</b> what you see in the telescope. It moves on by itself.</li>
+      <li><b>Zoomed in?</b> Name it before it pulls back for bonus points.</li>
+      <li><b>Harder finds</b> are worth far more: ${CONFIG.bands.map((b) => b.points).join(" / ")} points by difficulty.</li>
+      <li><b>${CONFIG.combo[0].at} in a row</b> multiplies your points, up to ×${CONFIG.combo[CONFIG.combo.length - 1].mult}. A skip costs ${CONFIG.skipCost}s.</li>
+      <li><b>One sky a night</b>, the same for everyone. Some nights hide their theme: guess the <b>Mystery link</b> at the end.</li>
+      <li>Difficulty goes outward: ${theme.bandNames.slice(0, 3).join(", ")}, then <b>${theme.bandNames[3]}</b>.</li></ul>` },
+  settings: { html: () => `<h2>Settings</h2>
+      <div class="settings">
+        <button class="btn" id="card-sound">SOUND: ${store.muted ? "OFF" : "ON"}</button>
+        <button class="btn" id="card-amb">NIGHT SOUNDS: ${store.ambience ? "ON" : "OFF"}</button>
+        ${isTouch && "vibrate" in navigator ? `<button class="btn" id="card-buzz">VIBRATION: ${store.haptics ? "ON" : "OFF"}</button>` : ""}
+      </div>
+      <p class="small">Night sounds are wind, crickets and a low hum of space under the game. Motion follows your device's reduced-motion setting.</p>`,
+    wire: (c) => {
+      const b = c.querySelector<HTMLButtonElement>("#card-sound")!;
+      b.onclick = () => { store.muted = !store.muted; setMuted(store.muted); b.textContent = `SOUND: ${store.muted ? "OFF" : "ON"}`; };
+      const a = c.querySelector<HTMLButtonElement>("#card-amb")!;
+      a.onclick = () => { store.ambience = !store.ambience; setAmbience(store.ambience); a.textContent = `NIGHT SOUNDS: ${store.ambience ? "ON" : "OFF"}`; };
+      const v = c.querySelector<HTMLButtonElement>("#card-buzz");
+      if (v) v.onclick = () => { store.haptics = !store.haptics; v.textContent = `VIBRATION: ${store.haptics ? "ON" : "OFF"}`; if (store.haptics) navigator.vibrate?.(15); };
+    } },
+  credits: { html: () => `<h2>Credits</h2><p>${theme.credits}</p><p class="small">Photographs generated with Qwen-Image, cut out and pixelated for the telescope.</p>` },
+};
+
+/** A card over the front page; closes on ✕, Escape, or a tap outside it. */
+function menuSheet(id: string) {
+  const m = MENU_CARDS[id];
+  if (!m) return;
+  document.querySelector(".sheet-wrap")?.remove();
+  const wrap = document.createElement("div");
+  wrap.className = "sheet-wrap";
+  wrap.innerHTML = `<section class="atlas-card sheet" role="dialog" aria-modal="true"><button class="card-x" aria-label="Close">✕</button>${m.html()}</section>`;
+  const close = () => { wrap.remove(); document.removeEventListener("keydown", esc); (document.querySelector(`[data-link="${id}"]`) as HTMLElement | null)?.focus(); };
+  const esc = (e: KeyboardEvent) => { if (e.key === "Escape") close(); };
+  wrap.addEventListener("pointerdown", (e) => { if (e.target === wrap) { ui("back"); close(); } });
+  (wrap.querySelector(".card-x") as HTMLElement).onclick = close;
+  document.addEventListener("keydown", esc);
+  document.body.appendChild(wrap);
+  m.wire?.(wrap);
+  (wrap.querySelector(".card-x") as HTMLElement).focus();
+}
+
+function frontPage() {
+  cancelAnimationFrame(raf);
+  introScreen(app, {
+    title: theme.title,
+    sub: fmtDate(localDateKey()),
+    onEnter: () => { document.querySelector(".sheet-wrap")?.remove(); void tonightPack.then(() => showAtlas()); },
+    links: [{ id: "how", label: "HOW TO PLAY" }, { id: "settings", label: "SETTINGS" }, { id: "credits", label: "CREDITS" }],
+    onLink: menuSheet,
+  });
+}
+
 if (PREVIEW_NIGHT) void openPlay("practice");
-else introScreen(app, {
-  title: theme.title,
-  sub: fmtDate(localDateKey()),
-  onEnter: () => void tonightPack.then(() => showAtlas()),
-});
+else frontPage();

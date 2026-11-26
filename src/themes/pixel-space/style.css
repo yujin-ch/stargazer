@@ -554,3 +554,13 @@ a { color: var(--cyan); }
 .seen li > .lens, .unseen-grid li > .lens { flex: none; display: grid; width: 58px; min-width: 0; }
 .unseen-grid li > .lens { width: 52px; }
 .seen li > div:not(.lens) { flex: 1; }
+
+/* ---------------------------------------------------------------- front page = main menu */
+.intro-menu { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 6px; }
+.intro-menu .btn { font-size: 9px; padding: 8px 10px; box-shadow: 3px 3px 0 #000; background: rgba(26, 21, 48, 0.82); }
+.intro.zooming .intro-menu { transform: translateY(-8px); opacity: 0; transition-delay: 110ms; pointer-events: none; }
+.sheet-wrap { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 16px; background: rgba(8, 6, 18, 0.55); animation: fade-in 0.2s steps(3); }
+.sheet-wrap .sheet { position: relative; left: auto; bottom: auto; translate: none; max-height: min(80vh, 560px); }
+.atlas .atlas-back { z-index: 6; }
+.atlas.card-open .atlas-back { opacity: 0.6; }
+@media (max-width: 520px) { .atlas .atlas-head { padding-top: max(50px, calc(env(safe-area-inset-top) + 44px)); } }

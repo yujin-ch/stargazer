@@ -166,7 +166,7 @@ const ROLL_END = -Math.PI / 2 - Math.atan2(N.y, N.x);
 
 interface Star { x: number; y: number; f: number; c: string; ph: number; big: boolean }
 
-export function introScreen(app: HTMLElement, opts: { title: string; sub: string; onEnter: () => void }) {
+export function introScreen(app: HTMLElement, opts: { title: string; sub: string; onEnter: () => void; links?: { id: string; label: string }[]; onLink?: (id: string) => void }) {
   app.innerHTML = `
   <main class="intro">
     <canvas class="intro-scene" id="intro-scene" aria-hidden="true"></canvas>
@@ -174,6 +174,7 @@ export function introScreen(app: HTMLElement, opts: { title: string; sub: string
       <h1 class="wordmark">${opts.title.toUpperCase()}</h1>
       <p class="intro-sub">${opts.sub}</p>
       <button class="btn primary intro-go" id="intro-go">${LINES[Math.floor(Math.random() * LINES.length)]}</button>
+      ${opts.links?.length ? `<nav class="intro-menu" aria-label="Menu">${opts.links.map((l) => `<button class="btn" data-link="${l.id}">${l.label}</button>`).join("")}</nav>` : ""}
     </div>
   </main>`;
   const root = app.querySelector(".intro") as HTMLElement;
@@ -645,6 +646,7 @@ export function introScreen(app: HTMLElement, opts: { title: string; sub: string
 
   raf = requestAnimationFrame(draw);
 
+  root.querySelectorAll<HTMLButtonElement>("[data-link]").forEach((b) => (b.onclick = () => opts.onLink?.(b.dataset.link!)));
   const go = document.getElementById("intro-go") as HTMLButtonElement;
   go.focus({ preventScroll: true });
   go.onclick = () => {
