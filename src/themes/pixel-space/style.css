@@ -382,3 +382,6 @@ a { color: var(--cyan); }
   .play.ready .back-btn { left: 24px; top: 20px; }
   .start .start-title { font-size: 26px; }
 }
+
+.share-row { margin-top: 16px; display: flex; justify-content: center; }
+.share-row .btn { min-width: 220px; }

@@ -81,7 +81,7 @@ export function dayCondition(puzzle: number): (typeof CONFIG.conditions)[number]
 }
 
 /** The objects of one theme. */
-export const themePool = (themeId: string) => OBJECTS.filter((o) => o.theme === themeId);
+export const themePool = (themeId: string) => OBJECTS.filter((o) => o.theme === themeId && !o.id.includes("/")); // day-pack objects ("theme:date/id") only play on their own night
 
 /**
  * The sky for a puzzle number, drawn from that day's theme. Each band walks through its own shuffled deck, so an

@@ -680,7 +680,7 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
         <div><dt>STEADY</dt><dd>${r.bestCombo ?? 0}</dd></div>
         <div><dt>SKIPPED</dt><dd>${r.skipped}</dd></div>
       </dl>
-      ${daily ? `<section class="share-card"><pre class="share-preview" id="share-preview" aria-label="What you'll share"></pre><button class="btn primary" id="share">${isTouch ? "SHARE" : "COPY TO SHARE"}</button></section>` : ""}
+      ${daily ? `<div class="share-row"><button class="btn primary" id="share">SHARE</button></div>` : ""}
     </section>
     <div class="actions">
       <button class="btn" id="to-atlas">STAR ATLAS</button>
