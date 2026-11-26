@@ -1,4 +1,4 @@
-import { CONFIG, type ConditionId } from "./config";
+import { CONFIG, answerPoints, type ConditionId } from "./config";
 import { mulberry32 } from "./daily";
 import type { SkyObject } from "./library";
 
@@ -28,7 +28,7 @@ function deviceId(): string {
  * reachable (local dev, offline). Pass your score to add it; each device counts once a night.
  */
 export async function liveCrowd(night: number, tier: number, score: number | null): Promise<number[] | null> {
-  const sentKey = `stargazer:sent:${night}`;
+  const sentKey = `stargazer:sent2:${night}`; // "2": the points scale changed on 2026-11-26
   let sent = false;
   try { sent = localStorage.getItem(sentKey) === "1"; } catch { /* storage blocked */ }
   try {
@@ -70,8 +70,7 @@ function play(sky: SkyObject[], eye: number, speed: number, rand: () => number, 
       if (t + at > CONFIG.runSeconds) break;
       t += at;
       combo++;
-      const extra = CONFIG.combo.reduce((e, c) => (combo >= c.at ? c.extra : e), 0);
-      score += (band.pullBack > 0 && at < band.pullBack ? band.zoomedPoints : band.points) + extra;
+      score += answerPoints(o.band, band.pullBack > 0 && at < band.pullBack, combo);
     } else {
       // stare a while, then skip
       t += look + 1.5 + rand() * 2 + CONFIG.skipCost;

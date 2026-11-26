@@ -10,7 +10,7 @@
 declare const process: { env: Record<string, string | undefined> };
 
 const LAUNCH = Date.UTC(2026, 10, 12); // keep in step with CONFIG.launchDate (puzzle #1)
-const MAX_SCORE = 400;
+const MAX_SCORE = 5000;
 const KEEP_SECONDS = 60 * 60 * 24 * 120;
 
 type Cmd = (string | number)[];
@@ -43,7 +43,7 @@ const json = (body: unknown, status = 200) =>
 const int = (v: unknown) => (typeof v === "number" ? v : typeof v === "string" && v.trim() ? Number(v) : NaN);
 
 async function tally(night: number, tier: number) {
-  const [flat] = (await redis([["HGETALL", `crowd:${night}:${tier}`]])) as [string[] | null];
+  const [flat] = (await redis([["HGETALL", `crowd2:${night}:${tier}`]])) as [string[] | null];
   const scores: Record<string, number> = {};
   let count = 0;
   for (let i = 0; flat && i < flat.length; i += 2) {
@@ -80,9 +80,9 @@ export async function POST(req: Request): Promise<Response> {
   if (!Number.isInteger(score) || score < 0 || score > MAX_SCORE) return json({ error: "bad score" }, 400);
   if (!/^[a-z0-9-]{8,64}$/i.test(id)) return json({ error: "bad id" }, 400);
   try {
-    const [fresh] = await redis([["SET", `seen:${night}:${id}`, 1, "NX", "EX", KEEP_SECONDS]]);
+    const [fresh] = await redis([["SET", `seen2:${night}:${id}`, 1, "NX", "EX", KEEP_SECONDS]]);
     if (fresh === "OK") {
-      const key = `crowd:${night}:${tier}`;
+      const key = `crowd2:${night}:${tier}`; // "2": the points scale changed on 2026-11-26
       await redis([["HINCRBY", key, score, 1], ["EXPIRE", key, KEEP_SECONDS]]);
     }
     return json(await tally(night, tier));

@@ -1,6 +1,6 @@
 import "@fontsource/press-start-2p";
 import "@fontsource/vt323";
-import { CONFIG, tierFor, SITE_URL, TIP_URL } from "./config";
+import { CONFIG, tierFor, answerPoints, SITE_URL, TIP_URL } from "./config";
 import { drawShareCard, cardBlob } from "./sharecard";
 import { OBJECTS, BY_ID, loadDayPack, loadPackIndex, shownNames, themeName, themeLabel, themeInfo, type SkyObject } from "./library";
 import { makeMatcher, normalize, forms as formsOf, linkMatches } from "./match";
@@ -331,7 +331,7 @@ function showObject(now: number) {
   const obj = run.sky[run.i];
   if (!obj) {
     // the whole sky named early: every second left is a point
-    run.clearedBonus = Math.max(0, Math.floor(timeLeft(now)));
+    run.clearedBonus = Math.max(0, Math.floor(timeLeft(now))) * CONFIG.clearedPerSecond;
     run.score += run.clearedBonus;
     el.score.textContent = String(run.score);
     return finish(now, true);
@@ -357,8 +357,7 @@ function named(obj: SkyObject, typed: string) {
   const zoomed = band.pullBack > 0 && viewer.pullProgress(now) < 1;
   run.combo++;
   run.bestCombo = Math.max(run.bestCombo, run.combo);
-  const extra = CONFIG.combo.reduce((x, c) => (run.combo >= c.at ? c.extra : x), 0);
-  const points = (zoomed ? band.zoomedPoints : band.points) + extra;
+  const points = answerPoints(obj.band, zoomed, run.combo);
   run.score += points;
   run.items.push({ id: obj.id, outcome: zoomed ? "zoomed" : "named", typed: typed.trim(), points });
   (el.guess as HTMLInputElement).value = "";
@@ -537,8 +536,8 @@ function renderCombo(broke: boolean) {
   void e.offsetWidth;
   if (broke) { e.textContent = "STEADY ×0"; e.classList.add("broke", "on"); return; }
   if (c >= CONFIG.combo[0].at) {
-    const extra = CONFIG.combo.reduce((x, k) => (c >= k.at ? k.extra : x), 0);
-    e.innerHTML = `STEADY ×${c} <span class="cpips">${CONFIG.combo.map((k) => (c >= k.at ? "■" : "□")).join("")}</span>`;
+    const mult = CONFIG.combo.reduce((x, k) => (c >= k.at ? k.mult : x), 1);
+    e.innerHTML = `STEADY ×${mult} <span class="cpips">${CONFIG.combo.map((k) => (c >= k.at ? "■" : "□")).join("")}</span>`;
     e.classList.add("on");
     if (c >= CONFIG.combo[1].at) e.classList.add("gold");
   } else e.textContent = "";
@@ -973,7 +972,7 @@ function bestFind(r: RunResult): number {
   let best = -1, bestScore = -1;
   r.items.forEach((it, i) => {
     if (it.outcome === "skipped") return;
-    const v = (BY_ID.get(it.id)?.band ?? 0) * 100 + (it.outcome === "zoomed" ? 50 : 0) + it.points;
+    const v = (BY_ID.get(it.id)?.band ?? 0) * 10000 + (it.outcome === "zoomed" ? 5000 : 0) + it.points;
     if (v > bestScore) { bestScore = v; best = i; }
   });
   return best;
@@ -1077,7 +1076,9 @@ function breakdown(r: RunResult): string {
     if (it.outcome === "skipped") continue;
     const band = CONFIG.bands[BY_ID.get(it.id)?.band ?? 0];
     const z = it.outcome === "zoomed" ? band.zoomedPoints - band.points : 0;
-    zoom += z; steady += it.points - band.points - z;
+    const st = it.points - band.points - z;
+    if (st < 0) return ""; // a night scored on the old points scale: no breakdown
+    zoom += z; steady += st;
   }
   if (zoom) rows.push(`<li class="bonus-row"><i>★</i><span>Zoom bonus</span><b>+${zoom}</b></li>`);
   if (steady) rows.push(`<li class="bonus-row"><i>■</i><span>Steady hand</span><b>+${steady}</b></li>`);
@@ -1249,7 +1250,8 @@ function showAtlas(focus = "tonight") {
     { id: "how", x: 650, y: 590, size: "big", color: "#2ce8f5", label: "HOW TO PLAY", card: () => `<h2>How to play</h2>
       <ul class="rules"><li><b>Type</b> what you see in the telescope. It moves on by itself.</li>
       <li><b>Zoomed in?</b> Name it before it pulls back for bonus points.</li>
-      <li><b>${CONFIG.combo[0].at} in a row</b> earns extra. A skip costs ${CONFIG.skipCost}s.</li>
+      <li><b>Harder finds</b> are worth far more: ${CONFIG.bands.map((b) => b.points).join(" / ")} points by difficulty.</li>
+      <li><b>${CONFIG.combo[0].at} in a row</b> multiplies your points, up to ×${CONFIG.combo[CONFIG.combo.length - 1].mult}. A skip costs ${CONFIG.skipCost}s.</li>
       <li><b>One sky a night</b>, the same for everyone. Some nights hide their theme: guess the <b>Mystery link</b> at the end.</li>
       <li>Difficulty runs Full Moon, Shooting Star, Nebula, then <b>Black Hole</b>.</li></ul>` },
     { id: "log", x: 1350, y: 590, size: "big", color: "#e07ab8", label: "OBSERVING LOG", card: () => `<h2>Observing log</h2>

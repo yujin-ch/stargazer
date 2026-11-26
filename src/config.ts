@@ -32,10 +32,11 @@ export const CONFIG = {
   bands: [
     // startZoom: how far in the telescope starts; pullBack: seconds to reach full view;
     // startBlur: how out of focus it starts, in sprite pixels (0 = sharp, max 2.4); points / zoomedPoints.
-    { startZoom: 1.6, pullBack: 1.8, startBlur: 0.4, points: 1, zoomedPoints: 2 },
-    { startZoom: 2.2, pullBack: 2.4, startBlur: 0.7, points: 2, zoomedPoints: 3 },
-    { startZoom: 3, pullBack: 3, startBlur: 1.1, points: 3, zoomedPoints: 5 },
-    { startZoom: 3.5, pullBack: 3.3, startBlur: 1.3, points: 4, zoomedPoints: 6 },
+    // points double with each band, so difficulty always matters most; a zoom answer is worth half again
+    { startZoom: 1.6, pullBack: 1.8, startBlur: 0.4, points: 10, zoomedPoints: 15 },
+    { startZoom: 2.2, pullBack: 2.4, startBlur: 0.7, points: 20, zoomedPoints: 30 },
+    { startZoom: 3, pullBack: 3, startBlur: 1.1, points: 40, zoomedPoints: 60 },
+    { startZoom: 3.5, pullBack: 3.3, startBlur: 1.3, points: 80, zoomedPoints: 120 },
   ],
   /**
    * Sky conditions: one per night, the same for everyone, picked by the night number.
@@ -50,12 +51,14 @@ export const CONFIG = {
     { id: "meteor", name: "Meteor shower", blurb: "Each one falls in pieces and pulls itself together.", revealAfter: 0.5 },
   ],
   /** Bonus for guessing a Mystery link night's theme at the end. */
-  linkBonus: 10,
-  /** "Steady hand" combo: answers in a row without a skip. Extra points per answer at each threshold. */
+  linkBonus: 100,
+  /** Points for each second left when the whole sky is named early. */
+  clearedPerSecond: 5,
+  /** "Steady hand" combo: answers in a row without a skip multiply each answer's points (so hard finds gain most). */
   combo: [
-    { at: 3, extra: 1 },
-    { at: 6, extra: 2 },
-    { at: 10, extra: 3 },
+    { at: 3, mult: 1.1 },
+    { at: 6, mult: 1.25 },
+    { at: 10, mult: 1.5 },
   ],
   /** Typo tolerance: one wrong, missing, extra or swapped letter on listed names this long or longer
    *  (what you typed may be one letter shorter). */
@@ -67,6 +70,13 @@ export const CONFIG = {
   /** Same idea for a plain plural ("cake" while "cakes" is also fine): a shorter wait. */
   pluralWaitMs: 170,
 } as const;
+
+/** Points for one answer: the band's points (or zoom points), times the steady-hand multiplier for this many in a row. */
+export function answerPoints(band: number, zoomed: boolean, inARow: number): number {
+  const b = CONFIG.bands[band];
+  const mult = CONFIG.combo.reduce((m, c) => (inARow >= c.at ? c.mult : m), 1);
+  return Math.round((zoomed ? b.zoomedPoints : b.points) * mult);
+}
 
 export type BandIndex = 0 | 1 | 2 | 3;
 export type ConditionId = (typeof CONFIG.conditions)[number]["id"];
