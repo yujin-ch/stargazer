@@ -65,13 +65,10 @@ describe("daily sky", () => {
     expect(s.length).toBeGreaterThanOrEqual(24);
     expect(new Set(s.map((o) => o.theme)).size).toBe(1);
     expect(dailySky(5).map((o) => o.id)).toEqual(dailySky(5).map((o) => o.id));
-    for (let d = 1; d <= 1000; d++) for (const t of [0, 1, 2]) {
-      const ids = dailySky(d, t).map((o) => o.id);
-      expect(new Set(ids).size, `day ${d} tier ${t}`).toBe(ids.length);
+    for (let d = 1; d <= 1000; d++) {
+      const ids = dailySky(d).map((o) => o.id);
+      expect(new Set(ids).size, `day ${d}`).toBe(ids.length);
     }
-    // harder tiers lean on the harder bands
-    const hard = (t: number) => dailySky(3, t).filter((o) => o.band >= 2).length;
-    expect(hard(2)).toBeGreaterThan(hard(0));
   });
 });
 

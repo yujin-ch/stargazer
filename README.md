@@ -9,7 +9,8 @@ A daily one-minute picture-naming game. Look through a pixel telescope and type 
 - One scored run per day (saved in the browser, from the moment the shutter opens, so a reload can't buy a retry); practice skies are random and unscored.
 - Steady hand: 3, 6 and 10 answers in a row earn +1, +2, +3 per answer. A skip breaks it.
 - Name the whole sky early and every second left is a point.
-- Streak tiers: Stargazer sky, Astronomer sky (3 nights in a row), Deep-sky hunter sky (7 in a row). Higher tiers mix in "Uncharted" niche objects. Everyone on the same tier gets the same sky.
+- One sky a night, the same for everyone (streak tiers were removed 11-26). Daily skies show no theme name; only Mystery link nights say so.
+- Leaving the tab mid-run pauses it: the clock stops and the lens is capped until the player taps OPEN THE SHUTTER (a 3-second countdown, then it carries on).
 
 ## Develop
 ```
@@ -53,7 +54,8 @@ Push the folder to `main` and Vercel redeploys. Note: future packs are public fi
 
 - `VITE_SITE_URL` in `.env` (or in Vercel's environment variables) is the public address. The share text, share picture and link-preview tags (`og:*`, `twitter:*` in `index.html`) are all built from it, so moving to a custom domain means changing this one line and redeploying.
 - `public/og.png` is the 1200×630 link-preview image.
-- Shared links carry `?s=1`. Vercel Web Analytics is loaded from `/_vercel/insights/script.js` and starts counting once Analytics is switched on in the Vercel project.
+- Shared links carry `?s=1`; a daily share also carries `&d=<date>&f=<score>`, so a friend who opens it tonight sees that score on the front page and as a rose stargazer on their hill (nothing is stored on a server).
+- `public/manifest.webmanifest` and `public/icons/` make "Add to Home Screen" give a proper app icon; the results offer it on phones. Vercel Web Analytics is loaded from `/_vercel/insights/script.js` and starts counting once Analytics is switched on in the Vercel project.
 - `VITE_TIP_URL` (e.g. a Ko-fi page) shows a small tip link under the results; leave it empty to hide it.
 
 ## Security

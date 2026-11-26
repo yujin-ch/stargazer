@@ -167,14 +167,17 @@ const ROLL_END = -Math.PI / 2 - Math.atan2(N.y, N.x);
 
 interface Star { x: number; y: number; f: number; c: string; ph: number; big: boolean }
 
-export function introScreen(app: HTMLElement, opts: { title: string; sub: string; onEnter: () => void; links?: { id: string; label: string }[]; onLink?: (id: string) => void; returning?: boolean }) {
+export function introScreen(app: HTMLElement, opts: { title: string; sub: string; onEnter: () => void; links?: { id: string; label: string }[]; onLink?: (id: string) => void; returning?: boolean;
+  /** What the game is, in a line (HTML). */ pitch?: string; /** A friend's score from a shared link (HTML). */ note?: string; /** The button's words; a random line if left out. */ go?: string }) {
   app.innerHTML = `
   <main class="intro${opts.returning && !REDUCED ? " zooming" : ""}">
     <canvas class="intro-scene" id="intro-scene" aria-hidden="true"></canvas>
     <div class="intro-ui">
       <h1 class="wordmark">${opts.title.toUpperCase()}</h1>
       <p class="intro-sub">${opts.sub}</p>
-      <button class="btn primary intro-go" id="intro-go">${LINES[Math.floor(Math.random() * LINES.length)]}</button>
+      ${opts.pitch ? `<p class="intro-pitch">${opts.pitch}</p>` : ""}
+      ${opts.note ? `<p class="intro-note">${opts.note}</p>` : ""}
+      <button class="btn primary intro-go" id="intro-go">${opts.go ?? LINES[Math.floor(Math.random() * LINES.length)]}</button>
     </div>
     ${opts.links?.length ? `<nav class="intro-menu" aria-label="Menu">${opts.links.map((l) => `<button class="btn" data-link="${l.id}">${l.label}</button>`).join("")}</nav>` : ""}
   </main>`;

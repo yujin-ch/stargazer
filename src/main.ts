@@ -2,7 +2,7 @@ import "@fontsource/press-start-2p";
 import "@fontsource/vt323";
 import { CONFIG, tierFor, answerPoints, SITE_URL, TIP_URL } from "./config";
 import { drawShareCard, cardBlob } from "./sharecard";
-import { OBJECTS, BY_ID, loadDayPack, loadPackIndex, shownNames, themeName, themeLabel, themeInfo, type SkyObject } from "./library";
+import { OBJECTS, BY_ID, loadDayPack, loadPackIndex, shownNames, themeName, themeInfo, type SkyObject } from "./library";
 import { makeMatcher, normalize, forms as formsOf, linkMatches } from "./match";
 import { dailySky, setDayPack, notePackNight, practiceSky, localDateKey, puzzleNumber, mulberry32, dayTheme, dayCondition } from "./daily";
 import { theme } from "./themes";
@@ -31,6 +31,13 @@ const longerNames = (o: SkyObject) => {
 const isTouch = window.matchMedia("(pointer: coarse)").matches;
 /** Links people share carry ?s=1, so visits from shares can be told apart. */
 const SHARE_URL = `${SITE_URL}/?s=1`;
+/** A daily share also carries its night and score (?d=YYYY-MM-DD&f=665), so a friend who opens it is met with the score to beat. */
+const shareUrlFor = (r: { date: string; score: number }) => `${SHARE_URL}&d=${r.date}&f=${r.score}`;
+{
+  const q = new URLSearchParams(location.search), d = q.get("d") ?? "", f = Number(q.get("f"));
+  // only tonight's score means anything: an older link's sky is gone
+  if (/^\d{4}-\d{2}-\d{2}$/.test(d) && d === localDateKey() && Number.isInteger(f) && f >= 0 && f <= 5000) store.setFriend(d, f);
+}
 setMuted(store.muted);
 setAmbience(store.ambience);
 // browsers only allow sound after a tap or key: the first one wakes the night sounds
@@ -50,6 +57,16 @@ document.addEventListener("pointerdown", (e) => { unlockAudio(); uiSoundFor(e.ta
 document.addEventListener("keydown", (e) => { if ((e.key === "Enter" || e.key === " ") && e.target instanceof HTMLElement && e.target !== el.guess) uiSoundFor(e.target); }, { capture: true });
 theme.startPageBackground(document.getElementById("sky") as HTMLCanvasElement);
 document.title = theme.title;
+
+// ---------------------------------------------------------------- home screen: Stargazer as an app icon
+
+/** Chrome and Android offer an install prompt we can hold on to; iPhones need the Share menu. */
+let installPrompt: (Event & { prompt: () => Promise<void> }) | null = null;
+window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); installPrompt = e as typeof installPrompt; });
+const standalone = () => window.matchMedia("(display-mode: standalone)").matches || (navigator as unknown as { standalone?: boolean }).standalone === true;
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+/** Only offered on phones, outside the installed app, where it can actually be done. */
+const canOfferHomeScreen = () => isTouch && !standalone() && (!!installPrompt || isIOS);
 
 // Keep the layout above the on-screen keyboard.
 function fitViewport() {
@@ -77,7 +94,10 @@ interface Run {
   streak: number;
   sky: SkyObject[];
   i: number;
-  phase: "ready" | "countdown" | "playing" | "over";
+  phase: "ready" | "countdown" | "playing" | "paused" | "over";
+  /** When the run was paused (the tab hidden), and what it was doing then. */
+  pausedAt: number;
+  pausedFrom: "countdown" | "playing" | null;
   countdownAt: number;
   startAt: number;
   penalty: number;
@@ -280,7 +300,7 @@ function newRun(mode: Run["mode"]): Run {
   const streak = store.streakThrough(puzzle - 1);
   const tier = tierFor(streak);
   const sky = mode === "daily" ? dailySky(puzzle, tier) : PREVIEW_NIGHT ? dailySky(PREVIEW_NIGHT, tier) : practiceSky(tier);
-  return { mode, puzzle: mode === "daily" ? puzzle : PREVIEW_NIGHT || puzzle, date, tier, streak, sky, i: 0, phase: "ready", countdownAt: 0, startAt: 0, penalty: 0, score: 0, items: [], attempt: "", lastTick: 99, combo: 0, bestCombo: 0, graceUntil: 0, graceObj: null, graceText: "", graceDropped: "", clearedBonus: 0, pending: null };
+  return { mode, puzzle: mode === "daily" ? puzzle : PREVIEW_NIGHT || puzzle, date, tier, streak, sky, i: 0, phase: "ready", pausedAt: 0, pausedFrom: null, countdownAt: 0, startAt: 0, penalty: 0, score: 0, items: [], attempt: "", lastTick: 99, combo: 0, bestCombo: 0, graceUntil: 0, graceObj: null, graceText: "", graceDropped: "", clearedBonus: 0, pending: null };
 }
 
 async function openPlay(mode: Run["mode"]) {
@@ -302,11 +322,11 @@ async function openPlay(mode: Run["mode"]) {
   const skyTheme = run.sky[0]?.theme ?? dayTheme(run.puzzle);
   const mystery = !!themeInfo(skyTheme)?.mystery;
   el.start.innerHTML = `
-    <p class="start-kicker">${mode === "daily" ? "TONIGHT'S SKY" : skyDate && skyDate < localDateKey() ? `${fmtDate(skyDate).toUpperCase()} · NOT SAVED` : "PREVIEW · NOT SAVED"}</p>
-    <h1 class="start-title">${mystery ? "A MYSTERY LINK" : themeName(skyTheme).toUpperCase()}</h1>
+    <p class="start-kicker">${mode === "daily" ? fmtDate(run.date).toUpperCase() : skyDate && skyDate < localDateKey() ? `${fmtDate(skyDate).toUpperCase()} · NOT SAVED` : "PREVIEW · NOT SAVED"}</p>
+    <h1 class="start-title">${mystery ? "A MYSTERY LINK" : mode === "daily" ? "TONIGHT'S SKY" : "AN OLD SKY"}</h1>
     <p class="start-line">${mystery ? `Name what you see, then guess what links it all for +${CONFIG.linkBonus}.` : "Name what you see before the clock runs out."}<br><small>${CONFIG.runSeconds} seconds · ${run.sky.length} objects · ${isTouch ? "Skip" : "Tab skips"} for ${CONFIG.skipCost}s</small></p>
     <button class="btn primary" id="go">OPEN THE SHUTTER</button>
-    ${mode === "daily" ? `<p class="small tier-mini">${CONFIG.tiers[run.tier].name} sky${run.streak ? ` · ${run.streak}-night streak` : ""}</p>` : ""}`;
+    ${mode === "daily" && run.streak ? `<p class="small tier-mini">${run.streak}-night streak</p>` : ""}`;
   document.getElementById("go")!.onclick = begin;
   el.backbtn.onclick = () => { cancelAnimationFrame(raf); skyTravel(false); showAtlas(); };
   sizeViewer();
@@ -332,6 +352,72 @@ function begin() {
   setTimeout(fitViewport, 350);
 }
 
+// ---------------------------------------------------------------- pause: a phone call or a switched app stops the clock
+
+/** The tab went away mid-run: stop the clock, cap the lens, and wait. */
+function pause(now: number) {
+  if (run?.phase !== "playing" && run?.phase !== "countdown") return;
+  if (!document.getElementById("eyepiece")) return;
+  if (run.pending !== null) acceptPending();
+  if (run.phase !== "playing" && run.phase !== "countdown") return; // that answer cleared the sky
+  // a countdown that hadn't finished simply starts again
+  run.pausedFrom = run.phase === "countdown" && !run.startAt ? null : "playing";
+  run.pausedAt = now;
+  run.phase = "paused";
+  viewer.covered = true;
+  blackHole(false);
+  el.overlay.className = "overlay";
+  el.overlay.textContent = "";
+  el.pops.textContent = "";
+  (el.guess as HTMLInputElement).blur();
+  el.controls.classList.add("hidden");
+  el.hint.classList.add("hidden");
+  app.querySelector(".play")!.classList.add("ready", "paused");
+  const left = run.startAt ? Math.max(0, Math.ceil(timeLeft(now))) : CONFIG.runSeconds;
+  el.start.className = "start";
+  el.start.innerHTML = `
+    <p class="start-kicker">PAUSED</p>
+    <h1 class="start-title">THE LENS IS CAPPED</h1>
+    <p class="start-line">You stepped away, so the clock stopped.<br><small>${left} seconds left · ${run.sky.length - run.i} objects still out there</small></p>
+    <button class="btn primary" id="resume">OPEN THE SHUTTER</button>`;
+  document.getElementById("resume")!.onclick = resume;
+  saveProgress();
+  announce("Paused.");
+}
+
+/** Back from a pause: a short countdown with the lens still capped, then the sky again. */
+function resume() {
+  unlockAudio();
+  el.start.classList.add("hidden");
+  app.querySelector(".play")!.classList.remove("ready", "paused");
+  el.controls.classList.remove("hidden");
+  el.hint.classList.remove("hidden");
+  const input = el.guess as HTMLInputElement;
+  input.value = "";
+  input.focus(); // inside the tap, so phones open the keyboard
+  sizeViewer();
+  if (!run.pausedFrom) viewer.covered = false;
+  run.phase = "countdown";
+  run.countdownAt = performance.now();
+  theme.sounds.tick();
+  setTimeout(fitViewport, 350);
+}
+
+/** The countdown after a pause ran out: everything that was timed picks up where it stopped. */
+function unpause(now: number) {
+  const away = now - run.pausedAt;
+  run.startAt += away;
+  viewer.shift(away);
+  run.pausedFrom = null;
+  run.phase = "playing";
+  viewer.covered = false;
+  el.overlay.textContent = "";
+  blackHole(run.sky[run.i]?.band === 3);
+  if ((el.guess as HTMLInputElement).value) onTyped(el.guess as HTMLInputElement);
+}
+
+document.addEventListener("visibilitychange", () => { if (document.hidden) pause(performance.now()); });
+
 function startClock(now: number) {
   run.phase = "playing";
   run.startAt = now;
@@ -356,9 +442,12 @@ function showObject(now: number) {
   viewer.preload(run.sky.slice(run.i + 1, run.i + 3));
   warmth((el.guess as HTMLInputElement).value);
   run.attempt = "";
-  el.label.textContent = themeLabel(obj.theme).toUpperCase();
   const band = CONFIG.bands[obj.band];
-  el.band.textContent = `${theme.bandNames[obj.band].toUpperCase()} · ${band.points} PT${band.points > 1 ? "S" : ""}`;
+  const bandText = `${theme.bandNames[obj.band].toUpperCase()} · ${band.points} PT${band.points > 1 ? "S" : ""}`;
+  const mysteryNight = !!themeInfo(obj.theme)?.mystery;
+  el.label.textContent = mysteryNight ? "???" : bandText;
+  el.label.dataset.band = mysteryNight ? "" : String(obj.band);
+  el.band.textContent = mysteryNight ? bandText : "\u00a0";
   el.band.dataset.band = String(obj.band);
   blackHole(obj.band === 3);
   el.count.textContent = `${run.i + 1}/${run.sky.length}`;
@@ -684,7 +773,7 @@ function loop() {
     if (run.phase === "countdown") {
       const left = CONFIG.countdownSeconds - (now - run.countdownAt) / 1000;
       const n = Math.ceil(left);
-      if (left <= 0) startClock(now);
+      if (left <= 0) (run.pausedFrom ? unpause(now) : startClock(now));
       else if (el.overlay.textContent !== String(n)) {
         el.overlay.className = "overlay big";
         el.overlay.textContent = String(n);
@@ -716,16 +805,6 @@ function loop() {
     raf = requestAnimationFrame(frame);
   };
   raf = requestAnimationFrame(frame);
-}
-
-function tierLine(tier: number, streak: number): string {
-  const t = CONFIG.tiers[tier], next = CONFIG.tiers[tier + 1];
-  const streakTxt = streak ? `${streak}-night streak` : "no streak yet";
-  return `<p class="tier">${t.name.toUpperCase()} SKY <span>· ${streakTxt}</span></p>${next ? `<p class="small next">${pips(streak - t.minStreak, next.minStreak - t.minStreak)} ${next.name} sky in ${next.minStreak - streak} more night${next.minStreak - streak === 1 ? "" : "s"}</p>` : `<p class="small next">The hardest sky there is.</p>`}`;
-}
-
-function pips(have: number, need: number): string {
-  return `<span class="pips" aria-hidden="true">${"<i class=on></i>".repeat(Math.max(0, have))}${"<i></i>".repeat(Math.max(0, need - have))}</span>`;
 }
 
 // ---------------------------------------------------------------- results
@@ -783,12 +862,9 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
   const stats = store.stats(today);
   const daily = mode === "daily";
   const cat = store.catalogue().size;
-  const tier = r.tier ?? 0;
+  // one sky for everyone now; a run saved on an old streak sky still finds the sky it was played on
+  const tier = Math.min(r.tier ?? 0, CONFIG.tiers.length - 1);
   const streakNow = store.streakThrough(today);
-  const next = CONFIG.tiers[tier + 1];
-  const tomorrow = next
-    ? `${pips(streakNow - CONFIG.tiers[tier].minStreak, next.minStreak - CONFIG.tiers[tier].minStreak)} ${next.name} sky in ${Math.max(1, next.minStreak - streakNow)} more night${next.minStreak - streakNow === 1 ? "" : "s"}`
-    : "You're on the hardest sky.";
   const bandsSeen = [...new Set(r.items.map((it) => BY_ID.get(it.id)?.band).filter((b) => b !== undefined))].sort() as number[];
   const crowdSky = daily ? dailySky(r.puzzle, tier) : run?.sky ?? [];
   const crowd = dayCurve(crowdSky, daily ? r.puzzle * 10 + tier : 777, dayCondition(r.puzzle).id);
@@ -806,10 +882,20 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
         <span>OBSERVING LOG</span>
         <span>${daily ? fmtDate(r.date).toUpperCase() : "PRACTICE"}</span>
       </header>
-      <p class="date">${daily ? `${fmtDate(r.date)} · ${shownTheme}${CONFIG.conditionsOn ? ` · ${dayCondition(r.puzzle).name}` : ""} · ${CONFIG.tiers[tier].name} sky` : `Preview · ${shownTheme}${CONFIG.conditionsOn ? ` · ${dayCondition(r.puzzle).name}` : ""}`}</p>
+      ${!daily || mystery || CONFIG.conditionsOn ? `<p class="date">${[daily ? "" : "Practice · not saved", mystery ? shownTheme : "", CONFIG.conditionsOn ? dayCondition(r.puzzle).name : ""].filter(Boolean).join(" · ")}</p>` : ""}
       <div class="final"><span>${r.score}</span><small>POINTS</small></div>
       ${r.partial ? `<p class="small">This run was cut short, so it counts as it stood.</p>` : ""}
+      <p class="verdict" id="verdict"></p>
+      <section class="sb-block hill-block">
+        <h3 class="sb-title">ON THE HILL TONIGHT</h3>
+        <canvas class="chart hill-chart" id="hill" aria-label="Tonight's scores as a bell-shaped hill, with you standing in gold at your score"></canvas>
+        <div class="hill-axis" id="hill-axis"></div>
+        <p class="hill-line" id="hill-line"></p>
+      </section>
+      ${daily ? `<div class="share-row"><button class="btn primary" id="share">SHARE</button></div>${isTouch ? "" : `<p class="save-row"><button class="link-btn" id="save-card">save the picture</button></p>`}` : ""}
+      <p class="caption" id="crowd-note">Tonight's hill is the same for everyone: how a crowd of stargazers fares on this exact sky.</p>
       ${mystery ? `<section class="link-box${r.link ? (r.link.ok ? " found" : " missed") : ""}" id="link-box"></section>` : ""}
+      <h3 class="sb-title details-title">HOW THE NIGHT WENT</h3>
       ${breakdown(r)}
       <section class="sb-block">
         <p class="constellation" id="constellation"></p>
@@ -817,20 +903,12 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
         <p class="legend">${bandsSeen.map((b) => `<span><i class="lg" style="background:${theme.bandColors[b]}"></i>${theme.bandNames[b]}</span>`).join("")}<span><i class="lg zoomed"></i>zoom</span><span><i class="lg skipped"></i>skipped</span></p>
         <p class="caption">Around the dial: your minute, from the top. Further out: harder. Answers in a row join up; grey dashes on the rim are skips.</p>
       </section>
-      <section class="sb-block">
-        <h3 class="sb-title">ON THE HILL TONIGHT</h3>
-        <canvas class="chart hill-chart" id="hill" aria-label="Tonight's scores as a bell-shaped hill, with you standing in gold at your score"></canvas>
-        <div class="hill-axis" id="hill-axis"></div>
-        <p class="hill-line" id="hill-line"></p>
-        <p class="caption" id="crowd-note">Tonight's hill is the same for everyone: how a crowd of stargazers fares on this exact sky.</p>
-      </section>
       <dl class="figures">
         <div><dt>NAMED</dt><dd>${r.named}</dd></div>
         <div><dt>ZOOM</dt><dd>${r.zoomed}</dd></div>
         <div><dt>STEADY</dt><dd>${r.bestCombo ?? 0}</dd></div>
         <div><dt>SKIPPED</dt><dd>${r.skipped}</dd></div>
       </dl>
-      ${daily ? `<div class="share-row"><button class="btn primary" id="share">SHARE</button></div>${isTouch ? "" : `<p class="save-row"><button class="link-btn" id="save-card">save the picture</button></p>`}` : ""}
       ${TIP_URL ? `<p class="tip-row"><a href="${esc(TIP_URL)}" target="_blank" rel="noopener">Enjoying the sky? Leave a tip for the stargazers who make it ☕</a></p>` : ""}
     </section>
     ${daily ? "" : `<div class="actions">
@@ -838,9 +916,10 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
     </div>`}
     <p class="toast" id="toast" role="status"></p>
     <section class="come-back">
-      ${daily ? `<div class="moonrise"><canvas id="moonrise" width="120" height="34" aria-hidden="true"></canvas><p>Next sky in <b id="next-in">${nextSkyIn()}</b></p></div><p class="small">${tomorrow}</p>` : ""}
+      ${daily ? `<div class="moonrise"><canvas id="moonrise" width="120" height="34" aria-hidden="true"></canvas><p>Next sky in <b id="next-in">${nextSkyIn()}</b></p></div>` : ""}
       <p class="small"><button class="link-btn" id="to-cat">Catalogue <b>${cat}</b> / ${OBJECTS.length} objects</button>${lastFresh ? ` <span class="new">+${lastFresh} new</span>` : ""}</p>
       ${daily ? `<p class="small">Best ${stats.best} · Streak ${stats.streak}</p>` : ""}
+      ${daily && canOfferHomeScreen() ? `<p class="small home-row"><button class="link-btn" id="home-screen"><img src="/icons/icon-192.png" alt="" width="20" height="20" /> Put Stargazer on your home screen</button></p>` : ""}
     </section>
    </div>
    <div class="res-side">
@@ -854,7 +933,7 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
   moonrise();
   const chart = document.getElementById("chart") as HTMLCanvasElement;
   let standing: Standing | null = null;
-  const sharePreview = () => { const pre = document.getElementById("share-preview"); if (pre) pre.textContent = shareText(r, theme, SHARE_URL, standing, streakNow); };
+  const sharePreview = () => { const pre = document.getElementById("share-preview"); if (pre) pre.textContent = shareText(r, theme, daily ? shareUrlFor(r) : SHARE_URL, standing, streakNow); };
   const best = bestFind(r);
   const bestObj = best >= 0 ? BY_ID.get(r.items[best].id) : undefined;
   document.getElementById("constellation")!.innerHTML = bestObj
@@ -876,14 +955,20 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
     const mine = r.score - (r.link?.bonus ?? 0), beat = beatShare(curve, mine);
     standing = { beat, live: false, players: 0 };
     sharePreview();
-    const ax = drawHill(hill, curve, mine);
+    // the night's title, right under the score: what you'd tell a friend
+    const [icon, ...words] = nightTitle(beat).split(" ");
+    document.getElementById("verdict")!.innerHTML = `<span aria-hidden="true">${icon}</span>${esc(words.join(" ").toUpperCase())}`;
+    const friend = daily ? store.friend(r.date) : null;
+    const ax = drawHill(hill, curve, mine, friend);
     const pct = Math.round(beat * 100);
     document.getElementById("hill-axis")!.innerHTML = `<span>${ax.lo}</span><span>typical ${ax.mean}</span><span>${ax.hi}</span>`;
     document.getElementById("hill-line")!.innerHTML =
       (pct >= 99 ? `You out-spotted <b>everyone on the hill</b> tonight.`
       : pct <= 1 ? `The whole hill saw more tonight. The sky comes back tomorrow.`
       : `You out-spotted <b>${pct}%</b> of tonight's stargazers.`)
-      + `<br><small>Your gold slope is everyone you out-spotted.</small>`;
+      + (friend !== null && !r.partial
+        ? `<br><span class="vs-friend">${r.score > friend ? `You beat your friend's <b>${friend}</b>.` : r.score === friend ? `Dead level with your friend: <b>${friend}</b>.` : `Your friend is ahead with <b>${friend}</b>.`}</span>`
+        : `<br><small>Your gold slope is everyone you out-spotted.</small>`);
   };
   paintHill(crowd);
   const box = document.getElementById("link-box");
@@ -960,7 +1045,7 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
     drawConstellation(small, r, best);
     const host = SITE_URL.replace(/^https?:\/\//, "");
     const title = standing ? nightTitle(standing.beat).replace(/^\S+\s/, "") : "";
-    const c = await drawShareCard({ r, theme, sky: shownTheme, constellation: small, title, streak: streakNow, host });
+    const c = await drawShareCard({ r, theme, sky: mystery ? "Mystery link" : "", constellation: small, title, streak: streakNow, host });
     return cardBlob(c);
   };
   document.getElementById("save-card")?.addEventListener("click", async () => {
@@ -974,8 +1059,12 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
   let cardFile: File | null = null;
   if (isTouch && daily) setTimeout(() => void card().then((b) => { cardFile = b ? new File([b], `stargazer-${r.date}.png`, { type: "image/png" }) : null; }), 1800);
   document.getElementById("share")?.addEventListener("click", async () => {
-    const res = await share(shareText(r, theme, SHARE_URL, standing, streakNow), cardFile);
+    const res = await share(shareText(r, theme, daily ? shareUrlFor(r) : SHARE_URL, standing, streakNow), cardFile);
     toast(res === "copied" ? "Copied! Paste it to a friend or group chat." : res === "shared" ? "" : "Couldn't share. Try again.");
+  });
+  document.getElementById("home-screen")?.addEventListener("click", async () => {
+    if (installPrompt) { const p = installPrompt; installPrompt = null; await p.prompt().catch(() => {}); document.querySelector(".home-row")?.remove(); return; }
+    toast("Tap Safari's Share button, then “Add to Home Screen”.");
   });
   document.getElementById("to-atlas")!.onclick = () => showAtlas();
   document.getElementById("to-cat")!.onclick = () => void catalogueScreen(() => void resultsScreen(r, mode));
@@ -1105,12 +1194,12 @@ function nInv(p: number): number {
  * Tonight's crowd as a hill shaped like a bell curve (from the crowd's mean and spread): stargazers stand along it,
  * thickest in the middle where most scores fall. You stand in gold at your score, and the slope you out-spotted glows.
  */
-function drawHill(c: HTMLCanvasElement, curve: Curve, mine: number): { lo: number; hi: number; mean: number } {
+function drawHill(c: HTMLCanvasElement, curve: Curve, mine: number, friend: number | null = null): { lo: number; hi: number; mean: number } {
   const W = 240, H = 96, base = H - 12, amp = 58;
   c.width = W; c.height = H;
   const g = c.getContext("2d")!;
   const { mean, sd } = curve;
-  const lo = Math.max(0, Math.min(mine, mean - 2.8 * sd)), hi = Math.max(mine, mean + 2.8 * sd);
+  const lo = Math.max(0, Math.min(mine, friend ?? mine, mean - 2.8 * sd)), hi = Math.max(mine, friend ?? mine, mean + 2.8 * sd);
   const X = (v: number) => 10 + ((v - lo) / (hi - lo || 1)) * (W - 20);
   const V = (x: number) => lo + ((x - 10) / (W - 20)) * (hi - lo);
   const top = (x: number) => Math.round(base - amp * Math.exp(-((V(x) - mean) ** 2) / (2 * sd * sd)));
@@ -1119,6 +1208,7 @@ function drawHill(c: HTMLCanvasElement, curve: Curve, mine: number): { lo: numbe
   g.fillStyle = "#2c2648";
   for (let i = 0; i < 40; i++) g.fillRect(Math.floor(rand() * W), Math.floor(rand() * (H - 30)), 1, 1);
   const youX = Math.round(X(mine));
+  const friendX = friend === null ? null : Math.round(X(friend));
   // the hill: a bell curve, softly lit from its ridge down; the part you out-spotted glows warm
   const hill = new Path2D();
   hill.moveTo(0, base);
@@ -1140,8 +1230,15 @@ function drawHill(c: HTMLCanvasElement, curve: Curve, mine: number): { lo: numbe
   const people = 15;
   for (let k = 0; k < people; k++) {
     const x = Math.round(X(mean + nInv((k + 0.5) / people) * sd));
-    if (x < 4 || x > W - 4 || Math.abs(x - youX) < 4) continue;
+    if (x < 4 || x > W - 4 || Math.abs(x - youX) < 4 || (friendX !== null && Math.abs(x - friendX) < 4)) continue;
     stargazer(g, x, top(x) + 1, x < mx ? 1 : -1, "#6a5f88", "#463d5e", (k * 7) % 3);
+  }
+  // the friend whose shared link brought you here, in rose, with a little star flag
+  if (friendX !== null) {
+    const fy = top(friendX) + 1, fx = friendX === youX ? friendX + 6 : friendX;
+    stargazer(g, fx, top(fx) + 1, fx < mx ? 1 : -1, "#f29bc8", "#b0568a", 1);
+    g.fillStyle = "#f29bc8";
+    g.fillRect(fx, fy - 19, 1, 6); g.fillRect(fx + 1, fy - 19, 3, 1); g.fillRect(fx + 1, fy - 18, 2, 1);
   }
   // you
   const yy = top(youX) + 1;
@@ -1321,14 +1418,14 @@ function showAtlas(focus = "tonight") {
   stars.push({
     id: "tonight", x: 1000, y: 1000, size: "huge", color: "#fee761",
     label: "TONIGHT'S SKY",
-    sub: done && !done.partial ? `${done.score} pts · next sky in ${nextSkyIn()}` : `${themeLabel(tonightTheme)}${CONFIG.conditionsOn ? ` · ${cond.name}` : ""}`,
+    sub: done && !done.partial ? `${done.score} pts · next sky in ${nextSkyIn()}` : `${themeInfo(tonightTheme)?.mystery ? "a mystery link · " : ""}60 seconds${CONFIG.conditionsOn ? ` · ${cond.name}` : ""}`,
     open: () => (done ? resultsScreen(done, "daily") : openPlay("daily")),
   });
   // past skies: one star below tonight; its card is a logbook of earlier nights by date, newest first
   const shortDate = (key: string) => new Date(key + "T12:00:00").toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
   const past = Array.from({ length: Math.min(30, today - 1) }, (_, i) => {
     const n = today - 1 - i, key = dateKeyOfNight(n), r = store.today(key), id = dayTheme(n), info = themeInfo(id);
-    return { key, r, name: info?.mystery && !r?.link ? "Mystery link" : themeName(id) };
+    return { key, r, name: info?.mystery ? (r?.link ? `Link: ${themeName(id)}` : "Mystery link") : "" };
   });
   if (past.length) stars.push({
     id: "past-label", x: 1000, y: 1260, size: "big", color: "#b8aed0",
@@ -1336,7 +1433,7 @@ function showAtlas(focus = "tonight") {
     card: () => `<h2>Past skies</h2>
       <p class="small">Missed nights can still be looked at. They just don't count.</p>
       <ul class="past-list">${past.map((p) => `<li class="${p.r ? "seen-night" : "missed-night"}">
-        <div><b>${esc(shortDate(p.key))}</b><small>${esc(p.name)} · ${p.r ? `${p.r.score} pts` : "missed"}</small></div>
+        <div><b>${esc(shortDate(p.key))}</b><small>${p.name ? `${esc(p.name)} · ` : ""}${p.r ? `${p.r.score} pts` : "missed"}</small></div>
         ${p.r ? `<button class="btn" data-log="${p.key}">LOG</button>` : ""}<button class="btn${p.r ? "" : " primary"}" data-replay="${p.key}">${p.r ? "AGAIN" : "LOOK"}</button></li>`).join("")}</ul>`,
     wire: (c) => {
       c.querySelectorAll<HTMLButtonElement>("[data-log]").forEach((b) => (b.onclick = async () => { const k = b.dataset.log!; await usePack(k); resultsScreen(store.today(k)!, "daily"); }));
@@ -1418,11 +1515,19 @@ function menuSheet(id: string) {
 
 function frontPage(returning = false) {
   cancelAnimationFrame(raf);
+  const key = localDateKey(), done = store.today(key), played = !!done && !done.partial;
+  const friend = store.friend(key);
   introScreen(app, {
     returning,
     title: theme.title,
-    sub: fmtDate(localDateKey()),
-    onEnter: () => { document.querySelector(".sheet-wrap")?.remove(); void tonightPack.then(() => showAtlas()); },
+    sub: fmtDate(key),
+    pitch: `Name what drifts past the telescope.<small>${CONFIG.runSeconds} seconds<i>·</i>one sky a night<br>the same for everyone</small>`,
+    note: friend === null ? undefined
+      : played ? `<span class="star">★</span>A friend spotted <b>${friend}</b> tonight.<br>You spotted <b>${done!.score}</b>.`
+      : `<span class="star">★</span>A friend spotted <b>${friend}</b> tonight.<br>Can you see more?`,
+    go: played ? "OPEN THE STAR ATLAS" : undefined,
+    // the telescope takes you straight to tonight's sky; once it's seen, to the atlas
+    onEnter: () => { document.querySelector(".sheet-wrap")?.remove(); void tonightPack.then(() => (played ? showAtlas() : openPlay("daily"))); },
     links: [{ id: "how", label: "HOW TO PLAY" }, { id: "settings", label: "SETTINGS" }, { id: "credits", label: "CREDITS" }],
     onLink: menuSheet,
   });

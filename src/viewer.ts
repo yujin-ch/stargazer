@@ -60,6 +60,10 @@ export class Viewer {
   private scratch: HTMLCanvasElement | null = null;
   private shutterAt = -1;
   closeShutter(now: number) { this.shutterAt = now; this.active = null; }
+  /** While the run is paused the lens is capped: nothing in it can be seen. */
+  covered = false;
+  /** Push the current object's timeline later (after a pause), so its zoom picks up where it stopped. */
+  shift(ms: number) { if (this.active) this.active.appear += ms; }
   readonly V: number;
   /** A full-resolution layer over the pixel canvas, for the developed photo. */
   private hiLayer: HTMLCanvasElement;
@@ -328,7 +332,12 @@ export class Viewer {
     }
     g.globalAlpha = 1;
 
-    if (this.shutterAt >= 0) {
+    if (this.covered) {
+      // the lens cap: a dark disc with a faint brass rim
+      g.fillStyle = "#07060f";
+      g.beginPath(); g.arc(V / 2, V / 2, V / 2, 0, Math.PI * 2); g.fill();
+      if (this.hiShown) { this.hiLayer.getContext("2d")!.clearRect(0, 0, this.hiLayer.width, this.hiLayer.height); this.hiShown = false; }
+    } else if (this.shutterAt >= 0) {
       // iris closes in six steps
       const p = Math.min(1, Math.floor(((now - this.shutterAt) / 400) * 6) / 6);
       g.fillStyle = "#07060f";

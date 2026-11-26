@@ -10,7 +10,7 @@ import { mulberry32 } from "./daily";
 export interface CardInput {
   r: RunResult;
   theme: Theme;
-  /** Tonight's sky name as shown to players ("Photographs", or "Mystery link" before it's revealed). */
+  /** Tonight's sky name as shown to players (empty on a plain daily sky; "Mystery link" on a link night). */
   sky: string;
   /** Your run drawn as a constellation, small; it is scaled up crisp. */
   constellation: HTMLCanvasElement;
@@ -47,7 +47,7 @@ export async function drawShareCard(o: CardInput): Promise<HTMLCanvasElement> {
   };
   const date = new Date(o.r.date + "T12:00:00").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
   text(o.theme.title.toUpperCase(), W / 2, 140, '64px "Press Start 2P"', "#fee761");
-  text(`${date} · ${o.sky}`, W / 2, 215, '54px "VT323"', "#f3ead8", 3);
+  text(o.sky ? `${date} · ${o.sky}` : date, W / 2, 215, '54px "VT323"', "#f3ead8", 3);
   text(String(o.r.score), W / 2, 380, '128px "Press Start 2P"', "#fee761", 8);
   text("POINTS", W / 2, 440, '28px "Press Start 2P"', "#a39bb8", 4);
   // the constellation in a brass frame

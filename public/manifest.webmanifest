@@ -1,0 +1,15 @@
+{
+  "name": "Stargazer",
+  "short_name": "Stargazer",
+  "description": "A daily one-minute telescope game. Name what drifts past. A new sky every night, the same for everyone.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0e0d1f",
+  "theme_color": "#0e0d1f",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

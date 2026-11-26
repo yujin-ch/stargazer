@@ -24,7 +24,7 @@ export interface RunResult {
   /** Longest run of answers without a skip. */
   bestCombo?: number;
 }
-interface Saved { days: Record<string, RunResult>; muted?: boolean; seenHelp?: boolean; catalogue?: string[]; noHaptics?: boolean; noAmbience?: boolean }
+interface Saved { days: Record<string, RunResult>; /** A friend's score for one night, from a shared link. */ friend?: { date: string; score: number }; muted?: boolean; seenHelp?: boolean; catalogue?: string[]; noHaptics?: boolean; noAmbience?: boolean }
 
 const KEY = "stargazer:v1";
 
@@ -55,6 +55,9 @@ export const store = {
     write(s);
     return fresh.length;
   },
+  /** The score a friend shared for this night, if a shared link brought one. */
+  friend(date: string): number | null { const f = read().friend; return f && f.date === date ? f.score : null; },
+  setFriend(date: string, score: number) { const s = read(); s.friend = { date, score }; write(s); },
   get muted() { return !!read().muted; },
   /** Little vibrations on hits and skips (phones that support it). On unless turned off. */
   get haptics() { return !read().noHaptics; },

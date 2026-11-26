@@ -16,14 +16,12 @@ export const CONFIG = {
   /** Puzzle #1 is this local date. */
   launchDate: "2026-11-12",
   /**
-   * Streak tiers. Your streak going into today picks your tier; everyone in the same tier
-   * gets the same sky. perBand = objects from each band of the day's theme, in order: clear, distant, deep space, uncharted
-   * (a band with fewer objects just gives what it has).
+   * The sky everyone gets (yujin, 11-26: one sky for everyone, no harder streak skies).
+   * perBand = objects from each band of the day's theme, in order: clear, distant, deep space, uncharted
+   * (a band with fewer objects just gives what it has). Kept as a list so a future mode can add its own.
    */
   tiers: [
     { name: "Stargazer", minStreak: 0, perBand: [3, 8, 12, 6] },
-    { name: "Astronomer", minStreak: 3, perBand: [2, 7, 12, 9] },
-    { name: "Deep-sky hunter", minStreak: 7, perBand: [1, 5, 12, 12] },
   ],
   /** How fast the hard objects take over after the easy opener: the share of hard picks starts at
    *  rampStart and grows by rampStep per object until every pick is hard (while any are left). */

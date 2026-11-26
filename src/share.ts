@@ -1,6 +1,6 @@
 import type { RunResult } from "./storage";
 import type { Theme } from "./themes/types";
-import { themeName, themeInfo, BY_ID } from "./library";
+import { themeInfo, BY_ID } from "./library";
 import { dayTheme } from "./daily";
 
 /** How the run sits against tonight's crowd: share of players beaten (0..1), and whether that crowd is real. */
@@ -25,7 +25,8 @@ export function nightTitle(beat: number): string {
 export function shareText(r: RunResult, theme: Theme, url: string, standing: Standing | null, streak = 0): string {
   const date = new Date(r.date + "T12:00:00").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
   const themeId = dayTheme(r.puzzle);
-  const sky = themeInfo(themeId)?.mystery ? "Mystery link" : themeName(themeId);
+  // daily skies carry no theme; only a link night says so (never what the link was)
+  const sky = themeInfo(themeId)?.mystery ? "Mystery link · " : "";
   const glyphs = r.items.map((it) => (it.outcome === "skipped" ? "☁️" : BAND_GLYPH[BY_ID.get(it.id)?.band ?? 0]));
   const rows: string[] = [];
   for (let i = 0; i < glyphs.length; i += 10) rows.push(glyphs.slice(i, i + 10).join(""));
@@ -34,7 +35,7 @@ export function shareText(r: RunResult, theme: Theme, url: string, standing: Sta
   const title = standing ? `${nightTitle(standing.beat)}${standing.live ? ` · top ${Math.max(1, Math.round((1 - standing.beat) * 100))}% tonight` : ""}` : "";
   return [
     `${theme.shareIcon} ${theme.title} · ${date}`,
-    `${sky} · ${r.score} pts`,
+    `${sky}${r.score} pts`,
     ...rows,
     facts.join(" · "),
     ...(r.link ? [r.link.ok ? "🔗 Found the hidden link" : "🔗 Missed the hidden link"] : []),
