@@ -87,13 +87,57 @@ export const themeLabel = (id: string) => (INFO.get(id)?.mystery ? "???" : theme
 export const shownNames = (o: SkyObject) => o.names.slice(1).filter((n) => !o.hidden.includes(n));
 export const BY_ID = new Map(OBJECTS.map((o) => [o.id, o]));
 
+// ---------------------------------------------------------------- day packs
+
+/**
+ * A day pack is one night's own photo set, served as static files at days/<YYYY-MM-DD>/:
+ * pack.json plus one plate strip per item (<id>.png, same format as src/art/photos).
+ * Built by scripts/photos/make_day.py. When tonight has a pack, it replaces the rotating theme.
+ */
+export interface DayPack {
+  date: string;
+  theme?: string;
+  items: { id: string; band: number; names: string[]; note?: string }[];
+}
+const PACK_URLS = new Map<string, string>();
+
+/** Fetch and register tonight's pack, if there is one. Returns its objects (empty when none). */
+export async function loadDayPack(dateKey: string): Promise<SkyObject[]> {
+  const base = `${import.meta.env.BASE_URL}days/${dateKey}/`;
+  let pack: DayPack;
+  try {
+    const r = await fetch(`${base}pack.json`, { cache: "no-cache" });
+    if (!r.ok || !(r.headers.get("content-type") ?? "").includes("json")) return [];
+    pack = (await r.json()) as DayPack;
+  } catch {
+    return [];
+  }
+  const theme = pack.theme && INFO.has(pack.theme) ? pack.theme : "photos";
+  const objs: SkyObject[] = pack.items
+    .filter((it) => it.id && it.names?.length && it.band >= 1 && it.band <= 4)
+    .map((it, i) => {
+      const id = `${theme}:${dateKey}/${it.id}`;
+      PACK_URLS.set(id, `${base}${it.id}.png`);
+      return {
+        id, sprite: OBJECTS.length + i, theme, band: (it.band - 1) as BandIndex,
+        names: it.names.map((n) => n.replace(/^~/, "")),
+        hidden: it.names.filter((n) => n.startsWith("~")).map((n) => n.slice(1)),
+        kind: "photo" as const, parts: [id], note: it.note ?? "",
+      };
+    })
+    .filter((o) => !BY_ID.has(o.id));
+  OBJECTS.push(...objs);
+  for (const o of objs) BY_ID.set(o.id, o);
+  return objs;
+}
+
 // ---------------------------------------------------------------- pictures (browser only)
 
 const photoImgs = new Map<string, HTMLImageElement>();
 function photoImg(id: string): HTMLImageElement {
   let img = photoImgs.get(id);
   if (!img) {
-    const url = PHOTO_URLS[`./art/photos/${id.split(":")[1]}.png`];
+    const url = PACK_URLS.get(id) ?? PHOTO_URLS[`./art/photos/${id.split(":")[1]}.png`];
     if (!url) throw new Error(`no photo for "${id}"`);
     img = new Image();
     img.src = url;

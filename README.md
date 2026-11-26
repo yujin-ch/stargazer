@@ -33,3 +33,18 @@ Vercel: import the repo, framework preset "Vite" (build `npm run build`, output 
 
 ## Credits
 All object art is drawn for this game on the Stargazer drawing board. Fonts: Press Start 2P and VT323 (SIL Open Font License).
+
+## Daily photo packs
+
+A night can have its own photo set instead of the rotating theme. Packs are static files:
+
+    public/days/<YYYY-MM-DD>/pack.json   # {date, theme: "photos", items: [{id, band 1-4, names[], note}]}
+    public/days/<YYYY-MM-DD>/<id>.png    # plate strip, same format as src/art/photos
+
+Build one from a generated batch (raw green-screen images named <id>.png plus the batch's items.json):
+
+    python3 scripts/photos/make_day.py <images dir> <items.json> 2026-12-01 --skip=hurdygurdy,ayeaye
+
+On that local date the game fetches `days/<date>/pack.json`; if it exists, tonight's star shows Photographs and
+the sky is drawn from the pack (per-band counts from CONFIG.tiers, 3/8/12/6 for most players). No pack, no change.
+Push the folder to `main` and Vercel redeploys. Note: future packs are public files, so a curious player could peek.

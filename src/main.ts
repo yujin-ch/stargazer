@@ -1,9 +1,9 @@
 import "@fontsource/press-start-2p";
 import "@fontsource/vt323";
 import { CONFIG, tierFor } from "./config";
-import { OBJECTS, BY_ID, shownNames, themeName, themeLabel, themeInfo, type SkyObject } from "./library";
+import { OBJECTS, BY_ID, loadDayPack, shownNames, themeName, themeLabel, themeInfo, type SkyObject } from "./library";
 import { makeMatcher, normalize, forms as formsOf, linkMatches } from "./match";
-import { dailySky, practiceSky, localDateKey, puzzleNumber, mulberry32, dayTheme, dayCondition } from "./daily";
+import { dailySky, setDayPack, practiceSky, localDateKey, puzzleNumber, mulberry32, dayTheme, dayCondition } from "./daily";
 import { theme } from "./themes";
 import { setMuted, unlockAudio } from "./themes/chip";
 import { Viewer } from "./viewer";
@@ -14,7 +14,7 @@ import { atlasScreen, type AtlasStar } from "./atlas";
 import { introScreen } from "./intro";
 import { THEMES } from "./library";
 
-const matcher = makeMatcher(OBJECTS.map((o) => o.names));
+let matcher = makeMatcher(OBJECTS.map((o) => o.names));
 /** /?night=N plays night N's sky and condition as an unsaved preview (for trying themes and conditions). */
 let PREVIEW_NIGHT = Math.max(0, Math.floor(Number(new URLSearchParams(location.search).get("night")) || 0));
 const app = document.getElementById("app")!;
@@ -258,6 +258,7 @@ function newRun(mode: Run["mode"]): Run {
 }
 
 async function openPlay(mode: Run["mode"]) {
+  await tonightPack;
   run = newRun(mode);
   playScreen();
   const cond = dayCondition(run.puzzle);
@@ -980,9 +981,16 @@ function showAtlas(focus = "tonight") {
   atlasScreen(app, stars, { title: "STAR ATLAS", footer: `Night #${today} · ${fmtDate(localDateKey())}`, focus });
 }
 
+// tonight's own photo set, if one has been published (falls back to the rotating themes)
+const tonightPack = loadDayPack(localDateKey()).then((objs) => {
+  if (!objs.length) return;
+  setDayPack(puzzleNumber(localDateKey()), objs);
+  matcher = makeMatcher(OBJECTS.map((o) => o.names));
+});
+
 if (PREVIEW_NIGHT) void openPlay("practice");
 else introScreen(app, {
   title: theme.title,
   sub: `Night #${puzzleNumber(localDateKey())} · ${fmtDate(localDateKey())}`,
-  onEnter: () => showAtlas(),
+  onEnter: () => void tonightPack.then(() => showAtlas()),
 });

@@ -17,7 +17,7 @@ from PIL import Image, ImageFilter
 from rembg import remove, new_session
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-OUT = os.path.join(ROOT, "src/art/photos")
+OUT = os.environ.get("PHOTO_OUT") or os.path.join(ROOT, "src/art/photos")
 T = 80
 STAGES = [48, 32, 24, 16, 12, 8, 6]
 OUTLINE = (0x18, 0x14, 0x25)

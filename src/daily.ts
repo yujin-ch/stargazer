@@ -38,8 +38,15 @@ export function puzzleNumber(dateKey: string): number {
   return days + 1;
 }
 
+/** Tonight's day pack (its own photo set), once loaded. */
+let pack: { puzzle: number; objs: SkyObject[] } | null = null;
+export function setDayPack(puzzle: number, objs: SkyObject[]): void {
+  pack = objs.length ? { puzzle, objs } : null;
+}
+
 /** The theme everyone plays on a puzzle number: themes take turns, one per day. */
 export function dayTheme(puzzle: number): string {
+  if (pack && pack.puzzle === puzzle) return pack.objs[0].theme;
   return THEMES[(((puzzle - 1) % THEMES.length) + THEMES.length) % THEMES.length];
 }
 
@@ -74,9 +81,11 @@ export const themePool = (themeId: string) => OBJECTS.filter((o) => o.theme === 
  * The sky for a puzzle number, drawn from that day's theme. Each band walks through its own shuffled deck, so an
  * object never repeats until every object in that band has been used once.
  */
-export function dailySky(puzzle: number, tier = 0, pool: SkyObject[] = themePool(dayTheme(puzzle))): SkyObject[] {
-  // each theme only comes round every THEMES.length days, so count its own days
-  const day = Math.floor(Math.max(0, puzzle - 1) / THEMES.length);
+export function dailySky(puzzle: number, tier = 0, poolArg?: SkyObject[]): SkyObject[] {
+  const fromPack = !poolArg && !!pack && pack.puzzle === puzzle;
+  const pool = poolArg ?? (fromPack ? pack!.objs : themePool(dayTheme(puzzle)));
+  // each theme only comes round every THEMES.length days, so count its own days (a pack is its own first day)
+  const day = fromPack ? 0 : Math.floor(Math.max(0, puzzle - 1) / THEMES.length);
   const sky: SkyObject[] = [];
   CONFIG.tiers[tier].perBand.forEach((k, band) => {
     const items = pool.filter((o) => o.band === band).sort((a, b) => a.id.localeCompare(b.id));
@@ -84,7 +93,7 @@ export function dailySky(puzzle: number, tier = 0, pool: SkyObject[] = themePool
     const decks = new Map<number, SkyObject[]>();
     const deck = (cycle: number) => {
       let d = decks.get(cycle);
-      if (!d) { d = shuffled(items, mulberry32(hash(`stargazer:${pool[0]?.theme}:t${tier}:${band}:${cycle}`))); decks.set(cycle, d); }
+      if (!d) { d = shuffled(items, mulberry32(hash(`stargazer:${fromPack ? `pack${puzzle}` : pool[0]?.theme}:t${tier}:${band}:${cycle}`))); decks.set(cycle, d); }
       return d;
     };
     const take = Math.min(k, L);
