@@ -51,7 +51,8 @@ export async function drawShareCard(o: CardInput): Promise<HTMLCanvasElement> {
   text(String(o.r.score), W / 2, 380, '128px "Press Start 2P"', "#fee761", 8);
   text("POINTS", W / 2, 440, '28px "Press Start 2P"', "#a39bb8", 4);
   // the constellation in a brass frame
-  const fw = 840, fh = Math.round((fw * o.constellation.height) / o.constellation.width), fx = (W - fw) / 2, fy = 490;
+  const k = Math.min(840 / o.constellation.width, 520 / o.constellation.height);
+  const fw = Math.round(o.constellation.width * k), fh = Math.round(o.constellation.height * k), fx = (W - fw) / 2, fy = 475;
   g.fillStyle = "#3a2410"; g.fillRect(fx - 18, fy - 18, fw + 36, fh + 36);
   g.fillStyle = "#c99a4a"; g.fillRect(fx - 12, fy - 12, fw + 24, fh + 24);
   g.fillStyle = "#f2d38a"; g.fillRect(fx - 12, fy - 12, fw + 24, 6);

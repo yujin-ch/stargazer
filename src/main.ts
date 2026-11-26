@@ -359,7 +359,7 @@ function named(obj: SkyObject, typed: string) {
   run.bestCombo = Math.max(run.bestCombo, run.combo);
   const points = answerPoints(obj.band, zoomed, run.combo);
   run.score += points;
-  run.items.push({ id: obj.id, outcome: zoomed ? "zoomed" : "named", typed: typed.trim(), points });
+  run.items.push({ id: obj.id, outcome: zoomed ? "zoomed" : "named", typed: typed.trim(), points, t: clockAt(now) });
   (el.guess as HTMLInputElement).value = "";
   run.graceUntil = now + CONFIG.graceMs;
   run.graceObj = obj;
@@ -388,7 +388,7 @@ function skip() {
   const obj = run.sky[run.i];
   if (!obj) return;
   run.penalty += CONFIG.skipCost;
-  run.items.push({ id: obj.id, outcome: "skipped", typed: run.attempt.trim(), points: 0 });
+  run.items.push({ id: obj.id, outcome: "skipped", typed: run.attempt.trim(), points: 0, t: clockAt(now) });
   (el.guess as HTMLInputElement).value = "";
   const broke = run.combo >= CONFIG.combo[0].at;
   run.combo = 0;
@@ -542,6 +542,9 @@ function renderCombo(broke: boolean) {
     if (c >= CONFIG.combo[1].at) e.classList.add("gold");
   } else e.textContent = "";
 }
+
+/** Seconds gone on the clock (skips included), rounded to a tenth. */
+function clockAt(now: number) { return Math.round(Math.min(CONFIG.runSeconds, CONFIG.runSeconds - timeLeft(now)) * 10) / 10; }
 
 function timeLeft(now: number) {
   return CONFIG.runSeconds - (now - run.startAt) / 1000 - run.penalty;
@@ -791,7 +794,7 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
         <p class="constellation" id="constellation"></p>
         <canvas class="chart sky-chart" id="chart" aria-label="Your run drawn as a constellation"></canvas>
         <p class="legend">${bandsSeen.map((b) => `<span><i class="lg" style="background:${theme.bandColors[b]}"></i>${theme.bandNames[b]}</span>`).join("")}<span><i class="lg zoomed"></i>zoom</span><span><i class="lg skipped"></i>skipped</span></p>
-        <p class="caption">One star per object, bigger for harder ones. Answers in a row join up.</p>
+        <p class="caption">Around the dial: your minute, from the top. Further out: harder. Answers in a row join up; grey dashes on the rim are skips.</p>
       </section>
       <section class="sb-block">
         <h3 class="sb-title">ON THE HILL TONIGHT</h3>
@@ -997,42 +1000,69 @@ function starPositions(r: RunResult, W: number, H: number): { x: number; y: numb
   });
 }
 
-/** Your run as a constellation: bright joined stars, sized by difficulty, the best find ringed in gold. */
+/**
+ * Your run as a star dial: you in the middle, the minute running clockwise from the top, and each find
+ * placed out from the centre by how hard it was (inner ring easiest, outer ring hardest).
+ * Answers in a row join into a constellation; skips are grey dashes on the rim; the best find is ringed in gold.
+ */
 function drawConstellation(c: HTMLCanvasElement, r: RunResult, best: number, upto = r.items.length) {
-  const W = 200, H = 116;
+  const W = 200, H = 200, cx = W / 2, cy = H / 2, R = [24, 42, 60, 78], RIM = 90;
   c.width = W; c.height = H;
   const g = c.getContext("2d")!;
+  const px = (x: number, y: number, w = 1, h = 1) => g.fillRect(Math.round(x), Math.round(y), w, h);
   g.fillStyle = "#0d0a1a"; g.fillRect(0, 0, W, H);
-  // a faint nebula and background stars
-  for (let k = 5; k >= 1; k--) { g.fillStyle = "rgba(58, 31, 74, 0.22)"; g.beginPath(); g.ellipse(W * 0.55, H * 0.5, W * 0.5 * (k / 5), H * 0.45 * (k / 5), -0.3, 0, Math.PI * 2); g.fill(); }
   const rand = mulberry32(r.puzzle * 31 + 7);
-  for (let i = 0; i < 110; i++) { g.fillStyle = rand() < 0.8 ? "#2c2648" : "#4a4068"; g.fillRect(Math.floor(rand() * W), Math.floor(rand() * H), 1, 1); }
-  const pos = starPositions(r, W, H);
-  const n = Math.min(upto, r.items.length);
-  // lines first, solid and soft, so the shape reads at a glance
-  for (let i = 1; i < n; i++) {
+  for (let i = 0; i < 120; i++) { g.fillStyle = rand() < 0.8 ? "#2c2648" : "#4a4068"; px(rand() * W, rand() * H); }
+  // the four difficulty bands, faintly tinted, with dotted orbits
+  for (let i = 3; i >= 0; i--) { g.globalAlpha = 0.1; g.fillStyle = theme.bandColors[i]; g.beginPath(); g.arc(cx, cy, R[i] + 9, 0, Math.PI * 2); g.fill(); }
+  g.globalAlpha = 1;
+  g.fillStyle = "#0d0a1a"; g.beginPath(); g.arc(cx, cy, 13, 0, Math.PI * 2); g.fill();
+  R.forEach((rr, i) => {
+    g.fillStyle = theme.bandColors[i]; g.globalAlpha = 0.45;
+    const n = Math.round(rr * 6.28);
+    for (let k = 0; k < n; k += 3) { const a = (k / n) * Math.PI * 2; px(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr); }
+  });
+  g.globalAlpha = 1;
+  // the minute: ticks every 5 s, longer every 15 s
+  g.fillStyle = "#6a5f88";
+  for (let sec = 0; sec < 60; sec += 5) {
+    const a = (sec / 60) * Math.PI * 2 - Math.PI / 2, len = sec % 15 ? 2 : 5;
+    for (let k = 0; k < len; k++) px(cx + Math.cos(a) * (RIM + 2 + k), cy + Math.sin(a) * (RIM + 2 + k));
+  }
+  // you, in the middle
+  g.fillStyle = "#fee761"; px(cx - 1, cy - 4, 3, 3); px(cx - 1, cy, 3, 4);
+  const n = r.items.length;
+  const pos = r.items.map((it, i) => {
+    const t = it.t ?? ((i + 0.5) / n) * CONFIG.runSeconds; // older logs have no times: spread them evenly
+    const a = (Math.min(t, CONFIG.runSeconds) / CONFIG.runSeconds) * Math.PI * 2 - Math.PI / 2;
+    const rad = it.outcome === "skipped" ? RIM : R[BY_ID.get(it.id)?.band ?? 0];
+    return { x: Math.round(cx + Math.cos(a) * rad), y: Math.round(cy + Math.sin(a) * rad), a };
+  });
+  const k = Math.min(upto, n);
+  g.fillStyle = "rgba(150, 180, 230, 0.6)";
+  for (let i = 1; i < k; i++) {
     if (r.items[i].outcome === "skipped" || r.items[i - 1].outcome === "skipped") continue;
-    g.fillStyle = "rgba(150, 180, 230, 0.55)";
     line(g, pos[i - 1].x, pos[i - 1].y, pos[i].x, pos[i].y, 1);
   }
-  for (let i = 0; i < n; i++) {
-    const it = r.items[i], { x, y } = pos[i], band = BY_ID.get(it.id)?.band ?? 0;
-    if (it.outcome === "skipped") { g.fillStyle = "#463d5e"; g.fillRect(x, y, 1, 1); continue; }
+  for (let i = 0; i < k; i++) {
+    const it = r.items[i], { x, y, a } = pos[i], band = BY_ID.get(it.id)?.band ?? 0;
+    if (it.outcome === "skipped") {
+      g.fillStyle = "#5a5078";
+      for (let d = -1; d <= 1; d++) px(x - Math.sin(a) * d * 1.5, y + Math.cos(a) * d * 1.5);
+      continue;
+    }
     const col = theme.bandColors[band], arm = band + 1;
-    // glow
     g.globalAlpha = 0.25; g.fillStyle = col; g.fillRect(x - arm, y - arm, arm * 2 + 1, arm * 2 + 1); g.globalAlpha = 1;
-    // a four-point star whose arms grow with difficulty
     g.fillStyle = col;
     g.fillRect(x - arm - 1, y, arm * 2 + 3, 1); g.fillRect(x, y - arm - 1, 1, arm * 2 + 3);
-    if (band >= 2) { g.fillRect(x - 1, y - 1, 3, 3); }
+    if (band >= 2) g.fillRect(x - 1, y - 1, 3, 3);
     g.fillStyle = it.outcome === "zoomed" ? "#fee761" : "#ffffff";
     g.fillRect(x, y, 1, 1);
   }
-  // the best find: ringed in gold, the star this constellation is named for
-  if (best >= 0 && best < n) {
+  if (best >= 0 && best < k) {
     const { x, y } = pos[best];
     g.fillStyle = "#fee761";
-    for (let a = 0; a < Math.PI * 2; a += Math.PI / 10) g.fillRect(Math.round(x + Math.cos(a) * 8), Math.round(y + Math.sin(a) * 8), 1, 1);
+    for (let a = 0; a < Math.PI * 2; a += Math.PI / 10) px(x + Math.cos(a) * 8, y + Math.sin(a) * 8);
   }
 }
 
@@ -1253,7 +1283,7 @@ function showAtlas(focus = "tonight") {
       <li><b>Harder finds</b> are worth far more: ${CONFIG.bands.map((b) => b.points).join(" / ")} points by difficulty.</li>
       <li><b>${CONFIG.combo[0].at} in a row</b> multiplies your points, up to ×${CONFIG.combo[CONFIG.combo.length - 1].mult}. A skip costs ${CONFIG.skipCost}s.</li>
       <li><b>One sky a night</b>, the same for everyone. Some nights hide their theme: guess the <b>Mystery link</b> at the end.</li>
-      <li>Difficulty runs Full Moon, Shooting Star, Nebula, then <b>Black Hole</b>.</li></ul>` },
+      <li>Difficulty goes outward: ${theme.bandNames.slice(0, 3).join(", ")}, then <b>${theme.bandNames[3]}</b>.</li></ul>` },
     { id: "log", x: 1350, y: 590, size: "big", color: "#e07ab8", label: "OBSERVING LOG", card: () => `<h2>Observing log</h2>
       <dl class="figures"><div><dt>NIGHTS</dt><dd>${stats.played}</dd></div><div><dt>BEST</dt><dd>${stats.best}</dd></div><div><dt>STREAK</dt><dd>${stats.streak}</dd></div><div><dt>CATALOGUE</dt><dd>${cat.size}</dd></div></dl>
       ${done ? `<button class="btn" id="card-log">TONIGHT'S LOG</button>` : `<p class="small">Tonight's sky is still waiting.</p>`}`,

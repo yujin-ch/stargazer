@@ -499,7 +499,7 @@ a { color: var(--cyan); }
 .breakdown li:not(.bonus-row) + .bonus-row { border-top: 1px dashed var(--faint); padding-top: 4px; margin-top: 2px; }
 .sb-block { margin: 14px 0 0; padding-top: 12px; border-top: 2px dashed var(--faint); }
 .sb-title { margin: 0 0 8px; font-family: var(--font-display); font-size: 9px; font-weight: normal; letter-spacing: 1px; color: var(--dim); }
-.chart.sky-chart { border-color: #3a2f52; box-shadow: 0 0 24px rgba(58, 31, 74, 0.6); }
+.chart.sky-chart { max-width: 360px; border-color: #3a2f52; box-shadow: 0 0 24px rgba(58, 31, 74, 0.6); }
 .chart.hill-chart { border: 0; }
 .constellation b { font-size: 16px; }
 .pop-band { display: inline-flex; align-items: center; gap: 6px; }

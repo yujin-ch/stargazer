@@ -1,5 +1,9 @@
 export type Outcome = "named" | "zoomed" | "skipped";
-export interface ItemResult { id: string; outcome: Outcome; typed: string; points: number }
+export interface ItemResult {
+  id: string; outcome: Outcome; typed: string; points: number;
+  /** Seconds into the run (on the clock, skips included) when it was answered or skipped. */
+  t?: number;
+}
 export interface RunResult {
   puzzle: number;
   date: string;
