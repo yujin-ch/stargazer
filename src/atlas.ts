@@ -41,7 +41,7 @@ export function atlasScreen(app: HTMLElement, stars: AtlasStar[], opts: { title:
     </div>
     <canvas class="atlas-meteors" id="atlas-meteors" aria-hidden="true"></canvas>
     ${opts.onBack ? `<button class="btn back-btn atlas-back" id="atlas-back" type="button" aria-label="Step back from the telescope to the front page">&lt; STEP BACK</button>` : ""}
-    <header class="atlas-head"><span>${opts.title}</span><small>drag to look around · pinch or scroll to zoom</small></header>
+    <header class="atlas-head"><span><img class="mark" src="/logo.svg" alt="" width="24" height="24" />${opts.title}</span><small>drag to look around · pinch or scroll to zoom</small></header>
     <div class="atlas-tools">
       <button class="btn" id="atlas-out" aria-label="Zoom out">−</button>
       <button class="btn" id="atlas-in" aria-label="Zoom in">+</button>

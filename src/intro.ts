@@ -174,7 +174,7 @@ export function introScreen(app: HTMLElement, opts: { title: string; sub: string
   <main class="intro${opts.returning && !REDUCED ? " zooming" : ""}">
     <canvas class="intro-scene" id="intro-scene" aria-hidden="true"></canvas>
     <div class="intro-ui">
-      <h1 class="wordmark">${opts.title.toUpperCase()}</h1>
+      <h1 class="wordmark"><img class="mark" src="/logo.svg" alt="" width="48" height="48" />${opts.title.toUpperCase()}</h1>
       <p class="intro-sub">${opts.sub}</p>
       ${opts.pitch ? `<p class="intro-pitch">${opts.pitch}</p>` : ""}
       ${opts.note ? `<p class="intro-note">${opts.note}</p>` : ""}

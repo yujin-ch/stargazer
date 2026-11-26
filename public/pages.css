@@ -10,7 +10,7 @@ body::before { content: ""; position: fixed; inset: 0; pointer-events: none; opa
   background-image: radial-gradient(1px 1px at 12% 18%, #d8cfe6, transparent), radial-gradient(1px 1px at 72% 9%, #fee761, transparent), radial-gradient(1px 1px at 34% 62%, #9a93b4, transparent), radial-gradient(1px 1px at 88% 44%, #2ce8f5, transparent), radial-gradient(1px 1px at 52% 84%, #d8cfe6, transparent), radial-gradient(1px 1px at 8% 76%, #9a93b4, transparent); }
 main { position: relative; max-width: 720px; margin: 0 auto; padding: 32px 16px 56px; }
 .top { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 22px; }
-.top a.home { font: 12px "Press Start 2P", monospace; color: var(--gold); text-decoration: none; letter-spacing: 2px; text-shadow: 3px 3px 0 #000; }
+.top a.home { display: inline-flex; align-items: center; gap: 10px; font: 12px "Press Start 2P", monospace; color: var(--gold); text-decoration: none; letter-spacing: 2px; text-shadow: 3px 3px 0 #000; }
 .top nav a { color: var(--dim); margin-left: 14px; }
 .card { background: linear-gradient(180deg, #231c3c, #1a1530 60%); border: 3px solid var(--edge); box-shadow: 6px 6px 0 #000, inset 0 2px 0 rgba(242, 211, 138, 0.12); padding: 22px 24px; }
 h1 { font: 20px/1.4 "Press Start 2P", monospace; color: var(--gold); margin: 0 0 6px; text-shadow: 3px 3px 0 #000; }
@@ -28,3 +28,4 @@ dt { color: var(--brass); margin-top: 14px; }
 dd { margin: 2px 0 0; }
 footer { margin-top: 24px; color: var(--dim); font-size: 18px; text-align: center; }
 footer a { color: var(--dim); }
+.mark { image-rendering: pixelated; image-rendering: crisp-edges; flex: none; }
