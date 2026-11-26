@@ -78,6 +78,65 @@ export function meteorShower(minGap = 3500, maxGap = 9000) {
   };
 }
 
+/** What the game asks of the sky: where the telescope is, a black hole behind it, and pulses of light after hits. */
+const fx = { cx: -1, cy: -1, bh: 0, bhOn: false, pulses: [] as { color: string; born: number; strength: number }[] };
+/** Centre of the telescope on screen, in CSS pixels. */
+export function skyCenter(x: number, y: number) { fx.cx = x; fx.cy = y; }
+/** A black hole looms behind the telescope while one is in view. */
+export function skyBlackHole(on: boolean) { fx.bhOn = on; }
+/** A wave of coloured light rolls out from the telescope across the whole sky; stronger for harder finds. */
+export function skyPulse(color: string, strength: number) { fx.pulses.push({ color, born: performance.now(), strength }); }
+
+function drawFx(g: CanvasRenderingContext2D, t: number, w: number, h: number) {
+  const cx = fx.cx < 0 ? w / 2 : fx.cx / SCALE, cy = fx.cy < 0 ? h * 0.45 : fx.cy / SCALE;
+  fx.bh += ((fx.bhOn ? 1 : 0) - fx.bh) * 0.04;
+  if (fx.bh > 0.01) {
+    const k = fx.bh, R = Math.min(w, h) * 0.6, spin = t / 1400;
+    // the dark well: everything near it dims
+    for (let i = 6; i >= 1; i--) {
+      g.globalAlpha = k * 0.12;
+      g.fillStyle = "#05030a";
+      g.beginPath(); g.ellipse(cx, cy, R * (0.55 + i * 0.16), R * (0.55 + i * 0.16), 0, 0, Math.PI * 2); g.fill();
+    }
+    // a tilted accretion disc of pixels, turning slowly behind the telescope
+    const cols = ["#fee761", "#feae34", "#f77622", "#be4a2f"];
+    for (let ring = 0; ring < 5; ring++) {
+      const r = R * (0.8 + ring * 0.12), n = 90 + ring * 24, sp = spin * (1.3 - ring * 0.18);
+      for (let i = 0; i < n; i++) {
+        const a = (i / n) * Math.PI * 2 + sp;
+        const x = cx + Math.cos(a) * r, y = cy + Math.sin(a) * r * 0.32 - Math.cos(a) * r * 0.05;
+        const front = Math.sin(a) > 0; // the near side of the disc is brighter
+        g.globalAlpha = k * (front ? 1 : 0.5) * (0.55 + 0.45 * Math.sin(i * 1.7 + ring));
+        g.fillStyle = cols[(i + ring) % cols.length];
+        g.fillRect(Math.round(x), Math.round(y), 2, ring < 3 ? 2 : 1);
+      }
+    }
+    // the photon ring, a thin bright halo
+    g.globalAlpha = k * 0.5;
+    g.strokeStyle = "#feae34"; g.lineWidth = 1;
+    g.beginPath(); g.arc(cx, cy, R * 0.62, 0, Math.PI * 2); g.stroke();
+    g.globalAlpha = 1;
+  }
+  for (let i = fx.pulses.length - 1; i >= 0; i--) {
+    const p = fx.pulses[i], age = t - p.born, life = 700 + p.strength * 500;
+    if (age > life || age < 0) { if (age > life) fx.pulses.splice(i, 1); continue; }
+    const q = age / life, fade = (1 - q) * (1 - q);
+    // a tint over the whole sky, then rings rolling outward
+    g.globalAlpha = fade * 0.1 * p.strength;
+    g.fillStyle = p.color; g.fillRect(0, 0, w, h);
+    g.strokeStyle = p.color;
+    const rings = 1 + Math.round(p.strength * 2);
+    for (let k = 0; k < rings; k++) {
+      const r = (age * (0.12 + p.strength * 0.05)) - k * 10;
+      if (r <= 0) continue;
+      g.globalAlpha = fade * (0.55 - k * 0.12) * Math.min(1, 0.4 + p.strength);
+      g.lineWidth = k === 0 ? 2 : 1;
+      g.beginPath(); g.arc(cx, cy, r, 0, Math.PI * 2); g.stroke();
+    }
+  }
+  g.globalAlpha = 1;
+}
+
 export function livingSky(canvas: HTMLCanvasElement) {
   const g = canvas.getContext("2d")!;
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -143,6 +202,7 @@ export function livingSky(canvas: HTMLCanvasElement) {
     }
     g.globalAlpha = 1;
     if (!reduce) meteors.step(g, t, canvas.width, canvas.height);
+    if (!reduce) drawFx(g, t, canvas.width, canvas.height);
     if (!reduce) requestAnimationFrame(frame);
   };
   requestAnimationFrame(frame);

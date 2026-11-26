@@ -12,6 +12,7 @@ import { crowdScores, beatShare, liveCrowd, MIN_LIVE } from "./crowd";
 import { share, shareText, type Standing } from "./share";
 import { atlasScreen, type AtlasStar } from "./atlas";
 import { introScreen } from "./intro";
+import { skyCenter, skyBlackHole, skyPulse } from "./themes/pixel-space/sky";
 import { THEMES } from "./library";
 
 let matcher = makeMatcher(OBJECTS.map((o) => o.names));
@@ -141,6 +142,8 @@ function sizeViewer() {
   k = k >= 2 ? Math.floor(k * 2) / 2 : Math.max(0.75, k);
   const canvas = scope.querySelector("canvas")!;
   canvas.style.width = canvas.style.height = `${Math.floor(viewer.V * k)}px`;
+  const rc = scope.getBoundingClientRect();
+  skyCenter(rc.left + rc.width / 2, rc.top + rc.height / 2);
 }
 
 function wireInput() {
@@ -362,7 +365,8 @@ function named(obj: SkyObject, typed: string) {
   run.graceText = typed;
   run.graceDropped = "";
   el.score.textContent = String(run.score);
-  pop(obj.names[0], `+${points}${zoomed ? " ZOOM" : ""}`, zoomed ? "gold" : "");
+  pop(obj.names[0], `+${points}${zoomed ? " ZOOM" : ""}`, zoomed ? "gold" : "", obj.band);
+  bandHit(obj.band, zoomed);
   flyStar(zoomed ? "#fee761" : theme.bandColors[obj.band], zoomed);
   buzz(zoomed ? [18, 40, 28] : [12]);
   theme.sounds.correct(zoomed, run.combo);
@@ -432,6 +436,7 @@ function blackHole(on: boolean) {
   if (!play) return;
   const was = play.classList.contains("blackhole");
   play.classList.toggle("blackhole", on);
+  skyBlackHole(on);
   if (!on || was) return;
   theme.sounds.blackHole?.();
   announce("Black hole");
@@ -443,7 +448,21 @@ function blackHole(on: boolean) {
 }
 
 /** One pop at a time: the object's name and what it earned. */
-function pop(name: string, points: string, cls: string) {
+/** The harder the find, the bigger the moment: the sky pulses in the band's colour, the lens kicks, the room lights up. */
+function bandHit(band: number, zoomed: boolean) {
+  skyPulse(theme.bandColors[band], [0.25, 0.5, 0.85, 1.25][band] + (zoomed ? 0.2 : 0));
+  const play = app.querySelector<HTMLElement>(".play");
+  if (!play) return;
+  play.style.setProperty("--hit", theme.bandColors[band]);
+  for (let b = 0; b < 4; b++) play.classList.remove(`hit-b${b}`);
+  void play.offsetWidth;
+  play.classList.add(`hit-b${band}`);
+  clearTimeout(bandHitTimer);
+  bandHitTimer = window.setTimeout(() => play.classList.remove(`hit-b${band}`), 900);
+}
+let bandHitTimer = 0;
+
+function pop(name: string, points: string, cls: string, band = -1) {
   el.pops.textContent = "";
   const p = document.createElement("div");
   p.className = `pop ${cls}`;
@@ -461,6 +480,13 @@ function pop(name: string, points: string, cls: string) {
   pts.className = "pop-pts";
   pts.textContent = points;
   p.append(n, pts);
+  if (band >= 0) {
+    const tag = document.createElement("span");
+    tag.className = "pop-band";
+    tag.style.setProperty("--band", theme.bandColors[band]);
+    tag.innerHTML = `<i></i>${theme.bandNames[band].toUpperCase()}`;
+    p.append(tag);
+  }
   el.pops.appendChild(p);
   setTimeout(() => p.remove(), 900);
 }
@@ -756,15 +782,23 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
         <span>${daily ? fmtDate(r.date).toUpperCase() : "PRACTICE"}</span>
       </header>
       <p class="date">${daily ? `${fmtDate(r.date)} · ${shownTheme}${CONFIG.conditionsOn ? ` · ${dayCondition(r.puzzle).name}` : ""} · ${CONFIG.tiers[tier].name} sky` : `Preview · ${shownTheme}${CONFIG.conditionsOn ? ` · ${dayCondition(r.puzzle).name}` : ""}`}</p>
-      <div class="final"><span>${r.score}</span><small>POINTS${r.clearedBonus ? ` · SKY CLEARED +${r.clearedBonus}` : ""}</small></div>
+      <div class="final"><span>${r.score}</span><small>POINTS</small></div>
       ${r.partial ? `<p class="small">This run was cut short, so it counts as it stood.</p>` : ""}
       ${mystery ? `<section class="link-box${r.link ? (r.link.ok ? " found" : " missed") : ""}" id="link-box"></section>` : ""}
-      <p class="constellation" id="constellation"></p>
-      <canvas class="chart" id="chart" aria-label="Star chart of your run, with tonight's crowd on the hill"></canvas>
-      <div class="hill-axis"><span>◂ fewer points</span><span>more points ▸</span></div>
-      <p class="hill-line" id="hill-line"></p>
-      <p class="legend">${bandsSeen.map((b) => `<span><i class="lg" style="background:${theme.bandColors[b]}"></i>${theme.bandNames[b]}</span>`).join("")}<span><b class="lg-big">+</b>big star = zoom bonus</span><span><i class="lg skipped"></i>skipped</span></p>
-      <p class="caption">One star per object, coloured by difficulty. Lines join answers in a row. <span id="crowd-note">The crowd on the hill is simulated on tonight's sky until enough live scores arrive.</span></p>
+      ${breakdown(r)}
+      <section class="sb-block">
+        <p class="constellation" id="constellation"></p>
+        <canvas class="chart sky-chart" id="chart" aria-label="Your run drawn as a constellation"></canvas>
+        <p class="legend">${bandsSeen.map((b) => `<span><i class="lg" style="background:${theme.bandColors[b]}"></i>${theme.bandNames[b]}</span>`).join("")}<span><i class="lg zoomed"></i>zoom</span><span><i class="lg skipped"></i>skipped</span></p>
+        <p class="caption">One star per object, bigger for harder ones. Answers in a row join up.</p>
+      </section>
+      <section class="sb-block">
+        <h3 class="sb-title">ON THE HILL TONIGHT</h3>
+        <canvas class="chart hill-chart" id="hill" aria-label="Tonight's stargazers lined up by score, with you in gold"></canvas>
+        <div class="hill-axis"><span>◂ fewer points</span><span>more points ▸</span></div>
+        <p class="hill-line" id="hill-line"></p>
+        <p class="caption" id="crowd-note">The hill is simulated on tonight's sky until enough live scores arrive.</p>
+      </section>
       <dl class="figures">
         <div><dt>NAMED</dt><dd>${r.named}</dd></div>
         <div><dt>ZOOM</dt><dd>${r.zoomed}</dd></div>
@@ -799,34 +833,30 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
   document.getElementById("constellation")!.innerHTML = bestObj
     ? `<small>TONIGHT YOU DREW</small><b>THE ${esc(bestObj.names[0].toUpperCase())}</b><small>a constellation named for your best find</small>`
     : `<small>TONIGHT YOU DREW</small><b>A CLOUDY SKY</b>`;
-  let drawn = false, animating = false, rankNow = 0;
+  const hill = document.getElementById("hill") as HTMLCanvasElement;
+  if (REDUCED_MOTION || !r.items.length) drawConstellation(chart, r, best);
+  else {
+    // the constellation draws itself, star by star
+    const t0 = performance.now(), per = Math.min(110, 1400 / r.items.length);
+    const step = (now: number) => {
+      const k = Math.min(r.items.length, Math.floor((now - t0) / per) + 1);
+      drawConstellation(chart, r, best, k);
+      if (k < r.items.length && chart.isConnected) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
   const paintHill = (scores: number[], live: boolean) => {
     const others = 12, beat = beatShare(scores, r.score - (r.link?.bonus ?? 0)), rank = Math.round(beat * others);
-    rankNow = rank;
     standing = { beat, live, players: scores.length };
     sharePreview();
-    if (animating) { /* the running draw picks up the new rank */ }
-    else if (drawn || REDUCED_MOTION || !r.items.length) drawChart(chart, r, rank, others, best);
-    else {
-      // the constellation draws itself, star by star
-      animating = true;
-      const t0 = performance.now(), per = Math.min(110, 1400 / r.items.length);
-      const step = (now: number) => {
-        const k = Math.min(r.items.length, Math.floor((now - t0) / per) + 1);
-        drawChart(chart, r, rankNow, others, best, k);
-        if (k < r.items.length && chart.isConnected) requestAnimationFrame(step);
-        else animating = false;
-      };
-      requestAnimationFrame(step);
-    }
-    drawn = true;
+    drawHill(hill, r.puzzle, rank, others);
     const median = scores[Math.floor(scores.length / 2)];
     document.getElementById("hill-line")!.innerHTML =
       (rank >= others ? `You out-spotted <b>every stargazer</b> on the hill tonight.`
       : rank === 0 ? `The whole hill saw more tonight. The sky comes back tomorrow.`
       : `You out-spotted <b>${rank} of ${others}</b> stargazers on the hill.`)
       + `<br><small>${live ? `Better than ${Math.min(99, Math.round(beat * 100))}% of ${scores.length} players tonight · typical score ${median}` : `A typical score tonight: ${median}`}</small>`;
-    if (live) document.getElementById("crowd-note")!.textContent = `The hill is tonight's real players on the ${CONFIG.tiers[tier].name} sky.`;
+    if (live) document.getElementById("crowd-note")!.textContent = `These are tonight's real players on the ${CONFIG.tiers[tier].name} sky.`;
   };
   paintHill(crowd, false);
   if (daily) void liveCrowd(r.puzzle, tier, r.partial ? null : r.score - (r.link?.bonus ?? 0)).then((live) => {
@@ -928,100 +958,111 @@ function bestFind(r: RunResult): number {
   return best;
 }
 
-function drawChart(c: HTMLCanvasElement, r: RunResult, rank: number, others: number, best: number, upto = r.items.length) {
-  const W = 160, H = 112, SKY = 72;
-  c.width = W;
-  c.height = H;
-  const g = c.getContext("2d")!;
-  g.fillStyle = "#0b0a18";
-  g.fillRect(0, 0, W, H);
-  for (let k = 4; k >= 1; k--) {
-    g.fillStyle = "rgba(32, 34, 67, 0.35)";
-    g.beginPath();
-    g.ellipse(W / 2, SKY / 2, (W / 2) * (k / 4), (SKY / 2) * (k / 4), 0, 0, Math.PI * 2);
-    g.fill();
-  }
+/** Where each object's star sits: a seeded walk, so everyone's chart for the same night shares a sky. */
+function starPositions(r: RunResult, W: number, H: number): { x: number; y: number }[] {
   const rand = mulberry32(r.puzzle * 7919 + 13);
-  g.fillStyle = "#26294a";
-  for (let i = 0; i < 80; i++) g.fillRect(Math.floor(rand() * W), Math.floor(rand() * H), 1, 1);
-  // a seeded random walk: each answer in a row steps a short way from the last, a skip jumps elsewhere
-  const mx = Math.round(W * 0.08), my = 7;
+  const mx = 14, my = 12;
   const clampX = (v: number) => Math.max(mx, Math.min(W - mx, v));
-  const clampY = (v: number) => Math.max(my, Math.min(SKY - 10, v));
-  let px = clampX(rand() * W), py = clampY(rand() * SKY);
-  const pos = r.items.map((it, i) => {
+  const clampY = (v: number) => Math.max(my, Math.min(H - my, v));
+  let px = clampX(rand() * W), py = clampY(rand() * H);
+  return r.items.map((it, i) => {
     if (i > 0) {
-      if (it.outcome === "skipped" || r.items[i - 1].outcome === "skipped") { px = clampX(rand() * W); py = clampY(rand() * SKY); }
+      if (it.outcome === "skipped" || r.items[i - 1].outcome === "skipped") { px = clampX(rand() * W); py = clampY(rand() * H); }
       else {
-        const ang = rand() * Math.PI * 2, d = W * (0.1 + rand() * 0.08);
-        px = clampX(px + Math.cos(ang) * d); py = clampY(py + Math.sin(ang) * d * 0.6);
+        const ang = rand() * Math.PI * 2, d = W * (0.11 + rand() * 0.07);
+        px = clampX(px + Math.cos(ang) * d); py = clampY(py + Math.sin(ang) * d * 0.7);
       }
     }
     return { x: Math.round(px), y: Math.round(py) };
   });
-  g.fillStyle = "#2b4a6f";
-  for (let i = 1; i < Math.min(upto, r.items.length); i++) {
-    if (r.items[i].outcome === "skipped" || r.items[i - 1].outcome === "skipped") continue;
-    line(g, pos[i - 1].x, pos[i - 1].y, pos[i].x, pos[i].y, 2);
-  }
-  const brightest = upto >= r.items.length ? best : -1;
-  r.items.forEach((it, i) => {
-    if (i >= upto) return;
-    const { x, y } = pos[i];
-    const o = BY_ID.get(it.id);
-    const col = theme.bandColors[o?.band ?? 0];
-    if (it.outcome === "skipped") { g.fillStyle = "#3a4466"; g.fillRect(x, y, 1, 1); return; }
-    g.fillStyle = col;
-    if (it.outcome === "zoomed") {
-      // a bigger four-point sparkle with a gold heart
-      g.fillRect(x - 2, y, 5, 1); g.fillRect(x, y - 2, 1, 5);
-      g.fillStyle = "#fee761"; g.fillRect(x, y, 1, 1);
-    } else {
-      g.fillRect(x, y, 1, 1);
-      g.globalAlpha = 0.45; g.fillRect(x - 1, y, 3, 1); g.fillRect(x, y - 1, 1, 3); g.globalAlpha = 1;
-    }
-  });
+}
 
-  // the hill
-  const ground = (x: number) => Math.round(H - 10 - Math.sin((x / W) * Math.PI) * 9);
+/** Your run as a constellation: bright joined stars, sized by difficulty, the best find ringed in gold. */
+function drawConstellation(c: HTMLCanvasElement, r: RunResult, best: number, upto = r.items.length) {
+  const W = 200, H = 116;
+  c.width = W; c.height = H;
+  const g = c.getContext("2d")!;
+  g.fillStyle = "#0d0a1a"; g.fillRect(0, 0, W, H);
+  // a faint nebula and background stars
+  for (let k = 5; k >= 1; k--) { g.fillStyle = "rgba(58, 31, 74, 0.22)"; g.beginPath(); g.ellipse(W * 0.55, H * 0.5, W * 0.5 * (k / 5), H * 0.45 * (k / 5), -0.3, 0, Math.PI * 2); g.fill(); }
+  const rand = mulberry32(r.puzzle * 31 + 7);
+  for (let i = 0; i < 110; i++) { g.fillStyle = rand() < 0.8 ? "#2c2648" : "#4a4068"; g.fillRect(Math.floor(rand() * W), Math.floor(rand() * H), 1, 1); }
+  const pos = starPositions(r, W, H);
+  const n = Math.min(upto, r.items.length);
+  // lines first, solid and soft, so the shape reads at a glance
+  for (let i = 1; i < n; i++) {
+    if (r.items[i].outcome === "skipped" || r.items[i - 1].outcome === "skipped") continue;
+    g.fillStyle = "rgba(150, 180, 230, 0.55)";
+    line(g, pos[i - 1].x, pos[i - 1].y, pos[i].x, pos[i].y, 1);
+  }
+  for (let i = 0; i < n; i++) {
+    const it = r.items[i], { x, y } = pos[i], band = BY_ID.get(it.id)?.band ?? 0;
+    if (it.outcome === "skipped") { g.fillStyle = "#463d5e"; g.fillRect(x, y, 1, 1); continue; }
+    const col = theme.bandColors[band], arm = band + 1;
+    // glow
+    g.globalAlpha = 0.25; g.fillStyle = col; g.fillRect(x - arm, y - arm, arm * 2 + 1, arm * 2 + 1); g.globalAlpha = 1;
+    // a four-point star whose arms grow with difficulty
+    g.fillStyle = col;
+    g.fillRect(x - arm - 1, y, arm * 2 + 3, 1); g.fillRect(x, y - arm - 1, 1, arm * 2 + 3);
+    if (band >= 2) { g.fillRect(x - 1, y - 1, 3, 3); }
+    g.fillStyle = it.outcome === "zoomed" ? "#fee761" : "#ffffff";
+    g.fillRect(x, y, 1, 1);
+  }
+  // the best find: ringed in gold, the star this constellation is named for
+  if (best >= 0 && best < n) {
+    const { x, y } = pos[best];
+    g.fillStyle = "#fee761";
+    for (let a = 0; a < Math.PI * 2; a += Math.PI / 10) g.fillRect(Math.round(x + Math.cos(a) * 8), Math.round(y + Math.sin(a) * 8), 1, 1);
+  }
+}
+
+/** Tonight's stargazers on a hill, lined up by score (fewest on the left), you in gold with a star over your head. */
+function drawHill(c: HTMLCanvasElement, puzzle: number, rank: number, others: number) {
+  const W = 200, H = 40;
+  c.width = W; c.height = H;
+  const g = c.getContext("2d")!;
+  g.fillStyle = "#0d0a1a"; g.fillRect(0, 0, W, H);
+  const rand = mulberry32(puzzle * 7919 + 13);
+  g.fillStyle = "#2c2648";
+  for (let i = 0; i < 30; i++) g.fillRect(Math.floor(rand() * W), Math.floor(rand() * 20), 1, 1);
+  const ground = (x: number) => Math.round(H - 7 - Math.sin((x / W) * Math.PI) * 8);
   for (let x = 0; x < W; x++) {
     const y0 = ground(x);
-    g.fillStyle = "#1b1d3a"; g.fillRect(x, y0, 1, H - y0);
-    g.fillStyle = "#2c3058"; g.fillRect(x, y0, 1, 1);
+    g.fillStyle = "#1e1934"; g.fillRect(x, y0, 1, H - y0);
+    g.fillStyle = "#3a2f52"; g.fillRect(x, y0, 1, 1);
   }
-  // grass tufts
-  g.fillStyle = "#24284a";
-  for (let i = 0; i < 26; i++) { const x = Math.floor(rand() * W); g.fillRect(x, ground(x) + 2 + Math.floor(rand() * 8), 1, 1); }
-
-  // stargazers: `others` people by score, you slotted in after `rank` of them
-  const n = others + 1, gap = (W - 20) / (n - 1);
-  let you = { x: 0, y: 0 };
+  const n = others + 1, gap = (W - 24) / (n - 1);
   for (let k = 0; k < n; k++) {
-    const x = Math.round(10 + k * gap), base = ground(x) + 1;
-    const isYou = k === rank;
-    const facing = x < W / 2 ? 1 : -1; // everyone leans in toward the middle of the sky
-    stargazer(g, x, base, facing, isYou ? "#fee761" : "#5a6988", isYou ? "#feae34" : "#3a4466", (k * 7) % 3);
-    if (isYou) you = { x, y: base };
+    const x = Math.round(12 + k * gap), base = ground(x) + 1, isYou = k === rank;
+    stargazer(g, x, base, x < W / 2 ? 1 : -1, isYou ? "#fee761" : "#6a5f88", isYou ? "#feae34" : "#463d5e", (k * 7) % 3);
+    if (isYou) {
+      g.fillStyle = "rgba(254, 231, 97, 0.18)"; g.fillRect(x - 5, base - 14, 11, 14);
+      g.fillStyle = "#fee761"; g.fillRect(x, base - 19, 1, 3); g.fillRect(x - 1, base - 18, 3, 1);
+    }
   }
-  // your best find gets a halo: the star your constellation is named for
-  if (brightest >= 0) {
-    const { x, y } = pos[brightest];
-    g.fillStyle = "rgba(254, 231, 97, 0.7)";
-    for (const [dx, dy] of [[-4, 0], [4, 0], [0, -4], [0, 4], [-3, -3], [3, 3], [-3, 3], [3, -3]]) g.fillRect(x + dx, y + dy, 1, 1);
-  }
-  // your beam up to your hardest catch, and a marker star over your head
-  if (brightest >= 0) {
-    const tx = you.x + 6 * (you.x < W / 2 ? 1 : -1), ty = you.y - 11;
-    g.fillStyle = "rgba(254, 231, 97, 0.35)";
-    line(g, tx, ty, pos[brightest].x, pos[brightest].y + 2, 3);
-  }
-  g.fillStyle = "#fee761";
-  g.fillRect(you.x, you.y - 17, 1, 3); g.fillRect(you.x - 1, you.y - 16, 3, 1);
+}
 
-  // compass mark
-  g.fillStyle = "#5a6988";
-  g.fillRect(W - 6, 3, 1, 5);
-  g.fillRect(W - 7, 4, 3, 1);
+/** Where the points came from: each difficulty, then zoom, steady-hand and end bonuses. */
+function breakdown(r: RunResult): string {
+  const rows: string[] = [];
+  let zoom = 0, steady = 0;
+  for (const b of [0, 1, 2, 3]) {
+    const its = r.items.filter((it) => it.outcome !== "skipped" && BY_ID.get(it.id)?.band === b);
+    if (!its.length) continue;
+    const base = its.length * CONFIG.bands[b].points;
+    rows.push(`<li style="--band:${theme.bandColors[b]}"><i class="sq"></i><span>${theme.bandNames[b]} <small>× ${its.length}</small></span><b>${base}</b></li>`);
+  }
+  for (const it of r.items) {
+    if (it.outcome === "skipped") continue;
+    const band = CONFIG.bands[BY_ID.get(it.id)?.band ?? 0];
+    const z = it.outcome === "zoomed" ? band.zoomedPoints - band.points : 0;
+    zoom += z; steady += it.points - band.points - z;
+  }
+  if (zoom) rows.push(`<li class="bonus-row"><i>★</i><span>Zoom bonus</span><b>+${zoom}</b></li>`);
+  if (steady) rows.push(`<li class="bonus-row"><i>■</i><span>Steady hand</span><b>+${steady}</b></li>`);
+  if (r.clearedBonus) rows.push(`<li class="bonus-row"><i>☼</i><span>Sky cleared</span><b>+${r.clearedBonus}</b></li>`);
+  if (r.link?.bonus) rows.push(`<li class="bonus-row"><i>⛓</i><span>Mystery link</span><b>+${r.link.bonus}</b></li>`);
+  return rows.length ? `<ul class="breakdown">${rows.join("")}</ul>` : "";
 }
 
 /** A little stargazer (5x10) peering through a telescope on a tripod, feet at (x, base). */

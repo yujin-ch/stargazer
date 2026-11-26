@@ -214,26 +214,6 @@ export class Viewer {
     return s;
   }
 
-  /** A slowly turning accretion disc and a dark core behind a Black Hole object. */
-  private drawBlackHole(g: CanvasRenderingContext2D, now: number, C: number) {
-    const V = this.V, spin = REDUCED ? 0 : now / 900;
-    g.save();
-    g.fillStyle = "rgba(7, 6, 15, 0.55)";
-    g.beginPath(); g.arc(C, C, V * 0.47, 0, Math.PI * 2); g.fill();
-    const cols = ["#feae34", "#f77622", "#be4a2f", "#fee761"];
-    for (let ring = 0; ring < 3; ring++) {
-      const r = V * (0.3 + ring * 0.06), n = 26 + ring * 8;
-      for (let i = 0; i < n; i++) {
-        const ang = (i / n) * Math.PI * 2 + spin * (1 - ring * 0.25);
-        const x = C + Math.cos(ang) * r, y = C + Math.sin(ang) * r * 0.42;
-        g.globalAlpha = 0.25 + 0.35 * ((i + ring) % 3 === 0 ? 1 : 0.3);
-        g.fillStyle = cols[(i + ring) % cols.length];
-        g.fillRect(Math.round(x), Math.round(y), 3, 3);
-      }
-    }
-    g.restore();
-  }
-
   /** Match the high-resolution layer to the pixel canvas's on-screen size, and clear it. */
   private syncHi(): CanvasRenderingContext2D {
     const L = this.hiLayer, cv = this.canvas, css = cv.clientWidth, px = Math.round(css * Math.min(2, window.devicePixelRatio || 1));
@@ -293,7 +273,6 @@ export class Viewer {
       const slide = REDUCED ? 0 : (1 - ease(enter)) * 70;
       const x = C - (fx + PAD) * px + bobX + slide;
       const y = C - (fy + PAD) * px + bobY;
-      if (a.obj.band === 3) this.drawBlackHole(g, now, C);
       // how far the night's condition has lifted: 0 until the zoom ends, then up to 1 over revealAfter seconds
       const cond = CONFIG.conditions.find((c) => c.id === this.condition)!;
       const settle = (ENTER_MS / 1000) + band.pullBack;
