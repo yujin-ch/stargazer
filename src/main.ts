@@ -6,7 +6,7 @@ import { OBJECTS, BY_ID, loadDayPack, loadPackIndex, shownNames, themeName, them
 import { makeMatcher, normalize, forms as formsOf, linkMatches } from "./match";
 import { dailySky, setDayPack, notePackNight, practiceSky, localDateKey, puzzleNumber, mulberry32, dayTheme, dayCondition } from "./daily";
 import { theme } from "./themes";
-import { setMuted, unlockAudio, setAmbience } from "./themes/chip";
+import { setMuted, unlockAudio, setAmbience, ui } from "./themes/chip";
 import { Viewer } from "./viewer";
 import { store, type ItemResult, type RunResult } from "./storage";
 import { crowdScores, beatShare, liveCrowd, MIN_LIVE } from "./crowd";
@@ -35,6 +35,19 @@ setMuted(store.muted);
 setAmbience(store.ambience);
 // browsers only allow sound after a tap or key: the first one wakes the night sounds
 for (const ev of ["pointerdown", "keydown"]) window.addEventListener(ev, () => unlockAudio(), { once: true, capture: true });
+// a sound for every touch of the interface (the in-play skip has its own)
+function uiSoundFor(t: HTMLElement) {
+  const b = t.closest("button, .btn, summary, .astar, .seen li, a[href]") as HTMLElement | null;
+  if (!b || b.id === "skip" || (b as HTMLButtonElement).disabled) return;
+  if (b.matches(".astar")) return; // the atlas plays its own
+  if (b.matches(".back-btn, #back, .card-x")) ui("back");
+  else if (b.matches(".primary")) ui("confirm");
+  else if (b.matches("summary, .seen li")) ui("open");
+  else if (/: (ON|OFF)/.test(b.textContent ?? "")) ui("toggle");
+  else ui("tap");
+}
+document.addEventListener("pointerdown", (e) => { unlockAudio(); uiSoundFor(e.target as HTMLElement); }, { capture: true });
+document.addEventListener("keydown", (e) => { if ((e.key === "Enter" || e.key === " ") && e.target instanceof HTMLElement && e.target !== el.guess) uiSoundFor(e.target); }, { capture: true });
 theme.startPageBackground(document.getElementById("sky") as HTMLCanvasElement);
 document.title = theme.title;
 
@@ -164,6 +177,7 @@ function wireInput() {
     if (input.value) run.graceUntil = 0; // something was kept: never clear text the player can see
     if (input.value.trim()) run.attempt = input.value;
     onTyped(input);
+    ui("key");
     warmth(input.value);
   });
   input.addEventListener("keydown", (e) => {
@@ -173,7 +187,7 @@ function wireInput() {
       e.preventDefault();
       if (run.phase !== "playing") return;
       if (run.pending !== null) acceptPending();
-      else if (input.value.trim()) { shake(); input.value = ""; }
+      else if (input.value.trim()) { shake(); ui("nope"); input.value = ""; }
     }
   });
   // buttons must not steal focus (that would close the phone keyboard)
@@ -372,7 +386,7 @@ function named(obj: SkyObject, typed: string) {
   bandHit(obj.band, zoomed);
   flyStar(zoomed ? "#fee761" : theme.bandColors[obj.band], zoomed);
   buzz(zoomed ? [18, 40, 28] : [12]);
-  theme.sounds.correct(zoomed, run.combo);
+  theme.sounds.correct(zoomed, run.combo, obj.band);
   viewer.dismiss(zoomed ? "zoomed" : "named", now);
   announce(`${obj.names[0]}, ${points} points`);
   saveProgress();
@@ -528,7 +542,9 @@ function warmth(value: string) {
   const obj = run?.sky[run.i];
   const n = normalize(value);
   const warm = !!obj && run.phase === "playing" && n.length >= 2 && forms(obj).some((f) => f.startsWith(n));
+  const was = el.guess.parentElement!.classList.contains("warm");
   el.guess.parentElement!.classList.toggle("warm", warm);
+  if (warm && !was) ui("warm");
 }
 
 function renderCombo(broke: boolean) {
@@ -1116,16 +1132,18 @@ function drawHill(c: HTMLCanvasElement, scores: number[], mine: number): { lo: n
   g.fillStyle = "#2c2648";
   for (let i = 0; i < 40; i++) g.fillRect(Math.floor(rand() * W), Math.floor(rand() * (H - 30)), 1, 1);
   const youX = Math.round(X(mine));
-  // the hill: a bell curve; the part you out-spotted is lit warm
-  for (let x = 0; x < W; x++) {
-    const y0 = top(x), beat = x < youX;
-    for (let y = y0; y < base; y++) {
-      const d = (y - y0) / Math.max(1, base - y0);
-      g.fillStyle = beat ? (d < 0.15 ? "#6a4a3a" : (x + y) % 3 === 0 ? "#3e2c38" : "#33253a") : d < 0.15 ? "#3a2f52" : (x + y) % 3 === 0 ? "#231c3c" : "#1e1934";
-      g.fillRect(x, y, 1, 1);
-    }
-    g.fillStyle = beat ? "#c99a4a" : "#5a4a70"; g.fillRect(x, y0, 1, 1);
-  }
+  // the hill: a bell curve, softly lit from its ridge down; the part you out-spotted glows warm
+  const hill = new Path2D();
+  hill.moveTo(0, base);
+  for (let x = 0; x <= W; x++) hill.lineTo(x, top(x));
+  hill.lineTo(W, base); hill.closePath();
+  const peak = base - amp;
+  const shade = (a: string, b: string) => { const gr = g.createLinearGradient(0, peak, 0, base); gr.addColorStop(0, a); gr.addColorStop(1, b); return gr; };
+  g.save(); g.clip(hill);
+  g.fillStyle = shade("#3a2f56", "#17132a"); g.fillRect(youX, 0, W - youX, H);
+  g.fillStyle = shade("#7a5238", "#2a1d2e"); g.fillRect(0, 0, youX, H);
+  g.restore();
+  for (let x = 0; x < W; x++) { g.fillStyle = x < youX ? "#e0b060" : "#6a5a88"; g.fillRect(x, top(x), 1, 1); }
   g.fillStyle = "#3a2f52"; g.fillRect(0, base, W, 1);
   // typical score: a dotted line down from the peak
   const mx = Math.round(X(mean));
@@ -1140,7 +1158,9 @@ function drawHill(c: HTMLCanvasElement, scores: number[], mine: number): { lo: n
   }
   // you
   const yy = top(youX) + 1;
-  g.fillStyle = "rgba(254, 231, 97, 0.16)"; g.fillRect(youX - 6, yy - 15, 13, 15);
+  const glow = g.createRadialGradient(youX, yy - 6, 0, youX, yy - 6, 16);
+  glow.addColorStop(0, "rgba(254, 231, 97, 0.28)"); glow.addColorStop(1, "rgba(254, 231, 97, 0)");
+  g.fillStyle = glow; g.fillRect(youX - 16, yy - 22, 32, 32);
   stargazer(g, youX, yy, youX < mx ? 1 : -1, "#fee761", "#feae34", 0);
   g.fillStyle = "#fee761";
   g.fillRect(youX, yy - 21, 1, 5); g.fillRect(youX - 2, yy - 19, 5, 1);

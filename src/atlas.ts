@@ -1,3 +1,4 @@
+import { ui } from "./themes/chip";
 /**
  * The front door: a telescope on a hill under the stars, then the Star Atlas, a map you can drag
  * and zoom. The brightest star in the middle is tonight's sky; a patch of small stars below it holds the
@@ -147,7 +148,8 @@ export function atlasScreen(app: HTMLElement, stars: AtlasStar[], opts: { title:
   map.addEventListener("click", (e) => {
     if (moved > 6) return; // that was a drag
     const b = (e.target as HTMLElement).closest(".astar") as HTMLElement | null;
-    if (!b) { closeCard(); return; }
+    if (!b) { if (!card.classList.contains("hidden")) ui("back"); closeCard(); return; }
+    ui(stars.find((x) => x.id === b.dataset.id)?.open ? "dive" : "star");
     const s = stars.find((x) => x.id === b.dataset.id)!;
     closeCard();
     b.classList.add("on");

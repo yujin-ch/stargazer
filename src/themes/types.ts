@@ -38,7 +38,7 @@ export interface Theme {
   startPageBackground(canvas: HTMLCanvasElement): void;
   sounds: {
     /** combo = answers in a row, so the sound can climb. */
-    correct(bonus: boolean, combo: number): void;
+    correct(bonus: boolean, combo: number, band?: number): void;
     comboBreak(): void;
     /** A Black Hole object just appeared. */
     blackHole?(): void;

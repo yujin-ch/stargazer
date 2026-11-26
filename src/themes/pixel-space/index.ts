@@ -1,5 +1,5 @@
 import type { Theme, FrameState } from "../types";
-import { blip } from "../chip";
+import { blip, bell, whoosh } from "../chip";
 import { livingSky } from "./sky";
 
 const V = 120; // logical viewer size
@@ -177,18 +177,22 @@ export const pixelSpace: Theme = {
   },
 
   sounds: {
-    correct: (bonus, combo) => {
+    correct: (bonus, combo, band = 0) => {
       const k = 2 ** (Math.min(combo, 12) / 12); // climbs a semitone per answer in a row
-      if (bonus) blip([660, 880, 1320, 1760].map((f) => f * k), 0.05);
-      else blip([660, 990].map((f) => f * k), 0.06);
+      // harder finds ring out with more notes: Moon one bell, Planet two, Nebula a shimmer, Black Hole a boom and a chord
+      const chord = [[784], [659, 988], [659, 880, 1319], [523, 784, 1047, 1568]][band].map((f) => f * k);
+      chord.forEach((f, i) => bell(f, i * 0.055, 0.05 - i * 0.006, 1 + band * 0.4, (i % 2 ? 0.3 : -0.3) * (band ? 1 : 0)));
+      blip([chord[0] * 2], 0.04, "square", 0.05);
+      if (band === 3) { blip([110, 82], 0.12, "sine", 0.14); whoosh(false, 0.7, 0.06); }
+      if (bonus) [1, 1.25, 1.5, 2].forEach((m, i) => bell(chord[chord.length - 1] * m, 0.12 + i * 0.05, 0.02, 0.8, 0.5));
     },
-    best: () => blip([784, 988, 1175, 1568], 0.09, "square", 0.09),
-    comboBreak: () => blip([392, 330, 262], 0.06, "triangle", 0.1),
-    blackHole: () => blip([220, 165, 110, 82], 0.09, "sawtooth", 0.07),
-    skip: () => blip([300, 200], 0.07, "triangle", 0.12),
-    tick: () => blip([1200], 0.03, "square", 0.04),
-    end: () => blip([880, 660, 440, 330], 0.11, "triangle", 0.12),
-    start: () => blip([440, 660, 880], 0.08),
+    best: () => [784, 988, 1175, 1568].forEach((f, i) => bell(f, i * 0.1, 0.05, 1.8)),
+    comboBreak: () => blip([392, 330, 262], 0.07, "triangle", 0.08),
+    blackHole: () => { blip([220, 165, 110, 82], 0.1, "sawtooth", 0.08); whoosh(false, 1.2, 0.07); },
+    skip: () => { blip([300, 200], 0.07, "triangle", 0.1); whoosh(true, 0.35, 0.04); },
+    tick: () => blip([1200], 0.03, "square", 0.05),
+    end: () => { [880, 659, 523, 392].forEach((f, i) => bell(f, i * 0.14, 0.045, 2)); whoosh(false, 1.2, 0.05); },
+    start: () => { whoosh(true, 0.8, 0.07); [440, 659, 880].forEach((f, i) => bell(f, 0.25 + i * 0.09, 0.045, 1.4)); },
   },
 
   credits: "Pixel art drawn for this game on the Stargazer drawing board. Fonts: Press Start 2P and VT323 (SIL Open Font License).",

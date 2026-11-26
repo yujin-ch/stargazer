@@ -48,6 +48,39 @@ function nebula(w: number, h: number, seed: number): HTMLCanvasElement {
   return c;
 }
 
+/** A small far-off galaxy, drawn once: a spiral (two arms), or an edge-on disc. */
+function galaxy(size: number, seed: number, kind: "spiral" | "edge" | "round"): HTMLCanvasElement {
+  const c = document.createElement("canvas");
+  c.width = c.height = size;
+  const g = c.getContext("2d")!;
+  let s = seed;
+  const rand = () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; };
+  const R = size / 2 - 1, cx = size / 2, cy = size / 2;
+  const tilt = kind === "edge" ? 0.22 : kind === "round" ? 0.75 : 0.45 + rand() * 0.25, rot = rand() * Math.PI;
+  const arms = ["#8fa6e8", "#b58fd8", "#e07ab8"], cosR = Math.cos(rot), sinR = Math.sin(rot);
+  const plot = (x: number, y: number, col: string, a: number) => {
+    const px = x * cosR - y * tilt * sinR, py = x * sinR + y * tilt * cosR;
+    g.globalAlpha = a; g.fillStyle = col; g.fillRect(Math.floor(cx + px), Math.floor(cy + py), 1, 1);
+  };
+  // a faint haze of the whole disc, so the arms sit in a glow rather than floating
+  g.save(); g.translate(cx, cy); g.rotate(rot); g.scale(1, tilt);
+  const halo = g.createRadialGradient(0, 0, 0, 0, 0, R);
+  halo.addColorStop(0, "rgba(243,226,192,0.35)"); halo.addColorStop(0.35, "rgba(160,150,220,0.14)"); halo.addColorStop(1, "rgba(120,110,200,0)");
+  g.fillStyle = halo; g.beginPath(); g.arc(0, 0, R, 0, 6.29); g.fill(); g.restore();
+  const n = size * size * 1.3;
+  for (let i = 0; i < n; i++) {
+    const t = Math.pow(rand(), 0.8);
+    let a: number, r: number;
+    if (kind === "spiral") { a = t * 3.6 + (i % 2) * Math.PI + (rand() - 0.5) * (0.9 - t * 0.5); r = t * R; }
+    else { a = rand() * Math.PI * 2; r = Math.pow(rand(), 1.6) * R; }
+    plot(Math.cos(a) * r + (rand() - 0.5) * 1.5, Math.sin(a) * r + (rand() - 0.5) * 1.5, r < R * 0.25 ? "#f3e2c0" : arms[Math.floor(rand() * 3)], 0.18 * (1 - r / R) + 0.05);
+  }
+  // a bright little core
+  for (let i = 0; i < size * 3; i++) { const a = rand() * 6.28, r = Math.pow(rand(), 2) * R * 0.18; plot(Math.cos(a) * r, Math.sin(a) * r, "#fff3d6", 0.5); }
+  g.globalAlpha = 1;
+  return c;
+}
+
 interface Meteor { x: number; y: number; vx: number; vy: number; born: number; life: number; len: number }
 
 /** Shooting stars: call step() each frame with the low-res context. */
@@ -174,6 +207,8 @@ export function livingSky(canvas: HTMLCanvasElement) {
   let stars: Star[] = [];
   let neb: HTMLCanvasElement | null = null;
   let bg: HTMLCanvasElement | null = null;
+  type Gal = { img: HTMLCanvasElement; x: number; y: number; depth: number; p: number };
+  let gals: Gal[] = [];
   const resize = () => {
     canvas.width = Math.ceil(window.innerWidth / SCALE);
     canvas.height = Math.ceil(window.innerHeight / SCALE);
@@ -188,6 +223,20 @@ export function livingSky(canvas: HTMLCanvasElement) {
       depth: Math.random() < 0.7 ? 0.25 : 1,
     }));
     neb = nebula(W, H, 7);
+    // a few galaxies, kept to the sides so they never sit behind the telescope; more on big screens
+    const kinds = ["spiral", "edge", "spiral", "round", "spiral", "edge"] as const;
+    const count = Math.max(3, Math.min(6, Math.round((W * H) / 22000)));
+    gals = Array.from({ length: count }, (_, i) => {
+      const size = [26, 18, 34, 14, 22, 16][i];
+      const left = i % 2 === 0;
+      return {
+        img: galaxy(size, 11 + i * 97, kinds[i]),
+        x: left ? W * (0.04 + Math.random() * 0.2) : W * (0.76 + Math.random() * 0.18) - size,
+        y: (H / count) * (i + Math.random() * 0.6),
+        depth: 0.4 + (size / 34) * 0.4,
+        p: Math.random() * 6.28,
+      };
+    });
     // the sky's colour, by the hour: a smooth gradient twice the screen tall, so scrolling moves through it
     bg = document.createElement("canvas");
     bg.width = canvas.width; bg.height = canvas.height * 2;
@@ -228,6 +277,12 @@ export function livingSky(canvas: HTMLCanvasElement) {
     g.globalAlpha = 0.55;
     g.drawImage(neb!, nx, ny);
     g.drawImage(neb!, nx, ny + SH); // tiled, so a long scroll never runs out of nebula
+    for (const ga of gals) {
+      const k = ga.depth * 4;
+      const gy = ((((ga.y + 12 - cur.y * k + driftY * ga.depth - scroll * (0.3 + ga.depth * 0.4)) % SH) + SH) % SH) - 12 - ga.img.height / 2;
+      g.globalAlpha = 0.75 + (reduce ? 0 : Math.sin(t / 4000 + ga.p) * 0.15);
+      g.drawImage(ga.img, Math.round(ga.x - cur.x * k + driftX * ga.depth), Math.round(gy));
+    }
     g.globalAlpha = 1;
     for (const s of stars) {
       const tw = reduce ? 1 : (Math.sin(t / 900 + s.p) + 1) / 2;
