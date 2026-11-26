@@ -600,7 +600,8 @@ a { color: var(--cyan); }
 .hill-block { margin-top: 4px; }
 .hill-block + .share-row { margin-top: 14px; }
 .share-row + .caption, .save-row + .caption { margin-top: 12px; text-align: center; }
-.details-title { margin-top: 22px; padding-top: 16px; border-top: 2px dashed var(--panel-edge); }
+.details-title { margin-top: 18px; }
+.sky-block { margin-top: 22px; padding-top: 16px; border-top: 2px dashed var(--panel-edge); }
 .home-row img { vertical-align: -4px; margin-right: 6px; image-rendering: auto; border-radius: 4px; }
 
 /* front page: the atlas has its own quieter button under tonight's sky */

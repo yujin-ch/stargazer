@@ -933,14 +933,14 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
       ${daily ? `<div class="share-row"><button class="btn primary" id="share">SHARE</button></div>${isTouch ? "" : `<p class="save-row"><button class="link-btn" id="save-card">save the picture</button></p>`}` : ""}
       <p class="caption" id="crowd-note">Tonight's hill is the same for everyone: how a crowd of stargazers fares on this exact sky.</p>
       ${mystery ? `<section class="link-box${r.link ? (r.link.ok ? " found" : " missed") : ""}" id="link-box"></section>` : ""}
-      <h3 class="sb-title details-title">HOW THE NIGHT WENT</h3>
-      ${breakdown(r)}
-      <section class="sb-block">
+      <section class="sb-block sky-block">
         <p class="constellation" id="constellation"></p>
         <canvas class="chart sky-chart" id="chart" aria-label="Your run drawn as a constellation"></canvas>
         <p class="legend">${bandsSeen.map((b) => `<span><i class="lg" style="background:${theme.bandColors[b]}"></i>${theme.bandNames[b]}</span>`).join("")}<span><i class="lg zoomed"></i>zoom</span><span><i class="lg skipped"></i>skipped</span></p>
         <p class="caption">Around the dial: your minute, from the top. Further out: harder. Answers in a row join up; grey dashes on the rim are skips.</p>
       </section>
+      <h3 class="sb-title details-title">HOW THE NIGHT WENT</h3>
+      ${breakdown(r)}
       <dl class="figures">
         <div><dt>NAMED</dt><dd>${r.named}</dd></div>
         <div><dt>ZOOM</dt><dd>${r.zoomed}</dd></div>
