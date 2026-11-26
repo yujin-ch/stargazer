@@ -33,6 +33,7 @@ const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const ANTICIPATE = 260;
 const ZOOM = 1350;
 const FADE = 460;
+const BACK = 1500;
 
 // ---------------------------------------------------------------- the pixel rasteriser
 
@@ -166,16 +167,16 @@ const ROLL_END = -Math.PI / 2 - Math.atan2(N.y, N.x);
 
 interface Star { x: number; y: number; f: number; c: string; ph: number; big: boolean }
 
-export function introScreen(app: HTMLElement, opts: { title: string; sub: string; onEnter: () => void; links?: { id: string; label: string }[]; onLink?: (id: string) => void }) {
+export function introScreen(app: HTMLElement, opts: { title: string; sub: string; onEnter: () => void; links?: { id: string; label: string }[]; onLink?: (id: string) => void; returning?: boolean }) {
   app.innerHTML = `
-  <main class="intro">
+  <main class="intro${opts.returning && !REDUCED ? " zooming" : ""}">
     <canvas class="intro-scene" id="intro-scene" aria-hidden="true"></canvas>
     <div class="intro-ui">
       <h1 class="wordmark">${opts.title.toUpperCase()}</h1>
       <p class="intro-sub">${opts.sub}</p>
       <button class="btn primary intro-go" id="intro-go">${LINES[Math.floor(Math.random() * LINES.length)]}</button>
-      ${opts.links?.length ? `<nav class="intro-menu" aria-label="Menu">${opts.links.map((l) => `<button class="btn" data-link="${l.id}">${l.label}</button>`).join("")}</nav>` : ""}
     </div>
+    ${opts.links?.length ? `<nav class="intro-menu" aria-label="Menu">${opts.links.map((l) => `<button class="btn" data-link="${l.id}">${l.label}</button>`).join("")}</nav>` : ""}
   </main>`;
   const root = app.querySelector(".intro") as HTMLElement;
   const cv = document.getElementById("intro-scene") as HTMLCanvasElement;
@@ -223,7 +224,24 @@ export function introScreen(app: HTMLElement, opts: { title: string; sub: string
 
   // camera and timeline
   let go0 = -1, fade0 = -1, raf = 0, prevLz = 0, prevT = 0, vel = 0, done = false;
+  // coming back from the atlas: start inside the eyepiece and pull back out to the hill
+  let back0 = opts.returning && !REDUCED ? -2 : -1;
   const cam = (t: number): Cam & { z: number; p: number } => {
+    if (back0 === -2) back0 = t;
+    if (back0 >= 0 && go0 < 0) {
+      const q = Math.min(1, (t - back0) / BACK);
+      if (q >= 1) { back0 = -1; root.classList.remove("zooming"); }
+      else {
+        // fast at first, then easing gently onto the hill
+        const p = 1 - (1 - (1 - q) ** 3);
+        const L = Math.log(zEnd);
+        const z = Math.exp(L * (0.12 * p + 0.88 * p ** 3.2));
+        const k = 1 - smooth(p * 1.05);
+        const ox = C0.x - T.x, oy = C0.y - T.y;
+        if (q > 0.55) root.classList.remove("zooming");
+        return { x: T.x + ox * k, y: T.y + oy * k, s: k0 * z, r: ROLL_END * smooth((p - 0.15) / 0.85), z, p };
+      }
+    }
     if (go0 < 0) {
       const z = 1 + 0.006 * Math.sin(t / 2600);
       return { x: C0.x + Math.sin(t / 4100) * 0.8, y: C0.y, s: k0 * z, r: 0, z, p: 0 };
@@ -650,7 +668,7 @@ export function introScreen(app: HTMLElement, opts: { title: string; sub: string
   const go = document.getElementById("intro-go") as HTMLButtonElement;
   go.focus({ preventScroll: true });
   go.onclick = () => {
-    if (go0 >= 0) return;
+    if (go0 >= 0 || back0 !== -1) return;
     if (REDUCED) { cancelAnimationFrame(raf); opts.onEnter(); return; }
     go0 = performance.now();
     root.classList.add("zooming");

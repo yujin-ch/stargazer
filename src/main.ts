@@ -6,7 +6,7 @@ import { OBJECTS, BY_ID, loadDayPack, loadPackIndex, shownNames, themeName, them
 import { makeMatcher, normalize, forms as formsOf, linkMatches } from "./match";
 import { dailySky, setDayPack, notePackNight, practiceSky, localDateKey, puzzleNumber, mulberry32, dayTheme, dayCondition } from "./daily";
 import { theme } from "./themes";
-import { setMuted, unlockAudio, setAmbience, ui } from "./themes/chip";
+import { setMuted, unlockAudio, setAmbience, ui, whoosh } from "./themes/chip";
 import { Viewer } from "./viewer";
 import { store, type ItemResult, type RunResult } from "./storage";
 import { crowdScores, beatShare, liveCrowd, MIN_LIVE } from "./crowd";
@@ -799,6 +799,7 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
   const shownTheme = revealed ? themeName(themeId) : "Mystery link";
   app.innerHTML = `
   <main class="results">
+   <button class="btn back-btn res-back" id="to-atlas" type="button" aria-label="Back to the star atlas">&lt; ATLAS</button>
    <div class="res-main">
     <section class="log">
       <header class="log-head">
@@ -832,11 +833,9 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
       ${daily ? `<div class="share-row"><button class="btn primary" id="share">SHARE</button></div>${isTouch ? "" : `<p class="save-row"><button class="link-btn" id="save-card">save the picture</button></p>`}` : ""}
       ${TIP_URL ? `<p class="tip-row"><a href="${esc(TIP_URL)}" target="_blank" rel="noopener">Enjoying the sky? Leave a tip for the stargazers who make it ☕</a></p>` : ""}
     </section>
-    <div class="actions">
-      <button class="btn" id="to-atlas">STAR ATLAS</button>
-      ${!daily && !store.today(localDateKey()) ? `<button class="btn primary" id="daily">TONIGHT'S SKY</button>` : ""}
-      ${!daily && store.today(localDateKey()) ? `<button class="btn" id="back">TONIGHT'S LOG</button>` : ""}
-    </div>
+    ${daily ? "" : `<div class="actions">
+      ${!store.today(localDateKey()) ? `<button class="btn primary" id="daily">TONIGHT'S SKY</button>` : `<button class="btn" id="back">TONIGHT'S LOG</button>`}
+    </div>`}
     <p class="toast" id="toast" role="status"></p>
     <section class="come-back">
       ${daily ? `<div class="moonrise"><canvas id="moonrise" width="120" height="34" aria-hidden="true"></canvas><p>Next sky in <b id="next-in">${nextSkyIn()}</b></p></div><p class="small">${tomorrow}</p>` : ""}
@@ -1365,7 +1364,7 @@ function showAtlas(focus = "tonight") {
       card: () => `<h2>Community skies</h2><p>Soon: skies drawn and themed by other stargazers, out here on the edge of the map.</p>` },
   ];
   stars.push(...menu);
-  atlasScreen(app, stars, { title: "STAR ATLAS", footer: fmtDate(localDateKey()), focus, onBack: () => frontPage() });
+  atlasScreen(app, stars, { title: "STAR ATLAS", footer: fmtDate(localDateKey()), focus, onBack: () => { whoosh(false, 1.3, 0.07); frontPage(true); } });
 }
 
 // tonight's own photo set, if one has been published (falls back to the rotating themes)
@@ -1423,9 +1422,10 @@ function menuSheet(id: string) {
   (wrap.querySelector(".card-x") as HTMLElement).focus();
 }
 
-function frontPage() {
+function frontPage(returning = false) {
   cancelAnimationFrame(raf);
   introScreen(app, {
+    returning,
     title: theme.title,
     sub: fmtDate(localDateKey()),
     onEnter: () => { document.querySelector(".sheet-wrap")?.remove(); void tonightPack.then(() => showAtlas()); },

@@ -40,7 +40,7 @@ export function atlasScreen(app: HTMLElement, stars: AtlasStar[], opts: { title:
       <canvas class="atlas-lines" id="atlas-lines" width="500" height="500" aria-hidden="true"></canvas>
     </div>
     <canvas class="atlas-meteors" id="atlas-meteors" aria-hidden="true"></canvas>
-    ${opts.onBack ? `<button class="btn back-btn atlas-back" id="atlas-back" type="button" aria-label="Back to the front page">&lt; FRONT PAGE</button>` : ""}
+    ${opts.onBack ? `<button class="btn back-btn atlas-back" id="atlas-back" type="button" aria-label="Step back from the telescope to the front page">&lt; STEP BACK</button>` : ""}
     <header class="atlas-head"><span>${opts.title}</span><small>drag to look around · pinch or scroll to zoom</small></header>
     <div class="atlas-tools">
       <button class="btn" id="atlas-out" aria-label="Zoom out">−</button>
@@ -53,7 +53,12 @@ export function atlasScreen(app: HTMLElement, stars: AtlasStar[], opts: { title:
   const root = document.getElementById("atlas")!;
   const map = document.getElementById("atlas-map")!;
   const back = document.getElementById("atlas-back");
-  if (back && opts.onBack) back.onclick = opts.onBack;
+  if (back && opts.onBack) back.onclick = () => {
+    // pull away from the map first, then the hill takes over
+    if (REDUCED) { opts.onBack!(); return; }
+    root.classList.add("leaving");
+    setTimeout(opts.onBack!, 320);
+  };
   drawSky(document.getElementById("atlas-sky") as HTMLCanvasElement);
   drawLines(document.getElementById("atlas-lines") as HTMLCanvasElement, stars);
   if (!REDUCED) shootingStars(document.getElementById("atlas-meteors") as HTMLCanvasElement);
