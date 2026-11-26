@@ -9,7 +9,7 @@ import { theme } from "./themes";
 import { setMuted, unlockAudio, setAmbience, ui, whoosh } from "./themes/chip";
 import { Viewer } from "./viewer";
 import { store, type ItemResult, type RunResult } from "./storage";
-import { crowdScores, beatShare, liveCrowd, MIN_LIVE } from "./crowd";
+import { dayCurve, beatShare, ncdf, type Curve } from "./crowd";
 import { share, shareText, nightTitle, type Standing } from "./share";
 import { atlasScreen, type AtlasStar } from "./atlas";
 import { introScreen } from "./intro";
@@ -791,7 +791,7 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
     : "You're on the hardest sky.";
   const bandsSeen = [...new Set(r.items.map((it) => BY_ID.get(it.id)?.band).filter((b) => b !== undefined))].sort() as number[];
   const crowdSky = daily ? dailySky(r.puzzle, tier) : run?.sky ?? [];
-  const crowd = crowdScores(crowdSky, daily ? r.puzzle * 10 + tier : 777, dayCondition(r.puzzle).id);
+  const crowd = dayCurve(crowdSky, daily ? r.puzzle * 10 + tier : 777, dayCondition(r.puzzle).id);
   const themeId = crowdSky[0]?.theme ?? dayTheme(r.puzzle);
   const info = themeInfo(themeId);
   const mystery = !!info?.mystery;
@@ -822,7 +822,7 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
         <canvas class="chart hill-chart" id="hill" aria-label="Tonight's scores as a bell-shaped hill, with you standing in gold at your score"></canvas>
         <div class="hill-axis" id="hill-axis"></div>
         <p class="hill-line" id="hill-line"></p>
-        <p class="caption" id="crowd-note">The hill is simulated on tonight's sky until enough live scores arrive.</p>
+        <p class="caption" id="crowd-note">Tonight's hill is the same for everyone: how a crowd of stargazers fares on this exact sky.</p>
       </section>
       <dl class="figures">
         <div><dt>NAMED</dt><dd>${r.named}</dd></div>
@@ -872,24 +872,20 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
     };
     requestAnimationFrame(step);
   }
-  const paintHill = (scores: number[], live: boolean) => {
-    const mine = r.score - (r.link?.bonus ?? 0), beat = beatShare(scores, mine);
-    standing = { beat, live, players: scores.length };
+  const paintHill = (curve: Curve) => {
+    const mine = r.score - (r.link?.bonus ?? 0), beat = beatShare(curve, mine);
+    standing = { beat, live: false, players: 0 };
     sharePreview();
-    const ax = drawHill(hill, scores, mine);
+    const ax = drawHill(hill, curve, mine);
     const pct = Math.round(beat * 100);
     document.getElementById("hill-axis")!.innerHTML = `<span>${ax.lo}</span><span>typical ${ax.mean}</span><span>${ax.hi}</span>`;
     document.getElementById("hill-line")!.innerHTML =
       (pct >= 99 ? `You out-spotted <b>everyone on the hill</b> tonight.`
       : pct <= 1 ? `The whole hill saw more tonight. The sky comes back tomorrow.`
       : `You out-spotted <b>${pct}%</b> of tonight's stargazers.`)
-      + `<br><small>${live ? `${scores.length} players on your sky tonight` : `Your gold slope is everyone you out-spotted.`}</small>`;
-    if (live) document.getElementById("crowd-note")!.textContent = `These are tonight's real players on the ${CONFIG.tiers[tier].name} sky.`;
+      + `<br><small>Your gold slope is everyone you out-spotted.</small>`;
   };
-  paintHill(crowd, false);
-  if (daily) void liveCrowd(r.puzzle, tier, r.partial ? null : r.score - (r.link?.bonus ?? 0)).then((live) => {
-    if (live && live.length >= MIN_LIVE && chart.isConnected) paintHill(live, true);
-  });
+  paintHill(crowd);
   const box = document.getElementById("link-box");
   if (box && info) {
     if (!r.link) {
@@ -1098,12 +1094,6 @@ function drawConstellation(c: HTMLCanvasElement, r: RunResult, best: number, upt
   }
 }
 
-/** Standard normal CDF (Abramowitz-Stegun erf approximation). */
-function ncdf(z: number): number {
-  const t = 1 / (1 + 0.3275911 * Math.abs(z) / Math.SQRT2);
-  const y = 1 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-(z * z) / 2);
-  return z >= 0 ? (1 + y) / 2 : (1 - y) / 2;
-}
 /** z for a given share of the bell curve (binary search on the CDF). */
 function nInv(p: number): number {
   let lo = -4, hi = 4;
@@ -1115,19 +1105,17 @@ function nInv(p: number): number {
  * Tonight's crowd as a hill shaped like a bell curve (from the crowd's mean and spread): stargazers stand along it,
  * thickest in the middle where most scores fall. You stand in gold at your score, and the slope you out-spotted glows.
  */
-function drawHill(c: HTMLCanvasElement, scores: number[], mine: number): { lo: number; hi: number; mean: number } {
+function drawHill(c: HTMLCanvasElement, curve: Curve, mine: number): { lo: number; hi: number; mean: number } {
   const W = 240, H = 96, base = H - 12, amp = 58;
   c.width = W; c.height = H;
   const g = c.getContext("2d")!;
-  const n = scores.length || 1;
-  const mean = scores.reduce((a, b) => a + b, 0) / n;
-  const sd = Math.max(1, Math.sqrt(scores.reduce((a, b) => a + (b - mean) ** 2, 0) / n));
+  const { mean, sd } = curve;
   const lo = Math.max(0, Math.min(mine, mean - 2.8 * sd)), hi = Math.max(mine, mean + 2.8 * sd);
   const X = (v: number) => 10 + ((v - lo) / (hi - lo || 1)) * (W - 20);
   const V = (x: number) => lo + ((x - 10) / (W - 20)) * (hi - lo);
   const top = (x: number) => Math.round(base - amp * Math.exp(-((V(x) - mean) ** 2) / (2 * sd * sd)));
   g.fillStyle = "#0d0a1a"; g.fillRect(0, 0, W, H);
-  const rand = mulberry32(Math.round(mean) * 31 + n);
+  const rand = mulberry32(Math.round(mean) * 31 + Math.round(sd));
   g.fillStyle = "#2c2648";
   for (let i = 0; i < 40; i++) g.fillRect(Math.floor(rand() * W), Math.floor(rand() * (H - 30)), 1, 1);
   const youX = Math.round(X(mine));
@@ -1287,6 +1275,9 @@ function packDate(o: SkyObject): string {
 }
 
 // ---------------------------------------------------------------- boot
+
+// scores used to be sent to a server; nothing is now, so tidy away the old device id and "sent" marks
+try { for (const k of Object.keys(localStorage)) if (k === "stargazer:id" || k.startsWith("stargazer:sent")) localStorage.removeItem(k); } catch { /* storage blocked */ }
 
 // test hook for automated playtests: /?debug, only on this computer (it reveals answers)
 const LOCAL = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);

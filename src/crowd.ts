@@ -3,48 +3,11 @@ import { mulberry32 } from "./daily";
 import type { SkyObject } from "./library";
 
 /**
- * "Everyone else", until real scores are collected: a crowd of simulated players runs tonight's
- * exact sky. Each has their own eye (how much they recognise) and speed (how fast they read and type),
- * spread the way a real crowd is: most middling, a few very quick, a few slow. Swap crowdScores for
- * real score data once there is a server.
+ * "Everyone else" is a set bell curve for each night: no scores are collected or stored.
+ * A crowd of simulated players runs tonight's exact sky (each with their own eye and speed, spread the way
+ * a real crowd is), and the night's curve is the mean and spread of their scores. Same curve for everyone.
  */
-export const CROWD_IS_SIMULATED = true;
-
-/** Real scores replace the simulated crowd once this many people have played the same sky. */
-export const MIN_LIVE = 20;
-
-function deviceId(): string {
-  try {
-    let id = localStorage.getItem("stargazer:id");
-    if (!id) { id = crypto.randomUUID(); localStorage.setItem("stargazer:id", id); }
-    return id;
-  } catch {
-    return crypto.randomUUID();
-  }
-}
-
-/**
- * Tonight's real crowd from /api/scores, as sorted scores (one per player), or null when the server isn't
- * reachable (local dev, offline). Pass your score to add it; each device counts once a night.
- */
-export async function liveCrowd(night: number, tier: number, score: number | null): Promise<number[] | null> {
-  const sentKey = `stargazer:sent2:${night}`; // "2": the points scale changed on 2026-11-26
-  let sent = false;
-  try { sent = localStorage.getItem(sentKey) === "1"; } catch { /* storage blocked */ }
-  try {
-    const r = score !== null && !sent
-      ? await fetch("/api/scores", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ night, tier, score, id: deviceId() }) })
-      : await fetch(`/api/scores?night=${night}&tier=${tier}`);
-    if (!r.ok || !(r.headers.get("content-type") ?? "").includes("json")) return null;
-    if (score !== null && !sent) try { localStorage.setItem(sentKey, "1"); } catch { /* ignore */ }
-    const { scores } = (await r.json()) as { scores: Record<string, number> };
-    const out: number[] = [];
-    for (const [k, n] of Object.entries(scores)) for (let i = 0; i < Math.min(n, 100000); i++) out.push(Number(k));
-    return out.sort((a, b) => a - b);
-  } catch {
-    return null;
-  }
-}
+export interface Curve { mean: number; sd: number }
 
 /** How sure a typical player is to know an object in each band, and how long they look before typing. */
 const KNOW = [0.97, 0.86, 0.66, 0.5];
@@ -93,9 +56,22 @@ export function crowdScores(sky: SkyObject[], seed: number, condition: Condition
   return out.sort((a, b) => a - b);
 }
 
-/** Share of the crowd you beat, 0..1 (ties count half). */
-export function beatShare(scores: number[], mine: number): number {
-  let below = 0, tie = 0;
-  for (const s of scores) { if (s < mine) below++; else if (s === mine) tie++; }
-  return (below + tie / 2) / scores.length;
+/** Tonight's bell curve: the mean and spread of the simulated crowd, rounded so it reads cleanly. */
+export function dayCurve(sky: SkyObject[], seed: number, condition: ConditionId = "clear"): Curve {
+  const s = crowdScores(sky, seed, condition);
+  const mean = s.reduce((a, b) => a + b, 0) / (s.length || 1);
+  const sd = Math.sqrt(s.reduce((a, b) => a + (b - mean) ** 2, 0) / (s.length || 1));
+  return { mean: Math.round(mean / 5) * 5, sd: Math.max(10, Math.round(sd / 5) * 5) };
+}
+
+/** Normal CDF (Abramowitz-Stegun). */
+export function ncdf(z: number): number {
+  const t = 1 / (1 + 0.3275911 * Math.abs(z) / Math.SQRT2);
+  const y = 1 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-(z * z) / 2);
+  return z >= 0 ? (1 + y) / 2 : (1 - y) / 2;
+}
+
+/** Share of the night's curve below your score, 0..1. */
+export function beatShare(c: Curve, mine: number): number {
+  return ncdf((mine - c.mean) / c.sd);
 }

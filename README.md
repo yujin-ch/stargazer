@@ -59,6 +59,6 @@ Push the folder to `main` and Vercel redeploys. Note: future packs are public fi
 ## Security
 
 - `vercel.json` sets the security headers: a strict Content-Security-Policy (same-origin scripts, fonts, images and API only), HSTS, no framing, nosniff, a tight Referrer-Policy and Permissions-Policy.
-- `api/scores.ts` limits each address (as a salted hash, never the raw IP) to 60 reads and 10 writes a minute and 8 new players a night, caps bodies at 512 bytes, and only accepts nights that are open now. Set `IP_HASH_SALT` in Vercel to a random string to use your own salt.
+- No player scores are collected or stored. "On the hill tonight" is a set bell curve per night (`dayCurve` in `src/crowd.ts`), worked out from a simulated crowd playing that exact sky, so it's the same for everyone.
 - `?debug` (which reveals answers) only works on localhost, and `?date=` can't preview a future night on the public site.
-- The game runs in the browser, so a determined player can always read answers from the code. Crowd scores are a friendly guide, not a guarded leaderboard.
+- The game runs in the browser, so a determined player can always read answers from the code. There's no leaderboard to protect.
