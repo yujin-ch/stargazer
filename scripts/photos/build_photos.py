@@ -23,8 +23,13 @@ STAGES = [48, 32, 24, 16, 12, 8, 6]
 OUTLINE = (0x18, 0x14, 0x25)
 
 board = open(os.path.join(ROOT, "src/art/board.ts")).read()
-pal = sorted(set(re.findall(r'"#([0-9a-f]{6})"', board.split("export const OUTLINE")[0])))
-COLS = np.array([[int(h[i:i + 2], 16) for i in (0, 2, 4)] for h in pal], float)
+_ramps = re.findall(r'(\w+): \["#([0-9a-f]{6})", "#([0-9a-f]{6})", "#([0-9a-f]{6})"\]', board.split("export const OUTLINE")[0])
+def _cols(skip=()):
+    hexes = sorted({h for name, *hs in _ramps if name not in skip for h in hs})
+    return np.array([[int(h[i:i + 2], 16) for i in (0, 2, 4)] for h in hexes], float)
+COLS = _cols()
+# on a greenscreen nothing in the object is green (prompt rule), so leftover olive shadows must not snap to green
+COLS_NO_GREEN = _cols(("green", "lime", "teal"))
 
 
 def lab(rgb):
@@ -37,9 +42,10 @@ def lab(rgb):
 
 
 COLS_LAB = lab(COLS)
+NO_GREEN_LAB = lab(COLS_NO_GREEN)
 
 
-def snap(rgb, k):
+def snap(rgb, k, no_green=False):
     """k-means the stage to k colours, then snap each to the nearest palette colour."""
     flat = rgb.reshape(-1, 3)
     L = lab(flat)
@@ -51,8 +57,9 @@ def snap(rgb, k):
         for j in range(k):
             if (lb == j).any():
                 cent[j] = L[lb == j].mean(0)
-    s = ((cent[:, None] - COLS_LAB[None]) ** 2).sum(-1).argmin(1)
-    return COLS[s[lb]].reshape(rgb.shape)
+    cols, cl = (COLS_NO_GREEN, NO_GREEN_LAB) if no_green else (COLS, COLS_LAB)
+    s = ((cent[:, None] - cl[None]) ** 2).sum(-1).argmin(1)
+    return cols[s[lb]].reshape(rgb.shape)
 
 
 def outline(rgba):
@@ -65,9 +72,9 @@ def outline(rgba):
 
 
 def is_greenscreen(img):
-    a = np.asarray(img).astype(int)
-    edge = np.concatenate([a[0], a[-1], a[:, 0], a[:, -1]])
-    return np.median(edge[:, 1] - np.maximum(edge[:, 0], edge[:, 2])) > 60
+    """Mostly green image (the border can be a stray white frame the model drew)."""
+    a = np.asarray(img.resize((64, 64))).astype(int)
+    return ((a[..., 1] - np.maximum(a[..., 0], a[..., 2])) > 60).mean() > 0.3
 
 
 def chroma_key(img):
@@ -82,12 +89,19 @@ def chroma_key(img):
     lab_, n = ndimage.label(keep)
     if n:
         sizes = ndimage.sum(keep, lab_, range(1, n + 1))
-        big = 1 + np.flatnonzero(sizes >= max(200, sizes.max() * 0.002))
+        # drop anything touching the image edge (stray frames the model sometimes draws)
+        border = set(np.unique(np.concatenate([lab_[0], lab_[-1], lab_[:, 0], lab_[:, -1]]))) - {0}
+        inner = [i for i in range(1, n + 1) if i not in border]
+        if inner:
+            m = max(sizes[i - 1] for i in inner)
+            big = [i for i in inner if sizes[i - 1] >= max(200, m * 0.002)]
+        else:
+            big = 1 + np.flatnonzero(sizes >= max(200, sizes.max() * 0.002))
         keep = np.isin(lab_, big)
     keep = ndimage.binary_fill_holes(keep) & (greenness < 40) | (keep & (greenness < 40))
     # despill: green may not exceed the larger of red and blue
     out = rgb.copy()
-    out[..., 1] = np.minimum(g, np.maximum(r, b) + 6)
+    out[..., 1] = np.minimum(g, (r + b) / 2 + 4)
     rgba = np.zeros(rgb.shape[:2] + (4,), np.uint8)
     rgba[..., :3] = out.clip(0, 255).astype(np.uint8)
     rgba[..., 3] = np.where(keep, 255, 0)
@@ -123,18 +137,24 @@ def add_thin_parts(img, cut):
     return Image.fromarray(out, "RGBA")
 
 
-def stage(cut, n, final=False):
+def stage(cut, n, final=False, no_green=False):
     inner = n - 2  # leave room for the outline
-    im = cut.resize((inner, inner), Image.LANCZOS if final else Image.BOX)
-    arr = np.asarray(im).astype(float)
-    rgb, a = arr[..., :3], arr[..., 3]
+    # premultiply so the (keyed-out) backdrop colour never bleeds into edge pixels
+    src = np.asarray(cut).astype(np.float32)
+    al = src[..., 3] / 255
+    flt = Image.LANCZOS if final else Image.BOX
+    rs = lambda ch: np.asarray(Image.fromarray(ch.astype(np.float32), "F").resize((inner, inner), flt))
+    a1 = np.clip(rs(al), 0, 1)
+    rgb = np.stack([rs(src[..., c] * al) for c in range(3)], -1) / np.maximum(a1, 1e-3)[..., None]
+    rgb = rgb.clip(0, 255)
+    a = a1 * 255
     if not final:
         g = rgb.mean(-1, keepdims=True)
         rgb = np.clip(g + (rgb - g) * 1.2, 0, 255)
         k = 5 if n <= 8 else 8 if n <= 12 else 12 if n <= 24 else 16
         mask = a > (28 if n >= 24 else 90)
         if mask.any():
-            rgb[mask] = snap(rgb[mask][None], k)[0]
+            rgb[mask] = snap(rgb[mask][None], k, no_green)[0]
     out = np.zeros((n, n, 4), np.uint8)
     out[1:-1, 1:-1, :3] = rgb.astype(np.uint8)
     # a low threshold keeps thin parts (antennas, rods) from vanishing when shrunk
@@ -152,7 +172,8 @@ def main():
         if want and sid not in want:
             continue
         img = Image.open(f).convert("RGB")
-        cut = chroma_key(img) if is_greenscreen(img) else add_thin_parts(img, remove(img, session=sess))
+        green = is_greenscreen(img)
+        cut = chroma_key(img) if green else add_thin_parts(img, remove(img, session=sess))
         a = np.asarray(cut)[..., 3] > 128
         ys, xs = np.where(a)
         x0, x1, y0, y1 = np.percentile(xs, 0.3), np.percentile(xs, 99.7), np.percentile(ys, 0.3), np.percentile(ys, 99.7)
@@ -163,7 +184,7 @@ def main():
         sq.paste(cut, (-box[0], -box[1]))
         # soften the generated rim light a touch so it doesn't read as a cyan halo
         sq = sq.filter(ImageFilter.UnsharpMask(radius=2, percent=60, threshold=2))
-        tiles = [stage(sq, T, final=True)] + [stage(sq, n) for n in STAGES]
+        tiles = [stage(sq, T, final=True, no_green=green)] + [stage(sq, n, no_green=green) for n in STAGES]
         strip = Image.new("RGBA", (T * len(tiles), T))
         for i, t in enumerate(tiles):
             strip.paste(t, (i * T, 0))
