@@ -167,7 +167,8 @@ const ROLL_END = -Math.PI / 2 - Math.atan2(N.y, N.x);
 
 interface Star { x: number; y: number; f: number; c: string; ph: number; big: boolean }
 
-export function introScreen(app: HTMLElement, opts: { title: string; sub: string; onEnter: () => void; links?: { id: string; label: string }[]; onLink?: (id: string) => void; returning?: boolean;
+export function introScreen(app: HTMLElement, opts: { title: string; sub: string; onEnter: (to: "go" | "alt") => void;
+  /** A second way in (the star atlas), flying through the same eyepiece. */ alt?: string; links?: { id: string; label: string }[]; onLink?: (id: string) => void; returning?: boolean;
   /** What the game is, in a line (HTML). */ pitch?: string; /** A friend's score from a shared link (HTML). */ note?: string; /** The button's words; a random line if left out. */ go?: string }) {
   app.innerHTML = `
   <main class="intro${opts.returning && !REDUCED ? " zooming" : ""}">
@@ -178,6 +179,7 @@ export function introScreen(app: HTMLElement, opts: { title: string; sub: string
       ${opts.pitch ? `<p class="intro-pitch">${opts.pitch}</p>` : ""}
       ${opts.note ? `<p class="intro-note">${opts.note}</p>` : ""}
       <button class="btn primary intro-go" id="intro-go">${opts.go ?? LINES[Math.floor(Math.random() * LINES.length)]}</button>
+      ${opts.alt ? `<button class="btn intro-alt" id="intro-alt">${opts.alt}</button>` : ""}
     </div>
     ${opts.links?.length ? `<nav class="intro-menu" aria-label="Menu">${opts.links.map((l) => `<button class="btn" data-link="${l.id}">${l.label}</button>`).join("")}</nav>` : ""}
   </main>`;
@@ -657,7 +659,7 @@ export function introScreen(app: HTMLElement, opts: { title: string; sub: string
     document.body.appendChild(cv);
     cv.classList.add("intro-out");
     arrival.forward = true;
-    opts.onEnter();
+    opts.onEnter(target);
     requestAnimationFrame(() => cv.classList.add("gone"));
   };
   const skip = () => {
@@ -670,9 +672,13 @@ export function introScreen(app: HTMLElement, opts: { title: string; sub: string
   root.querySelectorAll<HTMLButtonElement>("[data-link]").forEach((b) => (b.onclick = () => opts.onLink?.(b.dataset.link!)));
   const go = document.getElementById("intro-go") as HTMLButtonElement;
   go.focus({ preventScroll: true });
-  go.onclick = () => {
+  let target: "go" | "alt" = "go";
+  const alt = document.getElementById("intro-alt");
+  if (alt) alt.onclick = () => { target = "alt"; fly(); };
+  go.onclick = () => { target = "go"; fly(); };
+  const fly = () => {
     if (go0 >= 0 || back0 !== -1) return;
-    if (REDUCED) { cancelAnimationFrame(raf); opts.onEnter(); return; }
+    if (REDUCED) { cancelAnimationFrame(raf); opts.onEnter(target); return; }
     go0 = performance.now();
     root.classList.add("zooming");
     // tap again to skip the flight

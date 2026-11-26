@@ -333,16 +333,40 @@ async function openPlay(mode: Run["mode"]) {
   loop();
 }
 
+/**
+ * Change the layout and let the telescope glide from where it was to where it lands (FLIP),
+ * instead of jumping; the controls rise in behind it.
+ */
+function glideScope(change: () => void) {
+  const lens = el.scope.querySelector("canvas") as HTMLCanvasElement;
+  const before = lens.getBoundingClientRect();
+  change();
+  sizeViewer();
+  if (REDUCED_MOTION) return;
+  const after = lens.getBoundingClientRect();
+  const k = before.width / Math.max(1, after.width);
+  const dx = before.left + before.width / 2 - (after.left + after.width / 2), dy = before.top + before.height / 2 - (after.top + after.height / 2);
+  if (Math.abs(dx) < 2 && Math.abs(dy) < 2 && Math.abs(k - 1) < 0.01) return;
+  const play = app.querySelector(".play")!;
+  play.classList.add("gliding");
+  const done = () => { play.classList.remove("gliding"); sizeViewer(); };
+  lens.animate(
+    [{ transform: `translate(${dx}px, ${dy}px) scale(${k})` }, { transform: "none" }],
+    { duration: 700, easing: "cubic-bezier(0.45, 0, 0.2, 1)" },
+  ).finished.then(done, done);
+}
+
 function begin() {
   unlockAudio();
-  el.start.classList.add("hidden");
-  app.querySelector(".play")!.classList.remove("ready");
-  el.controls.classList.remove("hidden");
-  el.hint.classList.remove("hidden");
   const input = el.guess as HTMLInputElement;
-  input.value = "";
-  input.focus(); // inside the click, so phones open the keyboard
-  sizeViewer();
+  glideScope(() => {
+    el.start.classList.add("hidden");
+    app.querySelector(".play")!.classList.remove("ready");
+    el.controls.classList.remove("hidden");
+    el.hint.classList.remove("hidden");
+    input.value = "";
+  });
+  input.focus({ preventScroll: true }); // inside the click, so phones open the keyboard
   lastFresh = 0;
   run.phase = "countdown";
   run.countdownAt = performance.now();
@@ -1525,9 +1549,10 @@ function frontPage(returning = false) {
     note: friend === null ? undefined
       : played ? `<span class="star">★</span>A friend spotted <b>${friend}</b> tonight.<br>You spotted <b>${done!.score}</b>.`
       : `<span class="star">★</span>A friend spotted <b>${friend}</b> tonight.<br>Can you see more?`,
-    go: played ? "OPEN THE STAR ATLAS" : undefined,
-    // the telescope takes you straight to tonight's sky; once it's seen, to the atlas
-    onEnter: () => { document.querySelector(".sheet-wrap")?.remove(); void tonightPack.then(() => (played ? showAtlas() : openPlay("daily"))); },
+    go: played ? "TONIGHT'S LOG" : "TONIGHT'S SKY",
+    alt: "STAR ATLAS",
+    // the main button goes straight to tonight's sky (or its log once seen); the atlas is its own button
+    onEnter: (to) => { document.querySelector(".sheet-wrap")?.remove(); void tonightPack.then(() => (to === "alt" ? showAtlas() : played ? resultsScreen(done!, "daily") : openPlay("daily"))); },
     links: [{ id: "how", label: "HOW TO PLAY" }, { id: "settings", label: "SETTINGS" }, { id: "credits", label: "CREDITS" }],
     onLink: menuSheet,
   });
