@@ -322,8 +322,8 @@ async function openPlay(mode: Run["mode"]) {
   const skyTheme = run.sky[0]?.theme ?? dayTheme(run.puzzle);
   const mystery = !!themeInfo(skyTheme)?.mystery;
   el.start.innerHTML = `
-    <p class="start-kicker">${mode === "daily" ? fmtDate(run.date).toUpperCase() : skyDate && skyDate < localDateKey() ? `${fmtDate(skyDate).toUpperCase()} · NOT SAVED` : "PREVIEW · NOT SAVED"}</p>
-    <h1 class="start-title">${mystery ? "A MYSTERY LINK" : mode === "daily" ? "TONIGHT'S SKY" : "AN OLD SKY"}</h1>
+    <p class="start-kicker">${mode === "daily" ? fmtDate(run.date).toUpperCase() : skyDate ? `${fmtDate(skyDate).toUpperCase()} · ${skyDate > localDateKey() ? "PREVIEW" : "NOT SAVED"}` : "PREVIEW · NOT SAVED"}</p>
+    <h1 class="start-title">${mystery ? "A MYSTERY LINK" : mode === "daily" ? "TONIGHT'S SKY" : skyDate > localDateKey() ? "A SKY TO COME" : "AN OLD SKY"}</h1>
     <p class="start-line">${mystery ? `Name what you see, then guess what links it all for +${CONFIG.linkBonus}.` : "Name what you see before the clock runs out."}<br><small>${CONFIG.runSeconds} seconds · ${run.sky.length} objects · ${isTouch ? "Skip" : "Tab skips"} for ${CONFIG.skipCost}s</small></p>
     <button class="btn primary" id="go">OPEN THE SHUTTER</button>
     ${mode === "daily" && run.streak ? `<p class="small tier-mini">${run.streak}-night streak</p>` : ""}`;
