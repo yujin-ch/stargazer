@@ -990,9 +990,12 @@ function showAtlas(focus = "tonight") {
 }
 
 // tonight's own photo set, if one has been published (falls back to the rotating themes)
-const tonightPack = loadDayPack(localDateKey()).then((objs) => {
+// /?date=YYYY-MM-DD previews that date's pack as an unsaved run (for checking a pack before its night)
+const PACK_DATE = /^\d{4}-\d{2}-\d{2}$/.test(new URLSearchParams(location.search).get("date") ?? "") ? new URLSearchParams(location.search).get("date")! : "";
+if (PACK_DATE) PREVIEW_NIGHT = puzzleNumber(PACK_DATE);
+const tonightPack = loadDayPack(PACK_DATE || localDateKey()).then((objs) => {
   if (!objs.length) return;
-  setDayPack(puzzleNumber(localDateKey()), objs);
+  setDayPack(puzzleNumber(PACK_DATE || localDateKey()), objs);
   matcher = makeMatcher(OBJECTS.map((o) => o.names));
 });
 
