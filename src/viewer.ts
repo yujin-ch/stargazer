@@ -47,6 +47,12 @@ export class Viewer {
   private leaving: Leaving[] = [];
   private sparks: Spark[] = [];
   private flashAt = -1e9;
+  private flashK = 1;
+  private rippleAt = -1e9;
+  private rippleColor = "#fee761";
+  /** Turn of the focus ring: it twists a little more for each object as it is brought into focus. */
+  private turn = 0;
+  private shownCount = 0;
   /** Set by the game each frame. */
   alert = false;
   /** Tonight's sky condition. */
@@ -74,8 +80,17 @@ export class Viewer {
   /** Coarsest photo stage each band starts from (index into the plate: 7 = 6 px ... 3 = 24 px). */
   private static PHOTO_START = [4, 5, 6, 7];
 
-  load(objs: SkyObject[] = []): Promise<void> {
-    return picturesReady(objs);
+  load(objs: SkyObject[] = [], hi = true): Promise<void> {
+    return picturesReady(objs, hi);
+  }
+
+  /** The object's outline only, in shadow: for catalogue entries not found yet. */
+  silhouette(o: SkyObject, scale = 2): HTMLCanvasElement {
+    const c = this.spriteCanvas(o, scale), g = c.getContext("2d")!;
+    g.globalCompositeOperation = "source-atop";
+    g.fillStyle = "#2e2648";
+    g.fillRect(0, 0, c.width, c.height);
+    return c;
   }
 
   /** Draw an object's picture (sharp) into a small canvas, for results lists. */
@@ -138,6 +153,7 @@ export class Viewer {
 
   show(obj: SkyObject, now: number) {
     this.active = { obj, prep: this.prepare(obj), appear: now };
+    this.shownCount++;
   }
 
   /** Warm the cache for the next few objects so there is no hitch. */
@@ -155,10 +171,13 @@ export class Viewer {
 
   dismiss(how: "named" | "skipped" | "zoomed", now: number) {
     const big = how === "zoomed";
-    if (big) this.flashAt = now;
     const kind = big ? "named" : how;
     if (!this.active) return;
     const a = this.active;
+    if (kind === "named") {
+      this.flashAt = now; this.flashK = big ? 1 : 0.45;
+      this.rippleAt = now; this.rippleColor = big ? "#fee761" : this.theme.bandColors[a.obj.band];
+    }
     this.leaving.push({ prep: a.prep, start: now, kind });
     if (kind === "named" && !REDUCED) {
       const scale = this.theme.spriteScale * a.prep.fit, C = this.V / 2;
@@ -217,8 +236,13 @@ export class Viewer {
 
   /** Match the high-resolution layer to the pixel canvas's on-screen size, and clear it. */
   private syncHi(): CanvasRenderingContext2D {
-    const L = this.hiLayer, css = this.canvas.clientWidth, px = Math.round(css * Math.min(2, window.devicePixelRatio || 1));
-    if (L.width !== px) { L.width = L.height = px; L.style.width = L.style.height = `${css}px`; }
+    const L = this.hiLayer, cv = this.canvas, css = cv.clientWidth, px = Math.round(css * Math.min(2, window.devicePixelRatio || 1));
+    if (L.width !== px || L.height !== px) { L.width = px; L.height = px; }
+    // sit exactly on the pixel canvas, wherever the layout has put it
+    const w = `${css}px`, l = `${cv.offsetLeft}px`, t = `${cv.offsetTop}px`;
+    if (L.style.width !== w) L.style.width = L.style.height = w;
+    if (L.style.left !== l) L.style.left = l;
+    if (L.style.top !== t) L.style.top = t;
     const hg = L.getContext("2d")!;
     hg.imageSmoothingEnabled = true;
     hg.imageSmoothingQuality = "high";
@@ -333,7 +357,17 @@ export class Viewer {
       g.arc(V / 2, V / 2, (V / 2) * p, 0, Math.PI * 2);
       g.fill();
     }
-    this.theme.drawFrame(g, now, { alert: this.alert, flash: Math.max(0, 1 - (now - this.flashAt) / 120) });
+    // the focus ring turns as the object comes into focus
+    const target = this.shownCount * 0.6 + (this.active ? ease(this.pullProgress(now)) * 0.8 : 0.8);
+    this.turn += REDUCED ? target - this.turn : (target - this.turn) * 0.12;
+    const rp = (now - this.rippleAt) / 380;
+    this.theme.drawFrame(g, now, {
+      alert: this.alert,
+      flash: this.flashK * Math.max(0, 1 - (now - this.flashAt) / 140),
+      focus: this.turn,
+      ripple: rp >= 0 && rp < 1 && !REDUCED ? rp : -1,
+      rippleColor: this.rippleColor,
+    });
   }
 }
 

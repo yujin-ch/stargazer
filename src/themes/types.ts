@@ -5,8 +5,14 @@
 export interface FrameState {
   /** Under ten seconds left. */
   alert: boolean;
-  /** 0..1 strength of a flash for a zoom answer. */
+  /** 0..1 strength of a flash when something is named (strongest for a zoom answer). */
   flash: number;
+  /** Turn of the focus ring, in radians: it twists as each object is brought into focus. */
+  focus: number;
+  /** A ring of light spreading from the centre after a hit: 0..1 progress, or -1 for none. */
+  ripple: number;
+  /** Colour of that ring. */
+  rippleColor: string;
 }
 
 export interface Theme {

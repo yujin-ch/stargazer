@@ -20,7 +20,7 @@ export interface RunResult {
   /** Longest run of answers without a skip. */
   bestCombo?: number;
 }
-interface Saved { days: Record<string, RunResult>; muted?: boolean; seenHelp?: boolean; catalogue?: string[] }
+interface Saved { days: Record<string, RunResult>; muted?: boolean; seenHelp?: boolean; catalogue?: string[]; noHaptics?: boolean; noAmbience?: boolean }
 
 const KEY = "stargazer:v1";
 
@@ -52,6 +52,12 @@ export const store = {
     return fresh.length;
   },
   get muted() { return !!read().muted; },
+  /** Little vibrations on hits and skips (phones that support it). On unless turned off. */
+  get haptics() { return !read().noHaptics; },
+  set haptics(on: boolean) { const s = read(); s.noHaptics = !on; write(s); },
+  /** Night sounds (wind, crickets) under the game. On unless turned off; silent when muted. */
+  get ambience() { return !read().noAmbience; },
+  set ambience(on: boolean) { const s = read(); s.noAmbience = !on; write(s); },
   set muted(m: boolean) { const s = read(); s.muted = m; write(s); },
   /** Days in a row played up to and including `puzzle`. */
   streakThrough(puzzle: number): number {

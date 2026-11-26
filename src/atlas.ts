@@ -4,6 +4,7 @@
  * past skies, by date; the bright stars at the edges are the menu (community skies come later).
  */
 import { mulberry32 } from "./daily";
+import { meteorShower } from "./themes/pixel-space/sky";
 
 export interface AtlasStar {
   id: string;
@@ -37,6 +38,7 @@ export function atlasScreen(app: HTMLElement, stars: AtlasStar[], opts: { title:
       <canvas class="atlas-sky" id="atlas-sky" width="500" height="500" aria-hidden="true"></canvas>
       <canvas class="atlas-lines" id="atlas-lines" width="500" height="500" aria-hidden="true"></canvas>
     </div>
+    <canvas class="atlas-meteors" id="atlas-meteors" aria-hidden="true"></canvas>
     <header class="atlas-head"><span>${opts.title}</span><small>drag to look around · pinch or scroll to zoom</small></header>
     <div class="atlas-tools">
       <button class="btn" id="atlas-out" aria-label="Zoom out">−</button>
@@ -50,6 +52,7 @@ export function atlasScreen(app: HTMLElement, stars: AtlasStar[], opts: { title:
   const map = document.getElementById("atlas-map")!;
   drawSky(document.getElementById("atlas-sky") as HTMLCanvasElement);
   drawLines(document.getElementById("atlas-lines") as HTMLCanvasElement, stars);
+  if (!REDUCED) shootingStars(document.getElementById("atlas-meteors") as HTMLCanvasElement);
 
   for (const s of stars) {
     const b = document.createElement("button");
@@ -186,9 +189,23 @@ export function atlasScreen(app: HTMLElement, stars: AtlasStar[], opts: { title:
 
 // ---------------------------------------------------------------- map art
 
+/** Now and then a shooting star crosses the atlas (screen-fixed, over the map, under the cards). */
+function shootingStars(c: HTMLCanvasElement) {
+  const g = c.getContext("2d")!, m = meteorShower(2500, 7000);
+  const step = (t: number) => {
+    if (!c.isConnected) return;
+    const w = Math.ceil(c.clientWidth / 3), h = Math.ceil(c.clientHeight / 3);
+    if (c.width !== w || c.height !== h) { c.width = w; c.height = h; }
+    g.clearRect(0, 0, w, h);
+    m.step(g, t, w, h);
+    requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
 function drawSky(c: HTMLCanvasElement) {
   const g = c.getContext("2d")!, N = c.width;
-  g.fillStyle = "#0b0a18"; g.fillRect(0, 0, N, N);
+  g.fillStyle = "#0d0a1a"; g.fillRect(0, 0, N, N);
   const rand = mulberry32(2024);
   // nebula clouds: dithered blobs
   const clouds = [["#2c1f4a", 250, 250, 140], ["#1b2e4a", 120, 140, 90], ["#3a1f3a", 390, 360, 100], ["#1f3a3a", 380, 110, 80], ["#2a2140", 110, 390, 90]] as const;
@@ -213,7 +230,7 @@ function drawSky(c: HTMLCanvasElement) {
     g.fillRect(Math.floor(rand() * N), Math.floor(rand() * N), 1, 1);
   }
   // grid ticks like an old chart
-  g.fillStyle = "#1d2040";
+  g.fillStyle = "#231d3a";
   for (let k = 50; k < N; k += 50) for (let j = 0; j < N; j += 4) { g.fillRect(k, j, 1, 1); g.fillRect(j, k, 1, 1); }
 }
 

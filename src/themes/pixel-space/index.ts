@@ -1,5 +1,6 @@
 import type { Theme, FrameState } from "../types";
 import { blip } from "../chip";
+import { livingSky } from "./sky";
 
 const V = 120; // logical viewer size
 const R = 52; // inner radius of the eyepiece glass
@@ -25,6 +26,19 @@ function disc(ctx: CanvasRenderingContext2D, r: number, color: string) {
   ctx.fill();
 }
 
+/** Lighten (k > 1) or darken (k < 1) a hex colour. */
+function shade(hex: string, k: number): string {
+  const n = parseInt(hex.slice(1), 16);
+  const ch = (v: number) => Math.max(0, Math.min(255, Math.round(k > 1 ? v + (255 - v) * (k - 1) : v * k)));
+  return `rgb(${ch(n >> 16)},${ch((n >> 8) & 255)},${ch(n & 255)})`;
+}
+
+// the eyepiece is a brass tube: dark inner lip, bright bevel, knurled focus ring, outer bevel, shadow
+const BRASS = ["#2a1a0c", "#f2d38a", "#a8742e", "#a8742e", "#a8742e", "#a8742e", "#d6a656", "#3a2410"];
+// under ten seconds the brass heats to copper-red
+const HOT = ["#2a0c0c", "#ffc2a8", "#b0402e", "#b0402e", "#b0402e", "#b0402e", "#e0704e", "#3a1010"];
+const LIGHT = -2.3; // light falls from the upper left
+
 const rimCache = new Map<boolean, HTMLCanvasElement>();
 function rim(alert: boolean): HTMLCanvasElement {
   const hit = rimCache.get(alert);
@@ -32,35 +46,60 @@ function rim(alert: boolean): HTMLCanvasElement {
   const c = document.createElement("canvas");
   c.width = c.height = V;
   const ctx = c.getContext("2d")!;
-  const ring = (r0: number, r1: number, col: string) => {
-    ctx.fillStyle = col;
-    for (let y = -r1; y < r1; y++) {
-      const yy = (y + 0.5) * (y + 0.5);
-      const wo = Math.floor(Math.sqrt(Math.max(0, r1 * r1 - yy)));
-      const wi = yy < r0 * r0 ? Math.floor(Math.sqrt(r0 * r0 - yy)) : 0;
-      if (wo <= wi) continue;
-      ctx.fillRect(C - wo, C + y, wo - wi, 1);
-      ctx.fillRect(C + wi, C + y, wo - wi, 1);
-    }
-  };
-  ring(R, R + 2, "#181425");
-  ring(R + 2, R + 5, alert ? "#a22633" : "#5a6988");
-  ring(R + 5, R + 6, alert ? "#e43b44" : "#8b9bb4");
-  ring(R + 6, R + 7, "#3a4466");
-  ring(R + 7, R + 8, "#181425");
-  // focus-ring notches, like the grip on a real eyepiece
-  ctx.fillStyle = alert ? "#73172a" : "#3a4466";
-  for (let a = 0; a < Math.PI * 2; a += Math.PI / 18) {
-    ctx.fillRect(Math.round(C + Math.cos(a) * (R + 3.5)), Math.round(C + Math.sin(a) * (R + 3.5)), 1, 1);
+  const cols = alert ? HOT : BRASS;
+  for (let y = 0; y < V; y++) for (let x = 0; x < V; x++) {
+    const dx = x + 0.5 - C, dy = y + 0.5 - C, d = Math.hypot(dx, dy);
+    if (d < R || d >= R + 8) continue;
+    const band = Math.floor(d - R), a = Math.atan2(dy, dx);
+    const light = Math.cos(a - LIGHT);
+    // metal catches the light on one side and falls into shadow on the other; the lips stay dark
+    const k = band === 0 || band === 7 ? 1 + light * 0.15 : light > 0 ? 1 + light * 0.45 : 1 + light * 0.45;
+    ctx.fillStyle = shade(cols[band], k);
+    ctx.fillRect(x, y, 1, 1);
   }
-  // highlight glint on the rim
-  ctx.fillStyle = "#c0cbdc";
-  for (let a = 3.6; a < 4.4; a += 0.03) ctx.fillRect(Math.round(C + Math.cos(a) * (R + 3.5)), Math.round(C + Math.sin(a) * (R + 3.5)), 1, 1);
-  // glass reflection
-  ctx.fillStyle = "rgba(255,255,255,0.10)";
+  // glass reflection, a soft arc on the upper left
+  ctx.fillStyle = "rgba(255, 240, 210, 0.10)";
   for (let a = 3.75; a < 4.25; a += 0.02) ctx.fillRect(Math.round(C + Math.cos(a) * (R - 6)), Math.round(C + Math.sin(a) * (R - 6)), 2, 1);
+  ctx.fillStyle = "rgba(255, 240, 210, 0.06)";
+  for (let a = 3.9; a < 4.1; a += 0.02) ctx.fillRect(Math.round(C + Math.cos(a) * (R - 10)), Math.round(C + Math.sin(a) * (R - 10)), 1, 1);
   rimCache.set(alert, c);
   return c;
+}
+
+/** The glass darkens toward its edge, like looking down a tube. */
+let vignette: HTMLCanvasElement | null = null;
+function glassVignette(): HTMLCanvasElement {
+  if (vignette) return vignette;
+  const c = document.createElement("canvas");
+  c.width = c.height = V;
+  const ctx = c.getContext("2d")!;
+  for (let y = 0; y < V; y++) for (let x = 0; x < V; x++) {
+    const d = Math.hypot(x + 0.5 - C, y + 0.5 - C);
+    if (d >= R || d < R - 7) continue;
+    // stepped, so it stays pixel-art
+    const a = [0.06, 0.1, 0.14, 0.2, 0.28, 0.36, 0.45][Math.floor(d - (R - 7))];
+    ctx.fillStyle = `rgba(10, 6, 16, ${a})`;
+    ctx.fillRect(x, y, 1, 1);
+  }
+  vignette = c;
+  return c;
+}
+
+/** The knurled grip of the focus ring: drawn each frame so it can turn. */
+function knurl(ctx: CanvasRenderingContext2D, turn: number, alert: boolean) {
+  const n = 40;
+  for (let i = 0; i < n; i++) {
+    const a = (i / n) * Math.PI * 2 + turn;
+    const light = Math.cos(a - LIGHT);
+    ctx.fillStyle = alert ? (light > 0 ? "#6a1c14" : "#3a0c08") : light > 0 ? "#6b4512" : "#3d2408";
+    for (let r = R + 2.5; r < R + 6; r += 1) ctx.fillRect(Math.round(C + Math.cos(a) * r - 0.5), Math.round(C + Math.sin(a) * r - 0.5), 1, 1);
+    // a bright edge on the lit side of each ridge
+    if (light > 0.2) {
+      ctx.fillStyle = alert ? "rgba(255, 200, 170, 0.55)" : "rgba(255, 236, 180, 0.55)";
+      const b = a + 0.035;
+      ctx.fillRect(Math.round(C + Math.cos(b) * (R + 4) - 0.5), Math.round(C + Math.sin(b) * (R + 4) - 0.5), 1, 1);
+    }
+  }
 }
 
 export const pixelSpace: Theme = {
@@ -77,9 +116,9 @@ export const pixelSpace: Theme = {
 
   drawBackdrop(ctx, t) {
     ctx.clearRect(0, 0, V, V);
-    disc(ctx, R, "#181425");
-    disc(ctx, R - 6, "#1b1a33");
-    disc(ctx, R - 14, "#202243");
+    disc(ctx, R, "#17112a");
+    disc(ctx, R - 6, "#1b1533");
+    disc(ctx, R - 14, "#211a3f");
     for (const s of innerStars) {
       const x = Math.floor((s.x + t * 0.002) % V);
       const tw = (Math.sin(t / 500 + s.p * 6.28) + 1) / 2;
@@ -91,20 +130,32 @@ export const pixelSpace: Theme = {
     ctx.globalAlpha = 1;
     // a soft moonlit halo so dark objects still read
     ctx.globalAlpha = 0.16;
-    disc(ctx, 40, "#8b9bb4");
+    disc(ctx, 40, "#9a8fb4");
     ctx.globalAlpha = 0.14;
-    disc(ctx, 32, "#c0cbdc");
+    disc(ctx, 32, "#e0d2dc");
     ctx.globalAlpha = 1;
   },
 
   drawFrame(ctx, t, state: FrameState) {
     if (state.flash > 0) {
-      ctx.globalAlpha = 0.4 * state.flash;
-      disc(ctx, R, "#ffffff");
+      ctx.globalAlpha = 0.45 * state.flash;
+      disc(ctx, R, "#fff6dc");
       ctx.globalAlpha = 1;
     }
+    // a ring of light spreads out from the centre after a hit
+    if (state.ripple >= 0 && state.ripple < 1) {
+      const r = 8 + state.ripple * (R - 8);
+      ctx.globalAlpha = (1 - state.ripple) * 0.85;
+      ctx.strokeStyle = state.rippleColor;
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(C, C, r, 0, Math.PI * 2); ctx.stroke();
+      ctx.globalAlpha = (1 - state.ripple) * 0.35;
+      ctx.beginPath(); ctx.arc(C, C, r * 0.7, 0, Math.PI * 2); ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+    ctx.drawImage(glassVignette(), 0, 0);
     // reticle ticks at the compass points
-    ctx.fillStyle = "#3a4466";
+    ctx.fillStyle = "#4a3a5c";
     ctx.fillRect(C - 0.5, C - R + 3, 1, 5);
     ctx.fillRect(C - 0.5, C + R - 8, 1, 5);
     ctx.fillRect(C - R + 3, C - 0.5, 5, 1);
@@ -114,43 +165,14 @@ export const pixelSpace: Theme = {
     ctx.globalCompositeOperation = "destination-in";
     disc(ctx, R, "#000");
     ctx.restore();
-    // metal rim: drawn once per colour state into an offscreen canvas, then stamped each frame
+    // brass rim: drawn once per colour state into an offscreen canvas, then stamped each frame; the grip turns on top
     const pulse = state.alert && Math.floor(t / 500) % 2 === 0;
     ctx.drawImage(rim(pulse), 0, 0);
+    knurl(ctx, state.focus, pulse);
   },
 
   startPageBackground(canvas) {
-    const g = canvas.getContext("2d")!;
-    const scale = 3;
-    let stars: { x: number; y: number; p: number; c: string; s: number }[] = [];
-    const resize = () => {
-      canvas.width = Math.ceil(window.innerWidth / scale);
-      canvas.height = Math.ceil(window.innerHeight / scale);
-      const n = Math.floor((canvas.width * canvas.height) / 90);
-      stars = Array.from({ length: n }, (_, i) => ({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        p: Math.random() * 6.28,
-        c: ["#5a6988", "#8b9bb4", "#c0cbdc", "#2ce8f5", "#b55088", "#fee761"][i % 6],
-        s: Math.random() < 0.06 ? 2 : 1,
-      }));
-    };
-    resize();
-    window.addEventListener("resize", resize);
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const frame = (t: number) => {
-      g.fillStyle = "#0e0d1f";
-      g.fillRect(0, 0, canvas.width, canvas.height);
-      for (const s of stars) {
-        const tw = reduce ? 1 : (Math.sin(t / 900 + s.p) + 1) / 2;
-        g.globalAlpha = 0.25 + 0.75 * tw;
-        g.fillStyle = s.c;
-        g.fillRect(Math.floor(s.x), Math.floor(s.y), s.s, s.s);
-      }
-      g.globalAlpha = 1;
-      if (!reduce) requestAnimationFrame(frame);
-    };
-    requestAnimationFrame(frame);
+    livingSky(canvas);
   },
 
   sounds: {

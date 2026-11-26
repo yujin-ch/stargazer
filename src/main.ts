@@ -5,7 +5,7 @@ import { OBJECTS, BY_ID, loadDayPack, loadPackIndex, shownNames, themeName, them
 import { makeMatcher, normalize, forms as formsOf, linkMatches } from "./match";
 import { dailySky, setDayPack, notePackNight, practiceSky, localDateKey, puzzleNumber, mulberry32, dayTheme, dayCondition } from "./daily";
 import { theme } from "./themes";
-import { setMuted, unlockAudio } from "./themes/chip";
+import { setMuted, unlockAudio, setAmbience } from "./themes/chip";
 import { Viewer } from "./viewer";
 import { store, type ItemResult, type RunResult } from "./storage";
 import { crowdScores, beatShare, liveCrowd, MIN_LIVE } from "./crowd";
@@ -29,6 +29,9 @@ const longerNames = (o: SkyObject) => {
 const isTouch = window.matchMedia("(pointer: coarse)").matches;
 const SITE_URL = location.origin + location.pathname;
 setMuted(store.muted);
+setAmbience(store.ambience);
+// browsers only allow sound after a tap or key: the first one wakes the night sounds
+for (const ev of ["pointerdown", "keydown"]) window.addEventListener(ev, () => unlockAudio(), { once: true, capture: true });
 theme.startPageBackground(document.getElementById("sky") as HTMLCanvasElement);
 document.title = theme.title;
 
@@ -118,6 +121,8 @@ function playScreen() {
   for (const id of ["score", "time", "count", "scope", "overlay", "pops", "label", "band", "bonus", "bonusbar", "controls", "guess", "clear", "skip", "hint", "start", "mute", "combo", "backbtn"])
     el[id] = document.getElementById(id)!;
   viewer = new Viewer(document.getElementById("eyepiece") as HTMLCanvasElement, theme);
+  // the lens follows the space it has (the label row and keyboard change it mid-run)
+  if (window.ResizeObserver) new ResizeObserver(() => sizeViewer()).observe(el.scope);
   renderMute();
   wireInput();
   fitViewport();
@@ -154,6 +159,7 @@ function wireInput() {
     if (input.value) run.graceUntil = 0; // something was kept: never clear text the player can see
     if (input.value.trim()) run.attempt = input.value;
     onTyped(input);
+    warmth(input.value);
   });
   input.addEventListener("keydown", (e) => {
     if (e.key === "Tab") { e.preventDefault(); if (run.phase === "playing") skip(); }
@@ -327,6 +333,7 @@ function showObject(now: number) {
   }
   viewer.show(obj, now);
   viewer.preload(run.sky.slice(run.i + 1, run.i + 3));
+  warmth((el.guess as HTMLInputElement).value);
   run.attempt = "";
   el.label.textContent = themeLabel(obj.theme).toUpperCase();
   const band = CONFIG.bands[obj.band];
@@ -355,8 +362,9 @@ function named(obj: SkyObject, typed: string) {
   run.graceText = typed;
   run.graceDropped = "";
   el.score.textContent = String(run.score);
-  el.score.parentElement!.classList.remove("bump"); void el.score.offsetWidth; el.score.parentElement!.classList.add("bump");
   pop(obj.names[0], `+${points}${zoomed ? " ZOOM" : ""}`, zoomed ? "gold" : "");
+  flyStar(zoomed ? "#fee761" : theme.bandColors[obj.band], zoomed);
+  buzz(zoomed ? [18, 40, 28] : [12]);
   theme.sounds.correct(zoomed, run.combo);
   viewer.dismiss(zoomed ? "zoomed" : "named", now);
   announce(`${obj.names[0]}, ${points} points`);
@@ -382,6 +390,7 @@ function skip() {
   renderCombo(broke);
   if (broke) theme.sounds.comboBreak();
   pop(obj.names[0], `-${CONFIG.skipCost}s`, "red");
+  buzz([40]);
   el.time.classList.remove("hit"); void el.time.offsetWidth; el.time.classList.add("hit");
   theme.sounds.skip();
   viewer.dismiss("skipped", now);
@@ -440,13 +449,57 @@ function pop(name: string, points: string, cls: string) {
   p.className = `pop ${cls}`;
   const n = document.createElement("span");
   n.className = "pop-name";
-  n.textContent = name.toUpperCase();
+  n.setAttribute("aria-hidden", "true");
+  // each letter lights up in turn
+  [...name.toUpperCase()].forEach((ch, i) => {
+    const l = document.createElement("i");
+    l.textContent = ch;
+    l.style.animationDelay = `${i * 28}ms`;
+    n.appendChild(l);
+  });
   const pts = document.createElement("span");
   pts.className = "pop-pts";
   pts.textContent = points;
   p.append(n, pts);
   el.pops.appendChild(p);
   setTimeout(() => p.remove(), 900);
+}
+
+const REDUCED_MOTION = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/** A little star leaves the lens and flies up into the score, which bumps when it lands. */
+function flyStar(color: string, big: boolean) {
+  const bump = () => { el.score.parentElement!.classList.remove("bump"); void el.score.offsetWidth; el.score.parentElement!.classList.add("bump"); };
+  const cv = el.scope.querySelector("canvas");
+  if (REDUCED_MOTION || !cv || !("animate" in Element.prototype)) return bump();
+  const from = cv.getBoundingClientRect(), to = el.score.getBoundingClientRect();
+  const s = document.createElement("i");
+  s.className = `fly-star${big ? " big" : ""}`;
+  s.style.setProperty("--c", color);
+  document.body.appendChild(s);
+  const x0 = from.left + from.width / 2, y0 = from.top + from.height / 2, x1 = to.left + to.width / 2, y1 = to.top + to.height / 2;
+  // an arc: out and up, then into the score
+  const mx = (x0 + x1) / 2 + (x0 > x1 ? 40 : -40), my = Math.min(y0, y1) - 30;
+  const a = s.animate([
+    { transform: `translate(${x0}px, ${y0}px) scale(1.4)`, opacity: 1 },
+    { transform: `translate(${mx}px, ${my}px) scale(1)`, opacity: 1, offset: 0.55 },
+    { transform: `translate(${x1}px, ${y1}px) scale(0.5)`, opacity: 0.9 },
+  ], { duration: 480, easing: "cubic-bezier(0.3, 0, 0.6, 1)" });
+  a.onfinish = () => { s.remove(); bump(); };
+}
+
+/** A small tap on phones that can do it (Android); silent everywhere else. */
+function buzz(pattern: number[]) {
+  if (!isTouch || !store.haptics || REDUCED_MOTION) return;
+  try { navigator.vibrate?.(pattern); } catch { /* not allowed */ }
+}
+
+/** "Warmer": the entry glows while what you've typed is the start of a name for this object. */
+function warmth(value: string) {
+  const obj = run?.sky[run.i];
+  const n = normalize(value);
+  const warm = !!obj && run.phase === "playing" && n.length >= 2 && forms(obj).some((f) => f.startsWith(n));
+  el.guess.parentElement!.classList.toggle("warm", warm);
 }
 
 function renderCombo(broke: boolean) {
@@ -636,6 +689,43 @@ function nextSkyIn(): string {
   return h ? `${h}h ${String(m).padStart(2, "0")}m` : m ? `${m}m` : "a moment";
 }
 
+/** The moon climbs over the hill as the next sky gets closer; the countdown ticks every second. */
+function moonrise() {
+  const c = document.getElementById("moonrise") as HTMLCanvasElement | null, label = document.getElementById("next-in");
+  if (!c || !label) return;
+  const g = c.getContext("2d")!, W = c.width, H = c.height;
+  const paint = () => {
+    if (!c.isConnected) { clearInterval(timer); return; }
+    const now = new Date(), start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const next = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+    const frac = (now.getTime() - start.getTime()) / (next.getTime() - start.getTime());
+    const ms = next.getTime() - now.getTime();
+    const h = Math.floor(ms / 3600000), m = Math.floor((ms % 3600000) / 60000), s = Math.floor((ms % 60000) / 1000);
+    label.textContent = `${h ? `${h}h ` : ""}${String(m).padStart(h ? 2 : 1, "0")}m ${String(s).padStart(2, "0")}s`;
+    g.clearRect(0, 0, W, H);
+    // a few stars
+    g.fillStyle = "#5a5078";
+    for (let i = 0; i < 18; i++) g.fillRect((i * 37) % W, (i * 23) % (H - 12), 1, 1);
+    // the moon rises from behind the hill toward the top as midnight nears
+    const mx = Math.round(18 + frac * (W - 36)), my = Math.round(H + 4 - frac * (H - 2));
+    g.fillStyle = "rgba(242, 211, 138, 0.18)";
+    g.beginPath(); g.arc(mx, my, 9, 0, Math.PI * 2); g.fill();
+    g.fillStyle = "#f2e6c0";
+    g.beginPath(); g.arc(mx, my, 5, 0, Math.PI * 2); g.fill();
+    g.fillStyle = "#d8c89a"; g.fillRect(mx - 2, my - 1, 2, 2); g.fillRect(mx + 1, my + 2, 1, 1);
+    // the hill, with a tiny telescope waiting on top
+    for (let x = 0; x < W; x++) {
+      const y = Math.round(H - 6 - Math.sin((x / W) * Math.PI) * 6);
+      g.fillStyle = "#1b1630"; g.fillRect(x, y, 1, H - y);
+      g.fillStyle = "#3a2f52"; g.fillRect(x, y, 1, 1);
+    }
+    g.fillStyle = "#c99a4a";
+    g.fillRect(W / 2 - 1, H - 15, 4, 1); g.fillRect(W / 2 + 2, H - 16, 2, 1); g.fillRect(W / 2, H - 14, 1, 3); g.fillRect(W / 2 - 1, H - 12, 1, 1); g.fillRect(W / 2 + 1, H - 12, 1, 1);
+  };
+  const timer = window.setInterval(paint, 1000);
+  paint();
+}
+
 async function resultsScreen(r: RunResult, mode: Run["mode"]) {
   cancelAnimationFrame(raf);
   if (!viewer) { viewer = new Viewer(document.createElement("canvas"), theme); }
@@ -669,6 +759,7 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
       <div class="final"><span>${r.score}</span><small>POINTS${r.clearedBonus ? ` · SKY CLEARED +${r.clearedBonus}` : ""}</small></div>
       ${r.partial ? `<p class="small">This run was cut short, so it counts as it stood.</p>` : ""}
       ${mystery ? `<section class="link-box${r.link ? (r.link.ok ? " found" : " missed") : ""}" id="link-box"></section>` : ""}
+      <p class="constellation" id="constellation"></p>
       <canvas class="chart" id="chart" aria-label="Star chart of your run, with tonight's crowd on the hill"></canvas>
       <div class="hill-axis"><span>◂ fewer points</span><span>more points ▸</span></div>
       <p class="hill-line" id="hill-line"></p>
@@ -689,8 +780,8 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
     </div>
     <p class="toast" id="toast" role="status"></p>
     <section class="come-back">
-      ${daily ? `<p>Next sky in <b>${nextSkyIn()}</b></p><p class="small">${tomorrow}</p>` : ""}
-      <p class="small">Catalogue <b>${cat}</b> / ${OBJECTS.length} objects${lastFresh ? ` <span class="new">+${lastFresh} new</span>` : ""}</p>
+      ${daily ? `<div class="moonrise"><canvas id="moonrise" width="120" height="34" aria-hidden="true"></canvas><p>Next sky in <b id="next-in">${nextSkyIn()}</b></p></div><p class="small">${tomorrow}</p>` : ""}
+      <p class="small"><button class="link-btn" id="to-cat">Catalogue <b>${cat}</b> / ${OBJECTS.length} objects</button>${lastFresh ? ` <span class="new">+${lastFresh} new</span>` : ""}</p>
       ${daily ? `<p class="small">Best ${stats.best} · Streak ${stats.streak}</p>` : ""}
     </section>
     <h2>WHAT YOU SAW <small>tap for other names</small></h2>
@@ -699,14 +790,36 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
     ${import.meta.env.VITE_PREVIEW_TOOLS ? `<section class="preview-tools"><h2>PREVIEW ONLY <small>try other nights, not saved</small></h2><div class="actions">${[1, 2, 3, 4, 5, 6].map((n) => `<button class="btn" data-night="${n}">#${n} ${themeName(dayTheme(n))}<br><small>${dayCondition(n).name}</small></button>`).join("")}</div></section>` : ""}
   </main>`;
   lastFresh = 0;
+  moonrise();
   const chart = document.getElementById("chart") as HTMLCanvasElement;
   let standing: Standing | null = null;
   const sharePreview = () => { const pre = document.getElementById("share-preview"); if (pre) pre.textContent = shareText(r, theme, SITE_URL, standing); };
+  const best = bestFind(r);
+  const bestObj = best >= 0 ? BY_ID.get(r.items[best].id) : undefined;
+  document.getElementById("constellation")!.innerHTML = bestObj
+    ? `<small>TONIGHT YOU DREW</small><b>THE ${esc(bestObj.names[0].toUpperCase())}</b><small>a constellation named for your best find</small>`
+    : `<small>TONIGHT YOU DREW</small><b>A CLOUDY SKY</b>`;
+  let drawn = false, animating = false, rankNow = 0;
   const paintHill = (scores: number[], live: boolean) => {
     const others = 12, beat = beatShare(scores, r.score - (r.link?.bonus ?? 0)), rank = Math.round(beat * others);
+    rankNow = rank;
     standing = { beat, live, players: scores.length };
     sharePreview();
-    drawChart(chart, r, rank, others);
+    if (animating) { /* the running draw picks up the new rank */ }
+    else if (drawn || REDUCED_MOTION || !r.items.length) drawChart(chart, r, rank, others, best);
+    else {
+      // the constellation draws itself, star by star
+      animating = true;
+      const t0 = performance.now(), per = Math.min(110, 1400 / r.items.length);
+      const step = (now: number) => {
+        const k = Math.min(r.items.length, Math.floor((now - t0) / per) + 1);
+        drawChart(chart, r, rankNow, others, best, k);
+        if (k < r.items.length && chart.isConnected) requestAnimationFrame(step);
+        else animating = false;
+      };
+      requestAnimationFrame(step);
+    }
+    drawn = true;
     const median = scores[Math.floor(scores.length / 2)];
     document.getElementById("hill-line")!.innerHTML =
       (rank >= others ? `You out-spotted <b>every stargazer</b> on the hill tonight.`
@@ -792,6 +905,7 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
     toast(res === "copied" ? "Copied! Paste it to a friend or group chat." : res === "shared" ? "" : "Couldn't share. Try again.");
   });
   document.getElementById("to-atlas")!.onclick = () => showAtlas();
+  document.getElementById("to-cat")!.onclick = () => void catalogueScreen(() => void resultsScreen(r, mode));
   document.getElementById("back")?.addEventListener("click", () => resultsScreen(store.today(localDateKey())!, "daily"));
   document.getElementById("daily")?.addEventListener("click", () => { PREVIEW_NIGHT = 0; void openPlay("daily"); });
   app.querySelectorAll<HTMLButtonElement>("[data-night]").forEach((b) => (b.onclick = () => { PREVIEW_NIGHT = Number(b.dataset.night); void openPlay("practice"); }));
@@ -803,7 +917,18 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
  * and each star takes its difficulty colour. Below, a hill of stargazers lined up by score
  * (fewest points on the left), with you standing among them in gold.
  */
-function drawChart(c: HTMLCanvasElement, r: RunResult, rank: number, others: number) {
+/** Your best find of the night: the hardest object named, a zoom answer beating a plain one. -1 if none. */
+function bestFind(r: RunResult): number {
+  let best = -1, bestScore = -1;
+  r.items.forEach((it, i) => {
+    if (it.outcome === "skipped") return;
+    const v = (BY_ID.get(it.id)?.band ?? 0) * 100 + (it.outcome === "zoomed" ? 50 : 0) + it.points;
+    if (v > bestScore) { bestScore = v; best = i; }
+  });
+  return best;
+}
+
+function drawChart(c: HTMLCanvasElement, r: RunResult, rank: number, others: number, best: number, upto = r.items.length) {
   const W = 160, H = 112, SKY = 72;
   c.width = W;
   c.height = H;
@@ -835,17 +960,17 @@ function drawChart(c: HTMLCanvasElement, r: RunResult, rank: number, others: num
     return { x: Math.round(px), y: Math.round(py) };
   });
   g.fillStyle = "#2b4a6f";
-  for (let i = 1; i < r.items.length; i++) {
+  for (let i = 1; i < Math.min(upto, r.items.length); i++) {
     if (r.items[i].outcome === "skipped" || r.items[i - 1].outcome === "skipped") continue;
     line(g, pos[i - 1].x, pos[i - 1].y, pos[i].x, pos[i].y, 2);
   }
-  let brightest = -1;
+  const brightest = upto >= r.items.length ? best : -1;
   r.items.forEach((it, i) => {
+    if (i >= upto) return;
     const { x, y } = pos[i];
     const o = BY_ID.get(it.id);
     const col = theme.bandColors[o?.band ?? 0];
     if (it.outcome === "skipped") { g.fillStyle = "#3a4466"; g.fillRect(x, y, 1, 1); return; }
-    if (brightest < 0 || (o?.band ?? 0) > (BY_ID.get(r.items[brightest].id)?.band ?? 0)) brightest = i;
     g.fillStyle = col;
     if (it.outcome === "zoomed") {
       // a bigger four-point sparkle with a gold heart
@@ -877,6 +1002,12 @@ function drawChart(c: HTMLCanvasElement, r: RunResult, rank: number, others: num
     const facing = x < W / 2 ? 1 : -1; // everyone leans in toward the middle of the sky
     stargazer(g, x, base, facing, isYou ? "#fee761" : "#5a6988", isYou ? "#feae34" : "#3a4466", (k * 7) % 3);
     if (isYou) you = { x, y: base };
+  }
+  // your best find gets a halo: the star your constellation is named for
+  if (brightest >= 0) {
+    const { x, y } = pos[brightest];
+    g.fillStyle = "rgba(254, 231, 97, 0.7)";
+    for (const [dx, dy] of [[-4, 0], [4, 0], [0, -4], [0, 4], [-3, -3], [3, 3], [-3, 3], [3, -3]]) g.fillRect(x + dx, y + dy, 1, 1);
   }
   // your beam up to your hardest catch, and a marker star over your head
   if (brightest >= 0) {
@@ -911,6 +1042,80 @@ function stargazer(g: CanvasRenderingContext2D, x: number, base: number, dir: nu
 function line(g: CanvasRenderingContext2D, x0: number, y0: number, x1: number, y1: number, every = 1) {
   const n = Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0));
   for (let k = 0; k <= n; k += every) g.fillRect(Math.round(x0 + ((x1 - x0) * k) / n), Math.round(y0 + ((y1 - y0) * k) / n), 1, 1);
+}
+
+// ---------------------------------------------------------------- catalogue: the collection book
+
+/** Every object you've ever named, by theme; the rest wait as shadows. Future nights' photos are never loaded. */
+async function catalogueScreen(back: () => void) {
+  cancelAnimationFrame(raf);
+  if (!viewer) viewer = new Viewer(document.createElement("canvas"), theme);
+  app.innerHTML = `<main class="results catalogue"><p class="small">Opening the catalogue…</p></main>`;
+  const today = localDateKey();
+  const idx = await loadPackIndex();
+  for (const k of Object.keys(idx).filter((k) => k <= today)) await usePack(k);
+  const objs = OBJECTS.filter((o) => { const d = packDate(o); return !d || d <= today; });
+  await viewer.load(objs, false);
+  const seen = store.catalogue();
+  const found = objs.filter((o) => seen.has(o.id)).length;
+  const groups = new Map<string, { label: string; objs: SkyObject[] }>();
+  for (const o of objs) {
+    const d = packDate(o), key = d ? `pack:${d}` : o.theme;
+    if (!groups.has(key)) groups.set(key, { label: d ? `Photographs · ${fmtDate(d)}` : themeName(o.theme), objs: [] });
+    groups.get(key)!.objs.push(o);
+  }
+  // packs (newest first), then the themes with the most found
+  const order = [...groups.entries()].sort(([ka, a], [kb, b]) => {
+    const pa = ka.startsWith("pack:"), pb = kb.startsWith("pack:");
+    if (pa !== pb) return pa ? -1 : 1;
+    if (pa) return kb.localeCompare(ka);
+    const fa = a.objs.filter((o) => seen.has(o.id)).length / a.objs.length, fb = b.objs.filter((o) => seen.has(o.id)).length / b.objs.length;
+    return fb - fa || a.label.localeCompare(b.label);
+  });
+  app.innerHTML = `
+  <main class="results catalogue">
+    <button class="btn back-btn" id="cat-back" type="button">&lt; BACK</button>
+    <header class="cat-head">
+      <h1>CATALOGUE</h1>
+      <p class="cat-count"><b>${found}</b> / ${objs.length} found</p>
+      <div class="cat-bar" aria-hidden="true"><i style="width:${(found / Math.max(1, objs.length)) * 100}%"></i></div>
+      <p class="small">Everything you name goes in the book. Shadows are still out there.</p>
+    </header>
+    <div id="cat-groups"></div>
+  </main>`;
+  const wrap = document.getElementById("cat-groups")!;
+  for (const [, grp] of order) {
+    const have = grp.objs.filter((o) => seen.has(o.id)).length;
+    const d = document.createElement("details");
+    d.className = "cat-group";
+    if (have) d.open = true;
+    d.innerHTML = `<summary><span>${esc(grp.label)}</span><small>${have} / ${grp.objs.length}</small><i class="cat-mini"><i style="width:${(have / grp.objs.length) * 100}%"></i></i></summary>`;
+    const ul = document.createElement("ul");
+    ul.className = "cat-grid";
+    // found first, by difficulty; then shadows
+    const sorted = grp.objs.slice().sort((a, b) => Number(seen.has(b.id)) - Number(seen.has(a.id)) || a.band - b.band);
+    for (const o of sorted) {
+      const got = seen.has(o.id);
+      const li = document.createElement("li");
+      li.className = got ? "got" : "shadow";
+      li.style.setProperty("--band", theme.bandColors[o.band]);
+      li.appendChild(got ? viewer.spriteCanvas(o, 2) : viewer.silhouette(o, 2));
+      const name = document.createElement("span");
+      name.textContent = got ? o.names[0] : "???";
+      li.appendChild(name);
+      if (got && o.note) { li.title = o.note; li.tabIndex = 0; }
+      ul.appendChild(li);
+    }
+    d.appendChild(ul);
+    wrap.appendChild(d);
+  }
+  document.getElementById("cat-back")!.onclick = back;
+  window.scrollTo(0, 0);
+}
+
+/** The date of the pack an object came from, if any ("photos:2026-11-26/okapi" → "2026-11-26"). */
+function packDate(o: SkyObject): string {
+  return /:(\d{4}-\d{2}-\d{2})\//.exec(o.id)?.[1] ?? "";
 }
 
 // ---------------------------------------------------------------- boot
@@ -956,35 +1161,27 @@ function showAtlas(focus = "tonight") {
   stars.push({
     id: "tonight", x: 1000, y: 1000, size: "huge", color: "#fee761",
     label: "TONIGHT'S SKY",
-    sub: done && !done.partial ? `Seen · ${done.score} pts` : `${themeLabel(tonightTheme)}${CONFIG.conditionsOn ? ` · ${cond.name}` : ""}`,
+    sub: done && !done.partial ? `${done.score} pts · next sky in ${nextSkyIn()}` : `${themeLabel(tonightTheme)}${CONFIG.conditionsOn ? ` · ${cond.name}` : ""}`,
     open: () => (done ? resultsScreen(done, "daily") : openPlay("daily")),
   });
-  // past skies: their own patch of sky below tonight, a small grid of stars by date, newest first
-  const PAST_COLS = 3, PAST_ROWS = 4;
-  const shortDate = (key: string) => new Date(key + "T12:00:00").toLocaleDateString(undefined, { month: "short", day: "numeric" }).toUpperCase();
-  for (let i = 0; i < PAST_COLS * PAST_ROWS; i++) {
-    const n = today - 1 - i;
-    if (n < 1) break;
-    const key = dateKeyOfNight(n), r = store.today(key), id = dayTheme(n), info = themeInfo(id);
-    const name = info?.mystery && !r?.link ? "Mystery link" : themeName(id);
-    stars.push({
-      id: `past:${key}`, x: 860 + (i % PAST_COLS) * 140, y: 1250 + Math.floor(i / PAST_COLS) * 100, size: "small",
-      color: r ? "#fee761" : "#8b9bb4", dim: !r,
-      label: shortDate(key), sub: r ? `${r.score} pts` : "missed",
-      card: () => `<h2>${esc(fmtDate(key))}</h2>
-        <p>${esc(name)}</p>
-        <p class="small">${r ? `You scored <b>${r.score}</b>, ${r.named} spotted.` : "You missed this night. You can still look, but it won't count."}</p>
-        <div class="card-actions">${r ? `<button class="btn primary" data-log>YOUR LOG</button>` : ""}<button class="btn${r ? "" : " primary"}" data-replay>${r ? "LOOK AGAIN" : "LOOK NOW"}</button></div>`,
-      wire: (c) => {
-        c.querySelector<HTMLButtonElement>("[data-log]")?.addEventListener("click", async () => { await usePack(key); resultsScreen(r!, "daily"); });
-        c.querySelector<HTMLButtonElement>("[data-replay]")!.onclick = () => void playPastNight(key);
-      },
-    });
-  }
-  if (today > 1) stars.push({
-    id: "past-label", x: 1000, y: 1175, size: "mid", color: "#8b9bb4",
-    label: "PAST SKIES",
-    card: () => `<h2>Past skies</h2><p>Earlier nights, newest first. Bright stars you played; dim ones you missed.</p><p class="small">Missed nights can still be looked at. They just don't count.</p>`,
+  // past skies: one star below tonight; its card is a logbook of earlier nights by date, newest first
+  const shortDate = (key: string) => new Date(key + "T12:00:00").toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
+  const past = Array.from({ length: Math.min(30, today - 1) }, (_, i) => {
+    const n = today - 1 - i, key = dateKeyOfNight(n), r = store.today(key), id = dayTheme(n), info = themeInfo(id);
+    return { key, r, name: info?.mystery && !r?.link ? "Mystery link" : themeName(id) };
+  });
+  if (past.length) stars.push({
+    id: "past-label", x: 1000, y: 1260, size: "big", color: "#b8aed0",
+    label: "PAST SKIES", sub: `${past.filter((p) => p.r).length} of ${past.length} seen`,
+    card: () => `<h2>Past skies</h2>
+      <p class="small">Missed nights can still be looked at. They just don't count.</p>
+      <ul class="past-list">${past.map((p) => `<li class="${p.r ? "seen-night" : "missed-night"}">
+        <div><b>${esc(shortDate(p.key))}</b><small>${esc(p.name)} · ${p.r ? `${p.r.score} pts` : "missed"}</small></div>
+        ${p.r ? `<button class="btn" data-log="${p.key}">LOG</button>` : ""}<button class="btn${p.r ? "" : " primary"}" data-replay="${p.key}">${p.r ? "AGAIN" : "LOOK"}</button></li>`).join("")}</ul>`,
+    wire: (c) => {
+      c.querySelectorAll<HTMLButtonElement>("[data-log]").forEach((b) => (b.onclick = async () => { const k = b.dataset.log!; await usePack(k); resultsScreen(store.today(k)!, "daily"); }));
+      c.querySelectorAll<HTMLButtonElement>("[data-replay]").forEach((b) => (b.onclick = () => void playPastNight(b.dataset.replay!)));
+    },
   });
   const menu: AtlasStar[] = [
     { id: "how", x: 650, y: 590, size: "big", color: "#2ce8f5", label: "HOW TO PLAY", card: () => `<h2>How to play</h2>
@@ -998,9 +1195,24 @@ function showAtlas(focus = "tonight") {
       ${done ? `<button class="btn" id="card-log">TONIGHT'S LOG</button>` : `<p class="small">Tonight's sky is still waiting.</p>`}`,
       wire: (c) => { const b = c.querySelector<HTMLButtonElement>("#card-log"); if (b) b.onclick = () => resultsScreen(done!, "daily"); } },
     { id: "settings", x: 660, y: 1420, size: "big", color: "#9bd34a", label: "SETTINGS", card: () => `<h2>Settings</h2>
-      <p><button class="btn" id="card-sound">SOUND: ${store.muted ? "OFF" : "ON"}</button></p>
-      <p class="small">Motion follows your device's reduced-motion setting.</p>`,
-      wire: (c) => { const b = c.querySelector<HTMLButtonElement>("#card-sound")!; b.onclick = () => { store.muted = !store.muted; setMuted(store.muted); b.textContent = `SOUND: ${store.muted ? "OFF" : "ON"}`; }; } },
+      <div class="settings">
+        <button class="btn" id="card-sound">SOUND: ${store.muted ? "OFF" : "ON"}</button>
+        <button class="btn" id="card-amb">NIGHT SOUNDS: ${store.ambience ? "ON" : "OFF"}</button>
+        ${isTouch && "vibrate" in navigator ? `<button class="btn" id="card-buzz">VIBRATION: ${store.haptics ? "ON" : "OFF"}</button>` : ""}
+      </div>
+      <p class="small">Night sounds are wind and crickets under the game. Motion follows your device's reduced-motion setting.</p>`,
+      wire: (c) => {
+        const b = c.querySelector<HTMLButtonElement>("#card-sound")!;
+        b.onclick = () => { store.muted = !store.muted; setMuted(store.muted); b.textContent = `SOUND: ${store.muted ? "OFF" : "ON"}`; };
+        const a = c.querySelector<HTMLButtonElement>("#card-amb")!;
+        a.onclick = () => { store.ambience = !store.ambience; setAmbience(store.ambience); a.textContent = `NIGHT SOUNDS: ${store.ambience ? "ON" : "OFF"}`; };
+        const v = c.querySelector<HTMLButtonElement>("#card-buzz");
+        if (v) v.onclick = () => { store.haptics = !store.haptics; v.textContent = `VIBRATION: ${store.haptics ? "ON" : "OFF"}`; if (store.haptics) navigator.vibrate?.(15); };
+      } },
+    { id: "catalogue", x: 1000, y: 700, size: "big", color: "#f2d38a", label: "CATALOGUE", sub: `${cat.size} found`, card: () => `<h2>Catalogue</h2>
+      <p>Your collection book: everything you've ever named, by theme. The rest wait as shadows.</p>
+      <div class="card-actions"><button class="btn primary" id="card-cat">OPEN THE BOOK</button></div>`,
+      wire: (c) => { c.querySelector<HTMLButtonElement>("#card-cat")!.onclick = () => void catalogueScreen(() => showAtlas("catalogue")); } },
     { id: "credits", x: 1340, y: 1420, size: "big", color: "#feae34", label: "CREDITS", card: () => `<h2>Credits</h2><p>${theme.credits}</p><p class="small">Photographs generated with Qwen-Image, cut out and pixelated for the telescope.</p>` },
     { id: "community", x: 1640, y: 1180, size: "small", color: "#5a6988", dim: true, label: "COMMUNITY SKIES", sub: "coming soon",
       card: () => `<h2>Community skies</h2><p>Soon: skies drawn and themed by other stargazers, out here on the edge of the map.</p>` },

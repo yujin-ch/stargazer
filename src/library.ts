@@ -176,8 +176,8 @@ export function photoHi(o: SkyObject): HTMLImageElement | null {
 }
 
 /** Wait until these objects' photo plates are decoded (drawings are always ready). */
-export function picturesReady(objs: SkyObject[]): Promise<void> {
-  for (const o of objs) if (o.kind === "photo") photoHi(o);
+export function picturesReady(objs: SkyObject[], hi = true): Promise<void> {
+  if (hi) for (const o of objs) if (o.kind === "photo") photoHi(o);
   return Promise.all(objs.filter((o) => o.kind === "photo").map((o) => photoImg(o.id).decode().catch(() => undefined))).then(() => undefined);
 }
 /** Stage k of a photo plate (0 = the developed photo, 7 = coarsest), as its own canvas. */
