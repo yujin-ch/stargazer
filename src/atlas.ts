@@ -1,7 +1,7 @@
 /**
  * The front door: a telescope on a hill under the stars, then the Star Atlas, a map you can drag
- * and zoom. The brightest star in the middle is tonight's sky; the stars around it are the themes
- * (and, later, community skies); the bright stars at the edges are the menu.
+ * and zoom. The brightest star in the middle is tonight's sky; a patch of small stars below it holds the
+ * past skies, by date; the bright stars at the edges are the menu (community skies come later).
  */
 import { mulberry32 } from "./daily";
 
@@ -224,12 +224,10 @@ function drawLines(c: HTMLCanvasElement, stars: AtlasStar[]) {
   for (const s of stars.slice(1)) {
     if (s.size === "big" && !s.dim) dotted(g, centre.x * k, centre.y * k, s.x * k, s.y * k, 3);
   }
+  // tonight leads down to the past-skies patch
   g.fillStyle = "#24304f";
-  const mids = stars.filter((s) => s.size === "mid");
-  for (let i = 0; i < mids.length; i++) {
-    const a = mids[i], b = mids[(i + 1) % mids.length];
-    dotted(g, a.x * k, a.y * k, b.x * k, b.y * k, 4);
-  }
+  const past = stars.find((s) => s.id === "past-label");
+  if (past) dotted(g, centre.x * k, centre.y * k, past.x * k, past.y * k, 4);
 }
 
 function dotted(g: CanvasRenderingContext2D, x0: number, y0: number, x1: number, y1: number, every: number) {

@@ -1,5 +1,5 @@
 import type { Theme } from "./themes/types";
-import { SPRITE_SIZE, objectImage, photoStage, picturesReady, PHOTO_STAGES, PHOTO_TILE, type SkyObject } from "./library";
+import { SPRITE_SIZE, objectImage, photoStage, photoHi, picturesReady, PHOTO_STAGES, PHOTO_TILE, type SkyObject } from "./library";
 import { CONFIG, type ConditionId } from "./config";
 
 const PAD = 5; // transparent margin so blur can spread
@@ -17,6 +17,8 @@ interface Prepared {
   focal: { x: number; y: number };
   /** Photo plates reveal by depixelating through fixed stages instead of blurring. */
   photo: boolean;
+  /** The developed photo at high resolution, faded in over the plate once it has fully depixelated. */
+  hi: HTMLImageElement | null;
   opaque: { x: number; y: number; c: string }[];
 }
 
@@ -53,8 +55,15 @@ export class Viewer {
   private shutterAt = -1;
   closeShutter(now: number) { this.shutterAt = now; this.active = null; }
   readonly V: number;
+  /** A full-resolution layer over the pixel canvas, for the developed photo. */
+  private hiLayer: HTMLCanvasElement;
+  private hiShown = false;
 
   constructor(private canvas: HTMLCanvasElement, private theme: Theme) {
+    this.hiLayer = document.createElement("canvas");
+    this.hiLayer.className = "hi-layer";
+    this.hiLayer.setAttribute("aria-hidden", "true");
+    canvas.insertAdjacentElement("afterend", this.hiLayer);
     this.V = theme.viewSize;
     canvas.width = this.V;
     canvas.height = this.V;
@@ -122,7 +131,7 @@ export class Viewer {
     }
     // a photo plate shows a little bigger than a drawing, at one photo pixel per screen pixel
     const fit = photo ? 0.5 : Math.min(1, (SPRITE_SIZE * 1.45) / w);
-    const prep = { levels, focal, opaque, w, h, fit, photo };
+    const prep = { levels, focal, opaque, w, h, fit, photo, hi: photo ? photoHi(o) : null };
     this.cache.set(o.sprite, prep);
     return prep;
   }
@@ -206,8 +215,20 @@ export class Viewer {
     g.restore();
   }
 
+  /** Match the high-resolution layer to the pixel canvas's on-screen size, and clear it. */
+  private syncHi(): CanvasRenderingContext2D {
+    const L = this.hiLayer, css = this.canvas.clientWidth, px = Math.round(css * Math.min(2, window.devicePixelRatio || 1));
+    if (L.width !== px) { L.width = L.height = px; L.style.width = L.style.height = `${css}px`; }
+    const hg = L.getContext("2d")!;
+    hg.imageSmoothingEnabled = true;
+    hg.imageSmoothingQuality = "high";
+    return hg;
+  }
+
   draw(now: number) {
     const g = this.ctx, V = this.V, C = V / 2;
+    let hiDraw: (() => void) | null = null;
+    if (this.hiShown) { this.hiLayer.getContext("2d")!.clearRect(0, 0, this.hiLayer.width, this.hiLayer.height); this.hiShown = false; }
     this.theme.drawBackdrop(g, now);
     const scale = this.theme.spriteScale;
 
@@ -280,7 +301,19 @@ export class Viewer {
         g.drawImage(img, Math.round(x), Math.round(y), DW, DH);
       }
       g.globalAlpha = 1;
+      hiDraw = () => {
+        const hi = a.prep.hi;
+        const fade = clamp01((e - 0.9) / 0.1) * enter;
+        if (!hi || !hi.complete || !hi.naturalWidth || fade <= 0 || level > 0) return;
+        const hg = this.syncHi(), s = this.hiLayer.width / V;
+        hg.globalAlpha = fade;
+        hg.drawImage(hi, (x + PAD * px) * s, (y + PAD * px) * s, a.prep.w * px * s, a.prep.h * px * s);
+        hg.globalAlpha = 1;
+      };
     }
+
+    const drawHi = hiDraw as (() => void) | null;
+    if (drawHi) { drawHi(); this.hiShown = true; }
 
     // sparks
     this.sparks = this.sparks.filter((s) => now - s.born < s.life);

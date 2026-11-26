@@ -100,8 +100,20 @@ export interface DayPack {
   items: { id: string; band: number; names: string[]; note?: string }[];
 }
 const PACK_URLS = new Map<string, string>();
+const PACK_HI = new Map<string, string>();
 
-/** Fetch and register tonight's pack, if there is one. Returns its objects (empty when none). */
+/** Dates that have a pack, with their theme (public/days/index.json, written by make_day.py). */
+export async function loadPackIndex(): Promise<Record<string, { theme: string }>> {
+  try {
+    const r = await fetch(`${import.meta.env.BASE_URL}days/index.json`, { cache: "no-cache" });
+    if (!r.ok || !(r.headers.get("content-type") ?? "").includes("json")) return {};
+    return (await r.json()) as Record<string, { theme: string }>;
+  } catch {
+    return {};
+  }
+}
+
+/** Fetch and register a date's pack, if there is one. Returns its objects (empty when none). */
 export async function loadDayPack(dateKey: string): Promise<SkyObject[]> {
   const base = `${import.meta.env.BASE_URL}days/${dateKey}/`;
   let pack: DayPack;
@@ -118,6 +130,7 @@ export async function loadDayPack(dateKey: string): Promise<SkyObject[]> {
     .map((it, i) => {
       const id = `${theme}:${dateKey}/${it.id}`;
       PACK_URLS.set(id, `${base}${it.id}.png`);
+      PACK_HI.set(id, `${base}${it.id}.hi.webp`);
       return {
         id, sprite: OBJECTS.length + i, theme, band: (it.band - 1) as BandIndex,
         names: it.names.map((n) => n.replace(/^~/, "")),
@@ -125,9 +138,10 @@ export async function loadDayPack(dateKey: string): Promise<SkyObject[]> {
         kind: "photo" as const, parts: [id], note: it.note ?? "",
       };
     })
-    .filter((o) => !BY_ID.has(o.id));
-  OBJECTS.push(...objs);
-  for (const o of objs) BY_ID.set(o.id, o);
+    .map((o) => BY_ID.get(o.id) ?? o);
+  const fresh = objs.filter((o) => !BY_ID.has(o.id));
+  OBJECTS.push(...fresh);
+  for (const o of fresh) BY_ID.set(o.id, o);
   return objs;
 }
 
@@ -145,8 +159,25 @@ function photoImg(id: string): HTMLImageElement {
   }
   return img;
 }
+const hiImgs = new Map<string, HTMLImageElement | null>();
+/** The developed photo at high resolution, when the pack has one (loads in the background). */
+export function photoHi(o: SkyObject): HTMLImageElement | null {
+  if (hiImgs.has(o.id)) return hiImgs.get(o.id)!;
+  const url = PACK_HI.get(o.id);
+  let img: HTMLImageElement | null = null;
+  if (url) {
+    img = new Image();
+    img.decoding = "async";
+    img.onerror = () => hiImgs.set(o.id, null);
+    img.src = url;
+  }
+  hiImgs.set(o.id, img);
+  return img;
+}
+
 /** Wait until these objects' photo plates are decoded (drawings are always ready). */
 export function picturesReady(objs: SkyObject[]): Promise<void> {
+  for (const o of objs) if (o.kind === "photo") photoHi(o);
   return Promise.all(objs.filter((o) => o.kind === "photo").map((o) => photoImg(o.id).decode().catch(() => undefined))).then(() => undefined);
 }
 /** Stage k of a photo plate (0 = the developed photo, 7 = coarsest), as its own canvas. */

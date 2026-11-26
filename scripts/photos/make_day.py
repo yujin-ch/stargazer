@@ -44,6 +44,10 @@ def main():
         } for it in keep],
     }
     json.dump(pack, open(os.path.join(out, "pack.json"), "w"), indent=1)
+    idx_path = os.path.join(ROOT, "public", "days", "index.json")
+    idx = json.load(open(idx_path)) if os.path.exists(idx_path) else {}
+    idx[date] = {"theme": pack["theme"], "items": len(keep)}
+    json.dump(dict(sorted(idx.items())), open(idx_path, "w"), indent=1)
     bands = [sum(1 for it in keep if int(it["band"]) == b) for b in (1, 2, 3, 4)]
     print(f"{date}: {len(keep)} items, bands {bands}" + (f"; left out: {', '.join(left)}" if left else ""))
 

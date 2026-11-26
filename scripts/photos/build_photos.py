@@ -21,6 +21,7 @@ OUT = os.environ.get("PHOTO_OUT") or os.path.join(ROOT, "src/art/photos")
 T = 80
 STAGES = [48, 32, 24, 16, 12, 8, 6]
 OUTLINE = (0x18, 0x14, 0x25)
+HI = 448  # side of the high-resolution final photo
 
 board = open(os.path.join(ROOT, "src/art/board.ts")).read()
 _ramps = re.findall(r'(\w+): \["#([0-9a-f]{6})", "#([0-9a-f]{6})", "#([0-9a-f]{6})"\]', board.split("export const OUTLINE")[0])
@@ -78,7 +79,7 @@ def is_greenscreen(img):
     return ((a[..., 1] > m * 1.3 + 10) & (a[..., 1] - m > 30)).mean() > 0.3
 
 
-def chroma_key(img):
+def chroma_key(img, ai_mask=None):
     """Greenscreen cut-out: drop pixels where green clearly dominates, keep only the parts
     connected to the main object, then remove green spill from the edges that remain."""
     from scipy import ndimage
@@ -87,7 +88,11 @@ def chroma_key(img):
     greenness = g - np.maximum(r, b)
     # backdrop = green clearly ahead of red and blue, relative to brightness, so the darker green of
     # floor shadows goes too (objects are never green by prompt rule)
-    fg = ~((g > np.maximum(r, b) * 1.12 + 6) & (greenness > 8))
+    fg = ~((g > np.maximum(r, b) * 1.3 + 8) & (greenness > 12))
+    if ai_mask is not None:
+        # the cut-out model knows where the object is (so floor and shadow stay out, and green-tinted
+        # white parts stay in); the key only clears clearly green pixels inside it (gaps, edges)
+        fg &= ndimage.binary_dilation(ai_mask, iterations=3)
     keep = ndimage.binary_opening(fg, iterations=1)
     lab_, n = ndimage.label(keep)
     if n:
@@ -170,6 +175,7 @@ def main():
     src = sys.argv[1]
     want = set(sys.argv[2:])
     sess = new_session("u2netp")
+    sess_green = new_session("isnet-general-use")
     os.makedirs(OUT, exist_ok=True)
     for f in sorted(glob.glob(os.path.join(src, "*.jpg")) + glob.glob(os.path.join(src, "*.png"))):
         sid = os.path.splitext(os.path.basename(f))[0]
@@ -177,7 +183,7 @@ def main():
             continue
         img = Image.open(f).convert("RGB")
         green = is_greenscreen(img)
-        cut = chroma_key(img) if green else add_thin_parts(img, remove(img, session=sess))
+        cut = chroma_key(img, np.asarray(remove(img, session=sess_green))[..., 3] > 100) if green else add_thin_parts(img, remove(img, session=sess))
         a = np.asarray(cut)[..., 3] > 128
         ys, xs = np.where(a)
         x0, x1, y0, y1 = np.percentile(xs, 0.3), np.percentile(xs, 99.7), np.percentile(ys, 0.3), np.percentile(ys, 99.7)
@@ -193,6 +199,9 @@ def main():
         for i, t in enumerate(tiles):
             strip.paste(t, (i * T, 0))
         strip.save(os.path.join(OUT, f"{sid}.png"), optimize=True)
+        # the developed photo at high resolution, shown once the plate has fully depixelated
+        hi = sq.convert("RGBa").resize((HI, HI), Image.LANCZOS).convert("RGBA")
+        hi.save(os.path.join(OUT, f"{sid}.hi.webp"), quality=82, method=6)
         print(sid, os.path.getsize(os.path.join(OUT, f"{sid}.png")), "bytes")
 
 

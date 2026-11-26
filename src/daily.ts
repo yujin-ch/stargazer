@@ -39,14 +39,20 @@ export function puzzleNumber(dateKey: string): number {
 }
 
 /** Tonight's day pack (its own photo set), once loaded. */
-let pack: { puzzle: number; objs: SkyObject[] } | null = null;
+const packs = new Map<number, SkyObject[]>();
+/** Nights known to have a pack (from days/index.json), with the pack's theme, before the pack itself loads. */
+const packThemes = new Map<number, string>();
 export function setDayPack(puzzle: number, objs: SkyObject[]): void {
-  pack = objs.length ? { puzzle, objs } : null;
+  if (objs.length) packs.set(puzzle, objs);
 }
+export function notePackNight(puzzle: number, theme: string): void { packThemes.set(puzzle, theme); }
 
 /** The theme everyone plays on a puzzle number: themes take turns, one per day. */
 export function dayTheme(puzzle: number): string {
-  if (pack && pack.puzzle === puzzle) return pack.objs[0].theme;
+  const p = packs.get(puzzle);
+  if (p) return p[0].theme;
+  const t = packThemes.get(puzzle);
+  if (t) return t;
   return THEMES[(((puzzle - 1) % THEMES.length) + THEMES.length) % THEMES.length];
 }
 
@@ -82,8 +88,9 @@ export const themePool = (themeId: string) => OBJECTS.filter((o) => o.theme === 
  * object never repeats until every object in that band has been used once.
  */
 export function dailySky(puzzle: number, tier = 0, poolArg?: SkyObject[]): SkyObject[] {
-  const fromPack = !poolArg && !!pack && pack.puzzle === puzzle;
-  const pool = poolArg ?? (fromPack ? pack!.objs : themePool(dayTheme(puzzle)));
+  const packObjs = poolArg ? undefined : packs.get(puzzle);
+  const fromPack = !!packObjs;
+  const pool = poolArg ?? packObjs ?? themePool(dayTheme(puzzle));
   // each theme only comes round every THEMES.length days, so count its own days (a pack is its own first day)
   const day = fromPack ? 0 : Math.floor(Math.max(0, puzzle - 1) / THEMES.length);
   const sky: SkyObject[] = [];

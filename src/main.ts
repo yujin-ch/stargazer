@@ -1,15 +1,15 @@
 import "@fontsource/press-start-2p";
 import "@fontsource/vt323";
 import { CONFIG, tierFor } from "./config";
-import { OBJECTS, BY_ID, loadDayPack, shownNames, themeName, themeLabel, themeInfo, type SkyObject } from "./library";
+import { OBJECTS, BY_ID, loadDayPack, loadPackIndex, shownNames, themeName, themeLabel, themeInfo, type SkyObject } from "./library";
 import { makeMatcher, normalize, forms as formsOf, linkMatches } from "./match";
-import { dailySky, setDayPack, practiceSky, localDateKey, puzzleNumber, mulberry32, dayTheme, dayCondition } from "./daily";
+import { dailySky, setDayPack, notePackNight, practiceSky, localDateKey, puzzleNumber, mulberry32, dayTheme, dayCondition } from "./daily";
 import { theme } from "./themes";
 import { setMuted, unlockAudio } from "./themes/chip";
 import { Viewer } from "./viewer";
 import { store, type ItemResult, type RunResult } from "./storage";
 import { crowdScores, beatShare, liveCrowd, MIN_LIVE } from "./crowd";
-import { share, shareText } from "./share";
+import { share, shareText, type Standing } from "./share";
 import { atlasScreen, type AtlasStar } from "./atlas";
 import { introScreen } from "./intro";
 import { THEMES } from "./library";
@@ -82,6 +82,7 @@ let run: Run;
 function playScreen() {
   app.innerHTML = `
   <main class="play">
+    <button class="btn back-btn" id="backbtn" type="button" aria-label="Back to the star atlas">&lt; ATLAS</button>
     <header class="hud">
       <div class="hud-left">
         <div class="hud-score"><span id="score">0</span><small>PTS</small></div>
@@ -114,7 +115,7 @@ function playScreen() {
     <div class="start" id="start"></div>
     <div class="sr-only" id="live" aria-live="polite"></div>
   </main>`;
-  for (const id of ["score", "time", "count", "scope", "overlay", "pops", "label", "band", "bonus", "bonusbar", "controls", "guess", "clear", "skip", "hint", "start", "mute", "combo"])
+  for (const id of ["score", "time", "count", "scope", "overlay", "pops", "label", "band", "bonus", "bonusbar", "controls", "guess", "clear", "skip", "hint", "start", "mute", "combo", "backbtn"])
     el[id] = document.getElementById(id)!;
   viewer = new Viewer(document.getElementById("eyepiece") as HTMLCanvasElement, theme);
   renderMute();
@@ -270,23 +271,19 @@ async function openPlay(mode: Run["mode"]) {
   el.hint.classList.add("hidden");
   app.querySelector(".play")!.classList.add("ready");
   el.overlay.className = "overlay wordmark";
-  el.overlay.innerHTML = `<div><b>${theme.title.toUpperCase()}</b><span>${mode === "daily" ? `NIGHT #${run.puzzle} · ${fmtDate(run.date).toUpperCase()}` : (PREVIEW_NIGHT ? `PREVIEW OF NIGHT #${PREVIEW_NIGHT} · NOT SAVED` : "PRACTICE SKY · NOT SCORED")}</span><span>TONIGHT: ${themeLabel(run.sky[0]?.theme ?? dayTheme(run.puzzle)).toUpperCase()}</span></div>`;
+  const skyDate = mode === "daily" ? run.date : PREVIEW_NIGHT ? dateKeyOfNight(PREVIEW_NIGHT) : "";
+  el.overlay.innerHTML = `<div><b>${theme.title.toUpperCase()}</b></div>`;
   const c3 = CONFIG.combo[0];
+  const skyTheme = run.sky[0]?.theme ?? dayTheme(run.puzzle);
+  const mystery = !!themeInfo(skyTheme)?.mystery;
   el.start.innerHTML = `
-    ${tierLine(run.tier, run.streak)}
-    ${themeInfo(run.sky[0]?.theme ?? "")?.mystery
-      ? `<p class="tonight"><b>A MYSTERY LINK</b>${CONFIG.conditionsOn ? ` under <b class="cond">${cond.name.toUpperCase()}</b>` : ""}<br><small>Everything tonight has something in common. Name what you see, then guess the link for +${CONFIG.linkBonus}. ${cond.id === "clear" ? "" : cond.blurb}</small></p>`
-      : `<p class="tonight"><b>${themeName(run.sky[0]?.theme ?? dayTheme(run.puzzle)).toUpperCase()}</b>${CONFIG.conditionsOn ? ` under <b class="cond">${cond.name.toUpperCase()}</b><br><small>${cond.blurb}</small>` : ""}</p>`}
-    <ul class="rules">
-      <li><b>Type</b> what you see. It moves on by itself.</li>
-      <li><b>Zoomed in?</b> Name it early for bonus points.</li>
-      <li><b>${c3.at} in a row</b> earns extra. ${isTouch ? "Skip" : "Tab skips"}${isTouch ? "" : ","} costs ${CONFIG.skipCost}s and breaks it.</li>
-    </ul>
+    <p class="start-kicker">${mode === "daily" ? "TONIGHT'S SKY" : skyDate && skyDate < localDateKey() ? `${fmtDate(skyDate).toUpperCase()} · NOT SAVED` : "PREVIEW · NOT SAVED"}</p>
+    <h1 class="start-title">${mystery ? "A MYSTERY LINK" : themeName(skyTheme).toUpperCase()}</h1>
+    <p class="start-line">${mystery ? `Name what you see, then guess what links it all for +${CONFIG.linkBonus}.` : "Name what you see before the clock runs out."}<br><small>${CONFIG.runSeconds} seconds · ${run.sky.length} objects · ${isTouch ? "Skip" : "Tab skips"} for ${CONFIG.skipCost}s</small></p>
     <button class="btn primary" id="go">OPEN THE SHUTTER</button>
-    <button class="link-skip" id="back-atlas" type="button">back to the star atlas</button>
-    <p class="small">${CONFIG.runSeconds} seconds · ${mode === "daily" ? "same sky as everyone on your tier" : `a preview, not saved`}</p>`;
+    ${mode === "daily" ? `<p class="small tier-mini">${CONFIG.tiers[run.tier].name} sky${run.streak ? ` · ${run.streak}-night streak` : ""}</p>` : ""}`;
   document.getElementById("go")!.onclick = begin;
-  document.getElementById("back-atlas")!.onclick = () => { cancelAnimationFrame(raf); showAtlas(); };
+  el.backbtn.onclick = () => { cancelAnimationFrame(raf); showAtlas(); };
   sizeViewer();
   loop();
 }
@@ -666,7 +663,7 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
     <section class="log">
       <header class="log-head">
         <span>OBSERVING LOG</span>
-        <span>${daily ? `NIGHT #${r.puzzle}` : "PRACTICE"}</span>
+        <span>${daily ? fmtDate(r.date).toUpperCase() : "PRACTICE"}</span>
       </header>
       <p class="date">${daily ? `${fmtDate(r.date)} · ${shownTheme}${CONFIG.conditionsOn ? ` · ${dayCondition(r.puzzle).name}` : ""} · ${CONFIG.tiers[tier].name} sky` : `Preview · ${shownTheme}${CONFIG.conditionsOn ? ` · ${dayCondition(r.puzzle).name}` : ""}`}</p>
       <div class="final"><span>${r.score}</span><small>POINTS${r.clearedBonus ? ` · SKY CLEARED +${r.clearedBonus}` : ""}</small></div>
@@ -683,9 +680,9 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
         <div><dt>STEADY</dt><dd>${r.bestCombo ?? 0}</dd></div>
         <div><dt>SKIPPED</dt><dd>${r.skipped}</dd></div>
       </dl>
+      ${daily ? `<section class="share-card"><pre class="share-preview" id="share-preview" aria-label="What you'll share"></pre><button class="btn primary" id="share">${isTouch ? "SHARE" : "COPY TO SHARE"}</button></section>` : ""}
     </section>
     <div class="actions">
-      ${daily ? `<button class="btn primary" id="share">SHARE LOG</button>` : ""}
       <button class="btn" id="to-atlas">STAR ATLAS</button>
       ${!daily && !store.today(localDateKey()) ? `<button class="btn primary" id="daily">TONIGHT'S SKY</button>` : ""}
       ${!daily && store.today(localDateKey()) ? `<button class="btn" id="back">TONIGHT'S LOG</button>` : ""}
@@ -700,19 +697,22 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
     <ol class="seen" id="seen"></ol>
     <section class="missed" id="missed"></section>
     ${import.meta.env.VITE_PREVIEW_TOOLS ? `<section class="preview-tools"><h2>PREVIEW ONLY <small>try other nights, not saved</small></h2><div class="actions">${[1, 2, 3, 4, 5, 6].map((n) => `<button class="btn" data-night="${n}">#${n} ${themeName(dayTheme(n))}<br><small>${dayCondition(n).name}</small></button>`).join("")}</div></section>` : ""}
-    <footer class="credits">${theme.credits}</footer>
   </main>`;
   lastFresh = 0;
   const chart = document.getElementById("chart") as HTMLCanvasElement;
+  let standing: Standing | null = null;
+  const sharePreview = () => { const pre = document.getElementById("share-preview"); if (pre) pre.textContent = shareText(r, theme, SITE_URL, standing); };
   const paintHill = (scores: number[], live: boolean) => {
     const others = 12, beat = beatShare(scores, r.score - (r.link?.bonus ?? 0)), rank = Math.round(beat * others);
+    standing = { beat, live, players: scores.length };
+    sharePreview();
     drawChart(chart, r, rank, others);
     const median = scores[Math.floor(scores.length / 2)];
     document.getElementById("hill-line")!.innerHTML =
       (rank >= others ? `You out-spotted <b>every stargazer</b> on the hill tonight.`
       : rank === 0 ? `The whole hill saw more tonight. The sky comes back tomorrow.`
       : `You out-spotted <b>${rank} of ${others}</b> stargazers on the hill.`)
-      + `<br><small>${live ? `Better than ${Math.round(beat * 100)}% of ${scores.length} players tonight · typical score ${median}` : `A typical score tonight: ${median}`}</small>`;
+      + `<br><small>${live ? `Better than ${Math.min(99, Math.round(beat * 100))}% of ${scores.length} players tonight · typical score ${median}` : `A typical score tonight: ${median}`}</small>`;
     if (live) document.getElementById("crowd-note")!.textContent = `The hill is tonight's real players on the ${CONFIG.tiers[tier].name} sky.`;
   };
   paintHill(crowd, false);
@@ -788,8 +788,8 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
   if (!r.items.length) list.innerHTML = `<li class="empty">Nothing this time. The sky will be back tomorrow.</li>`;
   const toast = (t: string) => { const e = document.getElementById("toast")!; e.textContent = t; };
   document.getElementById("share")?.addEventListener("click", async () => {
-    const res = await share(shareText(r, theme, SITE_URL));
-    toast(res === "copied" ? "Log copied. Paste it anywhere." : res === "shared" ? "" : "Couldn't share. Try again.");
+    const res = await share(shareText(r, theme, SITE_URL, standing));
+    toast(res === "copied" ? "Copied! Paste it to a friend or group chat." : res === "shared" ? "" : "Couldn't share. Try again.");
   });
   document.getElementById("to-atlas")!.onclick = () => showAtlas();
   document.getElementById("back")?.addEventListener("click", () => resultsScreen(store.today(localDateKey())!, "daily"));
@@ -923,15 +923,25 @@ if (new URLSearchParams(location.search).has("debug"))
 
 const THEME_COLORS = ["#2ce8f5", "#e07ab8", "#9bd34a", "#feae34", "#a884d8", "#7cc6f5", "#f6757a", "#fee761"];
 
-function nextNightFor(themeId: string, from: number): number {
-  for (let n = from; n < from + 400; n++) if (dayTheme(n) === themeId) return n;
-  return from;
+/** The local date key (YYYY-MM-DD) of a puzzle number. */
+function dateKeyOfNight(n: number): string {
+  const [y, m, d] = CONFIG.launchDate.split("-").map(Number);
+  return localDateKey(new Date(y, m - 1, d + n - 1));
 }
 
-function dateOfNight(n: number): string {
-  const [y, m, d] = CONFIG.launchDate.split("-").map(Number);
-  const dt = new Date(y, m - 1, d + n - 1);
-  return dt.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
+/** Load a date's photo pack (if it has one) so its sky can be played or shown. */
+async function usePack(dateKey: string): Promise<void> {
+  const objs = await loadDayPack(dateKey);
+  if (!objs.length) return;
+  setDayPack(puzzleNumber(dateKey), objs);
+  matcher = makeMatcher(OBJECTS.map((o) => o.names));
+}
+
+/** Play an earlier night's sky as an unsaved run. */
+async function playPastNight(dateKey: string) {
+  await usePack(dateKey);
+  PREVIEW_NIGHT = puzzleNumber(dateKey);
+  void openPlay("practice");
 }
 
 function showAtlas(focus = "tonight") {
@@ -946,25 +956,35 @@ function showAtlas(focus = "tonight") {
   stars.push({
     id: "tonight", x: 1000, y: 1000, size: "huge", color: "#fee761",
     label: "TONIGHT'S SKY",
-    sub: done && !done.partial ? `Seen · ${done.score} pts` : `Night #${today} · ${themeLabel(tonightTheme)}${CONFIG.conditionsOn ? ` · ${cond.name}` : ""}`,
+    sub: done && !done.partial ? `Seen · ${done.score} pts` : `${themeLabel(tonightTheme)}${CONFIG.conditionsOn ? ` · ${cond.name}` : ""}`,
     open: () => (done ? resultsScreen(done, "daily") : openPlay("daily")),
   });
-  THEMES.forEach((id, i) => {
-    const ang = -Math.PI / 2 + ((i + 0.5) / THEMES.length) * Math.PI * 2;
-    const n = nextNightFor(id, today), info = themeInfo(id);
-    const pool = OBJECTS.filter((o) => o.theme === id);
-    const found = pool.filter((o) => cat.has(o.id)).length;
-    const name = info?.mystery && !(id === tonightTheme && done?.link) ? "Mystery link" : themeName(id);
+  // past skies: their own patch of sky below tonight, a small grid of stars by date, newest first
+  const PAST_COLS = 3, PAST_ROWS = 4;
+  const shortDate = (key: string) => new Date(key + "T12:00:00").toLocaleDateString(undefined, { month: "short", day: "numeric" }).toUpperCase();
+  for (let i = 0; i < PAST_COLS * PAST_ROWS; i++) {
+    const n = today - 1 - i;
+    if (n < 1) break;
+    const key = dateKeyOfNight(n), r = store.today(key), id = dayTheme(n), info = themeInfo(id);
+    const name = info?.mystery && !r?.link ? "Mystery link" : themeName(id);
     stars.push({
-      id: `theme:${id}`, x: 1000 + Math.cos(ang) * 330, y: 1000 + Math.sin(ang) * 290, size: "mid", color: THEME_COLORS[i % THEME_COLORS.length],
-      label: name.toUpperCase(), sub: n === today ? "tonight" : `night #${n}`,
-      card: () => `<h2>${esc(name)}</h2>
-        <p>${info?.mystery ? "A Mystery link sky: the theme stays hidden until your final guess." : `${pool.length} objects, from easy to Black Hole.`}</p>
-        <p class="small">${n === today ? "This is tonight's sky." : `Rises next on <b>night #${n}</b> · ${dateOfNight(n)}`}</p>
-        <p class="small">Catalogued <b>${found}</b> / ${pool.length}</p>
-        ${import.meta.env.VITE_PREVIEW_TOOLS ? `<button class="btn" data-preview="${n}">PREVIEW THIS SKY</button>` : ""}`,
-      wire: (c) => { const b = c.querySelector<HTMLButtonElement>("[data-preview]"); if (b) b.onclick = () => { PREVIEW_NIGHT = Number(b.dataset.preview); void openPlay("practice"); }; },
+      id: `past:${key}`, x: 860 + (i % PAST_COLS) * 140, y: 1250 + Math.floor(i / PAST_COLS) * 100, size: "small",
+      color: r ? "#fee761" : "#8b9bb4", dim: !r,
+      label: shortDate(key), sub: r ? `${r.score} pts` : "missed",
+      card: () => `<h2>${esc(fmtDate(key))}</h2>
+        <p>${esc(name)}</p>
+        <p class="small">${r ? `You scored <b>${r.score}</b>, ${r.named} spotted.` : "You missed this night. You can still look, but it won't count."}</p>
+        <div class="card-actions">${r ? `<button class="btn primary" data-log>YOUR LOG</button>` : ""}<button class="btn${r ? "" : " primary"}" data-replay>${r ? "LOOK AGAIN" : "LOOK NOW"}</button></div>`,
+      wire: (c) => {
+        c.querySelector<HTMLButtonElement>("[data-log]")?.addEventListener("click", async () => { await usePack(key); resultsScreen(r!, "daily"); });
+        c.querySelector<HTMLButtonElement>("[data-replay]")!.onclick = () => void playPastNight(key);
+      },
     });
+  }
+  if (today > 1) stars.push({
+    id: "past-label", x: 1000, y: 1175, size: "mid", color: "#8b9bb4",
+    label: "PAST SKIES",
+    card: () => `<h2>Past skies</h2><p>Earlier nights, newest first. Bright stars you played; dim ones you missed.</p><p class="small">Missed nights can still be looked at. They just don't count.</p>`,
   });
   const menu: AtlasStar[] = [
     { id: "how", x: 650, y: 590, size: "big", color: "#2ce8f5", label: "HOW TO PLAY", card: () => `<h2>How to play</h2>
@@ -981,27 +1001,26 @@ function showAtlas(focus = "tonight") {
       <p><button class="btn" id="card-sound">SOUND: ${store.muted ? "OFF" : "ON"}</button></p>
       <p class="small">Motion follows your device's reduced-motion setting.</p>`,
       wire: (c) => { const b = c.querySelector<HTMLButtonElement>("#card-sound")!; b.onclick = () => { store.muted = !store.muted; setMuted(store.muted); b.textContent = `SOUND: ${store.muted ? "OFF" : "ON"}`; }; } },
-    { id: "credits", x: 1340, y: 1420, size: "big", color: "#feae34", label: "CREDITS", card: () => `<h2>Credits</h2><p>${theme.credits}</p><p class="small">Made with a pixel drawing board, one shape at a time.</p>` },
+    { id: "credits", x: 1340, y: 1420, size: "big", color: "#feae34", label: "CREDITS", card: () => `<h2>Credits</h2><p>${theme.credits}</p><p class="small">Photographs generated with Qwen-Image, cut out and pixelated for the telescope.</p>` },
     { id: "community", x: 1640, y: 1180, size: "small", color: "#5a6988", dim: true, label: "COMMUNITY SKIES", sub: "coming soon",
       card: () => `<h2>Community skies</h2><p>Soon: skies drawn and themed by other stargazers, out here on the edge of the map.</p>` },
   ];
   stars.push(...menu);
-  atlasScreen(app, stars, { title: "STAR ATLAS", footer: `Night #${today} · ${fmtDate(localDateKey())}`, focus });
+  atlasScreen(app, stars, { title: "STAR ATLAS", footer: fmtDate(localDateKey()), focus });
 }
 
 // tonight's own photo set, if one has been published (falls back to the rotating themes)
 // /?date=YYYY-MM-DD previews that date's pack as an unsaved run (for checking a pack before its night)
 const PACK_DATE = /^\d{4}-\d{2}-\d{2}$/.test(new URLSearchParams(location.search).get("date") ?? "") ? new URLSearchParams(location.search).get("date")! : "";
 if (PACK_DATE) PREVIEW_NIGHT = puzzleNumber(PACK_DATE);
-const tonightPack = loadDayPack(PACK_DATE || localDateKey()).then((objs) => {
-  if (!objs.length) return;
-  setDayPack(puzzleNumber(PACK_DATE || localDateKey()), objs);
-  matcher = makeMatcher(OBJECTS.map((o) => o.names));
-});
+const tonightPack = Promise.all([
+  loadPackIndex().then((idx) => { for (const [k, v] of Object.entries(idx)) notePackNight(puzzleNumber(k), v.theme); }),
+  usePack(PACK_DATE || localDateKey()),
+]);
 
 if (PREVIEW_NIGHT) void openPlay("practice");
 else introScreen(app, {
   title: theme.title,
-  sub: `Night #${puzzleNumber(localDateKey())} · ${fmtDate(localDateKey())}`,
+  sub: fmtDate(localDateKey()),
   onEnter: () => void tonightPack.then(() => showAtlas()),
 });

@@ -348,3 +348,37 @@ a { color: var(--cyan); }
 .start .link-skip { display: block; margin: 8px auto 0; }
 @media (prefers-reduced-motion: reduce) { .astar.huge i, .intro-go { animation: none; } }
 .atlas.card-open .atlas-tools { display: none; }
+
+/* the developed photo, at full resolution, laid over the pixel eyepiece */
+.scope .hi-layer { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); pointer-events: none; image-rendering: auto; }
+
+/* share: a preview of exactly what gets copied, then one button */
+.share-card { margin: 16px 0 0; padding: 12px; border: 2px solid var(--faint); background: rgba(7, 6, 15, 0.45); display: grid; gap: 10px; }
+.share-preview { margin: 0; text-align: left; white-space: pre-wrap; word-break: break-word; font-family: var(--font-body); font-size: 19px; line-height: 1.25; color: var(--ink); }
+.share-card .btn { width: 100%; }
+
+/* ------------------------------------------------ ready screen (before the shutter opens) */
+.start-kicker { margin: 0; font-family: var(--font-display); font-size: 9px; letter-spacing: 1px; color: var(--cyan); }
+.start .start-title { font-family: var(--font-display); font-weight: normal; font-size: clamp(16px, 4.6vw, 22px); line-height: 1.35; margin: 10px 0 8px; color: var(--accent); letter-spacing: 1px; text-shadow: 3px 3px 0 #000; }
+.start-line { margin: 0 0 14px; color: var(--ink); }
+.start-line small { color: var(--dim); font-size: 18px; }
+.start .tier-mini { margin-top: 12px; font-size: 17px; }
+.start .btn.primary { min-width: 240px; }
+/* back to the atlas: a real button, top left, only before the run starts */
+.back-btn { position: absolute; left: max(12px, env(safe-area-inset-left)); top: max(10px, env(safe-area-inset-top)); z-index: 5; font-size: 10px; padding: 8px 10px; box-shadow: 3px 3px 0 #000; }
+.play:not(.ready) .back-btn { display: none; }
+.play.ready .hud-left, .play.ready .hud-count { visibility: hidden; }
+.card-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+.card-actions .btn { font-size: 11px; padding: 10px 12px; }
+
+/* desktop: before the run, the eyepiece fills the left and the card sits beside it, not stacked like a phone */
+@media (min-width: 900px) and (min-height: 560px) {
+  .play.ready { max-width: 1180px; display: grid; grid-template-columns: minmax(0, 1fr) 400px; grid-template-rows: auto minmax(0, 1fr); column-gap: 48px; align-items: center; padding: 24px 48px; }
+  .play.ready .hud { grid-column: 1; grid-row: 1; }
+  .play.ready .scope { grid-column: 1; grid-row: 2; height: 100%; }
+  .play.ready .start { grid-column: 2; grid-row: 1 / span 2; align-self: center; padding: 28px 30px; text-align: left; }
+  .play.ready .start .btn.primary { width: 100%; }
+  .play.ready .label-row, .play.ready .controls, .play.ready .hint { display: none; }
+  .play.ready .back-btn { left: 24px; top: 20px; }
+  .start .start-title { font-size: 26px; }
+}

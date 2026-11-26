@@ -1,21 +1,46 @@
 import type { RunResult } from "./storage";
 import type { Theme } from "./themes/types";
-import { CONFIG } from "./config";
-import { themeName, themeInfo } from "./library";
-import { dayTheme, dayCondition } from "./daily";
+import { themeName, themeInfo, BY_ID } from "./library";
+import { dayTheme } from "./daily";
 
-export function shareText(r: RunResult, theme: Theme, url: string): string {
-  const sym = { named: "🔵", zoomed: "✨", skipped: "▪️" } as const;
-  const marks = r.items.map((i) => sym[i.outcome]);
+/** How the run sits against tonight's crowd: share of players beaten (0..1), and whether that crowd is real. */
+export interface Standing { beat: number; live: boolean; players: number }
+
+/** One glyph per object you met, in order: the band's sky glyph when named, a cloud when skipped. */
+const BAND_GLYPH = ["🌕", "🌠", "🌌", "🕳️"] as const;
+
+/** A title for how the night went, from the share of the crowd you out-spotted. */
+export function nightTitle(beat: number): string {
+  if (beat >= 0.95) return "🏆 Eagle-eyed";
+  if (beat >= 0.75) return "🌟 Sharp-eyed";
+  if (beat >= 0.45) return "🔭 Keen watcher";
+  if (beat >= 0.2) return "🌙 Steady watcher";
+  return "☁️ Cloudy night";
+}
+
+/**
+ * The text a player shares: date and sky, score, the run as a strip of sky glyphs (difficulty of each object named,
+ * clouds for skips, so it shows how far and how hard you got without spoiling any answer), a title, and an invite.
+ */
+export function shareText(r: RunResult, theme: Theme, url: string, standing: Standing | null): string {
+  const date = new Date(r.date + "T12:00:00").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+  const themeId = dayTheme(r.puzzle);
+  const sky = themeInfo(themeId)?.mystery ? "Mystery link" : themeName(themeId);
+  const glyphs = r.items.map((it) => (it.outcome === "skipped" ? "☁️" : BAND_GLYPH[BY_ID.get(it.id)?.band ?? 0]));
   const rows: string[] = [];
-  for (let i = 0; i < marks.length; i += 10) rows.push(marks.slice(i, i + 10).join(""));
-  const device = r.device === "touch" ? "📱" : "⌨️";
+  for (let i = 0; i < glyphs.length; i += 10) rows.push(glyphs.slice(i, i + 10).join(""));
+  const zooms = r.items.filter((it) => it.outcome === "zoomed").length;
+  const facts = [`${r.named} spotted`, ...(zooms ? [`✨${zooms} zoomed`] : []), ...(r.skipped ? [`${r.skipped} clouded`] : [])];
+  const title = standing ? `${nightTitle(standing.beat)}${standing.live ? ` · top ${Math.max(1, Math.round((1 - standing.beat) * 100))}% tonight` : ""}` : "";
   return [
-    `${theme.shareIcon} ${theme.title} Night #${r.puzzle} · ${themeInfo(dayTheme(r.puzzle))?.mystery ? "Mystery link" : themeName(dayTheme(r.puzzle))}${CONFIG.conditionsOn ? ` · ${dayCondition(r.puzzle).name}` : ""} · ${r.score} pts${r.tier ? ` · ${CONFIG.tiers[r.tier].name} sky` : ""}`,
-    ...(r.link ? [r.link.ok ? "🔗 Found the mystery link" : "🔗 Missed the mystery link"] : []),
-    `${r.named} named · ${r.skipped} skipped${(r.bestCombo ?? 0) >= CONFIG.combo[0].at ? ` · steady hand ${r.bestCombo}` : ""} ${device}`,
+    `${theme.shareIcon} ${theme.title} · ${date}`,
+    `${sky} · ${r.score} pts`,
     ...rows,
-    url,
+    facts.join(" · "),
+    ...(r.link ? [r.link.ok ? "🔗 Found the hidden link" : "🔗 Missed the hidden link"] : []),
+    ...(title ? [title] : []),
+    "",
+    `Can you spot more? ${url}`,
   ].join("\n");
 }
 

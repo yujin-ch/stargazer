@@ -27,10 +27,10 @@ export const CONFIG = {
   bands: [
     // startZoom: how far in the telescope starts; pullBack: seconds to reach full view;
     // startBlur: how out of focus it starts, in sprite pixels (0 = sharp, max 2.4); points / zoomedPoints.
-    { startZoom: 1.6, pullBack: 3, startBlur: 0.4, points: 1, zoomedPoints: 2 },
-    { startZoom: 2.2, pullBack: 4, startBlur: 0.7, points: 2, zoomedPoints: 3 },
-    { startZoom: 3, pullBack: 5, startBlur: 1.1, points: 3, zoomedPoints: 5 },
-    { startZoom: 3.5, pullBack: 5.5, startBlur: 1.3, points: 4, zoomedPoints: 6 },
+    { startZoom: 1.6, pullBack: 1.8, startBlur: 0.4, points: 1, zoomedPoints: 2 },
+    { startZoom: 2.2, pullBack: 2.4, startBlur: 0.7, points: 2, zoomedPoints: 3 },
+    { startZoom: 3, pullBack: 3, startBlur: 1.1, points: 3, zoomedPoints: 5 },
+    { startZoom: 3.5, pullBack: 3.3, startBlur: 1.3, points: 4, zoomedPoints: 6 },
   ],
   /**
    * Sky conditions: one per night, the same for everyone, picked by the night number.
