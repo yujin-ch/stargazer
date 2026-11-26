@@ -22,7 +22,7 @@ export function nightTitle(beat: number): string {
  * The text a player shares: date and sky, score, the run as a strip of sky glyphs (difficulty of each object named,
  * clouds for skips, so it shows how far and how hard you got without spoiling any answer), a title, and an invite.
  */
-export function shareText(r: RunResult, theme: Theme, url: string, standing: Standing | null): string {
+export function shareText(r: RunResult, theme: Theme, url: string, standing: Standing | null, streak = 0): string {
   const date = new Date(r.date + "T12:00:00").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
   const themeId = dayTheme(r.puzzle);
   const sky = themeInfo(themeId)?.mystery ? "Mystery link" : themeName(themeId);
@@ -39,13 +39,18 @@ export function shareText(r: RunResult, theme: Theme, url: string, standing: Sta
     facts.join(" · "),
     ...(r.link ? [r.link.ok ? "🔗 Found the hidden link" : "🔗 Missed the hidden link"] : []),
     ...(title ? [title] : []),
+    ...(streak >= 2 ? [`🔥 ${streak}-night streak`] : []),
     "",
     `Can you spot more? ${url}`,
   ].join("\n");
 }
 
-export async function share(text: string): Promise<"shared" | "copied" | "failed"> {
+export async function share(text: string, image?: File | null): Promise<"shared" | "copied" | "failed"> {
   const touch = window.matchMedia("(pointer: coarse)").matches;
+  // on phones, send the picture along with the text when the share sheet takes files
+  if (touch && image && navigator.canShare?.({ files: [image] })) {
+    try { await navigator.share({ files: [image], text }); return "shared"; } catch (e) { if ((e as Error).name === "AbortError") return "shared"; }
+  }
   if (touch && navigator.share) {
     try { await navigator.share({ text }); return "shared"; } catch (e) { if ((e as Error).name === "AbortError") return "shared"; /* they closed the sheet: say nothing */ }
   }

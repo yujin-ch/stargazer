@@ -6,11 +6,26 @@
     <meta name="theme-color" content="#0e0d1f" />
     <meta name="description" content="A daily one-minute picture-naming game. Look through the telescope and name what drifts by." />
     <title>Stargazer</title>
+    <link rel="canonical" href="%VITE_SITE_URL%/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Stargazer" />
+    <meta property="og:title" content="Stargazer · a daily one-minute telescope game" />
+    <meta property="og:description" content="One minute at the telescope. Name what drifts by. A new sky every night, the same for everyone." />
+    <meta property="og:url" content="%VITE_SITE_URL%/" />
+    <meta property="og:image" content="%VITE_SITE_URL%/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Stargazer · a daily one-minute telescope game" />
+    <meta name="twitter:description" content="One minute at the telescope. Name what drifts by. A new sky every night." />
+    <meta name="twitter:image" content="%VITE_SITE_URL%/og.png" />
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'><rect width='16' height='16' fill='%230e0d1f'/><rect x='3' y='3' width='10' height='10' fill='%235a6988'/><rect x='4' y='4' width='8' height='8' fill='%23202243'/><rect x='7' y='6' width='2' height='2' fill='%23fee761'/><rect x='10' y='9' width='1' height='1' fill='%232ce8f5'/></svg>" />
   </head>
   <body>
     <canvas id="sky" aria-hidden="true"></canvas>
     <div id="app"></div>
     <script type="module" src="/src/main.ts"></script>
+    <!-- Vercel Web Analytics: counts visits once it's switched on in the Vercel project (Analytics tab); harmless before that -->
+    <script defer src="/_vercel/insights/script.js"></script>
   </body>
 </html>

@@ -1,4 +1,9 @@
 // Every tuning knob in one place. Change numbers here, not in game code.
+/** The public address, from VITE_SITE_URL (see .env): change it there when the custom domain arrives. */
+export const SITE_URL: string = (import.meta.env.VITE_SITE_URL as string | undefined)?.replace(/\/$/, "") || (typeof location !== "undefined" ? location.origin : "");
+/** A tip page (Ko-fi or similar); empty hides the tip link. */
+export const TIP_URL: string = (import.meta.env.VITE_TIP_URL as string | undefined) ?? "";
+
 export const CONFIG = {
   /** Length of a run in seconds. */
   runSeconds: 60,

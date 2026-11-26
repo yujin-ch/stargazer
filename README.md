@@ -48,3 +48,10 @@ Build one from a generated batch (raw green-screen images named <id>.png plus th
 On that local date the game fetches `days/<date>/pack.json`; if it exists, tonight's star shows Photographs and
 the sky is drawn from the pack (per-band counts from CONFIG.tiers, 3/8/12/6 for most players). No pack, no change.
 Push the folder to `main` and Vercel redeploys. Note: future packs are public files, so a curious player could peek.
+
+## Site address, link previews, analytics, tips
+
+- `VITE_SITE_URL` in `.env` (or in Vercel's environment variables) is the public address. The share text, share picture and link-preview tags (`og:*`, `twitter:*` in `index.html`) are all built from it, so moving to a custom domain means changing this one line and redeploying.
+- `public/og.png` is the 1200×630 link-preview image.
+- Shared links carry `?s=1`. Vercel Web Analytics is loaded from `/_vercel/insights/script.js` and starts counting once Analytics is switched on in the Vercel project.
+- `VITE_TIP_URL` (e.g. a Ko-fi page) shows a small tip link under the results; leave it empty to hide it.

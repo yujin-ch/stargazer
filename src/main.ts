@@ -1,6 +1,7 @@
 import "@fontsource/press-start-2p";
 import "@fontsource/vt323";
-import { CONFIG, tierFor } from "./config";
+import { CONFIG, tierFor, SITE_URL, TIP_URL } from "./config";
+import { drawShareCard, cardBlob } from "./sharecard";
 import { OBJECTS, BY_ID, loadDayPack, loadPackIndex, shownNames, themeName, themeLabel, themeInfo, type SkyObject } from "./library";
 import { makeMatcher, normalize, forms as formsOf, linkMatches } from "./match";
 import { dailySky, setDayPack, notePackNight, practiceSky, localDateKey, puzzleNumber, mulberry32, dayTheme, dayCondition } from "./daily";
@@ -9,7 +10,7 @@ import { setMuted, unlockAudio, setAmbience } from "./themes/chip";
 import { Viewer } from "./viewer";
 import { store, type ItemResult, type RunResult } from "./storage";
 import { crowdScores, beatShare, liveCrowd, MIN_LIVE } from "./crowd";
-import { share, shareText, type Standing } from "./share";
+import { share, shareText, nightTitle, type Standing } from "./share";
 import { atlasScreen, type AtlasStar } from "./atlas";
 import { introScreen } from "./intro";
 import { skyCenter, skyBlackHole, skyPulse } from "./themes/pixel-space/sky";
@@ -28,7 +29,8 @@ const longerNames = (o: SkyObject) => {
   return v;
 };
 const isTouch = window.matchMedia("(pointer: coarse)").matches;
-const SITE_URL = location.origin + location.pathname;
+/** Links people share carry ?s=1, so visits from shares can be told apart. */
+const SHARE_URL = `${SITE_URL}/?s=1`;
 setMuted(store.muted);
 setAmbience(store.ambience);
 // browsers only allow sound after a tap or key: the first one wakes the night sounds
@@ -805,7 +807,8 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
         <div><dt>STEADY</dt><dd>${r.bestCombo ?? 0}</dd></div>
         <div><dt>SKIPPED</dt><dd>${r.skipped}</dd></div>
       </dl>
-      ${daily ? `<div class="share-row"><button class="btn primary" id="share">SHARE</button></div>` : ""}
+      ${daily ? `<div class="share-row"><button class="btn primary" id="share">SHARE</button></div>${isTouch ? "" : `<p class="save-row"><button class="link-btn" id="save-card">save the picture</button></p>`}` : ""}
+      ${TIP_URL ? `<p class="tip-row"><a href="${esc(TIP_URL)}" target="_blank" rel="noopener">Enjoying the sky? Leave a tip for the stargazers who make it ☕</a></p>` : ""}
     </section>
     <div class="actions">
       <button class="btn" id="to-atlas">STAR ATLAS</button>
@@ -827,7 +830,7 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
   moonrise();
   const chart = document.getElementById("chart") as HTMLCanvasElement;
   let standing: Standing | null = null;
-  const sharePreview = () => { const pre = document.getElementById("share-preview"); if (pre) pre.textContent = shareText(r, theme, SITE_URL, standing); };
+  const sharePreview = () => { const pre = document.getElementById("share-preview"); if (pre) pre.textContent = shareText(r, theme, SHARE_URL, standing, streakNow); };
   const best = bestFind(r);
   const bestObj = best >= 0 ? BY_ID.get(r.items[best].id) : undefined;
   document.getElementById("constellation")!.innerHTML = bestObj
@@ -930,8 +933,26 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
   }
   if (!r.items.length) list.innerHTML = `<li class="empty">Nothing this time. The sky will be back tomorrow.</li>`;
   const toast = (t: string) => { const e = document.getElementById("toast")!; e.textContent = t; };
+  const card = async () => {
+    const small = document.createElement("canvas");
+    drawConstellation(small, r, best);
+    const host = SITE_URL.replace(/^https?:\/\//, "");
+    const title = standing ? nightTitle(standing.beat).replace(/^\S+\s/, "") : "";
+    const c = await drawShareCard({ r, theme, sky: shownTheme, constellation: small, title, streak: streakNow, host });
+    return cardBlob(c);
+  };
+  document.getElementById("save-card")?.addEventListener("click", async () => {
+    const b = await card();
+    if (!b) return;
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(b); a.download = `stargazer-${r.date}.png`; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  });
+  // phones: draw the picture ahead of time, so the tap goes straight to the share sheet
+  let cardFile: File | null = null;
+  if (isTouch && daily) setTimeout(() => void card().then((b) => { cardFile = b ? new File([b], `stargazer-${r.date}.png`, { type: "image/png" }) : null; }), 1800);
   document.getElementById("share")?.addEventListener("click", async () => {
-    const res = await share(shareText(r, theme, SITE_URL, standing));
+    const res = await share(shareText(r, theme, SHARE_URL, standing, streakNow), cardFile);
     toast(res === "copied" ? "Copied! Paste it to a friend or group chat." : res === "shared" ? "" : "Couldn't share. Try again.");
   });
   document.getElementById("to-atlas")!.onclick = () => showAtlas();
