@@ -55,3 +55,10 @@ Push the folder to `main` and Vercel redeploys. Note: future packs are public fi
 - `public/og.png` is the 1200×630 link-preview image.
 - Shared links carry `?s=1`. Vercel Web Analytics is loaded from `/_vercel/insights/script.js` and starts counting once Analytics is switched on in the Vercel project.
 - `VITE_TIP_URL` (e.g. a Ko-fi page) shows a small tip link under the results; leave it empty to hide it.
+
+## Security
+
+- `vercel.json` sets the security headers: a strict Content-Security-Policy (same-origin scripts, fonts, images and API only), HSTS, no framing, nosniff, a tight Referrer-Policy and Permissions-Policy.
+- `api/scores.ts` limits each address (as a salted hash, never the raw IP) to 60 reads and 10 writes a minute and 8 new players a night, caps bodies at 512 bytes, and only accepts nights that are open now. Set `IP_HASH_SALT` in Vercel to a random string to use your own salt.
+- `?debug` (which reveals answers) only works on localhost, and `?date=` can't preview a future night on the public site.
+- The game runs in the browser, so a determined player can always read answers from the code. Crowd scores are a friendly guide, not a guarded leaderboard.

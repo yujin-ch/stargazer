@@ -1288,8 +1288,9 @@ function packDate(o: SkyObject): string {
 
 // ---------------------------------------------------------------- boot
 
-// test hook for automated playtests: /?debug
-if (new URLSearchParams(location.search).has("debug"))
+// test hook for automated playtests: /?debug, only on this computer (it reveals answers)
+const LOCAL = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
+if (LOCAL && new URLSearchParams(location.search).has("debug"))
   (window as unknown as { __sg: unknown }).__sg = { answer: () => run?.sky[run.i]?.names[0], phase: () => run?.phase };
 
 // ---------------------------------------------------------------- front door: intro, then the star atlas
@@ -1369,7 +1370,9 @@ function showAtlas(focus = "tonight") {
 
 // tonight's own photo set, if one has been published (falls back to the rotating themes)
 // /?date=YYYY-MM-DD previews that date's pack as an unsaved run (for checking a pack before its night)
-const PACK_DATE = /^\d{4}-\d{2}-\d{2}$/.test(new URLSearchParams(location.search).get("date") ?? "") ? new URLSearchParams(location.search).get("date")! : "";
+const DATE_Q = new URLSearchParams(location.search).get("date") ?? "";
+// future nights stay hidden on the public site, so nobody can preview tomorrow's answers
+const PACK_DATE = /^\d{4}-\d{2}-\d{2}$/.test(DATE_Q) && (LOCAL || DATE_Q <= localDateKey()) ? DATE_Q : "";
 if (PACK_DATE) PREVIEW_NIGHT = puzzleNumber(PACK_DATE);
 const tonightPack = Promise.all([
   loadPackIndex().then((idx) => { for (const [k, v] of Object.entries(idx)) notePackNight(puzzleNumber(k), v.theme); }),
