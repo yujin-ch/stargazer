@@ -1,0 +1,190 @@
+{
+ "date": "2026-11-27",
+ "theme": "photos",
+ "items": [
+  {
+   "id": "key",
+   "band": 1,
+   "names": [
+    "key",
+    "skeleton key",
+    "door key"
+   ],
+   "note": "A skeleton key opens many locks by skipping the inner wards"
+  },
+  {
+   "id": "pineapple",
+   "band": 1,
+   "names": [
+    "pineapple",
+    "ananas"
+   ],
+   "note": "One plant grows a single pineapple at a time"
+  },
+  {
+   "id": "cactus",
+   "band": 1,
+   "names": [
+    "cactus",
+    "cacti",
+    "saguaro"
+   ],
+   "note": "Saguaros can live for 150 years"
+  },
+  {
+   "id": "seahorse",
+   "band": 2,
+   "names": [
+    "seahorse",
+    "sea horse"
+   ],
+   "note": "The father carries the babies"
+  },
+  {
+   "id": "kettlebell",
+   "band": 2,
+   "names": [
+    "kettlebell",
+    "kettle bell"
+   ],
+   "note": "Started as a Russian market counterweight"
+  },
+  {
+   "id": "pelican",
+   "band": 2,
+   "names": [
+    "pelican"
+   ],
+   "note": "The pouch can hold three gallons of water"
+  },
+  {
+   "id": "toucan",
+   "band": 2,
+   "names": [
+    "toucan"
+   ],
+   "note": "That huge beak is light and helps it shed heat"
+  },
+  {
+   "id": "gramophone",
+   "band": 2,
+   "names": [
+    "gramophone",
+    "phonograph",
+    "record player"
+   ],
+   "note": "The horn made it loud with no electricity"
+  },
+  {
+   "id": "hourglass",
+   "band": 2,
+   "names": [
+    "hourglass",
+    "sand timer",
+    "egg timer",
+    "sandglass"
+   ],
+   "note": "Sailors used them to time the ship's watch"
+  },
+  {
+   "id": "artichoke",
+   "band": 3,
+   "names": [
+    "artichoke",
+    "globe artichoke"
+   ],
+   "note": "We eat the flower bud"
+  },
+  {
+   "id": "fez",
+   "band": 3,
+   "names": [
+    "fez",
+    "tarboosh",
+    "hat"
+   ],
+   "note": "Named after a city in Morocco"
+  },
+  {
+   "id": "gondola",
+   "band": 3,
+   "names": [
+    "gondola"
+   ],
+   "note": "Each one is built slightly lopsided"
+  },
+  {
+   "id": "trebuchet",
+   "band": 3,
+   "names": [
+    "trebuchet",
+    "catapult"
+   ],
+   "note": "A counterweight hurls the stone"
+  },
+  {
+   "id": "dragonfruit",
+   "band": 3,
+   "names": [
+    "dragon fruit",
+    "pitaya",
+    "pitahaya"
+   ],
+   "note": "Grows on a climbing cactus"
+  },
+  {
+   "id": "zither",
+   "band": 4,
+   "names": [
+    "zither"
+   ],
+   "note": "Strings stretched over a flat box"
+  },
+  {
+   "id": "enigmamachine",
+   "band": 4,
+   "names": [
+    "enigma",
+    "enigma machine",
+    "cipher machine"
+   ],
+   "note": "Its code was broken at Bletchley Park"
+  },
+  {
+   "id": "quern",
+   "band": 4,
+   "names": [
+    "quern",
+    "quern stone",
+    "millstone",
+    "hand mill"
+   ],
+   "note": "Two stones grind grain to flour"
+  },
+  {
+   "id": "tarsier",
+   "band": 4,
+   "names": [
+    "tarsier"
+   ],
+   "note": "Each eye is as big as its brain"
+  },
+  {
+   "id": "nudibranch",
+   "band": 4,
+   "names": [
+    "nudibranch",
+    "sea slug"
+   ],
+   "note": "Some steal stinging cells from what they eat"
+  },
+  {
+   "id": "coelacanth",
+   "band": 4,
+   "names": [
+    "coelacanth"
+   ],
+   "note": "Thought extinct until 1938"
+  }
+ ]
+}

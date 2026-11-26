@@ -1498,7 +1498,8 @@ function showAtlas(focus = "tonight") {
 // /?date=YYYY-MM-DD previews that date's pack as an unsaved run (for checking a pack before its night)
 const DATE_Q = new URLSearchParams(location.search).get("date") ?? "";
 // future nights stay hidden on the public site, so nobody can preview tomorrow's answers
-const PACK_DATE = /^\d{4}-\d{2}-\d{2}$/.test(DATE_Q) && (LOCAL || DATE_Q <= localDateKey()) ? DATE_Q : "";
+declare const __PREVIEW__: boolean;
+const PACK_DATE = /^\d{4}-\d{2}-\d{2}$/.test(DATE_Q) && (LOCAL || __PREVIEW__ || DATE_Q <= localDateKey()) ? DATE_Q : "";
 if (PACK_DATE) PREVIEW_NIGHT = puzzleNumber(PACK_DATE);
 const tonightPack = Promise.all([
   loadPackIndex().then((idx) => { for (const [k, v] of Object.entries(idx)) notePackNight(puzzleNumber(k), v.theme); }),

@@ -4,3 +4,5 @@ dist
 __pycache__
 dist-single
 dist-board
+scripts/photos/nights/*/raw/
+scripts/photos/nights/*/review.png
