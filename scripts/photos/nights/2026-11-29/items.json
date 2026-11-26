@@ -1,0 +1,208 @@
+{
+ "date": "2026-11-29",
+ "items": [
+  {
+   "id": "headphones",
+   "band": 1,
+   "desc": "over-ear headphones with a padded headband",
+   "names": "headphones, headset, earphones, cans",
+   "note": "The first headphones were made for telephone operators"
+  },
+  {
+   "id": "cupcake",
+   "band": 1,
+   "desc": "cupcake with swirled pink frosting and sprinkles in a paper case",
+   "names": "cupcake, cup cake, fairy cake",
+   "note": "Named for being baked by the cupful"
+  },
+  {
+   "id": "anchor",
+   "band": 1,
+   "desc": "heavy black iron ship's anchor with a ring at the top",
+   "names": "anchor",
+   "note": "An anchor holds by digging into the seabed, not by its weight alone"
+  },
+  {
+   "id": "porcupine",
+   "band": 2,
+   "desc": "porcupine with raised quills, side view",
+   "names": "porcupine",
+   "note": "It can't shoot its quills"
+  },
+  {
+   "id": "wateringcan",
+   "band": 2,
+   "desc": "metal watering can with a long spout",
+   "names": "watering can, watering pot",
+   "note": "The rose on the spout spreads the water gently"
+  },
+  {
+   "id": "quill",
+   "band": 2,
+   "desc": "white feather quill pen in a glass inkwell",
+   "names": "quill, quill pen, feather pen, inkwell",
+   "note": "Goose feathers were the classic choice"
+  },
+  {
+   "id": "compass",
+   "band": 2,
+   "desc": "brass magnetic compass with the lid open, needle pointing north",
+   "names": "compass",
+   "note": "The needle points to magnetic north, not the North Pole"
+  },
+  {
+   "id": "snowglobe",
+   "band": 2,
+   "desc": "snow globe with a small house inside on a wooden base",
+   "names": "snow globe, snowglobe",
+   "note": "Invented by accident while trying to improve a lamp"
+  },
+  {
+   "id": "violin",
+   "band": 2,
+   "desc": "wooden violin with its bow, three-quarter view",
+   "names": "violin, fiddle",
+   "note": "A violin has about 70 separate wooden parts"
+  },
+  {
+   "id": "koala",
+   "band": 2,
+   "desc": "koala hugging a short eucalyptus branch",
+   "names": "koala, koala bear",
+   "note": "Sleeps up to 20 hours a day"
+  },
+  {
+   "id": "walrus",
+   "band": 2,
+   "desc": "walrus with long white tusks lying down",
+   "names": "walrus",
+   "note": "Tusks help it haul out onto the ice"
+  },
+  {
+   "id": "ocarina",
+   "band": 3,
+   "desc": "blue ceramic ocarina with finger holes",
+   "names": "ocarina",
+   "note": "A clay flute shaped like an egg"
+  },
+  {
+   "id": "castanets",
+   "band": 3,
+   "desc": "pair of wooden castanets",
+   "names": "castanets",
+   "note": "Clicked in the palm while dancing"
+  },
+  {
+   "id": "cashregister",
+   "band": 3,
+   "desc": "antique brass cash register",
+   "names": "cash register, till, register",
+   "note": "Invented to stop clerks pocketing cash"
+  },
+  {
+   "id": "starfruit",
+   "band": 3,
+   "desc": "starfruit with a slice cut off",
+   "names": "starfruit, star fruit, carambola",
+   "note": "Slices make little stars"
+  },
+  {
+   "id": "chandelier",
+   "band": 3,
+   "desc": "crystal chandelier",
+   "names": "chandelier",
+   "note": "The word comes from French for candle-holder"
+  },
+  {
+   "id": "bonsai",
+   "band": 3,
+   "desc": "bonsai tree in a shallow pot",
+   "names": "bonsai, bonsai tree, tree",
+   "note": "Some bonsai are centuries old"
+  },
+  {
+   "id": "hammerhead",
+   "band": 3,
+   "desc": "hammerhead shark, side view",
+   "names": "hammerhead shark, hammerhead, shark",
+   "note": "Wide-set eyes see above and below"
+  },
+  {
+   "id": "periscope",
+   "band": 3,
+   "desc": "brass periscope tube with angled eyepiece",
+   "names": "periscope",
+   "note": "Two mirrors at 45 degrees"
+  },
+  {
+   "id": "butterchurn",
+   "band": 3,
+   "desc": "wooden butter churn with a plunger",
+   "names": "butter churn, churn",
+   "note": "Cream becomes butter with enough plunging"
+  },
+  {
+   "id": "spinningtop",
+   "band": 3,
+   "desc": "wooden spinning top, mid-spin",
+   "names": "spinning top, top, whipping top",
+   "note": "Spin keeps it upright"
+  },
+  {
+   "id": "snowshoe",
+   "band": 3,
+   "desc": "wooden snowshoe with leather webbing",
+   "names": "snowshoe, snowshoes",
+   "note": "Spreads your weight over the snow"
+  },
+  {
+   "id": "pufferfish",
+   "band": 3,
+   "desc": "inflated pufferfish",
+   "names": "pufferfish, puffer fish, blowfish, fugu",
+   "note": "Puffs up with water"
+  },
+  {
+   "id": "erhu",
+   "band": 4,
+   "desc": "erhu, the Chinese two-string fiddle",
+   "names": "erhu",
+   "note": "The bow passes between the two strings"
+  },
+  {
+   "id": "cameraobscura",
+   "band": 4,
+   "desc": "wooden box camera obscura with a lens",
+   "names": "camera obscura, pinhole camera",
+   "note": "A dark room that projects the scene outside"
+  },
+  {
+   "id": "glassharmonica",
+   "band": 4,
+   "desc": "glass armonica with spinning glass bowls",
+   "names": "glass harmonica, armonica, glass armonica",
+   "note": "Invented by Benjamin Franklin"
+  },
+  {
+   "id": "mangle",
+   "band": 4,
+   "desc": "antique laundry mangle with rollers and a crank",
+   "names": "mangle, wringer, clothes wringer",
+   "note": "Squeezed water out before spin dryers"
+  },
+  {
+   "id": "markhor",
+   "band": 4,
+   "desc": "markhor goat with corkscrew horns",
+   "names": "markhor, goat",
+   "note": "Pakistan's national animal"
+  },
+  {
+   "id": "shoebill",
+   "band": 4,
+   "desc": "shoebill stork",
+   "names": "shoebill, shoebill stork, whale-headed stork",
+   "note": "Stands still for hours"
+  }
+ ]
+}

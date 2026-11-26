@@ -1,0 +1,208 @@
+{
+ "date": "2026-11-30",
+ "items": [
+  {
+   "id": "toothbrush",
+   "band": 1,
+   "desc": "blue plastic toothbrush with white bristles",
+   "names": "toothbrush, tooth brush",
+   "note": "Early toothbrushes used hog bristles"
+  },
+  {
+   "id": "trumpet",
+   "band": 1,
+   "desc": "shiny brass trumpet, side view",
+   "names": "trumpet, cornet",
+   "note": "Three valves give you every note"
+  },
+  {
+   "id": "penguin",
+   "band": 1,
+   "desc": "emperor penguin standing upright, side view",
+   "names": "penguin, emperor penguin",
+   "note": "Emperor dads keep the egg warm on their feet"
+  },
+  {
+   "id": "graduationcap",
+   "band": 2,
+   "desc": "black graduation cap with a gold tassel",
+   "names": "graduation cap, mortarboard, mortar board, cap",
+   "note": "Named after a plasterer's board"
+  },
+  {
+   "id": "mailbox",
+   "band": 2,
+   "desc": "blue US mailbox on legs",
+   "names": "mailbox, letterbox, postbox, mail box",
+   "note": "Collected twice a day in some cities"
+  },
+  {
+   "id": "bagpipes",
+   "band": 2,
+   "desc": "Scottish bagpipes with tartan bag and three drones",
+   "names": "bagpipes, bagpipe, pipes",
+   "note": "The drones play one note the whole time"
+  },
+  {
+   "id": "cello",
+   "band": 2,
+   "desc": "cello standing upright with its bow",
+   "names": "cello, violoncello",
+   "note": "Played sitting, held between the knees"
+  },
+  {
+   "id": "musicbox",
+   "band": 2,
+   "desc": "open wooden music box with a tiny ballerina",
+   "names": "music box, jewelry box, musical box",
+   "note": "A pinned drum plucks a steel comb"
+  },
+  {
+   "id": "xylophone",
+   "band": 2,
+   "desc": "wooden xylophone with two mallets",
+   "names": "xylophone, marimba",
+   "note": "The name means \"wood sound\""
+  },
+  {
+   "id": "lantern",
+   "band": 2,
+   "desc": "old brass oil lantern with a glass chimney",
+   "names": "lantern, oil lamp, lamp",
+   "note": "Glass keeps the wind off the flame"
+  },
+  {
+   "id": "whisk",
+   "band": 2,
+   "desc": "metal balloon whisk",
+   "names": "whisk, egg beater, balloon whisk",
+   "note": "More wires, more air"
+  },
+  {
+   "id": "spiritlevel",
+   "band": 3,
+   "desc": "yellow spirit level with a bubble",
+   "names": "spirit level, level, bubble level",
+   "note": "The bubble finds the middle when it's flat"
+  },
+  {
+   "id": "filmreel",
+   "band": 3,
+   "desc": "metal film reel with film",
+   "names": "film reel, reel, movie reel",
+   "note": "24 frames a second"
+  },
+  {
+   "id": "anvil",
+   "band": 3,
+   "desc": "black iron blacksmith's anvil",
+   "names": "anvil",
+   "note": "The pointed end is called the horn"
+  },
+  {
+   "id": "zeppelin",
+   "band": 3,
+   "desc": "silver zeppelin airship",
+   "names": "zeppelin, airship, blimp, dirigible",
+   "note": "A zeppelin has a rigid frame inside"
+  },
+  {
+   "id": "submarine",
+   "band": 3,
+   "desc": "yellow submarine with a periscope",
+   "names": "submarine, sub",
+   "note": "Tanks of water let it sink and rise"
+  },
+  {
+   "id": "monocle",
+   "band": 3,
+   "desc": "gold-rimmed monocle on a chain",
+   "names": "monocle",
+   "note": "One lens, held in by the eye socket"
+  },
+  {
+   "id": "concertina",
+   "band": 3,
+   "desc": "hexagonal concertina",
+   "names": "concertina",
+   "note": "Smaller cousin of the accordion"
+  },
+  {
+   "id": "floppydisk",
+   "band": 3,
+   "desc": "blue 3.5 inch floppy disk",
+   "names": "floppy disk, floppy, diskette",
+   "note": "Held 1.44 megabytes"
+  },
+  {
+   "id": "sickle",
+   "band": 3,
+   "desc": "curved sickle with a wooden handle",
+   "names": "sickle",
+   "note": "For cutting grain by hand"
+  },
+  {
+   "id": "garlicpress",
+   "band": 3,
+   "desc": "stainless steel garlic press",
+   "names": "garlic press",
+   "note": "Squeezes cloves through tiny holes"
+  },
+  {
+   "id": "didgeridoo",
+   "band": 3,
+   "desc": "painted didgeridoo",
+   "names": "didgeridoo, didjeridu",
+   "note": "Played with circular breathing"
+  },
+  {
+   "id": "samovar",
+   "band": 3,
+   "desc": "ornate brass samovar",
+   "names": "samovar",
+   "note": "A Russian urn for boiling tea water"
+  },
+  {
+   "id": "balalaika",
+   "band": 4,
+   "desc": "triangular balalaika",
+   "names": "balalaika",
+   "note": "A triangle-shaped Russian lute"
+  },
+  {
+   "id": "shamisen",
+   "band": 4,
+   "desc": "shamisen, the three-stringed Japanese lute",
+   "names": "shamisen, samisen",
+   "note": "Played with a big plectrum"
+  },
+  {
+   "id": "orrery",
+   "band": 4,
+   "desc": "brass orrery model of the solar system",
+   "names": "orrery, solar system model",
+   "note": "Named after an Earl of Orrery"
+  },
+  {
+   "id": "tricorn",
+   "band": 4,
+   "desc": "black tricorn hat",
+   "names": "tricorn, tricorne, tricorn hat, three-cornered hat",
+   "note": "The pirate classic"
+  },
+  {
+   "id": "handpan",
+   "band": 4,
+   "desc": "steel handpan drum",
+   "names": "handpan, hang, hang drum, steel tongue drum",
+   "note": "Played with the hands like a UFO-shaped bell"
+  },
+  {
+   "id": "dugong",
+   "band": 4,
+   "desc": "dugong swimming",
+   "names": "dugong, sea cow, manatee",
+   "note": "Cousin of the manatee"
+  }
+ ]
+}

@@ -1,0 +1,208 @@
+{
+ "date": "2026-11-27",
+ "items": [
+  {
+   "id": "key",
+   "band": 1,
+   "desc": "old-fashioned brass door key",
+   "names": "key, skeleton key, door key",
+   "note": "A skeleton key opens many locks by skipping the inner wards"
+  },
+  {
+   "id": "pineapple",
+   "band": 1,
+   "desc": "whole ripe pineapple with its leafy crown",
+   "names": "pineapple, ananas",
+   "note": "One plant grows a single pineapple at a time"
+  },
+  {
+   "id": "cactus",
+   "band": 1,
+   "desc": "green saguaro cactus with two arms in a terracotta pot",
+   "names": "cactus, cacti, saguaro",
+   "note": "Saguaros can live for 150 years"
+  },
+  {
+   "id": "seahorse",
+   "band": 2,
+   "desc": "yellow seahorse, side view",
+   "names": "seahorse, sea horse",
+   "note": "The father carries the babies"
+  },
+  {
+   "id": "kettlebell",
+   "band": 2,
+   "desc": "black cast-iron kettlebell",
+   "names": "kettlebell, kettle bell",
+   "note": "Started as a Russian market counterweight"
+  },
+  {
+   "id": "pelican",
+   "band": 2,
+   "desc": "white pelican with a big throat pouch",
+   "names": "pelican",
+   "note": "The pouch can hold three gallons of water"
+  },
+  {
+   "id": "toucan",
+   "band": 2,
+   "desc": "toucan with a huge orange beak on a branch",
+   "names": "toucan",
+   "note": "That huge beak is light and helps it shed heat"
+  },
+  {
+   "id": "gramophone",
+   "band": 2,
+   "desc": "gramophone with a big brass horn and a record",
+   "names": "gramophone, phonograph, record player",
+   "note": "The horn made it loud with no electricity"
+  },
+  {
+   "id": "hourglass",
+   "band": 2,
+   "desc": "wooden hourglass with pale sand trickling down",
+   "names": "hourglass, sand timer, egg timer, sandglass",
+   "note": "Sailors used them to time the ship's watch"
+  },
+  {
+   "id": "harp",
+   "band": 2,
+   "desc": "tall golden concert harp",
+   "names": "harp",
+   "note": "A concert harp has 47 strings"
+  },
+  {
+   "id": "scarecrow",
+   "band": 2,
+   "desc": "scarecrow in a straw hat and patched shirt",
+   "names": "scarecrow",
+   "note": "Crows soon learn it's harmless"
+  },
+  {
+   "id": "sombrero",
+   "band": 3,
+   "desc": "wide-brimmed straw sombrero",
+   "names": "sombrero, hat",
+   "note": "The name comes from sombra, shade"
+  },
+  {
+   "id": "sitar",
+   "band": 3,
+   "desc": "sitar with a gourd body and long neck",
+   "names": "sitar",
+   "note": "Extra strings ring along on their own"
+  },
+  {
+   "id": "vise",
+   "band": 3,
+   "desc": "cast-iron bench vise",
+   "names": "vise, vice, bench vise",
+   "note": "Holds work still while you saw"
+  },
+  {
+   "id": "stickinsect",
+   "band": 3,
+   "desc": "brown stick insect on a twig",
+   "names": "stick insect, walking stick, phasmid",
+   "note": "Looks like a twig on purpose"
+  },
+  {
+   "id": "stereoscope",
+   "band": 3,
+   "desc": "antique wooden stereoscope viewer with a double photo card",
+   "names": "stereoscope, stereo viewer, viewmaster",
+   "note": "Two photos, one 3D picture"
+  },
+  {
+   "id": "weathervane",
+   "band": 3,
+   "desc": "copper rooster weathervane",
+   "names": "weathervane, weather vane, wind vane",
+   "note": "Points into the wind"
+  },
+  {
+   "id": "sliderule",
+   "band": 3,
+   "desc": "wooden slide rule",
+   "names": "slide rule",
+   "note": "Engineers' calculator before electronics"
+  },
+  {
+   "id": "artichoke",
+   "band": 3,
+   "desc": "whole green artichoke",
+   "names": "artichoke, globe artichoke",
+   "note": "We eat the flower bud"
+  },
+  {
+   "id": "fez",
+   "band": 3,
+   "desc": "red fez with a black tassel",
+   "names": "fez, tarboosh, hat",
+   "note": "Named after a city in Morocco"
+  },
+  {
+   "id": "gondola",
+   "band": 3,
+   "desc": "black Venetian gondola",
+   "names": "gondola",
+   "note": "Each one is built slightly lopsided"
+  },
+  {
+   "id": "trebuchet",
+   "band": 3,
+   "desc": "wooden trebuchet siege engine",
+   "names": "trebuchet, catapult",
+   "note": "A counterweight hurls the stone"
+  },
+  {
+   "id": "dragonfruit",
+   "band": 3,
+   "desc": "dragon fruit cut in half",
+   "names": "dragon fruit, pitaya, pitahaya",
+   "note": "Grows on a climbing cactus"
+  },
+  {
+   "id": "zither",
+   "band": 4,
+   "desc": "zither",
+   "names": "zither",
+   "note": "Strings stretched over a flat box"
+  },
+  {
+   "id": "enigmamachine",
+   "band": 4,
+   "desc": "Enigma cipher machine in a wooden case",
+   "names": "enigma, enigma machine, cipher machine",
+   "note": "Its code was broken at Bletchley Park"
+  },
+  {
+   "id": "quern",
+   "band": 4,
+   "desc": "stone hand quern for grinding grain",
+   "names": "quern, quern stone, millstone, hand mill",
+   "note": "Two stones grind grain to flour"
+  },
+  {
+   "id": "tarsier",
+   "band": 4,
+   "desc": "tarsier with enormous eyes on a branch",
+   "names": "tarsier",
+   "note": "Each eye is as big as its brain"
+  },
+  {
+   "id": "nudibranch",
+   "band": 4,
+   "desc": "colorful nudibranch sea slug",
+   "names": "nudibranch, sea slug",
+   "note": "Some steal stinging cells from what they eat"
+  },
+  {
+   "id": "coelacanth",
+   "band": 4,
+   "desc": "coelacanth fish",
+   "names": "coelacanth",
+   "note": "Thought extinct until 1938"
+  }
+ ]
+}

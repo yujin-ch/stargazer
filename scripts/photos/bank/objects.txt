@@ -1,0 +1,208 @@
+# id | band (1 Moon, 2 Planet, 3 Nebula, 4 Black Hole) | what to draw | accepted names | note shown after
+# Moon: everyday, named instantly
+apple|1|shiny red apple with a short stem and one leaf|apple|An apple tree can live for over 100 years
+chair|1|simple wooden kitchen chair, three-quarter view|chair, wooden chair, kitchen chair|Chairs were a luxury for most of history; people sat on stools and benches
+key|1|old-fashioned brass door key|key, skeleton key, door key|A skeleton key opens many locks by skipping the inner wards
+lightbulb|1|clear glass light bulb with a glowing filament and screw base|light bulb, lightbulb, bulb|Only about 5% of an old bulb's energy became light
+pineapple|1|whole ripe pineapple with its leafy crown|pineapple, ananas|One plant grows a single pineapple at a time
+sunglasses|1|pair of black sunglasses with dark lenses, front view|sunglasses, shades, sunnies, glasses|Early sunglasses in China were made of smoky quartz
+toothbrush|1|blue plastic toothbrush with white bristles|toothbrush, tooth brush|Early toothbrushes used hog bristles
+cupcake|1|cupcake with swirled pink frosting and sprinkles in a paper case|cupcake, cup cake, fairy cake|Named for being baked by the cupful
+envelope|1|sealed white paper envelope with a red wax seal, slightly angled|envelope, letter|The self-sealing gummed envelope came in the 1800s
+pencil|1|yellow wooden pencil with a pink eraser, sharpened tip|pencil|There's no lead in a pencil, just graphite and clay
+kite|1|diamond-shaped red and yellow kite with a ribbon tail|kite|Kites were flown in China over 2,000 years ago
+ladder|1|wooden stepladder, open, three-quarter view|ladder, stepladder, step ladder|Walking under one is unlucky, or just unwise
+anchor|1|heavy black iron ship's anchor with a ring at the top|anchor|An anchor holds by digging into the seabed, not by its weight alone
+mushroom|1|red toadstool mushroom with white spots|mushroom, toadstool, fly agaric|Fly agaric: pretty, and poisonous
+headphones|1|over-ear headphones with a padded headband|headphones, headset, earphones, cans|The first headphones were made for telephone operators
+strawberry|1|single ripe red strawberry with green leaves on top|strawberry|The only fruit that wears its seeds on the outside
+crown|1|gold royal crown set with red and blue jewels|crown|Some crowns weigh over two kilos
+lighthouse|1|red and white striped lighthouse on a small rock|lighthouse|Each lighthouse flashes its own pattern
+trumpet|1|shiny brass trumpet, side view|trumpet, cornet|Three valves give you every note
+cactus|1|green saguaro cactus with two arms in a terracotta pot|cactus, cacti, saguaro|Saguaros can live for 150 years
+penguin|1|emperor penguin standing upright, side view|penguin, emperor penguin|Emperor dads keep the egg warm on their feet
+# Planet: familiar, takes a beat
+violin|2|wooden violin with its bow, three-quarter view|violin, fiddle|A violin has about 70 separate wooden parts
+compass|2|brass magnetic compass with the lid open, needle pointing north|compass|The needle points to magnetic north, not the North Pole
+hourglass|2|wooden hourglass with pale sand trickling down|hourglass, sand timer, egg timer, sandglass|Sailors used them to time the ship's watch
+stethoscope|2|black stethoscope with silver chest piece|stethoscope|Invented in 1816 by a doctor too shy to put his ear to patients
+snail|2|garden snail with a brown spiral shell, side view|snail|A snail can sleep for three years
+octopus|2|orange octopus with curling tentacles|octopus|Three hearts and blue blood
+chameleon|2|chameleon on a short twig, curled tail, side view|chameleon, lizard|Its eyes swivel separately
+seahorse|2|yellow seahorse, side view|seahorse, sea horse|The father carries the babies
+beehive|2|old-fashioned straw beehive (skep) with a few bees|beehive, bee hive, hive, skep|A strong hive holds tens of thousands of bees
+wheelbarrow|2|red metal wheelbarrow with one wheel|wheelbarrow, barrow|Used in ancient China centuries before Europe
+kettlebell|2|black cast-iron kettlebell|kettlebell, kettle bell|Started as a Russian market counterweight
+toucan|2|toucan with a huge orange beak on a branch|toucan|That huge beak is light and helps it shed heat
+peacock|2|peacock with its tail fanned out, front view|peacock, peafowl|Only the males have the fan
+walrus|2|walrus with long white tusks lying down|walrus|Tusks help it haul out onto the ice
+koala|2|koala hugging a short eucalyptus branch|koala, koala bear|Sleeps up to 20 hours a day
+sloth|2|three-toed sloth hanging from a branch|sloth|Algae grows in its fur
+porcupine|2|porcupine with raised quills, side view|porcupine|It can't shoot its quills
+platypus|2|platypus, side view|platypus, duck-billed platypus|A mammal that lays eggs
+pelican|2|white pelican with a big throat pouch|pelican|The pouch can hold three gallons of water
+lobster|2|red lobster with big claws, top view|lobster|Lobsters taste with their legs
+jellyfish|2|translucent pink jellyfish with trailing tentacles|jellyfish, jelly fish, jelly|No brain, no heart, no bones
+harp|2|tall golden concert harp|harp|A concert harp has 47 strings
+banjo|2|five-string banjo, front view|banjo|Its drum head is like a tambourine's
+xylophone|2|wooden xylophone with two mallets|xylophone, marimba|The name means "wood sound"
+tambourine|2|wooden tambourine with metal jingles|tambourine|The jingles are called zils
+bagpipes|2|Scottish bagpipes with tartan bag and three drones|bagpipes, bagpipe, pipes|The drones play one note the whole time
+cello|2|cello standing upright with its bow|cello, violoncello|Played sitting, held between the knees
+lantern|2|old brass oil lantern with a glass chimney|lantern, oil lamp, lamp|Glass keeps the wind off the flame
+birdcage|2|ornate white domed birdcage, empty|birdcage, bird cage, cage|Victorian homes kept singing canaries
+gramophone|2|gramophone with a big brass horn and a record|gramophone, phonograph, record player|The horn made it loud with no electricity
+rockinghorse|2|dapple-grey wooden rocking horse|rocking horse, hobby horse|Popular toys since the 1600s
+sewingmachine|2|black antique sewing machine with gold decoration|sewing machine|Made shirts far quicker than hand stitching
+rollingpin|2|wooden rolling pin with handles|rolling pin|Marble ones stay cool for pastry
+whisk|2|metal balloon whisk|whisk, egg beater, balloon whisk|More wires, more air
+corkscrew|2|waiter's corkscrew, opened out|corkscrew, wine opener, bottle opener|The spiral is called the worm
+firehydrant|2|red fire hydrant|fire hydrant, hydrant, fire plug|Some cities paint them by water pressure
+mailbox|2|blue US mailbox on legs|mailbox, letterbox, postbox, mail box|Collected twice a day in some cities
+trafficcone|2|orange traffic cone with a white stripe|traffic cone, cone, pylon|Invented in 1914 out of concrete
+snowglobe|2|snow globe with a small house inside on a wooden base|snow globe, snowglobe|Invented by accident while trying to improve a lamp
+musicbox|2|open wooden music box with a tiny ballerina|music box, jewelry box, musical box|A pinned drum plucks a steel comb
+chessknight|2|black chess knight piece|knight, chess knight, horse, chess piece|The only piece that jumps
+magnifyingglass|2|magnifying glass with a wooden handle|magnifying glass, magnifier, loupe|Detectives' favourite
+quill|2|white feather quill pen in a glass inkwell|quill, quill pen, feather pen, inkwell|Goose feathers were the classic choice
+globe|2|desk globe on a wooden stand|globe, world globe|Tilted 23.5 degrees, like the Earth
+candelabra|2|silver three-arm candelabra with lit candles|candelabra, candelabrum, candlestick, candle holder|Each arm holds its own candle
+horseshoe|2|iron horseshoe, open end up|horseshoe, horse shoe|Hung ends up to keep the luck in
+windchime|2|bamboo wind chime|wind chime, windchime, chimes|Hung where the breeze can find it
+scarecrow|2|scarecrow in a straw hat and patched shirt|scarecrow|Crows soon learn it's harmless
+rubikscube|2|scrambled Rubik's cube|rubik's cube, rubiks cube, cube, puzzle cube|43 quintillion possible positions
+graduationcap|2|black graduation cap with a gold tassel|graduation cap, mortarboard, mortar board, cap|Named after a plasterer's board
+shipswheel|2|wooden ship's wheel with handles|ship's wheel, ships wheel, helm, wheel|Turning it moves the rudder
+paddle|2|wooden canoe paddle|paddle, oar, canoe paddle|Paddles are held, oars sit in a lock
+icecream|2|ice cream cone with three scoops|ice cream, ice cream cone, cone|The waffle cone caught on at the 1904 World's Fair
+dartboard|2|dartboard with three darts|dartboard, dart board, darts|Numbers are arranged so big misses cost points
+wateringcan|2|metal watering can with a long spout|watering can, watering pot|The rose on the spout spreads the water gently
+bowlingpin|2|white bowling pin with red stripes|bowling pin, skittle, pin|Ten pins, set in a triangle
+# Nebula: hard to place
+kaleidoscope|3|brass kaleidoscope tube with colored glass end|kaleidoscope|Mirrors inside repeat the pattern
+periscope|3|brass periscope tube with angled eyepiece|periscope|Two mirrors at 45 degrees
+stereoscope|3|antique wooden stereoscope viewer with a double photo card|stereoscope, stereo viewer, viewmaster|Two photos, one 3D picture
+loom|3|small wooden weaving loom with colored threads|loom, weaving loom|A loom works by lifting threads to let the weft through
+butterchurn|3|wooden butter churn with a plunger|butter churn, churn|Cream becomes butter with enough plunging
+spinningtop|3|wooden spinning top, mid-spin|spinning top, top, whipping top|Spin keeps it upright
+narwhal|3|narwhal with its long spiral tusk|narwhal|The tusk is a tooth
+axolotl|3|pink axolotl with feathery gills|axolotl, mexican walking fish|It can regrow its limbs
+capybara|3|capybara sitting, side view|capybara, capybaras|The world's biggest rodent
+quokka|3|quokka, the smiling marsupial|quokka|Called the happiest animal for its smile
+fennecfox|3|fennec fox with huge ears|fennec fox, fennec, fox|Big ears shed desert heat
+puffin|3|Atlantic puffin with a striped orange beak|puffin, atlantic puffin|Can hold a dozen fish crosswise in its beak
+mantaray|3|manta ray gliding, top view|manta ray, manta, ray, stingray|Largest brain of any fish
+hammerhead|3|hammerhead shark, side view|hammerhead shark, hammerhead, shark|Wide-set eyes see above and below
+mantis|3|green praying mantis|praying mantis, mantis|Can turn its head 180 degrees
+stickinsect|3|brown stick insect on a twig|stick insect, walking stick, phasmid|Looks like a twig on purpose
+horseshoecrab|3|horseshoe crab, top view|horseshoe crab|Its blue blood is used to test medicines
+cassowary|3|cassowary with a blue neck and helmet-like casque|cassowary|The casque may help it hear low sounds
+kiwibird|3|kiwi bird, side view|kiwi, kiwi bird|Lays one of the biggest eggs for its size
+seaurchin|3|purple sea urchin|sea urchin, urchin|It walks on hundreds of tiny tube feet
+sitar|3|sitar with a gourd body and long neck|sitar|Extra strings ring along on their own
+didgeridoo|3|painted didgeridoo|didgeridoo, didjeridu|Played with circular breathing
+ocarina|3|blue ceramic ocarina with finger holes|ocarina|A clay flute shaped like an egg
+lute|3|lute with a bent-back pegbox and round back|lute|The ancestor of the guitar
+mandolin|3|mandolin with a teardrop body|mandolin|Eight strings in four pairs
+bassoon|3|bassoon, the tall wooden woodwind|bassoon|Its tube is over 2.5 metres long folded in two
+concertina|3|hexagonal concertina|concertina|Smaller cousin of the accordion
+kalimba|3|wooden kalimba thumb piano|kalimba, thumb piano, mbira|Plucked metal tines
+steeldrum|3|steel pan drum|steel drum, steel pan, steelpan, pan|Born in Trinidad from oil barrels
+gong|3|bronze gong hanging in a wooden frame with a mallet|gong|The note swells after you hit it
+castanets|3|pair of wooden castanets|castanets|Clicked in the palm while dancing
+anvil|3|black iron blacksmith's anvil|anvil|The pointed end is called the horn
+sickle|3|curved sickle with a wooden handle|sickle|For cutting grain by hand
+pitchfork|3|wooden-handled pitchfork|pitchfork, hay fork, fork|For tossing hay
+vise|3|cast-iron bench vise|vise, vice, bench vise|Holds work still while you saw
+spiritlevel|3|yellow spirit level with a bubble|spirit level, level, bubble level|The bubble finds the middle when it's flat
+weathervane|3|copper rooster weathervane|weathervane, weather vane, wind vane|Points into the wind
+trebuchet|3|wooden trebuchet siege engine|trebuchet, catapult|A counterweight hurls the stone
+galleon|3|wooden sailing galleon with full sails|galleon, ship, sailing ship, tall ship|Spanish treasure fleets used them
+gondola|3|black Venetian gondola|gondola|Each one is built slightly lopsided
+rickshaw|3|wooden pulled rickshaw with a canopy|rickshaw, pulled rickshaw|The name comes from Japanese for "human-powered vehicle"
+pennyfarthing|3|penny-farthing bicycle with a giant front wheel|penny-farthing, penny farthing, high wheeler, bicycle|Named after a big and a small coin
+unicycle|3|unicycle, side view|unicycle|One wheel, a lot of practice
+zeppelin|3|silver zeppelin airship|zeppelin, airship, blimp, dirigible|A zeppelin has a rigid frame inside
+submarine|3|yellow submarine with a periscope|submarine, sub|Tanks of water let it sink and rise
+garlicpress|3|stainless steel garlic press|garlic press|Squeezes cloves through tiny holes
+nutcracker|3|wooden soldier nutcracker|nutcracker, nut cracker|Made famous by Tchaikovsky's ballet
+samovar|3|ornate brass samovar|samovar|A Russian urn for boiling tea water
+mokapot|3|aluminum moka pot|moka pot, stovetop espresso, coffee pot, espresso maker|Steam pushes water up through the coffee
+frenchpress|3|glass french press coffee maker|french press, cafetiere, coffee press, press pot|Push the plunger down slowly
+monocle|3|gold-rimmed monocle on a chain|monocle|One lens, held in by the eye socket
+tophat|3|black silk top hat|top hat, tophat, hat|Magicians pull rabbits out of them
+sombrero|3|wide-brimmed straw sombrero|sombrero, hat|The name comes from sombra, shade
+fez|3|red fez with a black tassel|fez, tarboosh, hat|Named after a city in Morocco
+clogs|3|pair of yellow wooden clogs|clogs, clog, wooden shoes, klompen|Carved from one block of willow or poplar
+snowshoe|3|wooden snowshoe with leather webbing|snowshoe, snowshoes|Spreads your weight over the snow
+inkwell|3|glass inkwell with a dip pen|inkwell, ink pot, ink bottle, dip pen|Dip, write, dip again
+fountainpen|3|black fountain pen with a gold nib|fountain pen, pen|Ink flows down by capillary action
+waxseal|3|red wax seal stamp with a brass head|wax seal, seal, stamp, sealing wax|Proved a letter hadn't been opened
+sliderule|3|wooden slide rule|slide rule|Engineers' calculator before electronics
+cashregister|3|antique brass cash register|cash register, till, register|Invented to stop clerks pocketing cash
+rotaryphone|3|black rotary dial telephone|rotary phone, telephone, phone, dial phone|Dialling 9 took longer than 1
+cassette|3|audio cassette tape|cassette, cassette tape, tape, mixtape|Each side held about 30 minutes
+floppydisk|3|blue 3.5 inch floppy disk|floppy disk, floppy, diskette|Held 1.44 megabytes
+filmreel|3|metal film reel with film|film reel, reel, movie reel|24 frames a second
+lavalamp|3|lava lamp with orange blobs|lava lamp|Heat makes the wax rise and fall
+jukebox|3|colorful vintage jukebox|jukebox, juke box|Put a coin in, pick a song
+cuckooclock|3|carved wooden cuckoo clock with pinecone weights|cuckoo clock, clock|From Germany's Black Forest
+grandfatherclock|3|tall wooden grandfather clock|grandfather clock, longcase clock, clock|The pendulum keeps time
+chandelier|3|crystal chandelier|chandelier|The word comes from French for candle-holder
+newtonscradle|3|Newton's cradle with five steel balls|newton's cradle, newtons cradle, executive ball clicker|Momentum passes through the middle balls
+dreidel|3|wooden dreidel spinning top with Hebrew letters|dreidel, dreidl, spinning top|Four sides, four outcomes
+dragonfruit|3|dragon fruit cut in half|dragon fruit, pitaya, pitahaya|Grows on a climbing cactus
+starfruit|3|starfruit with a slice cut off|starfruit, star fruit, carambola|Slices make little stars
+artichoke|3|whole green artichoke|artichoke, globe artichoke|We eat the flower bud
+pomegranate|3|pomegranate split open showing red seeds|pomegranate|Each one can hold hundreds of seeds
+venusflytrap|3|venus flytrap plant in a small pot|venus flytrap, flytrap, venus fly trap|Snaps shut in a fraction of a second
+bonsai|3|bonsai tree in a shallow pot|bonsai, bonsai tree, tree|Some bonsai are centuries old
+fossil|3|ammonite fossil in rock|ammonite, fossil|Spiral shells from the age of dinosaurs
+geode|3|geode cracked open with purple crystals|geode, amethyst, crystal|Hollow rock lined with crystals
+trilobite|3|trilobite fossil|trilobite, fossil|Ruled the seas for 270 million years
+anglerfish|3|deep-sea anglerfish with a glowing lure|anglerfish, angler fish, monkfish|Its glowing lure attracts prey in the dark
+barometer|3|round brass aneroid barometer with a dial reading rain, change, fair|barometer|Falling pressure often means rain is coming
+pufferfish|3|inflated pufferfish|pufferfish, puffer fish, blowfish, fugu|Puffs up with water
+# Black Hole: the rarest, still nameable
+orrery|4|brass orrery model of the solar system|orrery, solar system model|Named after an Earl of Orrery
+armillarysphere|4|brass armillary sphere on a stand|armillary sphere, armillary, celestial sphere|Rings that map the sky
+theodolite|4|surveyor's theodolite on a tripod|theodolite, transit, surveying instrument|Surveyors measure angles with it
+cameraobscura|4|wooden box camera obscura with a lens|camera obscura, pinhole camera|A dark room that projects the scene outside
+enigmamachine|4|Enigma cipher machine in a wooden case|enigma, enigma machine, cipher machine|Its code was broken at Bletchley Park
+quern|4|stone hand quern for grinding grain|quern, quern stone, millstone, hand mill|Two stones grind grain to flour
+mangle|4|antique laundry mangle with rollers and a crank|mangle, wringer, clothes wringer|Squeezed water out before spin dryers
+tricorn|4|black tricorn hat|tricorn, tricorne, tricorn hat, three-cornered hat|The pirate classic
+pithhelmet|4|khaki pith helmet|pith helmet, sun helmet, safari hat|Made of pith from a plant
+davylamp|4|brass Davy safety lamp|davy lamp, safety lamp, miner's lamp|Kept miners' flames from igniting gas
+eartrumpet|4|brass ear trumpet|ear trumpet, hearing trumpet|A hearing aid before electricity
+pincenez|4|pince-nez spectacles|pince-nez, pince nez, spectacles, glasses|Pinches the nose, no arms
+glassharmonica|4|glass armonica with spinning glass bowls|glass harmonica, armonica, glass armonica|Invented by Benjamin Franklin
+serpent|4|serpent, the snake-shaped bass wind instrument|serpent|Played in church bands for centuries
+handpan|4|steel handpan drum|handpan, hang, hang drum, steel tongue drum|Played with the hands like a UFO-shaped bell
+sousaphone|4|brass sousaphone|sousaphone, tuba|Named after John Philip Sousa
+lyre|4|ancient Greek lyre|lyre|Played by Apollo in myth
+zither|4|zither|zither|Strings stretched over a flat box
+shamisen|4|shamisen, the three-stringed Japanese lute|shamisen, samisen|Played with a big plectrum
+erhu|4|erhu, the Chinese two-string fiddle|erhu|The bow passes between the two strings
+koto|4|koto, the long Japanese zither|koto|Thirteen strings over movable bridges
+balalaika|4|triangular balalaika|balalaika|A triangle-shaped Russian lute
+tarsier|4|tarsier with enormous eyes on a branch|tarsier|Each eye is as big as its brain
+gharial|4|gharial with its long thin snout|gharial, gavial, crocodile|Its snout is made for catching fish
+starnosedmole|4|star-nosed mole|star-nosed mole, star nosed mole, mole|22 fleshy tentacles on its nose
+saiga|4|saiga antelope with a bulbous nose|saiga, saiga antelope, antelope|Its big nose filters dust
+babirusa|4|babirusa with curved tusks|babirusa, deer pig, pig|Its upper tusks grow through its snout
+dugong|4|dugong swimming|dugong, sea cow, manatee|Cousin of the manatee
+coelacanth|4|coelacanth fish|coelacanth|Thought extinct until 1938
+nudibranch|4|colorful nudibranch sea slug|nudibranch, sea slug|Some steal stinging cells from what they eat
+frilledlizard|4|frilled lizard with its frill spread|frilled lizard, frill-necked lizard, lizard|Opens its frill to look bigger
+secretarybird|4|secretary bird|secretary bird, secretarybird|Stamps on snakes with its long legs
+shoebill|4|shoebill stork|shoebill, shoebill stork, whale-headed stork|Stands still for hours
+proboscismonkey|4|proboscis monkey with a big nose|proboscis monkey, monkey|The big nose belongs to the males
+markhor|4|markhor goat with corkscrew horns|markhor, goat|Pakistan's national animal
+gerenuk|4|gerenuk standing on hind legs to eat leaves|gerenuk, giraffe gazelle, antelope|Stands on its hind legs to reach leaves
+durian|4|spiky durian fruit|durian|Banned on some trains for its smell
+rambutan|4|hairy red rambutan fruit|rambutan|The name means "hairy"
+mangosteen|4|purple mangosteen cut open|mangosteen|Called the queen of fruits
+jackfruit|4|huge jackfruit|jackfruit, jack fruit|The biggest tree fruit
+kohlrabi|4|purple kohlrabi|kohlrabi, turnip cabbage|A cabbage that swelled at the stem
+romanesco|4|romanesco broccoli with spiraling florets|romanesco, romanesco broccoli, broccoli|Its florets form natural fractals

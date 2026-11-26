@@ -1,0 +1,208 @@
+{
+ "date": "2026-12-01",
+ "items": [
+  {
+   "id": "ladder",
+   "band": 1,
+   "desc": "wooden stepladder, open, three-quarter view",
+   "names": "ladder, stepladder, step ladder",
+   "note": "Walking under one is unlucky, or just unwise"
+  },
+  {
+   "id": "envelope",
+   "band": 1,
+   "desc": "sealed white paper envelope with a red wax seal, slightly angled",
+   "names": "envelope, letter",
+   "note": "The self-sealing gummed envelope came in the 1800s"
+  },
+  {
+   "id": "lighthouse",
+   "band": 1,
+   "desc": "red and white striped lighthouse on a small rock",
+   "names": "lighthouse",
+   "note": "Each lighthouse flashes its own pattern"
+  },
+  {
+   "id": "bowlingpin",
+   "band": 2,
+   "desc": "white bowling pin with red stripes",
+   "names": "bowling pin, skittle, pin",
+   "note": "Ten pins, set in a triangle"
+  },
+  {
+   "id": "lobster",
+   "band": 2,
+   "desc": "red lobster with big claws, top view",
+   "names": "lobster",
+   "note": "Lobsters taste with their legs"
+  },
+  {
+   "id": "tambourine",
+   "band": 2,
+   "desc": "wooden tambourine with metal jingles",
+   "names": "tambourine",
+   "note": "The jingles are called zils"
+  },
+  {
+   "id": "chameleon",
+   "band": 2,
+   "desc": "chameleon on a short twig, curled tail, side view",
+   "names": "chameleon, lizard",
+   "note": "Its eyes swivel separately"
+  },
+  {
+   "id": "platypus",
+   "band": 2,
+   "desc": "platypus, side view",
+   "names": "platypus, duck-billed platypus",
+   "note": "A mammal that lays eggs"
+  },
+  {
+   "id": "firehydrant",
+   "band": 2,
+   "desc": "red fire hydrant",
+   "names": "fire hydrant, hydrant, fire plug",
+   "note": "Some cities paint them by water pressure"
+  },
+  {
+   "id": "beehive",
+   "band": 2,
+   "desc": "old-fashioned straw beehive (skep) with a few bees",
+   "names": "beehive, bee hive, hive, skep",
+   "note": "A strong hive holds tens of thousands of bees"
+  },
+  {
+   "id": "peacock",
+   "band": 2,
+   "desc": "peacock with its tail fanned out, front view",
+   "names": "peacock, peafowl",
+   "note": "Only the males have the fan"
+  },
+  {
+   "id": "galleon",
+   "band": 3,
+   "desc": "wooden sailing galleon with full sails",
+   "names": "galleon, ship, sailing ship, tall ship",
+   "note": "Spanish treasure fleets used them"
+  },
+  {
+   "id": "barometer",
+   "band": 3,
+   "desc": "round brass aneroid barometer with a dial reading rain, change, fair",
+   "names": "barometer",
+   "note": "Falling pressure often means rain is coming"
+  },
+  {
+   "id": "mokapot",
+   "band": 3,
+   "desc": "aluminum moka pot",
+   "names": "moka pot, stovetop espresso, coffee pot, espresso maker",
+   "note": "Steam pushes water up through the coffee"
+  },
+  {
+   "id": "geode",
+   "band": 3,
+   "desc": "geode cracked open with purple crystals",
+   "names": "geode, amethyst, crystal",
+   "note": "Hollow rock lined with crystals"
+  },
+  {
+   "id": "venusflytrap",
+   "band": 3,
+   "desc": "venus flytrap plant in a small pot",
+   "names": "venus flytrap, flytrap, venus fly trap",
+   "note": "Snaps shut in a fraction of a second"
+  },
+  {
+   "id": "rotaryphone",
+   "band": 3,
+   "desc": "black rotary dial telephone",
+   "names": "rotary phone, telephone, phone, dial phone",
+   "note": "Dialling 9 took longer than 1"
+  },
+  {
+   "id": "inkwell",
+   "band": 3,
+   "desc": "glass inkwell with a dip pen",
+   "names": "inkwell, ink pot, ink bottle, dip pen",
+   "note": "Dip, write, dip again"
+  },
+  {
+   "id": "loom",
+   "band": 3,
+   "desc": "small wooden weaving loom with colored threads",
+   "names": "loom, weaving loom",
+   "note": "A loom works by lifting threads to let the weft through"
+  },
+  {
+   "id": "pitchfork",
+   "band": 3,
+   "desc": "wooden-handled pitchfork",
+   "names": "pitchfork, hay fork, fork",
+   "note": "For tossing hay"
+  },
+  {
+   "id": "bassoon",
+   "band": 3,
+   "desc": "bassoon, the tall wooden woodwind",
+   "names": "bassoon",
+   "note": "Its tube is over 2.5 metres long folded in two"
+  },
+  {
+   "id": "fossil",
+   "band": 3,
+   "desc": "ammonite fossil in rock",
+   "names": "ammonite, fossil",
+   "note": "Spiral shells from the age of dinosaurs"
+  },
+  {
+   "id": "tophat",
+   "band": 3,
+   "desc": "black silk top hat",
+   "names": "top hat, tophat, hat",
+   "note": "Magicians pull rabbits out of them"
+  },
+  {
+   "id": "serpent",
+   "band": 4,
+   "desc": "serpent, the snake-shaped bass wind instrument",
+   "names": "serpent",
+   "note": "Played in church bands for centuries"
+  },
+  {
+   "id": "pincenez",
+   "band": 4,
+   "desc": "pince-nez spectacles",
+   "names": "pince-nez, pince nez, spectacles, glasses",
+   "note": "Pinches the nose, no arms"
+  },
+  {
+   "id": "pithhelmet",
+   "band": 4,
+   "desc": "khaki pith helmet",
+   "names": "pith helmet, sun helmet, safari hat",
+   "note": "Made of pith from a plant"
+  },
+  {
+   "id": "armillarysphere",
+   "band": 4,
+   "desc": "brass armillary sphere on a stand",
+   "names": "armillary sphere, armillary, celestial sphere",
+   "note": "Rings that map the sky"
+  },
+  {
+   "id": "frilledlizard",
+   "band": 4,
+   "desc": "frilled lizard with its frill spread",
+   "names": "frilled lizard, frill-necked lizard, lizard",
+   "note": "Opens its frill to look bigger"
+  },
+  {
+   "id": "theodolite",
+   "band": 4,
+   "desc": "surveyor's theodolite on a tripod",
+   "names": "theodolite, transit, surveying instrument",
+   "note": "Surveyors measure angles with it"
+  }
+ ]
+}

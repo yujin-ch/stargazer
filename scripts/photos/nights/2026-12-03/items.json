@@ -1,0 +1,208 @@
+{
+ "date": "2026-12-03",
+ "items": [
+  {
+   "id": "apple",
+   "band": 1,
+   "desc": "shiny red apple with a short stem and one leaf",
+   "names": "apple",
+   "note": "An apple tree can live for over 100 years"
+  },
+  {
+   "id": "sunglasses",
+   "band": 1,
+   "desc": "pair of black sunglasses with dark lenses, front view",
+   "names": "sunglasses, shades, sunnies, glasses",
+   "note": "Early sunglasses in China were made of smoky quartz"
+  },
+  {
+   "id": "lightbulb",
+   "band": 1,
+   "desc": "clear glass light bulb with a glowing filament and screw base",
+   "names": "light bulb, lightbulb, bulb",
+   "note": "Only about 5% of an old bulb's energy became light"
+  },
+  {
+   "id": "corkscrew",
+   "band": 2,
+   "desc": "waiter's corkscrew, opened out",
+   "names": "corkscrew, wine opener, bottle opener",
+   "note": "The spiral is called the worm"
+  },
+  {
+   "id": "dartboard",
+   "band": 2,
+   "desc": "dartboard with three darts",
+   "names": "dartboard, dart board, darts",
+   "note": "Numbers are arranged so big misses cost points"
+  },
+  {
+   "id": "snail",
+   "band": 2,
+   "desc": "garden snail with a brown spiral shell, side view",
+   "names": "snail",
+   "note": "A snail can sleep for three years"
+  },
+  {
+   "id": "rockinghorse",
+   "band": 2,
+   "desc": "dapple-grey wooden rocking horse",
+   "names": "rocking horse, hobby horse",
+   "note": "Popular toys since the 1600s"
+  },
+  {
+   "id": "birdcage",
+   "band": 2,
+   "desc": "ornate white domed birdcage, empty",
+   "names": "birdcage, bird cage, cage",
+   "note": "Victorian homes kept singing canaries"
+  },
+  {
+   "id": "octopus",
+   "band": 2,
+   "desc": "orange octopus with curling tentacles",
+   "names": "octopus",
+   "note": "Three hearts and blue blood"
+  },
+  {
+   "id": "windchime",
+   "band": 2,
+   "desc": "bamboo wind chime",
+   "names": "wind chime, windchime, chimes",
+   "note": "Hung where the breeze can find it"
+  },
+  {
+   "id": "sloth",
+   "band": 2,
+   "desc": "three-toed sloth hanging from a branch",
+   "names": "sloth",
+   "note": "Algae grows in its fur"
+  },
+  {
+   "id": "puffin",
+   "band": 3,
+   "desc": "Atlantic puffin with a striped orange beak",
+   "names": "puffin, atlantic puffin",
+   "note": "Can hold a dozen fish crosswise in its beak"
+  },
+  {
+   "id": "fennecfox",
+   "band": 3,
+   "desc": "fennec fox with huge ears",
+   "names": "fennec fox, fennec, fox",
+   "note": "Big ears shed desert heat"
+  },
+  {
+   "id": "jukebox",
+   "band": 3,
+   "desc": "colorful vintage jukebox",
+   "names": "jukebox, juke box",
+   "note": "Put a coin in, pick a song"
+  },
+  {
+   "id": "frenchpress",
+   "band": 3,
+   "desc": "glass french press coffee maker",
+   "names": "french press, cafetiere, coffee press, press pot",
+   "note": "Push the plunger down slowly"
+  },
+  {
+   "id": "capybara",
+   "band": 3,
+   "desc": "capybara sitting, side view",
+   "names": "capybara, capybaras",
+   "note": "The world's biggest rodent"
+  },
+  {
+   "id": "unicycle",
+   "band": 3,
+   "desc": "unicycle, side view",
+   "names": "unicycle",
+   "note": "One wheel, a lot of practice"
+  },
+  {
+   "id": "steeldrum",
+   "band": 3,
+   "desc": "steel pan drum",
+   "names": "steel drum, steel pan, steelpan, pan",
+   "note": "Born in Trinidad from oil barrels"
+  },
+  {
+   "id": "kiwibird",
+   "band": 3,
+   "desc": "kiwi bird, side view",
+   "names": "kiwi, kiwi bird",
+   "note": "Lays one of the biggest eggs for its size"
+  },
+  {
+   "id": "seaurchin",
+   "band": 3,
+   "desc": "purple sea urchin",
+   "names": "sea urchin, urchin",
+   "note": "It walks on hundreds of tiny tube feet"
+  },
+  {
+   "id": "dreidel",
+   "band": 3,
+   "desc": "wooden dreidel spinning top with Hebrew letters",
+   "names": "dreidel, dreidl, spinning top",
+   "note": "Four sides, four outcomes"
+  },
+  {
+   "id": "anglerfish",
+   "band": 3,
+   "desc": "deep-sea anglerfish with a glowing lure",
+   "names": "anglerfish, angler fish, monkfish",
+   "note": "Its glowing lure attracts prey in the dark"
+  },
+  {
+   "id": "pennyfarthing",
+   "band": 3,
+   "desc": "penny-farthing bicycle with a giant front wheel",
+   "names": "penny-farthing, penny farthing, high wheeler, bicycle",
+   "note": "Named after a big and a small coin"
+  },
+  {
+   "id": "proboscismonkey",
+   "band": 4,
+   "desc": "proboscis monkey with a big nose",
+   "names": "proboscis monkey, monkey",
+   "note": "The big nose belongs to the males"
+  },
+  {
+   "id": "romanesco",
+   "band": 4,
+   "desc": "romanesco broccoli with spiraling florets",
+   "names": "romanesco, romanesco broccoli, broccoli",
+   "note": "Its florets form natural fractals"
+  },
+  {
+   "id": "gerenuk",
+   "band": 4,
+   "desc": "gerenuk standing on hind legs to eat leaves",
+   "names": "gerenuk, giraffe gazelle, antelope",
+   "note": "Stands on its hind legs to reach leaves"
+  },
+  {
+   "id": "koto",
+   "band": 4,
+   "desc": "koto, the long Japanese zither",
+   "names": "koto",
+   "note": "Thirteen strings over movable bridges"
+  },
+  {
+   "id": "rambutan",
+   "band": 4,
+   "desc": "hairy red rambutan fruit",
+   "names": "rambutan",
+   "note": "The name means \"hairy\""
+  },
+  {
+   "id": "kohlrabi",
+   "band": 4,
+   "desc": "purple kohlrabi",
+   "names": "kohlrabi, turnip cabbage",
+   "note": "A cabbage that swelled at the stem"
+  }
+ ]
+}

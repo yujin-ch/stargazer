@@ -1,0 +1,208 @@
+{
+ "date": "2026-12-02",
+ "items": [
+  {
+   "id": "crown",
+   "band": 1,
+   "desc": "gold royal crown set with red and blue jewels",
+   "names": "crown",
+   "note": "Some crowns weigh over two kilos"
+  },
+  {
+   "id": "pencil",
+   "band": 1,
+   "desc": "yellow wooden pencil with a pink eraser, sharpened tip",
+   "names": "pencil",
+   "note": "There's no lead in a pencil, just graphite and clay"
+  },
+  {
+   "id": "strawberry",
+   "band": 1,
+   "desc": "single ripe red strawberry with green leaves on top",
+   "names": "strawberry",
+   "note": "The only fruit that wears its seeds on the outside"
+  },
+  {
+   "id": "rubikscube",
+   "band": 2,
+   "desc": "scrambled Rubik's cube",
+   "names": "rubik's cube, rubiks cube, cube, puzzle cube",
+   "note": "43 quintillion possible positions"
+  },
+  {
+   "id": "jellyfish",
+   "band": 2,
+   "desc": "translucent pink jellyfish with trailing tentacles",
+   "names": "jellyfish, jelly fish, jelly",
+   "note": "No brain, no heart, no bones"
+  },
+  {
+   "id": "sewingmachine",
+   "band": 2,
+   "desc": "black antique sewing machine with gold decoration",
+   "names": "sewing machine",
+   "note": "Made shirts far quicker than hand stitching"
+  },
+  {
+   "id": "magnifyingglass",
+   "band": 2,
+   "desc": "magnifying glass with a wooden handle",
+   "names": "magnifying glass, magnifier, loupe",
+   "note": "Detectives' favourite"
+  },
+  {
+   "id": "paddle",
+   "band": 2,
+   "desc": "wooden canoe paddle",
+   "names": "paddle, oar, canoe paddle",
+   "note": "Paddles are held, oars sit in a lock"
+  },
+  {
+   "id": "globe",
+   "band": 2,
+   "desc": "desk globe on a wooden stand",
+   "names": "globe, world globe",
+   "note": "Tilted 23.5 degrees, like the Earth"
+  },
+  {
+   "id": "chessknight",
+   "band": 2,
+   "desc": "black chess knight piece",
+   "names": "knight, chess knight, horse, chess piece",
+   "note": "The only piece that jumps"
+  },
+  {
+   "id": "candelabra",
+   "band": 2,
+   "desc": "silver three-arm candelabra with lit candles",
+   "names": "candelabra, candelabrum, candlestick, candle holder",
+   "note": "Each arm holds its own candle"
+  },
+  {
+   "id": "trilobite",
+   "band": 3,
+   "desc": "trilobite fossil",
+   "names": "trilobite, fossil",
+   "note": "Ruled the seas for 270 million years"
+  },
+  {
+   "id": "mandolin",
+   "band": 3,
+   "desc": "mandolin with a teardrop body",
+   "names": "mandolin",
+   "note": "Eight strings in four pairs"
+  },
+  {
+   "id": "fountainpen",
+   "band": 3,
+   "desc": "black fountain pen with a gold nib",
+   "names": "fountain pen, pen",
+   "note": "Ink flows down by capillary action"
+  },
+  {
+   "id": "pomegranate",
+   "band": 3,
+   "desc": "pomegranate split open showing red seeds",
+   "names": "pomegranate",
+   "note": "Each one can hold hundreds of seeds"
+  },
+  {
+   "id": "narwhal",
+   "band": 3,
+   "desc": "narwhal with its long spiral tusk",
+   "names": "narwhal",
+   "note": "The tusk is a tooth"
+  },
+  {
+   "id": "cassette",
+   "band": 3,
+   "desc": "audio cassette tape",
+   "names": "cassette, cassette tape, tape, mixtape",
+   "note": "Each side held about 30 minutes"
+  },
+  {
+   "id": "cuckooclock",
+   "band": 3,
+   "desc": "carved wooden cuckoo clock with pinecone weights",
+   "names": "cuckoo clock, clock",
+   "note": "From Germany's Black Forest"
+  },
+  {
+   "id": "clogs",
+   "band": 3,
+   "desc": "pair of yellow wooden clogs",
+   "names": "clogs, clog, wooden shoes, klompen",
+   "note": "Carved from one block of willow or poplar"
+  },
+  {
+   "id": "nutcracker",
+   "band": 3,
+   "desc": "wooden soldier nutcracker",
+   "names": "nutcracker, nut cracker",
+   "note": "Made famous by Tchaikovsky's ballet"
+  },
+  {
+   "id": "lute",
+   "band": 3,
+   "desc": "lute with a bent-back pegbox and round back",
+   "names": "lute",
+   "note": "The ancestor of the guitar"
+  },
+  {
+   "id": "waxseal",
+   "band": 3,
+   "desc": "red wax seal stamp with a brass head",
+   "names": "wax seal, seal, stamp, sealing wax",
+   "note": "Proved a letter hadn't been opened"
+  },
+  {
+   "id": "horseshoecrab",
+   "band": 3,
+   "desc": "horseshoe crab, top view",
+   "names": "horseshoe crab",
+   "note": "Its blue blood is used to test medicines"
+  },
+  {
+   "id": "jackfruit",
+   "band": 4,
+   "desc": "huge jackfruit",
+   "names": "jackfruit, jack fruit",
+   "note": "The biggest tree fruit"
+  },
+  {
+   "id": "davylamp",
+   "band": 4,
+   "desc": "brass Davy safety lamp",
+   "names": "davy lamp, safety lamp, miner's lamp",
+   "note": "Kept miners' flames from igniting gas"
+  },
+  {
+   "id": "mangosteen",
+   "band": 4,
+   "desc": "purple mangosteen cut open",
+   "names": "mangosteen",
+   "note": "Called the queen of fruits"
+  },
+  {
+   "id": "eartrumpet",
+   "band": 4,
+   "desc": "brass ear trumpet",
+   "names": "ear trumpet, hearing trumpet",
+   "note": "A hearing aid before electricity"
+  },
+  {
+   "id": "babirusa",
+   "band": 4,
+   "desc": "babirusa with curved tusks",
+   "names": "babirusa, deer pig, pig",
+   "note": "Its upper tusks grow through its snout"
+  },
+  {
+   "id": "lyre",
+   "band": 4,
+   "desc": "ancient Greek lyre",
+   "names": "lyre",
+   "note": "Played by Apollo in myth"
+  }
+ ]
+}

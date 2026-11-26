@@ -177,13 +177,20 @@ def main():
     sess = new_session("u2netp")
     sess_green = new_session("isnet-general-use")
     os.makedirs(OUT, exist_ok=True)
-    for f in sorted(glob.glob(os.path.join(src, "*.jpg")) + glob.glob(os.path.join(src, "*.png"))):
+    for f in sorted(glob.glob(os.path.join(src, "*.jpg")) + glob.glob(os.path.join(src, "*.png")) + glob.glob(os.path.join(src, "*.webp"))):
         sid = os.path.splitext(os.path.basename(f))[0]
         if want and sid not in want:
             continue
-        img = Image.open(f).convert("RGB")
-        green = is_greenscreen(img)
-        cut = chroma_key(img, np.asarray(remove(img, session=sess_green))[..., 3] > 100) if green else add_thin_parts(img, remove(img, session=sess))
+        src_img = Image.open(f)
+        img = src_img.convert("RGB")
+        alpha = np.asarray(src_img.convert("RGBA"))[..., 3]
+        green = False
+        if (alpha < 16).mean() > 0.05:
+            # already cut out (a transparent PNG, e.g. from ChatGPT): keep its own edges
+            cut = src_img.convert("RGBA")
+        else:
+            green = is_greenscreen(img)
+            cut = chroma_key(img, np.asarray(remove(img, session=sess_green))[..., 3] > 100) if green else add_thin_parts(img, remove(img, session=sess))
         a = np.asarray(cut)[..., 3] > 128
         ys, xs = np.where(a)
         x0, x1, y0, y1 = np.percentile(xs, 0.3), np.percentile(xs, 99.7), np.percentile(ys, 0.3), np.percentile(ys, 99.7)
