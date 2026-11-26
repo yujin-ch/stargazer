@@ -10,6 +10,42 @@ import type { SkyObject } from "./library";
  */
 export const CROWD_IS_SIMULATED = true;
 
+/** Real scores replace the simulated crowd once this many people have played the same sky. */
+export const MIN_LIVE = 20;
+
+function deviceId(): string {
+  try {
+    let id = localStorage.getItem("stargazer:id");
+    if (!id) { id = crypto.randomUUID(); localStorage.setItem("stargazer:id", id); }
+    return id;
+  } catch {
+    return crypto.randomUUID();
+  }
+}
+
+/**
+ * Tonight's real crowd from /api/scores, as sorted scores (one per player), or null when the server isn't
+ * reachable (local dev, offline). Pass your score to add it; each device counts once a night.
+ */
+export async function liveCrowd(night: number, tier: number, score: number | null): Promise<number[] | null> {
+  const sentKey = `stargazer:sent:${night}`;
+  let sent = false;
+  try { sent = localStorage.getItem(sentKey) === "1"; } catch { /* storage blocked */ }
+  try {
+    const r = score !== null && !sent
+      ? await fetch("/api/scores", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ night, tier, score, id: deviceId() }) })
+      : await fetch(`/api/scores?night=${night}&tier=${tier}`);
+    if (!r.ok || !(r.headers.get("content-type") ?? "").includes("json")) return null;
+    if (score !== null && !sent) try { localStorage.setItem(sentKey, "1"); } catch { /* ignore */ }
+    const { scores } = (await r.json()) as { scores: Record<string, number> };
+    const out: number[] = [];
+    for (const [k, n] of Object.entries(scores)) for (let i = 0; i < Math.min(n, 100000); i++) out.push(Number(k));
+    return out.sort((a, b) => a - b);
+  } catch {
+    return null;
+  }
+}
+
 /** How sure a typical player is to know an object in each band, and how long they look before typing. */
 const KNOW = [0.97, 0.86, 0.66, 0.5];
 const LOOK = [1.1, 1.8, 2.6, 3.2];

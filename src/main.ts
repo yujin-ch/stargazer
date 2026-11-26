@@ -8,7 +8,7 @@ import { theme } from "./themes";
 import { setMuted, unlockAudio } from "./themes/chip";
 import { Viewer } from "./viewer";
 import { store, type ItemResult, type RunResult } from "./storage";
-import { crowdScores, beatShare, CROWD_IS_SIMULATED } from "./crowd";
+import { crowdScores, beatShare, liveCrowd, MIN_LIVE } from "./crowd";
 import { share, shareText } from "./share";
 import { atlasScreen, type AtlasStar } from "./atlas";
 import { introScreen } from "./intro";
@@ -676,7 +676,7 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
       <div class="hill-axis"><span>◂ fewer points</span><span>more points ▸</span></div>
       <p class="hill-line" id="hill-line"></p>
       <p class="legend">${bandsSeen.map((b) => `<span><i class="lg" style="background:${theme.bandColors[b]}"></i>${theme.bandNames[b]}</span>`).join("")}<span><b class="lg-big">+</b>big star = zoom bonus</span><span><i class="lg skipped"></i>skipped</span></p>
-      <p class="caption">One star per object, coloured by difficulty. Lines join answers in a row.${CROWD_IS_SIMULATED ? " The crowd on the hill is simulated on tonight's sky until live scores arrive." : ""}</p>
+      <p class="caption">One star per object, coloured by difficulty. Lines join answers in a row. <span id="crowd-note">The crowd on the hill is simulated on tonight's sky until enough live scores arrive.</span></p>
       <dl class="figures">
         <div><dt>NAMED</dt><dd>${r.named}</dd></div>
         <div><dt>ZOOM</dt><dd>${r.zoomed}</dd></div>
@@ -703,14 +703,22 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
     <footer class="credits">${theme.credits}</footer>
   </main>`;
   lastFresh = 0;
-  const others = 12, beat = beatShare(crowd, r.score - (r.link?.bonus ?? 0)), rank = Math.round(beat * others);
-  drawChart(document.getElementById("chart") as HTMLCanvasElement, r, rank, others);
-  const median = crowd[Math.floor(crowd.length / 2)];
-  document.getElementById("hill-line")!.innerHTML =
-    rank >= others ? `You out-spotted <b>every stargazer</b> on the hill tonight.`
-    : rank === 0 ? `The whole hill saw more tonight. The sky comes back tomorrow.`
-    : `You out-spotted <b>${rank} of ${others}</b> stargazers on the hill.`
-    + `<br><small>A typical score tonight: ${median}</small>`;
+  const chart = document.getElementById("chart") as HTMLCanvasElement;
+  const paintHill = (scores: number[], live: boolean) => {
+    const others = 12, beat = beatShare(scores, r.score - (r.link?.bonus ?? 0)), rank = Math.round(beat * others);
+    drawChart(chart, r, rank, others);
+    const median = scores[Math.floor(scores.length / 2)];
+    document.getElementById("hill-line")!.innerHTML =
+      (rank >= others ? `You out-spotted <b>every stargazer</b> on the hill tonight.`
+      : rank === 0 ? `The whole hill saw more tonight. The sky comes back tomorrow.`
+      : `You out-spotted <b>${rank} of ${others}</b> stargazers on the hill.`)
+      + `<br><small>${live ? `Better than ${Math.round(beat * 100)}% of ${scores.length} players tonight · typical score ${median}` : `A typical score tonight: ${median}`}</small>`;
+    if (live) document.getElementById("crowd-note")!.textContent = `The hill is tonight's real players on the ${CONFIG.tiers[tier].name} sky.`;
+  };
+  paintHill(crowd, false);
+  if (daily) void liveCrowd(r.puzzle, tier, r.partial ? null : r.score - (r.link?.bonus ?? 0)).then((live) => {
+    if (live && live.length >= MIN_LIVE && chart.isConnected) paintHill(live, true);
+  });
   const box = document.getElementById("link-box");
   if (box && info) {
     if (!r.link) {
