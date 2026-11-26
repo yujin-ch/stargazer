@@ -45,6 +45,8 @@ function write(s: Saved) {
 export const store = {
   today(date: string): RunResult | undefined { return read().days[date]; },
   save(r: RunResult) { const s = read(); s.days[r.date] = r; write(s); },
+  /** Every saved night, oldest first. */
+  allDays(): RunResult[] { return Object.values(read().days).sort((a, b) => a.date.localeCompare(b.date)); },
   /** Every object ever named, in any run. */
   catalogue(): Set<string> { return new Set(read().catalogue ?? []); },
   addToCatalogue(ids: string[]): number {

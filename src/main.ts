@@ -2,7 +2,10 @@ import "@fontsource/press-start-2p";
 import "@fontsource/vt323";
 import { CONFIG, tierFor, answerPoints, SITE_URL, TIP_URL } from "./config";
 import { drawShareCard, cardBlob } from "./sharecard";
-import { OBJECTS, BY_ID, loadDayPack, loadPackIndex, shownNames, themeName, themeInfo, type SkyObject } from "./library";
+import { OBJECTS, BY_ID, loadDayPack, loadPackIndex, shownNames, themeName, themeInfo, photoHi, type SkyObject } from "./library";
+import { openUniverse, type UBody, type UNight } from "./universe";
+import { MiniMap } from "./minimap";
+let mini: MiniMap | null = null;
 import { makeMatcher, normalize, forms as formsOf, linkMatches } from "./match";
 import { dailySky, setDayPack, notePackNight, practiceSky, localDateKey, puzzleNumber, mulberry32, dayTheme, dayCondition } from "./daily";
 import { theme } from "./themes";
@@ -137,6 +140,7 @@ function playScreen() {
       <canvas id="eyepiece" aria-label="Telescope view"></canvas>
       <div class="overlay" id="overlay"></div>
       <div class="pops" id="pops"></div>
+      <div class="minimap" aria-hidden="true"><canvas id="minimap"></canvas><span>TONIGHT</span></div>
     </section>
     <div class="label-row">
       <div class="theme-label" id="label"></div>
@@ -157,6 +161,8 @@ function playScreen() {
   for (const id of ["score", "time", "count", "scope", "overlay", "pops", "label", "band", "bonus", "bonusbar", "controls", "guess", "clear", "skip", "hint", "start", "mute", "combo", "backbtn"])
     el[id] = document.getElementById(id)!;
   viewer = new Viewer(document.getElementById("eyepiece") as HTMLCanvasElement, theme);
+  mini = new MiniMap(document.getElementById("minimap") as HTMLCanvasElement, theme.bandColors);
+  mini.start();
   // the lens follows the space it has (the label row and keyboard change it mid-run)
   if (window.ResizeObserver) new ResizeObserver(() => sizeViewer()).observe(el.scope);
   renderMute();
@@ -503,6 +509,7 @@ function named(obj: SkyObject, typed: string) {
   const points = answerPoints(obj.band, zoomed, run.combo);
   run.score += points;
   run.items.push({ id: obj.id, outcome: zoomed ? "zoomed" : "named", typed: typed.trim(), points, t: clockAt(now) });
+  mini?.add(obj.band, viewer.spriteCanvas(obj, 1));
   (el.guess as HTMLInputElement).value = "";
   run.graceUntil = now + CONFIG.graceMs;
   run.graceObj = obj;
@@ -532,6 +539,7 @@ function skip() {
   if (!obj) return;
   run.penalty += CONFIG.skipCost;
   run.items.push({ id: obj.id, outcome: "skipped", typed: run.attempt.trim(), points: 0, t: clockAt(now) });
+  mini?.skip();
   (el.guess as HTMLInputElement).value = "";
   const broke = run.combo >= CONFIG.combo[0].at;
   run.combo = 0;
@@ -938,6 +946,7 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
         <canvas class="chart sky-chart" id="chart" aria-label="Your run drawn as a constellation"></canvas>
         <p class="legend">${bandsSeen.map((b) => `<span><i class="lg" style="background:${theme.bandColors[b]}"></i>${theme.bandNames[b]}</span>`).join("")}<span><i class="lg zoomed"></i>zoom</span><span><i class="lg skipped"></i>skipped</span></p>
         <p class="caption">Around the dial: your minute, from the top. Further out: harder. Answers in a row join up; grey dashes on the rim are skips.</p>
+        ${daily && r.named ? `<p class="land-row"><button class="btn" id="to-universe">SEE WHERE TONIGHT LANDED ✦</button></p>` : ""}
       </section>
       <h3 class="sb-title details-title">HOW THE NIGHT WENT</h3>
       ${breakdown(r)}
@@ -955,7 +964,7 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
     <p class="toast" id="toast" role="status"></p>
     <section class="come-back">
       ${daily ? `<div class="moonrise"><canvas id="moonrise" width="120" height="34" aria-hidden="true"></canvas><p>Next sky in <b id="next-in">${nextSkyIn()}</b></p></div>` : ""}
-      <p class="small"><button class="link-btn" id="to-cat">Catalogue <b>${cat}</b> / ${OBJECTS.length} objects</button>${lastFresh ? ` <span class="new">+${lastFresh} new</span>` : ""}</p>
+      <p class="small"><button class="link-btn" id="to-cat">Your universe · <b>${cat}</b> found</button>${lastFresh ? ` <span class="new">+${lastFresh} new</span>` : ""}</p>
       ${daily ? `<p class="small">Best ${stats.best} · Streak ${stats.streak}</p>` : ""}
       ${daily && canOfferHomeScreen() ? `<p class="small home-row"><button class="link-btn" id="home-screen"><img src="/icons/icon-192.png" alt="" width="20" height="20" /> Put Stargazer on your home screen</button></p>` : ""}
     </section>
@@ -1106,6 +1115,8 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
   });
   document.getElementById("to-atlas")!.onclick = () => showAtlas();
   document.getElementById("to-cat")!.onclick = () => void catalogueScreen(() => void resultsScreen(r, mode));
+  const land = document.getElementById("to-universe");
+  if (land) land.onclick = () => void catalogueScreen(() => void resultsScreen(r, mode), r.date);
   document.getElementById("back")?.addEventListener("click", () => resultsScreen(store.today(localDateKey())!, "daily"));
   document.getElementById("daily")?.addEventListener("click", () => { PREVIEW_NIGHT = 0; void openPlay("daily"); });
   app.querySelectorAll<HTMLButtonElement>("[data-night]").forEach((b) => (b.onclick = () => { PREVIEW_NIGHT = Number(b.dataset.night); void openPlay("practice"); }));
@@ -1337,71 +1348,44 @@ function line(g: CanvasRenderingContext2D, x0: number, y0: number, x1: number, y
 
 // ---------------------------------------------------------------- catalogue: the collection book
 
-/** Every object you've ever named, by theme; the rest wait as shadows. Future nights' photos are never loaded. */
-async function catalogueScreen(back: () => void) {
+/**
+ * Your Universe: every object you've ever named, as moons, planets, nebulae and black holes around the star of
+ * the night you found it (see universe.ts). Nothing you haven't found is shown. Future nights are never loaded.
+ */
+async function catalogueScreen(back: () => void, focus?: string) {
   cancelAnimationFrame(raf);
   if (!viewer) viewer = new Viewer(document.createElement("canvas"), theme);
-  app.innerHTML = `<main class="results catalogue"><p class="small">Opening the catalogue…</p></main>`;
+  app.innerHTML = `<main class="results catalogue"><p class="small">Opening your universe…</p></main>`;
   const today = localDateKey();
+  const days = store.allDays().filter((d) => d.date <= today);
   const idx = await loadPackIndex();
   for (const k of Object.keys(idx).filter((k) => k <= today)) await usePack(k);
-  const objs = OBJECTS.filter((o) => { const d = packDate(o); return !d || d <= today; });
-  await viewer.load(objs, false);
   const seen = store.catalogue();
-  const found = objs.filter((o) => seen.has(o.id)).length;
-  const groups = new Map<string, { label: string; objs: SkyObject[] }>();
-  for (const o of objs) {
-    const d = packDate(o), key = d ? `pack:${d}` : o.theme;
-    if (!groups.has(key)) groups.set(key, { label: d ? `Photographs · ${fmtDate(d)}` : themeName(o.theme), objs: [] });
-    groups.get(key)!.objs.push(o);
-  }
-  // packs (newest first), then the themes with the most found
-  const order = [...groups.entries()].sort(([ka, a], [kb, b]) => {
-    const pa = ka.startsWith("pack:"), pb = kb.startsWith("pack:");
-    if (pa !== pb) return pa ? -1 : 1;
-    if (pa) return kb.localeCompare(ka);
-    const fa = a.objs.filter((o) => seen.has(o.id)).length / a.objs.length, fb = b.objs.filter((o) => seen.has(o.id)).length / b.objs.length;
-    return fb - fa || a.label.localeCompare(b.label);
+  const placed = new Set<string>();
+  const want: SkyObject[] = [...seen].map((id) => BY_ID.get(id)).filter((o): o is SkyObject => !!o);
+  await viewer.load(want, true);
+  const body = (o: SkyObject, zoomed: boolean): UBody => ({
+    id: o.id, band: o.band, name: o.names[0], others: shownNames(o).slice(0, 3), note: o.note ?? "", zoomed,
+    sprite: viewer.spriteCanvas(o, 1), hi: o.kind === "photo" ? photoHi(o) : null,
   });
-  app.innerHTML = `
-  <main class="results catalogue">
-    <button class="btn back-btn" id="cat-back" type="button">&lt; BACK</button>
-    <header class="cat-head">
-      <h1>CATALOGUE</h1>
-      <p class="cat-count"><b>${found}</b> / ${objs.length} found</p>
-      <div class="cat-bar" aria-hidden="true"><i style="width:${(found / Math.max(1, objs.length)) * 100}%"></i></div>
-      <p class="small">Everything you name goes in the book. Shadows are still out there.</p>
-    </header>
-    <div id="cat-groups"></div>
-  </main>`;
-  const wrap = document.getElementById("cat-groups")!;
-  for (const [, grp] of order) {
-    const have = grp.objs.filter((o) => seen.has(o.id)).length;
-    const d = document.createElement("details");
-    d.className = "cat-group";
-    if (have) d.open = true;
-    d.innerHTML = `<summary><span>${esc(grp.label)}</span><small>${have} / ${grp.objs.length}</small><i class="cat-mini"><i style="width:${(have / grp.objs.length) * 100}%"></i></i></summary>`;
-    const ul = document.createElement("ul");
-    ul.className = "cat-grid";
-    // found first, by difficulty; then shadows
-    const sorted = grp.objs.slice().sort((a, b) => Number(seen.has(b.id)) - Number(seen.has(a.id)) || a.band - b.band);
-    for (const o of sorted) {
-      const got = seen.has(o.id);
-      const li = document.createElement("li");
-      li.className = got ? "got" : "shadow";
-      li.style.setProperty("--band", theme.bandColors[o.band]);
-      li.appendChild(got ? viewer.spriteCanvas(o, 2) : viewer.silhouette(o, 2));
-      const name = document.createElement("span");
-      name.textContent = got ? o.names[0] : "???";
-      li.appendChild(name);
-      if (got && o.note) { li.title = o.note; li.tabIndex = 0; }
-      ul.appendChild(li);
+  const nights: UNight[] = [];
+  for (const d of days) {
+    const bodies: UBody[] = [];
+    for (const it of d.items) {
+      const o = BY_ID.get(it.id);
+      if (!o || it.outcome === "skipped" || placed.has(o.id)) continue;
+      placed.add(o.id);
+      bodies.push(body(o, it.outcome === "zoomed"));
     }
-    d.appendChild(ul);
-    wrap.appendChild(d);
+    if (bodies.length) nights.push({ date: d.date, label: fmtDate(d.date), sub: `${d.score} points · ${d.named} named`, bodies });
   }
-  document.getElementById("cat-back")!.onclick = back;
-  window.scrollTo(0, 0);
+  // found on practice skies only: a loose cluster of wanderers
+  const loose = want.filter((o) => !placed.has(o.id));
+  if (loose.length) nights.push({ date: "", label: "Wanderers", sub: "found on practice and past skies", bodies: loose.map((o) => body(o, false)) });
+  openUniverse(app, {
+    nights, bandNames: theme.bandNames, bandColors: theme.bandColors, plural: ["Moons", "Planets", "Nebulae", "Black Holes"],
+    onBack: back, focus,
+  });
 }
 
 /** The date of the pack an object came from, if any ("photos:2026-11-26/okapi" → "2026-11-26"). */
@@ -1417,7 +1401,7 @@ try { for (const k of Object.keys(localStorage)) if (k === "stargazer:id" || k.s
 // test hook for automated playtests: /?debug, only on this computer (it reveals answers)
 const LOCAL = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
 if (LOCAL && new URLSearchParams(location.search).has("debug"))
-  (window as unknown as { __sg: unknown }).__sg = { answer: () => run?.sky[run.i]?.names[0], phase: () => run?.phase };
+  (window as unknown as { __sg: unknown }).__sg = { answer: () => run?.sky[run.i]?.names[0], phase: () => run?.phase, universe: () => catalogueScreen(() => frontPage()) };
 
 // ---------------------------------------------------------------- front door: intro, then the star atlas
 
@@ -1480,12 +1464,12 @@ function showAtlas(focus = "tonight") {
   });
   const menu: AtlasStar[] = [
     { id: "log", x: 1320, y: 720, size: "big", color: "#e07ab8", label: "OBSERVING LOG", card: () => `<h2>Observing log</h2>
-      <dl class="figures"><div><dt>NIGHTS</dt><dd>${stats.played}</dd></div><div><dt>BEST</dt><dd>${stats.best}</dd></div><div><dt>STREAK</dt><dd>${stats.streak}</dd></div><div><dt>CATALOGUE</dt><dd>${cat.size}</dd></div></dl>
+      <dl class="figures"><div><dt>NIGHTS</dt><dd>${stats.played}</dd></div><div><dt>BEST</dt><dd>${stats.best}</dd></div><div><dt>STREAK</dt><dd>${stats.streak}</dd></div><div><dt>FOUND</dt><dd>${cat.size}</dd></div></dl>
       ${done ? `<button class="btn" id="card-log">TONIGHT'S LOG</button>` : `<p class="small">Tonight's sky is still waiting.</p>`}`,
       wire: (c) => { const b = c.querySelector<HTMLButtonElement>("#card-log"); if (b) b.onclick = () => resultsScreen(done!, "daily"); } },
-    { id: "catalogue", x: 680, y: 720, size: "big", color: "#f2d38a", label: "CATALOGUE", sub: `${cat.size} found`, card: () => `<h2>Catalogue</h2>
-      <p>Your collection book: everything you've ever named, by theme. The rest wait as shadows.</p>
-      <div class="card-actions"><button class="btn primary" id="card-cat">OPEN THE BOOK</button></div>`,
+    { id: "catalogue", x: 680, y: 720, size: "big", color: "#f2d38a", label: "YOUR UNIVERSE", sub: `${cat.size} found`, card: () => `<h2>Your universe</h2>
+      <p>Everything you've ever named, as moons, planets, nebulae and black holes around the night you found them.</p>
+      <div class="card-actions"><button class="btn primary" id="card-cat">EXPLORE IT</button></div>`,
       wire: (c) => { c.querySelector<HTMLButtonElement>("#card-cat")!.onclick = () => void catalogueScreen(() => showAtlas("catalogue")); } },
     { id: "community", x: 1640, y: 1180, size: "small", color: "#5a6988", dim: true, label: "COMMUNITY SKIES", sub: "coming soon",
       card: () => `<h2>Community skies</h2><p>Soon: skies drawn and themed by other stargazers, out here on the edge of the map.</p>` },

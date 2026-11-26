@@ -630,3 +630,57 @@ h1.wordmark { display: inline-flex; align-items: center; gap: 14px; }
 @media (min-width: 700px) { .wordmark .mark { width: 72px; height: 72px; } h1.wordmark { gap: 18px; } }
 .atlas-head span { display: inline-flex; align-items: center; gap: 8px; }
 .atlas-head .mark { width: 24px; height: 24px; filter: drop-shadow(2px 2px 0 #000); }
+
+/* ---------- Your universe (the catalogue as a map) ---------- */
+.universe { position: fixed; inset: 0; overflow: hidden; background: #0b0818; touch-action: none; }
+.uni-canvas { position: absolute; inset: 0; width: 100%; height: 100%; cursor: grab; touch-action: none; }
+.uni-canvas:active { cursor: grabbing; }
+.uni-head { position: absolute; left: 0; right: 0; top: 0; display: flex; align-items: flex-start; gap: 16px; padding: 16px; pointer-events: none; }
+.uni-head > * { pointer-events: auto; }
+.uni-head .back-btn { position: static; flex: none; }
+.uni-title h1 { margin: 0; font-family: var(--font-display); font-weight: normal; font-size: clamp(14px, 3.4vw, 20px); color: var(--accent); letter-spacing: 2px; text-shadow: 3px 3px 0 #000, 0 0 18px rgba(247, 201, 92, 0.28); }
+.uni-title p { margin: 6px 0 0; color: var(--dim); font-size: 18px; }
+.uni-title b { color: var(--brass-hi); font-weight: normal; }
+.uni-filter { position: absolute; left: 16px; right: 16px; bottom: 16px; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; pointer-events: none; }
+.uni-filter .chip { pointer-events: auto; font-family: var(--font-display); font-size: 8px; letter-spacing: 1px; color: #d8cff0; background: rgba(20, 14, 40, 0.85); border: 2px solid #3b2f5e; padding: 8px 10px; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; box-shadow: 3px 3px 0 #000; }
+.uni-filter .chip i { width: 8px; height: 8px; background: var(--c, #fff); display: inline-block; }
+.uni-filter .chip small { color: var(--dim); font-size: 8px; }
+.uni-filter .chip.on { border-color: var(--c, var(--accent)); color: #fff; background: rgba(48, 34, 86, 0.95); }
+.uni-filter .chip:disabled { opacity: 0.35; cursor: default; }
+.uni-hint { position: absolute; left: 16px; right: 16px; bottom: 64px; text-align: center; margin: 0; color: var(--dim); font-size: 16px; pointer-events: none; opacity: 0.8; }
+.uni-empty { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; padding: 24px; pointer-events: none; }
+.uni-empty p { font-family: var(--font-display); color: var(--accent); font-size: 12px; margin: 0 0 12px; }
+.uni-empty p.small { font-family: var(--font-body); color: var(--dim); font-size: 18px; max-width: 30ch; margin: 0 auto; }
+.uni-card { position: absolute; left: 60%; top: 84px; width: min(300px, calc(100% - 32px)); background: rgba(22, 16, 44, 0.96); border: 2px solid var(--band, var(--accent)); box-shadow: 4px 4px 0 #000, 0 0 30px rgba(0, 0, 0, 0.5); padding: 18px 18px 14px; color: #e9e0ff; animation: uni-in 0.25s ease-out; }
+.uni-card[hidden] { display: none; }
+.uni-card h2 { margin: 4px 0 6px; font-family: var(--font-display); font-weight: normal; font-size: 14px; color: var(--accent); text-transform: uppercase; line-height: 1.4; }
+.uni-card .small { color: var(--dim); font-size: 16px; margin: 4px 0; }
+.uni-card .uni-note { font-size: 18px; margin: 8px 0; }
+.uni-card .uni-kind { margin: 0; font-family: var(--font-display); font-size: 8px; letter-spacing: 1px; color: var(--band); display: flex; align-items: center; gap: 6px; }
+.uni-card .uni-kind i { width: 8px; height: 8px; background: var(--band); display: inline-block; }
+.uni-card .uni-pic { display: grid; place-items: center; height: 170px; margin-bottom: 10px; background: radial-gradient(circle, rgba(80, 60, 130, 0.35), transparent 70%); }
+.uni-card .uni-pic img, .uni-card .uni-pic canvas { max-width: 170px; max-height: 170px; width: auto; height: auto; image-rendering: auto; }
+.uni-card .uni-pic canvas { width: 150px; height: auto; image-rendering: pixelated; }
+.uni-card .card-x { position: absolute; right: 8px; top: 6px; }
+.uni-tally { list-style: none; padding: 0; margin: 10px 0 4px; display: grid; gap: 6px; font-size: 18px; }
+.uni-tally li { display: flex; align-items: center; gap: 8px; }
+.uni-tally i { width: 8px; height: 8px; background: var(--c); display: inline-block; }
+@keyframes uni-in { from { opacity: 0; transform: translateY(8px); } }
+@media (max-width: 640px) {
+  .uni-card { left: 12px !important; right: 12px; width: auto; top: auto !important; bottom: 64px; max-height: 48vh; overflow: auto; }
+  .uni-card .uni-pic { height: 120px; }
+  .uni-card .uni-pic img, .uni-card .uni-pic canvas { max-height: 120px; }
+  .uni-hint { bottom: 104px; }
+}
+@media (prefers-reduced-motion: reduce) { .uni-card { animation: none; } }
+
+/* ---------- live mini-map in the corner of the eyepiece ---------- */
+.minimap { position: absolute; right: 4px; bottom: 4px; width: clamp(76px, 22vw, 124px); pointer-events: none; display: flex; flex-direction: column; align-items: center; gap: 2px; z-index: 2; }
+.minimap canvas { width: 100%; aspect-ratio: 1; display: block; border-radius: 50%; background: radial-gradient(circle, rgba(30, 22, 58, 0.85) 0 62%, rgba(30, 22, 58, 0) 72%); }
+.minimap span { font-family: var(--font-display); font-size: 7px; letter-spacing: 1px; color: var(--dim); }
+.minimap.ping canvas { animation: mini-ping 0.5s ease-out; }
+@keyframes mini-ping { 30% { filter: brightness(1.5); } }
+.play.ready .minimap, .play.arriving .minimap, .play.gliding .minimap { opacity: 0; }
+.minimap { transition: opacity 0.4s; }
+@media (prefers-reduced-motion: reduce) { .minimap.ping canvas { animation: none; } }
+.land-row { text-align: center; margin: 12px 0 0; }
