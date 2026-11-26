@@ -158,24 +158,24 @@ export function livingSky(canvas: HTMLCanvasElement) {
       depth: Math.random() < 0.7 ? 0.25 : 1,
     }));
     neb = nebula(W, H, 7);
-    // the sky's colour, by the hour, in stepped bands like an old print
+    // the sky's colour, by the hour: a smooth gradient twice the screen tall, so scrolling moves through it
     bg = document.createElement("canvas");
-    bg.width = canvas.width; bg.height = canvas.height;
+    bg.width = canvas.width; bg.height = canvas.height * 2;
     const b = bg.getContext("2d")!;
     const tint = skyTint(new Date().getHours());
-    const top = hex(tint.top), bot = hex(tint.bottom), glow = hex(tint.glow);
-    const steps = 10;
-    for (let k = 0; k < steps; k++) {
-      const y0 = Math.floor((k / steps) * bg.height), y1 = Math.floor(((k + 1) / steps) * bg.height);
-      b.fillStyle = mix(top, bot, (k / (steps - 1)) ** 1.6);
-      b.fillRect(0, y0, bg.width, y1 - y0);
-    }
-    // a glow low on the horizon, in soft steps
-    for (let k = 0; k < 14; k++) {
-      const y0 = Math.floor(bg.height * (0.58 + k * 0.03));
-      b.fillStyle = mix(bot, glow, ((k + 1) / 14) ** 1.4 * tint.glowA * 1.6);
-      b.fillRect(0, y0, bg.width, bg.height - y0);
-    }
+    const grad = b.createLinearGradient(0, 0, 0, bg.height);
+    grad.addColorStop(0, tint.top);
+    grad.addColorStop(0.45, mix(hex(tint.top), hex(tint.bottom), 0.6));
+    grad.addColorStop(1, tint.bottom);
+    b.fillStyle = grad; b.fillRect(0, 0, bg.width, bg.height);
+    // a soft glow rising from below, like a far-off horizon: a wide radial wash, no hard edge
+    const gx = bg.width / 2, gy = bg.height * 1.05, gr = Math.max(bg.width, bg.height) * 0.75;
+    const rg = b.createRadialGradient(gx, gy, 0, gx, gy, gr);
+    const gc = hex(tint.glow);
+    rg.addColorStop(0, `rgba(${gc.join(",")},${tint.glowA * 1.4})`);
+    rg.addColorStop(0.5, `rgba(${gc.join(",")},${tint.glowA * 0.5})`);
+    rg.addColorStop(1, `rgba(${gc.join(",")},0)`);
+    b.fillStyle = rg; b.fillRect(0, 0, bg.width, bg.height);
   };
   resize();
   window.addEventListener("resize", resize);
@@ -183,22 +183,29 @@ export function livingSky(canvas: HTMLCanvasElement) {
   const aim = { x: 0, y: 0 }, cur = { x: 0, y: 0 };
   window.addEventListener("pointermove", (e) => { aim.x = (e.clientX / window.innerWidth - 0.5) * 2; aim.y = (e.clientY / window.innerHeight - 0.5) * 2; }, { passive: true });
   const meteors = meteorShower();
+  // scrolling a long page (results, catalogue) drifts through the sky: far things move least
+  let scroll = 0;
+  window.addEventListener("scroll", () => { scroll = window.scrollY / SCALE; if (reduce) requestAnimationFrame(frame); }, { passive: true });
   const frame = (t: number) => {
     if (!canvas.isConnected) return;
     // nothing to see while the atlas or intro covers it: keep ticking cheaply
     cur.x += (aim.x - cur.x) * 0.04; cur.y += (aim.y - cur.y) * 0.04;
     const driftX = reduce ? 0 : Math.sin(t / 23000) * 3, driftY = reduce ? 0 : Math.cos(t / 31000) * 2;
-    g.drawImage(bg!, 0, 0);
-    const nx = Math.round(-12 - cur.x * 2 + driftX * 0.5), ny = Math.round(-12 - cur.y * 2 + driftY * 0.5);
+    const H0 = canvas.height, SH = H0 + 24;
+    g.drawImage(bg!, 0, -Math.round(Math.min(H0, scroll * 0.35)));
+    const nx = Math.round(-12 - cur.x * 2 + driftX * 0.5);
+    const ny = -12 - (((Math.round(cur.y * 2 - driftY * 0.5 + scroll * 0.5) % SH) + SH) % SH);
     g.globalAlpha = 0.55;
     g.drawImage(neb!, nx, ny);
+    g.drawImage(neb!, nx, ny + SH); // tiled, so a long scroll never runs out of nebula
     g.globalAlpha = 1;
     for (const s of stars) {
       const tw = reduce ? 1 : (Math.sin(t / 900 + s.p) + 1) / 2;
       g.globalAlpha = (s.depth < 1 ? 0.2 : 0.35) + 0.65 * tw * (s.depth < 1 ? 0.6 : 1);
       g.fillStyle = s.c;
       const k = s.depth * 6;
-      g.fillRect(Math.floor(s.x - cur.x * k + driftX * s.depth), Math.floor(s.y - cur.y * k + driftY * s.depth), s.s, s.s);
+      const sy = ((((s.y + 12 - cur.y * k + driftY * s.depth - scroll * (0.3 + s.depth * 0.5)) % SH) + SH) % SH) - 12;
+      g.fillRect(Math.floor(s.x - cur.x * k + driftX * s.depth), Math.floor(sy), s.s, s.s);
     }
     g.globalAlpha = 1;
     if (!reduce) meteors.step(g, t, canvas.width, canvas.height);
