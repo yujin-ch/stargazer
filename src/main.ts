@@ -9,7 +9,7 @@ let mini: MiniMap | null = null;
 import { makeMatcher, normalize, forms as formsOf, linkMatches } from "./match";
 import { dailySky, setDayPack, notePackNight, practiceSky, localDateKey, puzzleNumber, mulberry32, dayTheme, dayCondition } from "./daily";
 import { theme } from "./themes";
-import { setMuted, unlockAudio, setAmbience, ui, whoosh } from "./themes/chip";
+import { setMuted, unlockAudio, setAmbience, ui, whoosh, blip } from "./themes/chip";
 import { Viewer } from "./viewer";
 import { store, type ItemResult, type RunResult } from "./storage";
 import { dayCurve, beatShare, ncdf, type Curve } from "./crowd";
@@ -118,6 +118,8 @@ interface Run {
   clearedBonus: number;
   /** A match waiting briefly in case a longer name is being typed. */
   pending: string | null;
+  /** Adaptive difficulty level, 0 (Moon) to 3 (Black Hole). */
+  level: number;
 }
 let run: Run;
 
@@ -306,7 +308,7 @@ function newRun(mode: Run["mode"]): Run {
   const streak = store.streakThrough(puzzle - 1);
   const tier = tierFor(streak);
   const sky = mode === "daily" ? dailySky(puzzle, tier) : PREVIEW_NIGHT ? dailySky(PREVIEW_NIGHT, tier) : practiceSky(tier);
-  return { mode, puzzle: mode === "daily" ? puzzle : PREVIEW_NIGHT || puzzle, date, tier, streak, sky, i: 0, phase: "ready", pausedAt: 0, pausedFrom: null, countdownAt: 0, startAt: 0, penalty: 0, score: 0, items: [], attempt: "", lastTick: 99, combo: 0, bestCombo: 0, graceUntil: 0, graceObj: null, graceText: "", graceDropped: "", clearedBonus: 0, pending: null };
+  return { mode, puzzle: mode === "daily" ? puzzle : PREVIEW_NIGHT || puzzle, date, tier, streak, sky, i: 0, phase: "ready", pausedAt: 0, pausedFrom: null, countdownAt: 0, startAt: 0, penalty: 0, score: 0, items: [], attempt: "", lastTick: 99, combo: 0, bestCombo: 0, graceUntil: 0, graceObj: null, graceText: "", graceDropped: "", clearedBonus: 0, pending: null, level: 0 };
 }
 
 async function openPlay(mode: Run["mode"]) {
@@ -510,6 +512,7 @@ function named(obj: SkyObject, typed: string) {
   run.score += points;
   run.items.push({ id: obj.id, outcome: zoomed ? "zoomed" : "named", typed: typed.trim(), points, t: clockAt(now) });
   mini?.add(obj.band, viewer.spriteCanvas(obj, 1));
+  if (obj.band === 3) { document.body.classList.remove("bh-glow"); void document.body.offsetWidth; document.body.classList.add("bh-glow"); setTimeout(() => document.body.classList.remove("bh-glow"), 1800); }
   (el.guess as HTMLInputElement).value = "";
   run.graceUntil = now + CONFIG.graceMs;
   run.graceObj = obj;
@@ -526,8 +529,26 @@ function named(obj: SkyObject, typed: string) {
   saveProgress();
   if (zoomed) { el.scope.classList.remove("jolt"); void el.scope.offsetWidth; el.scope.classList.add("jolt"); }
   renderCombo(false);
+  adapt(zoomed ? CONFIG.adapt.zoomed : CONFIG.adapt.named);
   run.i++;
   showObject(now);
+}
+
+/**
+ * Adaptive difficulty: every answer nudges the level up (more when zoomed), every skip knocks it back down, and the
+ * next object is drawn from the band nearest that level. Everyone gets the same objects tonight, just in their own order.
+ */
+function adapt(delta: number) {
+  run.level = Math.max(0, Math.min(3, run.level + delta));
+  mini?.setLevel(run.level);
+  const want = Math.round(run.level), from = run.i + 1;
+  if (from >= run.sky.length) return;
+  let best = -1, bestD = 9;
+  for (let j = from; j < run.sky.length; j++) {
+    const b = run.sky[j].band, d = Math.abs(b - want) + (delta < 0 ? (b > want ? 0.1 : 0) : (b < want ? 0.1 : 0));
+    if (d < bestD) { best = j; bestD = d; if (d === 0) break; }
+  }
+  if (best > from) { const [o] = run.sky.splice(best, 1); run.sky.splice(from, 0, o); }
 }
 
 function skip() {
@@ -552,6 +573,7 @@ function skip() {
   viewer.dismiss("skipped", now);
   announce(`Skipped ${obj.names[0]}`);
   saveProgress();
+  adapt(CONFIG.adapt.skipped);
   run.i++;
   showObject(now);
 }
@@ -737,7 +759,7 @@ function finish(now: number, cleared = false) {
     countUp(document.getElementById("tally")!, result.score, 900, true, () => {
       if (newBest) { document.getElementById("best")?.classList.remove("hidden"); theme.sounds.best(); }
       const info = themeInfo(run.sky[0]?.theme ?? "");
-      setTimeout(() => (info?.mystery ? finalQuestion(result, run.mode) : resultsScreen(result, run.mode)), newBest ? 1300 : 900);
+      setTimeout(() => (info?.mystery ? finalQuestion(result, run.mode) : resultsScreen(result, run.mode, true)), newBest ? 1300 : 900);
     });
   }, 800);
 }
@@ -780,7 +802,7 @@ function finalQuestion(result: RunResult, mode: Run["mode"]) {
     el.overlay.innerHTML = next.link!.ok
       ? `<div><b>+${next.link!.bonus}</b><span>LINK FOUND</span></div>`
       : `<div><b>✕</b><span>${guess.trim() ? "NOT QUITE" : "THE LINK WAS…"}</span></div>`;
-    setTimeout(() => resultsScreen(next, mode), 1100);
+    setTimeout(() => resultsScreen(next, mode, true), 1100);
   };
   (document.getElementById("final-form") as HTMLFormElement).onsubmit = (e) => { e.preventDefault(); submit(input.value); };
   document.getElementById("final-skip")!.onclick = () => submit("");
@@ -900,7 +922,7 @@ function moonrise() {
   paint();
 }
 
-async function resultsScreen(r: RunResult, mode: Run["mode"]) {
+async function resultsScreen(r: RunResult, mode: Run["mode"], fresh = false) {
   cancelAnimationFrame(raf);
   if (!viewer) { viewer = new Viewer(document.createElement("canvas"), theme); }
   await viewer.load(OBJECTS.filter((o) => o.kind === "photo"));
@@ -928,6 +950,13 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
         <span>OBSERVING LOG</span>
         <span>${daily ? fmtDate(r.date).toUpperCase() : "PRACTICE"}</span>
       </header>
+      <section class="sb-block sky-block sky-top">
+        <p class="constellation" id="constellation"></p>
+        <canvas class="chart sky-chart" id="chart" aria-label="Your run drawn as a constellation"></canvas>
+        <p class="legend">${bandsSeen.map((b) => `<span><i class="lg" style="background:${theme.bandColors[b]}"></i>${theme.bandNames[b]}</span>`).join("")}<span><i class="lg zoomed"></i>zoom</span><span><i class="lg skipped"></i>skipped</span></p>
+        <p class="caption">Around the dial: your minute, from the top. Further out: harder. Answers in a row join up; grey dashes on the rim are skips.</p>
+
+      </section>
       ${!daily || mystery || CONFIG.conditionsOn ? `<p class="date">${[daily ? "" : "Practice · not saved", mystery ? shownTheme : "", CONFIG.conditionsOn ? dayCondition(r.puzzle).name : ""].filter(Boolean).join(" · ")}</p>` : ""}
       <div class="final"><span>${r.score}</span><small>POINTS</small></div>
       ${r.partial ? `<p class="small">This run was cut short, so it counts as it stood.</p>` : ""}
@@ -938,16 +967,9 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
         <div class="hill-axis" id="hill-axis"></div>
         <p class="hill-line" id="hill-line"></p>
       </section>
-      ${daily ? `<div class="share-row"><button class="btn primary" id="share">SHARE</button></div>${isTouch ? "" : `<p class="save-row"><button class="link-btn" id="save-card">save the picture</button></p>`}` : ""}
+      <div class="share-row">${daily ? `<button class="btn primary" id="share">SHARE</button>` : ""}<button class="btn" id="to-universe">YOUR UNIVERSE ✦</button></div>${daily ? `${isTouch ? "" : `<p class="save-row"><button class="link-btn" id="save-card">save the picture</button></p>`}` : ""}
       <p class="caption" id="crowd-note">Tonight's hill is the same for everyone: how a crowd of stargazers fares on this exact sky.</p>
       ${mystery ? `<section class="link-box${r.link ? (r.link.ok ? " found" : " missed") : ""}" id="link-box"></section>` : ""}
-      <section class="sb-block sky-block">
-        <p class="constellation" id="constellation"></p>
-        <canvas class="chart sky-chart" id="chart" aria-label="Your run drawn as a constellation"></canvas>
-        <p class="legend">${bandsSeen.map((b) => `<span><i class="lg" style="background:${theme.bandColors[b]}"></i>${theme.bandNames[b]}</span>`).join("")}<span><i class="lg zoomed"></i>zoom</span><span><i class="lg skipped"></i>skipped</span></p>
-        <p class="caption">Around the dial: your minute, from the top. Further out: harder. Answers in a row join up; grey dashes on the rim are skips.</p>
-        ${daily && r.named ? `<p class="land-row"><button class="btn" id="to-universe">SEE WHERE TONIGHT LANDED ✦</button></p>` : ""}
-      </section>
       <h3 class="sb-title details-title">HOW THE NIGHT WENT</h3>
       ${breakdown(r)}
       <dl class="figures">
@@ -987,7 +1009,10 @@ async function resultsScreen(r: RunResult, mode: Run["mode"]) {
     ? `<small>TONIGHT YOU DREW</small><b>THE ${esc(bestObj.names[0].toUpperCase())}</b><small>a constellation named for your best find</small>`
     : `<small>TONIGHT YOU DREW</small><b>A CLOUDY SKY</b>`;
   const hill = document.getElementById("hill") as HTMLCanvasElement;
-  if (REDUCED_MOTION || !r.items.length) drawConstellation(chart, r, best);
+  if (fresh && !REDUCED_MOTION && r.items.length) {
+    drawConstellation(chart, r, best);
+    void replayNight(r, best, chart, bestObj ? `THE ${bestObj.names[0].toUpperCase()}` : "A CLOUDY SKY");
+  } else if (REDUCED_MOTION || !r.items.length) drawConstellation(chart, r, best);
   else {
     // the constellation draws itself, star by star
     const t0 = performance.now(), per = Math.min(110, 1400 / r.items.length);
@@ -1171,6 +1196,106 @@ function starPositions(r: RunResult, W: number, H: number): { x: number; y: numb
  * placed out from the centre by how hard it was (inner ring easiest, outer ring hardest).
  * Answers in a row join into a constellation; skips are grey dashes on the rim; the best find is ringed in gold.
  */
+/** Where each answer sits on the constellation dial (in the dial's 200 x 200 units). */
+function constellationPos(r: RunResult) {
+  const cx = 100, cy = 100, R = [24, 42, 60, 78], RIM = 90, n = r.items.length;
+  return r.items.map((it, i) => {
+    const t = it.t ?? ((i + 0.5) / n) * CONFIG.runSeconds;
+    const a = (Math.min(t, CONFIG.runSeconds) / CONFIG.runSeconds) * Math.PI * 2 - Math.PI / 2;
+    const rad = it.outcome === "skipped" ? RIM : R[BY_ID.get(it.id)?.band ?? 0];
+    return { x: Math.round(cx + Math.cos(a) * rad), y: Math.round(cy + Math.sin(a) * rad), a };
+  });
+}
+
+/**
+ * After a night: the dial fills the screen, zoomed in, and the night replays itself: each find arrives one by one with
+ * its picture and its sound, skips tick the rim. Then the view pulls back, names the constellation, and settles into
+ * the chart at the top of the observing log. A tap skips to the end.
+ */
+function replayNight(r: RunResult, best: number, target: HTMLCanvasElement, title: string): Promise<void> {
+  return new Promise((done) => {
+    const wrap = document.createElement("div");
+    wrap.className = "replay";
+    wrap.innerHTML = `<canvas class="replay-map"></canvas><p class="replay-title"><small>TONIGHT YOU DREW</small><b>${esc(title)}</b></p><p class="replay-skip">tap to skip</p>`;
+    document.body.appendChild(wrap);
+    const cv = wrap.querySelector("canvas")!, g = cv.getContext("2d")!;
+    const S = Math.round(Math.min(window.innerWidth * 0.92, window.innerHeight * 0.62, 560));
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    cv.style.width = cv.style.height = `${S}px`; cv.width = cv.height = Math.round(S * dpr);
+    const off = document.createElement("canvas");
+    const pos = constellationPos(r), n = r.items.length;
+    const sprites = r.items.map((it) => { const o = BY_ID.get(it.id); return o && it.outcome !== "skipped" ? viewer.spriteCanvas(o, 1) : null; });
+    const per = Math.max(200, Math.min(430, 5600 / n));
+    const t0 = performance.now() + 450;
+    let shown = 0, endAt = 0, finished = false, inARow = 0;
+    const view = { x: pos[0]?.x ?? 100, y: pos[0]?.y ?? 100, z: 1.7 };
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      const from = cv.getBoundingClientRect(), to = target.getBoundingClientRect();
+      wrap.classList.add("leaving");
+      const dx = to.left + to.width / 2 - (from.left + from.width / 2), dy = to.top + to.height / 2 - (from.top + from.height / 2);
+      cv.animate([{ transform: "none" }, { transform: `translate(${dx}px, ${dy}px) scale(${to.width / from.width})` }], { duration: 750, easing: "cubic-bezier(.6,0,.2,1)", fill: "forwards" });
+      whoosh(false, 0.8, 0.05);
+      setTimeout(() => { wrap.remove(); done(); }, 780);
+    };
+    wrap.addEventListener("pointerdown", () => { if (!endAt) { shown = n; endAt = performance.now(); } else finish(); });
+    const frame = (now: number) => {
+      if (!wrap.isConnected) return;
+      // reveal the next answer on its beat
+      while (shown < n && now >= t0 + shown * per) {
+        const it = r.items[shown], band = BY_ID.get(it.id)?.band ?? 0;
+        if (it.outcome === "skipped") { inARow = 0; blip([233], 0.05, "triangle", 0.035); }
+        else {
+          inARow++;
+          theme.sounds.correct(it.outcome === "zoomed", inARow, band);
+          if (band === 3) { document.body.classList.remove("bh-glow"); void document.body.offsetWidth; document.body.classList.add("bh-glow"); setTimeout(() => document.body.classList.remove("bh-glow"), 1800); }
+        }
+        shown++;
+        if (shown === n) endAt = now + per;
+      }
+      // camera: follows the newest find while zoomed in, then pulls back to the whole dial
+      const last = pos[Math.max(0, shown - 1)];
+      const out = endAt && now > endAt ? Math.min(1, (now - endAt) / 900) : 0;
+      const eo = 1 - Math.pow(1 - out, 3);
+      const tz = 1.7 - 0.7 * eo, tx = last ? last.x + (100 - last.x) * eo : 100, ty = last ? last.y + (100 - last.y) * eo : 100;
+      view.x += (tx - view.x) * 0.12; view.y += (ty - view.y) * 0.12; view.z += (tz - view.z) * 0.12;
+      if (out >= 1) { view.x = 100; view.y = 100; view.z = 1; }
+      drawConstellation(off, r, out >= 1 ? best : -1, shown);
+      g.setTransform(dpr, 0, 0, dpr, 0, 0);
+      g.fillStyle = "#0d0a1a"; g.fillRect(0, 0, S, S);
+      const k = (S / 200) * view.z;
+      const ox = S / 2 - view.x * k, oy = S / 2 - view.y * k;
+      g.imageSmoothingEnabled = false;
+      g.drawImage(off, ox, oy, 200 * k, 200 * k);
+      // the finds' own pictures, popping in
+      for (let i = 0; i < shown; i++) {
+        const sp = sprites[i];
+        if (!sp) continue;
+        const band = BY_ID.get(r.items[i].id)?.band ?? 0;
+        const age = Math.min(1, (now - (t0 + i * per)) / 380), pop = age < 1 ? 1 + Math.sin(age * Math.PI) * 0.6 : 1;
+        const rad = S * 0.034 * Math.sqrt(view.z) * pop, x = ox + pos[i].x * k, y = oy + pos[i].y * k;
+        g.fillStyle = "rgba(13,10,26,0.92)"; g.beginPath(); g.arc(x, y, rad, 0, Math.PI * 2); g.fill();
+        g.save(); g.beginPath(); g.arc(x, y, rad, 0, Math.PI * 2); g.clip();
+        const sc = (rad * 1.75) / Math.max(sp.width, sp.height);
+        g.imageSmoothingEnabled = sp.width > 60;
+        g.drawImage(sp, x - (sp.width * sc) / 2, y - (sp.height * sc) / 2, sp.width * sc, sp.height * sc);
+        g.restore();
+        g.strokeStyle = r.items[i].outcome === "zoomed" ? "#fee761" : theme.bandColors[band]; g.lineWidth = 2;
+        g.beginPath(); g.arc(x, y, rad, 0, Math.PI * 2); g.stroke();
+        if (age < 1) { g.globalAlpha = 1 - age; g.strokeStyle = "#fee761"; g.beginPath(); g.arc(x, y, rad + 4 + age * 18, 0, Math.PI * 2); g.stroke(); g.globalAlpha = 1; }
+      }
+      if (out >= 1 && !wrap.classList.contains("named")) {
+        wrap.classList.add("named");
+        theme.sounds.best();
+        setTimeout(finish, 1500);
+      }
+      requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
+  });
+}
+
 function drawConstellation(c: HTMLCanvasElement, r: RunResult, best: number, upto = r.items.length) {
   const W = 200, H = 200, cx = W / 2, cy = H / 2, R = [24, 42, 60, 78], RIM = 90;
   c.width = W; c.height = H;
@@ -1377,7 +1502,16 @@ async function catalogueScreen(back: () => void, focus?: string) {
       placed.add(o.id);
       bodies.push(body(o, it.outcome === "zoomed"));
     }
-    if (bodies.length) nights.push({ date: d.date, label: fmtDate(d.date), sub: `${d.score} points · ${d.named} named`, bodies });
+    // the ones that got away that night, as shadows
+    const sky = dailySky(d.puzzle, Math.min(d.tier ?? 0, CONFIG.tiers.length - 1));
+    const lost = sky.filter((o) => !seen.has(o.id) && !placed.has(o.id));
+    await viewer.load(lost, false);
+    for (const o of lost) {
+      placed.add(o.id);
+      bodies.push({ ...body(o, false), name: "???", others: [], note: "", hi: null, sprite: viewer.silhouette(o, 1), unknown: true });
+    }
+    const bi = bestFind(d), bo = bi >= 0 ? BY_ID.get(d.items[bi].id) : undefined;
+    if (bodies.length) nights.push({ date: d.date, label: fmtDate(d.date), sub: `${d.score} points · ${d.named} named`, title: bo ? `the ${bo.names[0]}` : undefined, bodies });
   }
   // found on practice skies only: a loose cluster of wanderers
   const loose = want.filter((o) => !placed.has(o.id));

@@ -18,12 +18,16 @@ export interface UBody {
   /** The picture to wear (small sprite canvas) and, if there is one, the sharp photo. */
   sprite: HTMLCanvasElement;
   hi: HTMLImageElement | null;
+  /** Still out there: from a night you played but never named. Shown as a shadow. */
+  unknown?: boolean;
 }
 export interface UNight {
   date: string;
   label: string;
   /** e.g. "412 points" */
   sub: string;
+  /** The constellation's name, after the night's best find ("The Zither"). */
+  title?: string;
   bodies: UBody[];
 }
 export interface UniverseOpts {
@@ -40,6 +44,13 @@ const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const GOLDEN = Math.PI * (3 - Math.sqrt(5));
 const SPACING = 430;
 const SIZE = [9, 15, 22, 13];
+/** Your universe expands across real cosmic scales as you play: the first week is the Solar Neighbourhood, and so on out. */
+const REGIONS: [number, string, string][] = [
+  [7, "Solar Neighbourhood", "#7fb7ff"], [30, "Orion Arm", "#9f8cff"], [90, "Milky Way", "#e08ad0"],
+  [180, "Local Group", "#ffb36b"], [365, "Virgo Supercluster", "#7fe0c4"], [Infinity, "Laniakea", "#ffd86b"],
+];
+const regionOf = (i: number) => REGIONS.findIndex(([n]) => i < n);
+const regionEdge = (k: number) => SPACING * Math.sqrt(REGIONS[k][0] - 0.5) + 320;
 
 interface Placed extends UBody {
   sys: number;
@@ -68,14 +79,15 @@ function avgColor(c: HTMLCanvasElement): string {
 }
 
 export function openUniverse(app: HTMLElement, o: UniverseOpts): () => void {
-  const total = o.nights.reduce((n, s) => n + s.bodies.length, 0);
-  const counts = [0, 1, 2, 3].map((b) => o.nights.reduce((n, s) => n + s.bodies.filter((x) => x.band === b).length, 0));
+  const total = o.nights.reduce((n, s) => n + s.bodies.filter((x) => !x.unknown).length, 0);
+  const unknownN = o.nights.reduce((n, s) => n + s.bodies.filter((x) => x.unknown).length, 0);
+  const counts = [0, 1, 2, 3].map((b) => o.nights.reduce((n, s) => n + s.bodies.filter((x) => x.band === b && !x.unknown).length, 0));
   app.innerHTML = `
   <main class="universe">
     <canvas class="uni-canvas" aria-label="Your universe: a map of everything you've named"></canvas>
     <header class="uni-head">
       <button class="btn back-btn" id="uni-back" type="button">&lt; BACK</button>
-      <div class="uni-title"><h1>YOUR UNIVERSE</h1><p><b>${total}</b> found${o.nights.length ? ` · ${o.nights.filter((n) => n.date).length} nights` : ""}</p></div>
+      <div class="uni-title"><h1>YOUR UNIVERSE</h1><p><b>${total}</b> found${unknownN ? ` · ${unknownN} still out there` : ""}</p></div>
     </header>
     <nav class="uni-filter" aria-label="Show only">
       <button class="chip on" data-band="-1">ALL</button>
@@ -187,6 +199,17 @@ export function openUniverse(app: HTMLElement, o: UniverseOpts): () => void {
     g.globalAlpha = a;
   }
 
+  function drawUnknown(b: Placed, sx: number, sy: number, rad: number) {
+    const a = g.globalAlpha;
+    g.globalAlpha = a * 0.55; g.fillStyle = "#120d24"; g.beginPath(); g.arc(sx, sy, rad, 0, Math.PI * 2); g.fill();
+    const box = rad * 1.5, k = Math.min(box / b.sprite.width, box / b.sprite.height);
+    g.imageSmoothingEnabled = b.sprite.width > 60;
+    g.globalAlpha = a * 0.7; g.drawImage(b.sprite, sx - (b.sprite.width * k) / 2, sy - (b.sprite.height * k) / 2, b.sprite.width * k, b.sprite.height * k);
+    g.globalAlpha = a * 0.5; g.strokeStyle = o.bandColors[b.band]; g.lineWidth = 1; g.setLineDash([2, 3]);
+    g.beginPath(); g.arc(sx, sy, rad, 0, Math.PI * 2); g.stroke(); g.setLineDash([]);
+    g.globalAlpha = a;
+  }
+
   function drawNebula(b: Placed, sx: number, sy: number, rad: number, t: number) {
     const rand = mulberry32(hashStr(b.id));
     const breathe = REDUCED ? 1 : 1 + Math.sin(t * 0.5 + b.a0) * 0.06;
@@ -257,6 +280,29 @@ export function openUniverse(app: HTMLElement, o: UniverseOpts): () => void {
       }
     }
     const far = cam.z < 0.32;
+    // the regions of the real universe your nights have reached, and the next frontier
+    const reached = systems.length ? regionOf(systems.length - 1) : 0;
+    const o0 = toScreen(0, 0);
+    for (let k = Math.min(REGIONS.length - 2, reached); k >= 0; k--) {
+      const R = regionEdge(k) * cam.z;
+      g.globalAlpha = k === reached ? 0.35 : 0.22; g.strokeStyle = REGIONS[k][2]; g.lineWidth = 1; g.setLineDash([6, 8]);
+      g.beginPath(); g.arc(o0[0], o0[1], R, 0, Math.PI * 2); g.stroke(); g.setLineDash([]);
+      const fill = g.createRadialGradient(o0[0], o0[1], R * 0.7, o0[0], o0[1], R);
+      fill.addColorStop(0, "rgba(0,0,0,0)"); fill.addColorStop(1, REGIONS[k][2] + "14");
+      g.globalAlpha = 1; g.fillStyle = fill; g.beginPath(); g.arc(o0[0], o0[1], R, 0, Math.PI * 2); g.fill();
+      // its name, curving along the top of the ring
+      const label = REGIONS[k][1].toUpperCase(), next = REGIONS[k + 1]?.[1].toUpperCase();
+      g.font = `${Math.max(8, Math.min(14, R * 0.03))}px "Press Start 2P", monospace`; g.textAlign = "center"; g.fillStyle = REGIONS[k][2];
+      g.globalAlpha = 0.75; g.fillText(label, o0[0], o0[1] - R + Math.max(14, R * 0.035));
+      if (k === reached && next) { g.globalAlpha = 0.45; g.fillStyle = REGIONS[k + 1][2]; g.fillText(`${next} · UNCHARTED`, o0[0], o0[1] - R - 10); }
+    }
+    g.globalAlpha = 1;
+    // your path through the nights, star to star
+    if (systems.length > 1) {
+      g.globalAlpha = 0.18; g.strokeStyle = "#f2d38a"; g.lineWidth = 1; g.setLineDash([1, 6]);
+      g.beginPath(); systems.filter((s) => s.night.date).forEach((s, i) => { const p = toScreen(s.x, s.y); if (i) g.lineTo(p[0], p[1]); else g.moveTo(p[0], p[1]); }); g.stroke(); g.setLineDash([]);
+      g.globalAlpha = 1;
+    }
     for (const s of systems) {
       const sun = toScreen(s.x, s.y);
       if (sun[0] < -400 * cam.z - 60 || sun[0] > W + 400 * cam.z + 60 || sun[1] < -400 * cam.z - 60 || sun[1] > H + 400 * cam.z + 60) continue;
@@ -269,11 +315,11 @@ export function openUniverse(app: HTMLElement, o: UniverseOpts): () => void {
           g.globalAlpha = 0.1 * dim(b); g.strokeStyle = o.bandColors[b.band];
           g.beginPath(); g.arc(sun[0], sun[1], b.r * cam.z, 0, Math.PI * 2); g.stroke();
         }
-        // that night's constellation, in the order you found them
-        g.globalAlpha = 0.22; g.strokeStyle = "#f2d38a"; g.setLineDash([3, 5]);
+        // that night's constellation: your finds joined in the order you named them
+        g.globalAlpha = 0.4; g.strokeStyle = "#f2d38a"; g.lineWidth = 1.2;
         g.beginPath();
-        s.bodies.forEach((b, i) => { const p = toScreen(b.x, b.y); if (i) g.lineTo(p[0], p[1]); else g.moveTo(p[0], p[1]); });
-        g.stroke(); g.setLineDash([]);
+        s.bodies.filter((b) => !b.unknown).forEach((b, i) => { const p = toScreen(b.x, b.y); if (i) g.lineTo(p[0], p[1]); else g.moveTo(p[0], p[1]); });
+        g.stroke();
       }
       // the night's star
       if (s.night.date) {
@@ -290,14 +336,16 @@ export function openUniverse(app: HTMLElement, o: UniverseOpts): () => void {
         const rad = Math.max(far ? 1.5 : 2.5, b.size * cam.z);
         g.globalAlpha = dim(b);
         if (far || rad < 4) {
+          if (b.unknown) g.globalAlpha *= 0.25;
           g.fillStyle = o.bandColors[b.band];
           g.fillRect(Math.round(p[0] - rad / 2), Math.round(p[1] - rad / 2), Math.ceil(rad), Math.ceil(rad));
           continue;
         }
-        if (b.band === 2) drawNebula(b, p[0], p[1], rad * 1.6, t);
+        if (b.unknown) drawUnknown(b, p[0], p[1], rad);
+        else if (b.band === 2) drawNebula(b, p[0], p[1], rad * 1.6, t);
         else if (b.band === 3) drawHole(b, p[0], p[1], rad, t);
         else drawPlanet(b, p[0], p[1], rad, sun, t);
-        if (fresh === s && now < freshUntil) {
+        if (fresh === s && now < freshUntil && !b.unknown) {
           const k = (freshUntil - now) / 6000;
           g.globalAlpha = Math.min(1, k * 2) * (0.5 + 0.5 * Math.sin(t * 5 + b.a0 * 3));
           g.strokeStyle = "#fee761"; g.lineWidth = 1.5;
@@ -321,7 +369,7 @@ export function openUniverse(app: HTMLElement, o: UniverseOpts): () => void {
         if (cam.z > 1.6) {
           g.globalAlpha = dim(b) * Math.min(1, (cam.z - 1.6) * 2);
           g.font = "16px VT323, monospace"; g.textAlign = "center"; g.fillStyle = "#e9e0ff";
-          g.fillText(b.name, p[0], p[1] + rad * (b.band === 2 ? 1.5 : b.band === 3 ? 1.6 : 1) + 16);
+          g.fillText(b.unknown ? "???" : b.name, p[0], p[1] + rad * (b.band === 2 ? 1.5 : b.band === 3 ? 1.6 : 1) + 16);
         }
       }
       g.globalAlpha = 1;
@@ -329,7 +377,8 @@ export function openUniverse(app: HTMLElement, o: UniverseOpts): () => void {
         g.font = `${cam.z > 0.5 ? 9 : 8}px "Press Start 2P", monospace`; g.textAlign = "center";
         g.fillStyle = s.night.date ? "#f2d38a" : "#b9a8e0";
         g.globalAlpha = Math.min(1, (cam.z - 0.18) * 5);
-        g.fillText(s.night.label.toUpperCase(), sun[0], sun[1] + Math.max(22, 34 * cam.z) + (s.night.date ? 0 : 0));
+        g.fillText(s.night.label.toUpperCase(), sun[0], sun[1] + Math.max(22, 34 * cam.z));
+        if (s.night.title && cam.z > 0.4) { g.fillStyle = "#e9e0ff"; g.font = "16px VT323, monospace"; g.fillText(s.night.title, sun[0], sun[1] + Math.max(22, 34 * cam.z) + 16); }
         g.globalAlpha = 1;
       }
     }
@@ -358,6 +407,21 @@ export function openUniverse(app: HTMLElement, o: UniverseOpts): () => void {
   function showBody(b: Placed) {
     selected = b;
     const night = systems[b.sys].night;
+    if (b.unknown) {
+      card.hidden = false;
+      card.style.setProperty("--band", o.bandColors[b.band]);
+      card.innerHTML = `<button class="card-x" aria-label="Close">✕</button>
+        <div class="uni-pic"></div>
+        <p class="uni-kind"><i></i>${o.bandNames[b.band].toUpperCase()} · UNDISCOVERED</p>
+        <h2>???</h2>
+        <p class="uni-note">Something drifted past your telescope ${esc(night.label)} and got away.</p>
+        <p class="small">Play that night again from Past Skies in the Star Atlas to find it.</p>`;
+      const c = document.createElement("canvas"); c.width = b.sprite.width; c.height = b.sprite.height; c.getContext("2d")!.drawImage(b.sprite, 0, 0);
+      card.querySelector(".uni-pic")!.appendChild(c);
+      (card.querySelector(".card-x") as HTMLElement).onclick = () => { ui("back"); closeCard(); };
+      flyTo(b.x, b.y, Math.max(cam.z, 2.6), b);
+      return;
+    }
     card.hidden = false;
     card.style.setProperty("--band", o.bandColors[b.band]);
     card.innerHTML = `<button class="card-x" aria-label="Close">✕</button>
@@ -378,13 +442,15 @@ export function openUniverse(app: HTMLElement, o: UniverseOpts): () => void {
     selected = null;
     card.hidden = false;
     card.style.setProperty("--band", "#f2d38a");
-    const by = [0, 1, 2, 3].map((k) => s.bodies.filter((b) => b.band === k).length);
+    const by = [0, 1, 2, 3].map((k) => s.bodies.filter((b) => b.band === k && !b.unknown).length);
+    const lost = s.bodies.filter((b) => b.unknown).length;
     card.innerHTML = `<button class="card-x" aria-label="Close">✕</button>
-      <p class="uni-kind"><i></i>${s.night.date ? "A NIGHT" : "PRACTICE SKIES"}</p>
+      <p class="uni-kind"><i></i>${s.night.date ? `A NIGHT IN THE ${REGIONS[regionOf(systems.indexOf(s))][1].toUpperCase()}` : "PRACTICE SKIES"}</p>
       <h2>${esc(s.night.label)}</h2>
+      ${s.night.title ? `<p class="uni-note">Tonight you drew ${esc(s.night.title)}.</p>` : ""}
       ${s.night.sub ? `<p class="small">${esc(s.night.sub)}</p>` : ""}
       ${lead ? `<p class="uni-note">${esc(lead)}</p>` : ""}
-      <ul class="uni-tally">${by.map((n, k) => (n ? `<li style="--c:${o.bandColors[k]}"><i></i>${n} ${n === 1 ? o.bandNames[k] : o.plural[k]}</li>` : "")).join("")}</ul>`;
+      <ul class="uni-tally">${by.map((n, k) => (n ? `<li style="--c:${o.bandColors[k]}"><i></i>${n} ${n === 1 ? o.bandNames[k] : o.plural[k]}</li>` : "")).join("")}${lost ? `<li style="--c:#5a5078"><i></i>${lost} still out there</li>` : ""}</ul>`;
     (card.querySelector(".card-x") as HTMLElement).onclick = () => { ui("back"); closeCard(); };
     flyTo(s.x, s.y, 1.1);
   }
@@ -455,7 +521,7 @@ export function openUniverse(app: HTMLElement, o: UniverseOpts): () => void {
     freshUntil = performance.now() + 6000;
     fresh = focusSys;
     if (systems.length > 1) cam.z = Math.min(cam.z, 0.3);
-    setTimeout(() => { ui("dive"); showSystem(focusSys, `Tonight's ${focusSys.bodies.length} ${focusSys.bodies.length === 1 ? "find" : "finds"} joined your universe.`); }, REDUCED ? 0 : 500);
+    setTimeout(() => { ui("dive"); showSystem(focusSys, `Tonight's ${focusSys.bodies.filter((b) => !b.unknown).length} ${focusSys.bodies.filter((b) => !b.unknown).length === 1 ? "find" : "finds"} joined your universe.`); }, REDUCED ? 0 : 500);
   }
   return stop;
 }

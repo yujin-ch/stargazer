@@ -27,6 +27,9 @@ export const CONFIG = {
    *  rampStart and grows by rampStep per object until every pick is hard (while any are left). */
   rampStart: 0.3,
   rampStep: 0.07,
+  /** Adaptive difficulty during a run: how far each outcome moves the level (0 = Moon ... 3 = Black Hole).
+   *  The next object comes from the band nearest the level, so a streak climbs fast and a skip drops back fast. */
+  adapt: { named: 0.6, zoomed: 0.85, skipped: -1.2 },
   bands: [
     // startZoom: how far in the telescope starts; pullBack: seconds to reach full view;
     // startBlur: how out of focus it starts, in sprite pixels (0 = sharp, max 2.4); points / zoomedPoints.

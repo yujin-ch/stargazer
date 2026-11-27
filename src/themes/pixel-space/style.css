@@ -600,7 +600,7 @@ a { color: var(--cyan); }
 .hill-block { margin-top: 4px; }
 .hill-block + .share-row { margin-top: 14px; }
 .share-row + .caption, .save-row + .caption { margin-top: 12px; text-align: center; }
-.details-title { margin-top: 18px; }
+.details-title { margin-top: 22px; padding-top: 16px; border-top: 2px dashed var(--panel-edge); }
 .sky-block { margin-top: 22px; padding-top: 16px; border-top: 2px dashed var(--panel-edge); }
 .home-row img { vertical-align: -4px; margin-right: 6px; image-rendering: auto; border-radius: 4px; }
 
@@ -675,7 +675,7 @@ h1.wordmark { display: inline-flex; align-items: center; gap: 14px; }
 @media (prefers-reduced-motion: reduce) { .uni-card { animation: none; } }
 
 /* ---------- live mini-map in the corner of the eyepiece ---------- */
-.minimap { position: absolute; right: 4px; bottom: 4px; width: clamp(76px, 22vw, 124px); pointer-events: none; display: flex; flex-direction: column; align-items: center; gap: 2px; z-index: 2; }
+.minimap { position: absolute; right: 4px; bottom: 4px; width: clamp(84px, 24vw, 144px); pointer-events: none; display: flex; flex-direction: column; align-items: center; gap: 2px; z-index: 2; }
 .minimap canvas { width: 100%; aspect-ratio: 1; display: block; border-radius: 50%; background: radial-gradient(circle, rgba(30, 22, 58, 0.85) 0 62%, rgba(30, 22, 58, 0) 72%); }
 .minimap span { font-family: var(--font-display); font-size: 7px; letter-spacing: 1px; color: var(--dim); }
 .minimap.ping canvas { animation: mini-ping 0.5s ease-out; }
@@ -684,3 +684,26 @@ h1.wordmark { display: inline-flex; align-items: center; gap: 14px; }
 .minimap { transition: opacity 0.4s; }
 @media (prefers-reduced-motion: reduce) { .minimap.ping canvas { animation: none; } }
 .land-row { text-align: center; margin: 12px 0 0; }
+
+/* a Black Hole named: the whole sky flares in its colours for a moment */
+body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: 0;
+  background: radial-gradient(ellipse at 50% 45%, rgba(254, 174, 52, 0.0) 18%, rgba(254, 174, 52, 0.28) 45%, rgba(140, 60, 200, 0.32) 75%, rgba(40, 10, 60, 0.5) 100%); }
+body.bh-glow::after { animation: bh-glow 1.8s ease-out; }
+@keyframes bh-glow { 0% { opacity: 0; } 12% { opacity: 1; } 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { body.bh-glow::after { animation-duration: 0.9s; } }
+
+/* ---------- after a night: the replay ---------- */
+.replay { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; background: rgba(8, 5, 18, 0.94); animation: replay-in 0.35s ease-out; cursor: pointer; }
+.replay-map { display: block; border-radius: 50%; box-shadow: 0 0 60px rgba(120, 80, 200, 0.25); }
+.replay-title { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; opacity: 0; transform: translateY(8px); transition: opacity 0.5s, transform 0.5s; }
+.replay-title small { font-family: var(--font-display); font-size: 9px; letter-spacing: 1px; color: var(--dim); }
+.replay-title b { font-family: var(--font-display); font-weight: normal; font-size: clamp(16px, 4.5vw, 24px); color: var(--brass-hi); text-shadow: 3px 3px 0 #000, 0 0 18px rgba(247, 201, 92, 0.4); text-align: center; }
+.replay.named .replay-title { opacity: 1; transform: none; }
+.replay-skip { position: absolute; bottom: 18px; margin: 0; color: var(--dim); font-size: 16px; }
+.replay.named .replay-skip { opacity: 0; }
+.replay.leaving { background: rgba(8, 5, 18, 0); transition: background 0.7s; pointer-events: none; }
+.replay.leaving .replay-title, .replay.leaving .replay-skip { opacity: 0; }
+@keyframes replay-in { from { opacity: 0; } }
+.sky-top { margin-top: 6px; padding-top: 4px; border-top: 0; }
+.share-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.share-row .btn { flex: 1 1 140px; max-width: 230px; padding-left: 10px; padding-right: 10px; }
