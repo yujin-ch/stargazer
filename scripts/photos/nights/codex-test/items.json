@@ -1,0 +1,68 @@
+{
+ "date": "codex-test",
+ "items": [
+  {
+   "id": "headphones",
+   "band": 1,
+   "desc": "over-ear headphones with a padded headband",
+   "names": "headphones, headset, earphones, cans",
+   "note": "The first headphones were made for telephone operators"
+  },
+  {
+   "id": "compass",
+   "band": 2,
+   "desc": "brass magnetic compass with the lid open, needle pointing north",
+   "names": "compass",
+   "note": "The needle points to magnetic north, not the North Pole"
+  },
+  {
+   "id": "violin",
+   "band": 2,
+   "desc": "wooden violin with its bow, three-quarter view",
+   "names": "violin, fiddle",
+   "note": "A violin has about 70 separate wooden parts"
+  },
+  {
+   "id": "cashregister",
+   "band": 3,
+   "desc": "antique brass cash register",
+   "names": "cash register, till, register",
+   "note": "Invented to stop clerks pocketing cash"
+  },
+  {
+   "id": "chandelier",
+   "band": 3,
+   "desc": "crystal chandelier",
+   "names": "chandelier",
+   "note": "The word comes from French for candle-holder"
+  },
+  {
+   "id": "butterchurn",
+   "band": 3,
+   "desc": "wooden butter churn with a plunger",
+   "names": "butter churn, churn",
+   "note": "Cream becomes butter with enough plunging"
+  },
+  {
+   "id": "erhu",
+   "band": 4,
+   "desc": "erhu, the Chinese two-string fiddle",
+   "names": "erhu",
+   "note": "The bow passes between the two strings"
+  },
+  {
+   "id": "glassharmonica",
+   "band": 4,
+   "desc": "glass armonica with spinning glass bowls",
+   "names": "glass harmonica, armonica, glass armonica",
+   "note": "Invented by Benjamin Franklin"
+  },
+  {
+   "id": "mangle",
+   "band": 4,
+   "desc": "antique laundry mangle with rollers and a crank",
+   "names": "mangle, wringer, clothes wringer",
+   "note": "Squeezed water out before spin dryers"
+  }
+ ]
+}
