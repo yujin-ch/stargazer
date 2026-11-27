@@ -1,0 +1,322 @@
+{
+ "date": "2026-12-01",
+ "theme": "photos",
+ "bands": 5,
+ "items": [
+  {
+   "id": "crab",
+   "img": "b8e40f6312e7bc47",
+   "band": 1,
+   "names": [
+    "crab"
+   ],
+   "note": "Crabs walk sideways because their legs bend that way"
+  },
+  {
+   "id": "pizza",
+   "img": "7b42b8e3614d34b7",
+   "band": 1,
+   "names": [
+    "pizza"
+   ],
+   "note": "Pizza margherita was named for a queen of Italy"
+  },
+  {
+   "id": "schoolbus",
+   "img": "2c8b7a8e331df06b",
+   "band": 1,
+   "names": [
+    "school bus",
+    "bus"
+   ],
+   "note": "The yellow was picked in 1939 so drivers spot it in the dim early morning"
+  },
+  {
+   "id": "lobster",
+   "img": "b006b06ec1c1f583",
+   "band": 2,
+   "names": [
+    "lobster"
+   ],
+   "note": "Lobsters taste with hairs on their legs"
+  },
+  {
+   "id": "magnifyingglass",
+   "img": "30521d1d172e0060",
+   "band": 2,
+   "names": [
+    "magnifying glass",
+    "magnifier",
+    "hand lens",
+    "loupe"
+   ],
+   "note": "A water drop on a leaf works as a tiny magnifier"
+  },
+  {
+   "id": "wrench",
+   "img": "03e06d0b0b0f2a47",
+   "band": 2,
+   "names": [
+    "wrench",
+    "spanner",
+    "adjustable wrench",
+    "adjustable spanner",
+    "monkey wrench"
+   ],
+   "note": "An adjustable wrench is called a \"shifter\" in Australia"
+  },
+  {
+   "id": "pretzel",
+   "img": "1f24374a57b5859c",
+   "band": 2,
+   "names": [
+    "pretzel"
+   ],
+   "note": "The twist was said to look like arms folded in prayer"
+  },
+  {
+   "id": "slippers",
+   "img": "0d785e439b2d66b8",
+   "band": 2,
+   "names": [
+    "slippers",
+    "slipper",
+    "house shoes"
+   ],
+   "note": "Cinderella's slipper may first have been fur, not glass"
+  },
+  {
+   "id": "bowlingpin",
+   "img": "30c288bc43a34a28",
+   "band": 2,
+   "names": [
+    "bowling pin",
+    "skittle",
+    "pin"
+   ],
+   "note": "A bowling pin is made of maple wood under its white coat"
+  },
+  {
+   "id": "canoe",
+   "img": "40b13a0629f5ad47",
+   "band": 2,
+   "names": [
+    "canoe",
+    "?boat"
+   ],
+   "note": "The oldest known boat in the world is a dugout canoe"
+  },
+  {
+   "id": "cello",
+   "img": "223f0e4996902e5d",
+   "band": 3,
+   "names": [
+    "cello",
+    "violoncello",
+    "?violin"
+   ],
+   "note": "A cello is played sitting down, held between the knees"
+  },
+  {
+   "id": "seaurchin",
+   "img": "879219342e1cbc60",
+   "band": 3,
+   "names": [
+    "sea urchin",
+    "urchin"
+   ],
+   "note": "Its mouth is underneath, with five teeth called Aristotle's lantern"
+  },
+  {
+   "id": "candelabra",
+   "img": "7ed5a612140c0503",
+   "band": 3,
+   "names": [
+    "candelabra",
+    "candelabrum",
+    "candlestick",
+    "candle holder"
+   ],
+   "note": "A seven- or nine-branched candelabra is a menorah"
+  },
+  {
+   "id": "shuttlecock",
+   "img": "1746be6eff1d666e",
+   "band": 3,
+   "names": [
+    "shuttlecock",
+    "shuttle",
+    "birdie",
+    "badminton"
+   ],
+   "note": "The best ones use 16 feathers from the left wing of a goose"
+  },
+  {
+   "id": "hermitcrab",
+   "img": "90d982b763345546",
+   "band": 3,
+   "names": [
+    "hermit crab",
+    "?crab"
+   ],
+   "note": "It moves to a bigger shell as it grows, and sometimes swaps with others"
+  },
+  {
+   "id": "steeldrum",
+   "img": "3382a3f1e5004c91",
+   "band": 3,
+   "names": [
+    "steel drum",
+    "steel pan",
+    "steelpan",
+    "pan",
+    "?drum"
+   ],
+   "note": "Made from oil drums in Trinidad in the 1930s"
+  },
+  {
+   "id": "bamboosteamer",
+   "img": "66604d649287a4d5",
+   "band": 3,
+   "names": [
+    "bamboo steamer",
+    "steamer",
+    "steamer basket",
+    "dim sum basket"
+   ],
+   "note": "Stacked baskets cook several dishes over one pot"
+  },
+  {
+   "id": "sliderule",
+   "img": "db3755efb6b648dc",
+   "band": 4,
+   "names": [
+    "slide rule",
+    "slipstick"
+   ],
+   "note": "Apollo astronauts carried slide rules as a backup"
+  },
+  {
+   "id": "spiritlevel",
+   "img": "54a46aa79c6f8004",
+   "band": 4,
+   "names": [
+    "spirit level",
+    "level",
+    "bubble level"
+   ],
+   "note": "The bubble always floats to the highest point"
+  },
+  {
+   "id": "lychee",
+   "img": "55595664ffff215b",
+   "band": 4,
+   "names": [
+    "lychee",
+    "litchi",
+    "lichee"
+   ],
+   "note": "A favourite of a Chinese empress, brought by horse relay from the south"
+  },
+  {
+   "id": "tagine",
+   "img": "bef6e793556132a8",
+   "band": 4,
+   "names": [
+    "tagine",
+    "tajine"
+   ],
+   "note": "The cone sends steam back down into the food"
+  },
+  {
+   "id": "tuktuk",
+   "img": "ab328e7f4fc5f138",
+   "band": 4,
+   "names": [
+    "tuk-tuk",
+    "tuk tuk",
+    "auto rickshaw",
+    "rickshaw",
+    "autorickshaw"
+   ],
+   "note": "Named for the sound its little engine makes"
+  },
+  {
+   "id": "stereoscope",
+   "img": "b72d2f0aa6460668",
+   "band": 4,
+   "names": [
+    "stereoscope",
+    "stereo viewer",
+    "stereopticon"
+   ],
+   "note": "Two photos taken a few centimetres apart fool the eyes into 3D"
+  },
+  {
+   "id": "kohlrabi",
+   "img": "731635482705c574",
+   "band": 4,
+   "names": [
+    "kohlrabi",
+    "german turnip",
+    "?turnip"
+   ],
+   "note": "Its name is German for cabbage turnip"
+  },
+  {
+   "id": "horseshoecrab",
+   "img": "165aaba45c4061f6",
+   "band": 5,
+   "names": [
+    "horseshoe crab",
+    "limulus",
+    "?crab"
+   ],
+   "note": "Its blue blood is used to test medicines for germs"
+  },
+  {
+   "id": "astrolabe",
+   "img": "65db6fb6078e777a",
+   "band": 5,
+   "names": [
+    "astrolabe"
+   ],
+   "note": "An astrolabe could tell the time from the height of a star"
+  },
+  {
+   "id": "dhow",
+   "img": "13ca0fd3d8882dc9",
+   "band": 5,
+   "names": [
+    "dhow",
+    "?boat",
+    "?ship",
+    "?sailboat"
+   ],
+   "note": "Dhows sailed the monsoon winds between Africa, Arabia and India"
+  },
+  {
+   "id": "kendama",
+   "img": "f10aa26f8842edff",
+   "band": 5,
+   "names": [
+    "kendama",
+    "cup and ball"
+   ],
+   "note": "The aim is to land the ball in the cups or on the spike"
+  },
+  {
+   "id": "handpan",
+   "img": "d364369946f6381d",
+   "band": 6,
+   "names": [
+    "handpan",
+    "hang",
+    "hang drum",
+    "pantam",
+    "?drum"
+   ],
+   "note": "First built in Switzerland in 2000 and called the Hang, \"hand\" in Bernese German"
+  }
+ ]
+}

@@ -1,0 +1,316 @@
+{
+ "date": "2026-11-30",
+ "theme": "photos",
+ "bands": 5,
+ "items": [
+  {
+   "id": "strawberry",
+   "img": "b9c2d1bdada3b919",
+   "band": 1,
+   "names": [
+    "strawberry"
+   ],
+   "note": "Strawberries wear their seeds on the outside, about 200 each"
+  },
+  {
+   "id": "lightbulb",
+   "img": "d64e7aefb8ffb8a4",
+   "band": 1,
+   "names": [
+    "light bulb",
+    "lightbulb",
+    "bulb",
+    "globe"
+   ],
+   "note": "Most of the energy in an old bulb came out as heat, not light"
+  },
+  {
+   "id": "penguin",
+   "img": "ba32c87e29b4ae86",
+   "band": 1,
+   "names": [
+    "penguin",
+    "emperor penguin",
+    "king penguin"
+   ],
+   "note": "Emperor penguins can dive deeper than 500 metres"
+  },
+  {
+   "id": "toaster",
+   "img": "7b3455ae0be47156",
+   "band": 2,
+   "names": [
+    "toaster"
+   ],
+   "note": "Sliced bread came after the pop-up toaster, not before"
+  },
+  {
+   "id": "snail",
+   "img": "934057aba03a6ccc",
+   "band": 2,
+   "names": [
+    "snail",
+    "garden snail",
+    "?slug"
+   ],
+   "note": "A snail can sleep for up to three years in a dry spell"
+  },
+  {
+   "id": "globe",
+   "img": "6011af3bd968ccf8",
+   "band": 2,
+   "names": [
+    "globe",
+    "world globe",
+    "terrestrial globe"
+   ],
+   "note": "The oldest surviving globe, from 1492, has no Americas on it"
+  },
+  {
+   "id": "ladder",
+   "img": "29af06640c8ab6e6",
+   "band": 2,
+   "names": [
+    "ladder",
+    "stepladder",
+    "step ladder"
+   ],
+   "note": "Walking under a ladder was unlucky because of the triangle it makes with the wall"
+  },
+  {
+   "id": "sunflower",
+   "img": "08f68589f4b90844",
+   "band": 2,
+   "names": [
+    "sunflower"
+   ],
+   "note": "A sunflower head is hundreds of tiny flowers packed in spirals"
+  },
+  {
+   "id": "skateboard",
+   "img": "9fed63115154451c",
+   "band": 2,
+   "names": [
+    "skateboard",
+    "skate board"
+   ],
+   "note": "Skateboards began as surfers' way to surf on dry days"
+  },
+  {
+   "id": "sailboat",
+   "img": "617be54dd6b44581",
+   "band": 2,
+   "names": [
+    "sailboat",
+    "sailing boat",
+    "yacht",
+    "dinghy",
+    "?boat"
+   ],
+   "note": "A sailboat can sail faster than the wind that pushes it"
+  },
+  {
+   "id": "harp",
+   "img": "b1c0077852b87226",
+   "band": 3,
+   "names": [
+    "harp",
+    "concert harp",
+    "pedal harp"
+   ],
+   "note": "A concert harp has 47 strings and 7 pedals"
+  },
+  {
+   "id": "frenchpress",
+   "img": "655c2a772d6b590e",
+   "band": 3,
+   "names": [
+    "french press",
+    "cafetiere",
+    "coffee press",
+    "press pot",
+    "plunger"
+   ],
+   "note": "The plunger's mesh traps the grounds at the bottom"
+  },
+  {
+   "id": "narwhal",
+   "img": "eef4934414bcd5a5",
+   "band": 3,
+   "names": [
+    "narwhal"
+   ],
+   "note": "The tusk is a tooth, and it can grow 3 metres long"
+  },
+  {
+   "id": "cuckooclock",
+   "img": "20874609814e793b",
+   "band": 3,
+   "names": [
+    "cuckoo clock",
+    "?clock"
+   ],
+   "note": "The pine-cone weights are what keep it running"
+  },
+  {
+   "id": "pomegranate",
+   "img": "87e558d34de773ce",
+   "band": 3,
+   "names": [
+    "pomegranate"
+   ],
+   "note": "One pomegranate can hold over 600 seeds"
+  },
+  {
+   "id": "unicycle",
+   "img": "1bbab016238a7f11",
+   "band": 3,
+   "names": [
+    "unicycle"
+   ],
+   "note": "With no gears, one pedal turn is one wheel turn"
+  },
+  {
+   "id": "waffleiron",
+   "img": "6259bed3d3a7223e",
+   "band": 3,
+   "names": [
+    "waffle iron",
+    "waffle maker"
+   ],
+   "note": "Waffle irons were once made with family crests on the plates"
+  },
+  {
+   "id": "bassoon",
+   "img": "e1b8c2e3d6476284",
+   "band": 4,
+   "names": [
+    "bassoon",
+    "fagotto"
+   ],
+   "note": "Unfolded, a bassoon's tube would be about 2.5 metres long"
+  },
+  {
+   "id": "loom",
+   "img": "c73d31f75a86793f",
+   "band": 4,
+   "names": [
+    "loom",
+    "weaving loom",
+    "handloom"
+   ],
+   "note": "The punched cards of the Jacquard loom inspired early computers"
+  },
+  {
+   "id": "dreidel",
+   "img": "0c3527cd3eacb317",
+   "band": 4,
+   "names": [
+    "dreidel",
+    "dreidl",
+    "sevivon"
+   ],
+   "note": "Each of the four letters tells you what to take or give"
+  },
+  {
+   "id": "curlingstone",
+   "img": "23043c6d1118b36c",
+   "band": 4,
+   "names": [
+    "curling stone",
+    "curling rock",
+    "?stone"
+   ],
+   "note": "Most curling stones come from one Scottish island, Ailsa Craig"
+  },
+  {
+   "id": "snowmobile",
+   "img": "988d685030cd6187",
+   "band": 4,
+   "names": [
+    "snowmobile",
+    "skidoo",
+    "ski-doo",
+    "snow machine"
+   ],
+   "note": "The first snowmobile was built to reach patients in snowy Quebec"
+  },
+  {
+   "id": "capybara",
+   "img": "39f0d9a5b9a90808",
+   "band": 4,
+   "names": [
+    "capybara"
+   ],
+   "note": "The world's largest rodent, and a strong swimmer"
+  },
+  {
+   "id": "pennyfarthing",
+   "img": "f795ac4707573a1f",
+   "band": 4,
+   "names": [
+    "penny-farthing",
+    "penny farthing",
+    "high wheeler",
+    "ordinary"
+   ],
+   "note": "The big wheel made it faster, since pedals turned the wheel directly"
+  },
+  {
+   "id": "samovar",
+   "img": "7489763adc6badb5",
+   "band": 5,
+   "names": [
+    "samovar"
+   ],
+   "note": "Its central pipe once held burning charcoal to keep the water hot"
+  },
+  {
+   "id": "shamisen",
+   "img": "957f058c0e0b2c4f",
+   "band": 5,
+   "names": [
+    "shamisen",
+    "samisen",
+    "sangen"
+   ],
+   "note": "It is plucked with a large fan-shaped plectrum called a bachi"
+  },
+  {
+   "id": "babirusa",
+   "img": "dc80defb78f6bbf7",
+   "band": 5,
+   "names": [
+    "babirusa",
+    "deer pig",
+    "?pig",
+    "?boar"
+   ],
+   "note": "Its upper tusks grow up through the top of its snout"
+  },
+  {
+   "id": "romanesco",
+   "img": "ef967d59ffcf52f8",
+   "band": 5,
+   "names": [
+    "romanesco",
+    "romanesco broccoli",
+    "romanesque cauliflower",
+    "?broccoli",
+    "?cauliflower"
+   ],
+   "note": "Each cone is made of smaller cones in a spiral pattern"
+  },
+  {
+   "id": "theodolite",
+   "img": "39025ff121a6d0a3",
+   "band": 6,
+   "names": [
+    "theodolite",
+    "transit",
+    "total station"
+   ],
+   "note": "It measures angles to map the land, from the pyramids to modern roads"
+  }
+ ]
+}

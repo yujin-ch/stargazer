@@ -112,9 +112,9 @@ def chroma_key(img, ai_mask=None):
     # green key calls object, as long as it is joined to what was kept
     keep = ndimage.binary_propagation(keep, mask=key | keep)
     keep = ndimage.binary_fill_holes(keep) & key
-    # despill: green may not exceed the larger of red and blue
+    # despill: green may not exceed the larger of red and blue (the average was too harsh: yellows went orange)
     out = rgb.copy()
-    out[..., 1] = np.minimum(g, (r + b) / 2 + 4)
+    out[..., 1] = np.minimum(g, np.maximum(r, b) + 2)
     rgba = np.zeros(rgb.shape[:2] + (4,), np.uint8)
     rgba[..., :3] = out.clip(0, 255).astype(np.uint8)
     rgba[..., 3] = np.where(keep, 255, 0)

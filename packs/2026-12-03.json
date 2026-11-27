@@ -1,0 +1,327 @@
+{
+ "date": "2026-12-03",
+ "theme": "photos",
+ "bands": 5,
+ "items": [
+  {
+   "id": "cheese",
+   "img": "7266dd1157adcfc0",
+   "band": 1,
+   "names": [
+    "cheese",
+    "swiss cheese",
+    "emmental",
+    "cheese wedge"
+   ],
+   "note": "The holes come from gas made by bacteria"
+  },
+  {
+   "id": "basketball",
+   "img": "21bbca52fc593856",
+   "band": 1,
+   "names": [
+    "basketball",
+    "ball"
+   ],
+   "note": "The first games used a peach basket as the hoop"
+  },
+  {
+   "id": "airplane",
+   "img": "fc932bc057e15264",
+   "band": 1,
+   "names": [
+    "airplane",
+    "aeroplane",
+    "plane",
+    "jet",
+    "airliner",
+    "aircraft"
+   ],
+   "note": "An airliner cruises at about 900 km/h"
+  },
+  {
+   "id": "kangaroo",
+   "img": "f5bf848695ab53bd",
+   "band": 2,
+   "names": [
+    "kangaroo",
+    "roo"
+   ],
+   "note": "Kangaroos can't walk backward"
+  },
+  {
+   "id": "tennisracket",
+   "img": "653466d53f4267d7",
+   "band": 2,
+   "names": [
+    "tennis racket",
+    "racket",
+    "racquet",
+    "tennis racquet"
+   ],
+   "note": "The fuzzy ball was made yellow in 1972 to show up on TV"
+  },
+  {
+   "id": "saw",
+   "img": "755562131af4cbe7",
+   "band": 2,
+   "names": [
+    "saw",
+    "handsaw",
+    "hand saw"
+   ],
+   "note": "Saw teeth bend alternately left and right so the blade doesn't jam"
+  },
+  {
+   "id": "trumpet",
+   "img": "ae3d2131d5b3fd3d",
+   "band": 2,
+   "names": [
+    "trumpet",
+    "cornet"
+   ],
+   "note": "Trumpets were found in Tutankhamun's tomb"
+  },
+  {
+   "id": "telescope",
+   "img": "fd6eb5b06f179661",
+   "band": 2,
+   "names": [
+    "telescope",
+    "spyglass"
+   ],
+   "note": "Galileo's first telescope magnified only three times"
+  },
+  {
+   "id": "avocado",
+   "img": "f06d8a6b6052989a",
+   "band": 2,
+   "names": [
+    "avocado"
+   ],
+   "note": "Its name comes from the Aztec word ahuacatl"
+  },
+  {
+   "id": "tractor",
+   "img": "b8a64191d2970979",
+   "band": 2,
+   "names": [
+    "tractor"
+   ],
+   "note": "The big back wheels give grip in soft soil"
+  },
+  {
+   "id": "lantern",
+   "img": "c76b7e076dcb957d",
+   "band": 3,
+   "names": [
+    "lantern",
+    "oil lantern",
+    "hurricane lamp",
+    "lamp"
+   ],
+   "note": "The glass chimney keeps the wind from blowing it out"
+  },
+  {
+   "id": "anteater",
+   "img": "a5bf512adb630334",
+   "band": 3,
+   "names": [
+    "anteater",
+    "giant anteater"
+   ],
+   "note": "Its tongue flicks 150 times a minute"
+  },
+  {
+   "id": "puffin",
+   "img": "3aae8c16315c6c6f",
+   "band": 3,
+   "names": [
+    "puffin",
+    "atlantic puffin"
+   ],
+   "note": "A puffin can carry a dozen fish crosswise in its bill"
+  },
+  {
+   "id": "bagpipes",
+   "img": "6cee91245f0920f2",
+   "band": 3,
+   "names": [
+    "bagpipes",
+    "bagpipe",
+    "pipes",
+    "great highland bagpipe"
+   ],
+   "note": "The bag holds air so the sound never stops for breath"
+  },
+  {
+   "id": "boomerang",
+   "img": "6755e3d1b7f0ac29",
+   "band": 3,
+   "names": [
+    "boomerang"
+   ],
+   "note": "Only the light curved ones come back; hunting ones fly straight"
+  },
+  {
+   "id": "pogostick",
+   "img": "a2d91e87e81d7ff5",
+   "band": 3,
+   "names": [
+    "pogo stick",
+    "pogo"
+   ],
+   "note": "Modern ones use air springs to jump over 3 metres"
+  },
+  {
+   "id": "cablecar",
+   "img": "8343c72c247cad4e",
+   "band": 3,
+   "names": [
+    "cable car",
+    "gondola",
+    "aerial tramway",
+    "ropeway",
+    "cable way"
+   ],
+   "note": "The car has no engine; the cable pulls it"
+  },
+  {
+   "id": "fonduepot",
+   "img": "f2d8fd2cb7e542df",
+   "band": 4,
+   "names": [
+    "fondue pot",
+    "fondue",
+    "caquelon"
+   ],
+   "note": "Lose your bread in the pot and tradition says you buy the next round"
+  },
+  {
+   "id": "bokchoy",
+   "img": "c0c9995cd97098c5",
+   "band": 4,
+   "names": [
+    "bok choy",
+    "pak choi",
+    "pak choy",
+    "chinese cabbage",
+    "?cabbage"
+   ],
+   "note": "It has been grown in China for over 1500 years"
+  },
+  {
+   "id": "foldingfan",
+   "img": "fd3b7db9e8463d35",
+   "band": 4,
+   "names": [
+    "folding fan",
+    "hand fan",
+    "fan",
+    "sensu"
+   ],
+   "note": "The folding fan is said to have been invented in Japan"
+  },
+  {
+   "id": "plumbbob",
+   "img": "24aa1e85725edec4",
+   "band": 4,
+   "names": [
+    "plumb bob",
+    "plumb line",
+    "plumb"
+   ],
+   "note": "\"Plumb\" comes from plumbum, Latin for lead"
+  },
+  {
+   "id": "geigercounter",
+   "img": "8afbed3a26365d59",
+   "band": 4,
+   "names": [
+    "geiger counter",
+    "geiger",
+    "radiation detector",
+    "dosimeter"
+   ],
+   "note": "The clicks are single particles passing through the tube"
+  },
+  {
+   "id": "barometer",
+   "img": "3261fe22fb5de30a",
+   "band": 4,
+   "names": [
+    "barometer"
+   ],
+   "note": "A falling barometer means a storm may be coming"
+  },
+  {
+   "id": "buddhashand",
+   "img": "9dd8e79411d90859",
+   "band": 4,
+   "names": [
+    "buddha's hand",
+    "buddhas hand",
+    "fingered citron",
+    "?citron"
+   ],
+   "note": "It has almost no juice or pulp, and is kept for its scent"
+  },
+  {
+   "id": "dikdik",
+   "img": "41bb4a8627d171d7",
+   "band": 5,
+   "names": [
+    "dik-dik",
+    "dikdik",
+    "dik dik",
+    "?antelope",
+    "?deer"
+   ],
+   "note": "Named for its alarm call"
+  },
+  {
+   "id": "hurdygurdy",
+   "img": "e88973890cb905dd",
+   "band": 5,
+   "names": [
+    "hurdy-gurdy",
+    "hurdy gurdy",
+    "wheel fiddle"
+   ],
+   "note": "A cranked wheel rubs the strings like an endless bow"
+  },
+  {
+   "id": "armillarysphere",
+   "img": "ee70dd2ebbfa928c",
+   "band": 5,
+   "names": [
+    "armillary sphere",
+    "armillary",
+    "armilla"
+   ],
+   "note": "The rings show the circles of the sky around the Earth"
+  },
+  {
+   "id": "sampan",
+   "img": "42d739565a3b86b1",
+   "band": 5,
+   "names": [
+    "sampan",
+    "?boat"
+   ],
+   "note": "The name means three planks"
+  },
+  {
+   "id": "drawknife",
+   "img": "cbc76065835580a3",
+   "band": 6,
+   "names": [
+    "drawknife",
+    "draw knife",
+    "drawshave",
+    "draw shave"
+   ],
+   "note": "You pull it toward yourself to shave wood"
+  }
+ ]
+}
