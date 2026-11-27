@@ -24,7 +24,7 @@ export interface RunResult {
   /** Longest run of answers without a skip. */
   bestCombo?: number;
 }
-interface Saved { days: Record<string, RunResult>; /** A friend's score for one night, from a shared link. */ friend?: { date: string; score: number }; muted?: boolean; seenHelp?: boolean; catalogue?: string[]; noHaptics?: boolean; noAmbience?: boolean }
+export interface Saved { days: Record<string, RunResult>; /** A friend's score for one night, from a shared link. */ friend?: { date: string; score: number }; muted?: boolean; seenHelp?: boolean; catalogue?: string[]; noHaptics?: boolean; noAmbience?: boolean }
 
 const KEY = "stargazer:v1";
 
@@ -38,11 +38,33 @@ function read(): Saved {
   } catch { /* storage blocked */ }
   return { days: {} };
 }
-function write(s: Saved) {
+const listeners: ((s: Saved) => void)[] = [];
+function write(s: Saved, quiet = false) {
   try { localStorage.setItem(KEY, JSON.stringify(s)); } catch { /* ignore */ }
+  if (!quiet) for (const f of listeners) f(s);
+}
+
+/**
+ * Two saves of the same player (this browser and their account) combined: every night from either, the finished or
+ * better run where both have one, and every object either has found. Settings stay as this device has them.
+ */
+export function mergeSaved(local: Saved, remote: Partial<Saved>): Saved {
+  const days: Record<string, RunResult> = { ...(remote.days ?? {}) };
+  for (const [k, r] of Object.entries(local.days ?? {})) {
+    const o = days[k];
+    days[k] = !o ? r : o.partial !== r.partial ? (o.partial ? r : o) : r.score >= o.score ? r : o;
+  }
+  const catalogue = [...new Set([...(remote.catalogue ?? []), ...(local.catalogue ?? [])])];
+  return { ...local, days, catalogue };
 }
 
 export const store = {
+  /** The whole save, for syncing to an account. */
+  raw(): Saved { return read(); },
+  /** Replace the whole save (after merging with an account); `quiet` skips the sync listeners. */
+  replace(s: Saved, quiet = true) { write(s, quiet); },
+  /** Called after every change, e.g. to sync it to an account. */
+  onChange(f: (s: Saved) => void) { listeners.push(f); },
   today(date: string): RunResult | undefined { return read().days[date]; },
   save(r: RunResult) { const s = read(); s.days[r.date] = r; write(s); },
   /** Every saved night, oldest first. */

@@ -1,3 +1,4 @@
+import { accessToken } from "./cloud";
 import { CONFIG, type BandIndex } from "./config";
 import { parseTheme, renderSprite, toRGBA, SIZE, type SheetMeta, type SpriteDef } from "./art/board";
 
@@ -90,14 +91,15 @@ export const BY_ID = new Map(OBJECTS.map((o) => [o.id, o]));
 // ---------------------------------------------------------------- day packs
 
 /**
- * A day pack is one night's own photo set, served as static files at days/<YYYY-MM-DD>/:
- * pack.json plus one plate strip per item (<id>.png, same format as src/art/photos).
+ * A day pack is one night's own photo set: the pack itself (names, bands, notes) comes from /api/night, which only
+ * hands a night out once it has started, and its pictures are static files at days/<YYYY-MM-DD>/<img>.png under
+ * random names (same strip format as src/art/photos).
  * Built by scripts/photos/make_day.py. When tonight has a pack, it replaces the rotating theme.
  */
 export interface DayPack {
   date: string;
   theme?: string;
-  items: { id: string; band: number; names: string[]; note?: string }[];
+  items: { id: string; img?: string; band: number; names: string[]; note?: string }[];
 }
 const PACK_URLS = new Map<string, string>();
 const PACK_HI = new Map<string, string>();
@@ -118,7 +120,8 @@ export async function loadDayPack(dateKey: string): Promise<SkyObject[]> {
   const base = `${import.meta.env.BASE_URL}days/${dateKey}/`;
   let pack: DayPack;
   try {
-    const r = await fetch(`${base}pack.json`, { cache: "no-cache" });
+    const token = await accessToken();
+    const r = await fetch(`${import.meta.env.BASE_URL}api/night?date=${dateKey}`, token ? { headers: { Authorization: `Bearer ${token}` }, cache: "no-cache" } : { cache: "no-cache" });
     if (!r.ok || !(r.headers.get("content-type") ?? "").includes("json")) return [];
     pack = (await r.json()) as DayPack;
   } catch {
@@ -129,8 +132,8 @@ export async function loadDayPack(dateKey: string): Promise<SkyObject[]> {
     .filter((it) => it.id && it.names?.length && it.band >= 1 && it.band <= 4)
     .map((it, i) => {
       const id = `${theme}:${dateKey}/${it.id}`;
-      PACK_URLS.set(id, `${base}${it.id}.png`);
-      PACK_HI.set(id, `${base}${it.id}.hi.webp`);
+      PACK_URLS.set(id, `${base}${it.img ?? it.id}.png`);
+      PACK_HI.set(id, `${base}${it.img ?? it.id}.hi.webp`);
       return {
         id, sprite: OBJECTS.length + i, theme, band: (it.band - 1) as BandIndex,
         names: it.names.map((n) => n.replace(/^~/, "")),

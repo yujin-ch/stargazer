@@ -1,4 +1,8 @@
-"""Turn one generated batch into a night's day pack, served at public/days/<date>/.
+"""Turn one generated batch into a night's day pack.
+
+The pictures go to public/days/<date>/ under random file names (so nobody can guess tomorrow's answers from URLs),
+and the pack (names, bands, notes, which file is which) goes to packs/<date>.json, which is never public: the game
+gets it from /api/night, which only hands a night out once it has started somewhere on Earth (or early to an admin).
 
     python3 scripts/photos/make_day.py <images dir> <items.json> <YYYY-MM-DD> [--skip id,id]
 
@@ -9,6 +13,7 @@
 """
 import json
 import os
+import secrets
 import subprocess
 import sys
 
@@ -24,6 +29,9 @@ def main():
     src, items_path, date = args
     items = json.load(open(items_path))["items"]
     out = os.path.join(ROOT, "public", "days", date)
+    if os.path.isdir(out):
+        for f in os.listdir(out):
+            os.remove(os.path.join(out, f))
     os.makedirs(out, exist_ok=True)
 
     def has_img(i):
@@ -33,17 +41,26 @@ def main():
     left = [it["id"] for it in items if it not in keep]
     subprocess.run([sys.executable, os.path.join(ROOT, "scripts/photos/build_photos.py"), src, *[it["id"] for it in keep]],
                    check=True, env={**os.environ, "PHOTO_OUT": out})
+    # random names for the pictures; old pictures for this date are cleared first
+    imgs = {}
+    for it in keep:
+        tok = secrets.token_hex(8)
+        for ext in ("png", "hi.webp"):
+            os.replace(os.path.join(out, f"{it['id']}.{ext}"), os.path.join(out, f"{tok}.{ext}"))
+        imgs[it["id"]] = tok
     pack = {
         "date": date,
         "theme": "photos",
         "items": [{
             "id": it["id"],
+            "img": imgs[it["id"]],
             "band": int(it["band"]),
             "names": it["names"] if isinstance(it["names"], list) else [n.strip() for n in it["names"].split(",") if n.strip()],
             "note": it.get("note", ""),
         } for it in keep],
     }
-    json.dump(pack, open(os.path.join(out, "pack.json"), "w"), indent=1)
+    os.makedirs(os.path.join(ROOT, "packs"), exist_ok=True)
+    json.dump(pack, open(os.path.join(ROOT, "packs", f"{date}.json"), "w"), indent=1)
     idx_path = os.path.join(ROOT, "public", "days", "index.json")
     idx = json.load(open(idx_path)) if os.path.exists(idx_path) else {}
     idx[date] = {"theme": pack["theme"], "items": len(keep)}

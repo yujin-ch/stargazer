@@ -708,3 +708,10 @@ body.bh-glow::after { animation: bh-glow 1.8s ease-out; }
 .share-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
 .share-row .btn { flex: 1 1 140px; max-width: 230px; white-space: nowrap; padding-left: 10px; padding-right: 10px; }
 .past-list .btn:disabled { opacity: 0.35; filter: grayscale(1); cursor: not-allowed; box-shadow: none; }
+
+/* ---------- account (in Settings) ---------- */
+.acct-title { margin: 18px 0 6px; font-family: var(--font-display); font-weight: normal; font-size: 10px; letter-spacing: 1px; color: var(--accent); }
+.acct .small b { color: var(--brass-hi); font-weight: normal; word-break: break-all; }
+.acct-mail { display: flex; gap: 8px; margin-top: 8px; }
+.acct-mail input { flex: 1; min-width: 0; font-family: var(--font-body); font-size: 18px; padding: 6px 8px; background: #120d24; color: #e9e0ff; border: 2px solid var(--panel-edge); }
+.acct-mail .btn { flex: none; padding-left: 10px; padding-right: 10px; }

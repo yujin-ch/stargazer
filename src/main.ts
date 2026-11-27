@@ -5,6 +5,7 @@ import { drawShareCard, cardBlob } from "./sharecard";
 import { OBJECTS, BY_ID, loadDayPack, loadPackIndex, shownNames, themeName, themeInfo, photoHi, type SkyObject } from "./library";
 import { openUniverse, type UBody, type UNight } from "./universe";
 import { MiniMap } from "./minimap";
+import { accountsOn, initCloud, hadSession, signedInEmail, signInWithGoogle, signInWithEmail, signOut, deleteCloudSave, onAccountChange, warmUp } from "./cloud";
 let mini: MiniMap | null = null;
 import { makeMatcher, normalize, forms as formsOf, linkMatches } from "./match";
 import { dailySky, setDayPack, notePackNight, practiceSky, localDateKey, puzzleNumber, mulberry32, dayTheme, dayCondition } from "./daily";
@@ -1618,7 +1619,7 @@ function showAtlas(focus = "tonight") {
 const DATE_Q = new URLSearchParams(location.search).get("date") ?? "";
 // future nights stay hidden on the public site, so nobody can preview tomorrow's answers
 declare const __PREVIEW__: boolean;
-const PACK_DATE = /^\d{4}-\d{2}-\d{2}$/.test(DATE_Q) && (LOCAL || __PREVIEW__ || DATE_Q <= localDateKey()) ? DATE_Q : "";
+const PACK_DATE = /^\d{4}-\d{2}-\d{2}$/.test(DATE_Q) && (LOCAL || __PREVIEW__ || hadSession() || DATE_Q <= localDateKey()) ? DATE_Q : "";
 if (PACK_DATE) PREVIEW_NIGHT = puzzleNumber(PACK_DATE);
 const tonightPack = Promise.all([
   loadPackIndex().then((idx) => { for (const [k, v] of Object.entries(idx)) notePackNight(puzzleNumber(k), v.theme); }),
@@ -1641,7 +1642,8 @@ const MENU_CARDS: Record<string, { html: () => string; wire?: (c: HTMLElement) =
         <button class="btn" id="card-amb">NIGHT SOUNDS: ${store.ambience ? "ON" : "OFF"}</button>
         ${isTouch && "vibrate" in navigator ? `<button class="btn" id="card-buzz">VIBRATION: ${store.haptics ? "ON" : "OFF"}</button>` : ""}
       </div>
-      <p class="small">Night sounds are wind, crickets and a low hum of space under the game. Motion follows your device's reduced-motion setting.</p>`,
+      <p class="small">Night sounds are wind, crickets and a low hum of space under the game. Motion follows your device's reduced-motion setting.</p>
+      ${accountsOn ? `<h3 class="acct-title">YOUR ACCOUNT</h3><div class="acct" id="acct"></div>` : ""}`,
     wire: (c) => {
       const b = c.querySelector<HTMLButtonElement>("#card-sound")!;
       b.onclick = () => { store.muted = !store.muted; setMuted(store.muted); b.textContent = `SOUND: ${store.muted ? "OFF" : "ON"}`; };
@@ -1649,9 +1651,42 @@ const MENU_CARDS: Record<string, { html: () => string; wire?: (c: HTMLElement) =
       a.onclick = () => { store.ambience = !store.ambience; setAmbience(store.ambience); a.textContent = `NIGHT SOUNDS: ${store.ambience ? "ON" : "OFF"}`; };
       const v = c.querySelector<HTMLButtonElement>("#card-buzz");
       if (v) v.onclick = () => { store.haptics = !store.haptics; v.textContent = `VIBRATION: ${store.haptics ? "ON" : "OFF"}`; if (store.haptics) navigator.vibrate?.(15); };
+      const acct = c.querySelector<HTMLElement>("#acct");
+      if (acct) { renderAccount(acct); onAccountChange(() => acct.isConnected && renderAccount(acct)); void warmUp().then(() => acct.isConnected && renderAccount(acct)); }
     } },
   credits: { html: () => `<h2>Credits</h2><p>${theme.credits}</p><p class="small">Photographs generated with Qwen-Image, cut out and pixelated for the telescope.</p>` },
 };
+
+/** The account part of Settings: sign in to keep your nights and universe on every device. */
+function renderAccount(box: HTMLElement) {
+  const email = signedInEmail();
+  if (email) {
+    box.innerHTML = `<p class="small">Signed in as <b>${esc(email)}</b>. Your nights and universe are saved to your account and follow you to any device.</p>
+      <div class="settings"><button class="btn" id="acct-out">SIGN OUT</button></div>
+      <p class="small"><button class="link-btn" id="acct-del">Delete my saved progress from the account</button></p>`;
+    box.querySelector<HTMLButtonElement>("#acct-out")!.onclick = () => void signOut();
+    box.querySelector<HTMLButtonElement>("#acct-del")!.onclick = async (e) => {
+      const b = e.currentTarget as HTMLButtonElement;
+      if (b.dataset.sure !== "1") { b.dataset.sure = "1"; b.textContent = "Tap again to delete it (this browser keeps its own copy)"; return; }
+      const err = await deleteCloudSave();
+      if (err) b.textContent = err;
+    };
+    return;
+  }
+  box.innerHTML = `<p class="small">Sign in to keep your nights and your universe if you switch devices or clear this browser. Optional, free, and nothing else is shared.</p>
+    <div class="settings"><button class="btn primary" id="acct-google">SIGN IN WITH GOOGLE</button></div>
+    <form class="acct-mail" id="acct-mail"><input type="email" required placeholder="or your email" aria-label="Email for a sign-in link" autocomplete="email" /><button class="btn">SEND LINK</button></form>
+    <p class="small" id="acct-msg" role="status"></p>`;
+  box.querySelector<HTMLButtonElement>("#acct-google")!.onclick = () => void signInWithGoogle();
+  const form = box.querySelector<HTMLFormElement>("#acct-mail")!, msg = box.querySelector<HTMLElement>("#acct-msg")!;
+  form.onsubmit = async (e) => {
+    e.preventDefault();
+    const email = (form.querySelector("input") as HTMLInputElement).value.trim();
+    msg.textContent = "Sending…";
+    const err = await signInWithEmail(email);
+    msg.textContent = err || "Check your email for a sign-in link.";
+  };
+}
 
 /** A card over the front page; closes on ✕, Escape, or a tap outside it. */
 function menuSheet(id: string) {
@@ -1696,5 +1731,6 @@ function frontPage(returning = false) {
   app.querySelector(".intro")?.insertAdjacentHTML("beforeend", `<p class="intro-foot"><a href="/about">About</a><i>·</i><a href="/privacy">Privacy</a></p>`);
 }
 
+void initCloud(() => { if (app.querySelector(".intro")) frontPage(); });
 if (PREVIEW_NIGHT) void openPlay("practice");
 else frontPage();
