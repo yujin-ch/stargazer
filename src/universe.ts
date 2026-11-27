@@ -490,7 +490,9 @@ export function openUniverse(app: HTMLElement, o: UniverseOpts): () => void {
   // ------------------------------------------------------------ input
   const pts = new Map<number, { x: number; y: number }>();
   let moved = 0, pinch0 = 0, z0 = 1;
+  root.addEventListener("dragstart", (e) => e.preventDefault());
   canvas.addEventListener("pointerdown", (e) => {
+    window.getSelection()?.removeAllRanges();
     canvas.setPointerCapture(e.pointerId);
     pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
     moved = 0; fly = null;

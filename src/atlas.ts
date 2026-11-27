@@ -311,8 +311,12 @@ export function atlasScreen(app: HTMLElement, starsIn: AtlasStar[], opts: { titl
     if ((e.target as HTMLElement).closest(".atlas-card, .atlas-tools, .aedge, .atlas-mini")) return;
     pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
     moved = 0;
+    window.getSelection()?.removeAllRanges();
     if (pts.size === 2) { const [a, b] = [...pts.values()]; pinch = Math.hypot(a.x - b.x, a.y - b.y); }
   });
+  // a native drag (of a label or a picture) would steal the pointer and freeze panning
+  root.addEventListener("dragstart", (e) => e.preventDefault());
+  root.addEventListener("selectstart", (e) => { if (!(e.target as HTMLElement).closest?.("input, textarea")) e.preventDefault(); });
   root.addEventListener("pointermove", (e) => {
     const p = pts.get(e.pointerId);
     if (!p) return;
