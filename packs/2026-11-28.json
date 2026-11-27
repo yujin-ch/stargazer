@@ -149,8 +149,8 @@
    "names": [
     "manta ray",
     "manta",
-    "ray",
-    "stingray"
+    "?ray",
+    "?stingray"
    ],
    "note": "Largest brain of any fish",
    "img": "731a544d5066db90"
@@ -220,7 +220,7 @@
    "names": [
     "grandfather clock",
     "longcase clock",
-    "clock"
+    "?clock"
    ],
    "note": "The pendulum keeps time",
    "img": "6318ccb63024df39"
@@ -240,7 +240,7 @@
    "names": [
     "gharial",
     "gavial",
-    "crocodile"
+    "?crocodile"
    ],
    "note": "Its snout is made for catching fish",
    "img": "d197e950ed363f10"
@@ -250,7 +250,7 @@
    "band": 4,
    "names": [
     "sousaphone",
-    "tuba"
+    "?tuba"
    ],
    "note": "Named after John Philip Sousa",
    "img": "cf451765c09180c0"
@@ -261,7 +261,7 @@
    "names": [
     "star-nosed mole",
     "star nosed mole",
-    "mole"
+    "?mole"
    ],
    "note": "22 fleshy tentacles on its nose",
    "img": "53e7cc302cd98be4"
@@ -272,7 +272,7 @@
    "names": [
     "saiga",
     "saiga antelope",
-    "antelope"
+    "?antelope"
    ],
    "note": "Its big nose filters dust",
    "img": "f87b99ce07e338dd"

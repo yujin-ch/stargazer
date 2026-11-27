@@ -305,7 +305,7 @@
    "band": 3,
    "names": [
     "french horn",
-    "horn"
+    "?horn"
    ],
    "note": "About 3.7 metres of tubing, coiled",
    "img": "f683b8ce9d804516"
@@ -338,8 +338,8 @@
    "names": [
     "nautilus",
     "nautilus shell",
-    "shell",
-    "chambered nautilus"
+    "chambered nautilus",
+    "?shell"
    ],
    "note": "A living fossil that floats using its chambers",
    "img": "9e713e4d0cb21041"
@@ -370,7 +370,7 @@
     "diving helmet",
     "diving bell helmet",
     "dive helmet",
-    "helmet"
+    "?helmet"
    ],
    "note": "Air was pumped down from the surface",
    "img": "e3499fcff68f7646"

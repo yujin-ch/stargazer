@@ -866,3 +866,4 @@ img, canvas { -webkit-user-drag: none; user-drag: none; }
 .midnight-card h2 { margin: 0 0 12px; font-family: var(--font-display); font-weight: normal; font-size: 14px; line-height: 1.5; color: var(--accent); }
 .midnight-card p { font-size: 19px; margin: 0 0 18px; }
 .midnight-card .btn { width: 100%; }
+.suggest.nudge { border-color: var(--accent); cursor: default; }

@@ -225,6 +225,7 @@ function wireInput() {
         // a near-miss whose question hasn't shown yet still counts as asked
         const obj = run.sky[run.i], m = obj ? matcher.test(input.value, obj.names) : null;
         if (obj && m?.typo) named(obj, m.name ?? obj.names[0]);
+        else if (obj && vagueWord(obj, input.value)) { shake(); ui("nope"); showNudge(vagueWord(obj, input.value)!); }
         else { shake(); ui("nope"); input.value = ""; }
       }
     }
@@ -251,10 +252,23 @@ let pendingTimer = 0, suggestTimer = 0;
 function dropPending() { clearTimeout(pendingTimer); run.pending = null; }
 function showSuggest(name: string) {
   run.suggest = name;
+  el.suggest.classList.remove("nudge");
   el.suggest.innerHTML = `did you mean <b>${name.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!)}</b>? <small>${isTouch ? "tap" : "Enter ↵"}</small>`;
   el.suggest.classList.remove("hidden");
 }
-function hideSuggest() { clearTimeout(suggestTimer); run.suggest = null; el.suggest?.classList.add("hidden"); }
+/** The too-general word this text is, if any ("goats" → "goat"). */
+function vagueWord(obj: SkyObject, typed: string): string | null {
+  const n = normalize(typed);
+  if (!n || !obj.vague?.length) return null;
+  return obj.vague.find((v) => formsOf(v).includes(n)) ?? null;
+}
+function showNudge(word: string) {
+  run.suggest = null;
+  el.suggest.innerHTML = `close: <b>what kind of ${word.replace(/[&<>"]/g, "")}?</b>`;
+  el.suggest.classList.remove("hidden");
+  el.suggest.classList.add("nudge");
+}
+function hideSuggest() { clearTimeout(suggestTimer); run.suggest = null; el.suggest?.classList.add("hidden"); el.suggest?.classList.remove("nudge"); }
 function takeSuggestion() {
   const obj = run.sky[run.i], name = run.suggest;
   if (!obj || name === null || run.phase !== "playing") return;
@@ -273,6 +287,13 @@ function onTyped(input: HTMLInputElement) {
   clearTimeout(pendingTimer);
   const m = matcher.test(value, obj.names);
   clearTimeout(suggestTimer);
+  // too general for a hard find ("goat" for a markhor): it doesn't count, so ask which kind
+  const vague = !m && p === null ? vagueWord(obj, value) : null;
+  if (vague) {
+    hideSuggest();
+    suggestTimer = window.setTimeout(() => { if (run.sky[run.i] === obj) showNudge(vague); }, 250);
+    return;
+  }
   if (m?.typo && p === null) {
     // close but not right: ask, and let Enter (or a tap) take it. One letter short is probably still being typed,
     // so give that a moment before asking.
@@ -1758,8 +1779,7 @@ const MENU_CARDS: Record<string, { html: () => string; wire?: (c: HTMLElement) =
         <button class="btn" id="card-amb">NIGHT SOUNDS: ${store.ambience ? "ON" : "OFF"}</button>
         ${isTouch && "vibrate" in navigator ? `<button class="btn" id="card-buzz">VIBRATION: ${store.haptics ? "ON" : "OFF"}</button>` : ""}
       </div>
-      <p class="small">Night sounds are wind, crickets and a low hum of space under the game. Motion follows your device's reduced-motion setting.</p>
-      ${accountsOn ? `<h3 class="acct-title">YOUR ACCOUNT</h3><div class="acct" id="acct"></div>` : ""}`,
+      <p class="small">Night sounds are wind, crickets and a low hum of space under the game. Motion follows your device's reduced-motion setting.</p>`,
     wire: (c) => {
       const b = c.querySelector<HTMLButtonElement>("#card-sound")!;
       b.onclick = () => { store.muted = !store.muted; setMuted(store.muted); b.textContent = `SOUND: ${store.muted ? "OFF" : "ON"}`; };
@@ -1767,8 +1787,6 @@ const MENU_CARDS: Record<string, { html: () => string; wire?: (c: HTMLElement) =
       a.onclick = () => { store.ambience = !store.ambience; setAmbience(store.ambience); a.textContent = `NIGHT SOUNDS: ${store.ambience ? "ON" : "OFF"}`; };
       const v = c.querySelector<HTMLButtonElement>("#card-buzz");
       if (v) v.onclick = () => { store.haptics = !store.haptics; v.textContent = `VIBRATION: ${store.haptics ? "ON" : "OFF"}`; if (store.haptics) navigator.vibrate?.(15); };
-      const acct = c.querySelector<HTMLElement>("#acct");
-      if (acct) { renderAccount(acct); onAccountChange(() => acct.isConnected && renderAccount(acct)); void warmUp().then(() => acct.isConnected && renderAccount(acct)); }
     } },
   account: { html: () => `<h2>Your account</h2><div class="acct" id="acct"></div>`,
     wire: (c) => {

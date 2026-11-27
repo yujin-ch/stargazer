@@ -31,6 +31,8 @@ export interface SkyObject {
   parts: string[];
   /** Why it belongs in its theme (shown after the run). */
   note: string;
+  /** Too-general words for a hard find ("goat" for a markhor): they don't count, they prompt "what kind of goat?". */
+  vague?: string[];
 }
 
 export interface ThemeInfo extends SheetMeta { id: string }
@@ -129,15 +131,16 @@ export async function loadDayPack(dateKey: string): Promise<SkyObject[]> {
   }
   const theme = pack.theme && INFO.has(pack.theme) ? pack.theme : "photos";
   const objs: SkyObject[] = pack.items
-    .filter((it) => it.id && it.names?.length && it.band >= 1 && it.band <= 4)
+    .filter((it) => it.id && it.names?.some((n) => !n.startsWith("?")) && it.band >= 1 && it.band <= 4)
     .map((it, i) => {
       const id = `${theme}:${dateKey}/${it.id}`;
       PACK_URLS.set(id, `${base}${it.img ?? it.id}.png`);
       PACK_HI.set(id, `${base}${it.img ?? it.id}.hi.webp`);
       return {
         id, sprite: OBJECTS.length + i, theme, band: (it.band - 1) as BandIndex,
-        names: it.names.map((n) => n.replace(/^~/, "")),
+        names: it.names.filter((n) => !n.startsWith("?")).map((n) => n.replace(/^~/, "")),
         hidden: it.names.filter((n) => n.startsWith("~")).map((n) => n.slice(1)),
+        vague: it.names.filter((n) => n.startsWith("?")).map((n) => n.slice(1)),
         kind: "photo" as const, parts: [id], note: it.note ?? "",
       };
     })
