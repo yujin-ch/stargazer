@@ -29,3 +29,4 @@ dd { margin: 2px 0 0; }
 footer { margin-top: 24px; color: var(--dim); font-size: 18px; text-align: center; }
 footer a { color: var(--dim); }
 .mark { image-rendering: pixelated; image-rendering: crisp-edges; flex: none; }
+.tip-row { margin: 14px 0 0; text-align: center; }

@@ -1090,7 +1090,7 @@ async function resultsScreen(r: RunResult, mode: Run["mode"], fresh = false) {
       </dl>
        </div>
       </div>
-      ${TIP_URL ? `<p class="tip-row"><a href="${esc(TIP_URL)}" target="_blank" rel="noopener">Enjoying the sky? Leave a tip for the stargazers who make it ☕</a></p>` : ""}
+      ${TIP_URL ? `<p class="tip-row"><a class="tip-btn" href="${esc(TIP_URL)}" target="_blank" rel="noopener">Keep the telescope lit ☕</a></p>` : ""}
     </section>
     ${daily ? "" : `<div class="actions">
       ${!store.today(localDateKey()) ? `<button class="btn primary" id="daily">TONIGHT'S SKY</button>` : `<button class="btn" id="back">TONIGHT'S LOG</button>`}
