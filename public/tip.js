@@ -14,7 +14,13 @@
     ".tip-x{position:absolute;top:8px;right:8px;width:32px;height:32px;font:14px 'Press Start 2P',monospace;color:#f3ead8;" +
     "background:#4a3d60;border:2px solid #f2d38a;cursor:pointer;line-height:1}" +
     ".tip-alt{margin:8px 0 0;font:18px 'VT323',monospace;text-align:center}.tip-alt a{color:#f2d38a}";
+  // Inside someone else's page (the itch.io embed): no account buttons and no tip panel, so nothing that
+  // changes a player's account or takes money can be clickjacked by the framing page.
+  var framed = false;
+  try { framed = window.top !== window.self; } catch (e) { framed = true; }
+  if (framed) css += ".acct-badge,.tip-row,.acct,.acct-mail{display:none!important}";
   var st = document.createElement("style"); st.textContent = css; document.head.appendChild(st);
+  if (framed) return;
 
   var last = null;
   function close() {
