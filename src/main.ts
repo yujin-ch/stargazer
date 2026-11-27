@@ -9,7 +9,7 @@ import { MiniMap } from "./minimap";
 import { accountsOn, initCloud, hadSession, signedInEmail, signInWithGoogle, signInWithEmail, signOut, deleteCloudSave, onAccountChange, warmUp } from "./cloud";
 let mini: MiniMap | null = null;
 import { makeMatcher, normalize, forms as formsOf, linkMatches } from "./match";
-import { dailySky, setDayPack, notePackNight, practiceSky, localDateKey, puzzleNumber, mulberry32, dayTheme, dayCondition } from "./daily";
+import { dailySky, setDayPack, notePackNight, practiceSky, localDateKey, puzzleNumber, mulberry32, hash, dayTheme, dayCondition } from "./daily";
 import { theme } from "./themes";
 import { setMuted, unlockAudio, setAmbience, ui, whoosh, blip } from "./themes/chip";
 import { Viewer } from "./viewer";
@@ -1448,9 +1448,10 @@ function singLine(r: RunResult, crowd: Curve): string {
   const m = singMood(r);
   if (!m) return "";
   if (m === 1) return `<p class="sing-line seen">You caught a glimpse of the Singularity.</p>`;
-  const share = crowd.singCaught ?? 0;
-  const pct = share >= 0.1 ? `${Math.round(share * 100)}%` : share >= 0.01 ? `${Math.round(share * 100)}%` : "less than 1%";
-  return `<p class="sing-line caught">You're one of the <b>${pct}</b> of stargazers who caught the Singularity tonight.</p>`;
+  void crowd;
+  // until the game has a real crowd: a small number, the same for everyone on the night (yujin, 11-27)
+  const n = 3 + Math.floor(mulberry32(hash(`sing:${r.date}`))() * 15);
+  return `<p class="sing-line caught">You're one of <b>${n}</b> stargazers who caught the Singularity tonight.</p>`;
 }
 
 function drawConstellation(c: HTMLCanvasElement, r: RunResult, best: number, upto = r.items.length) {
@@ -1498,7 +1499,9 @@ function drawConstellation(c: HTMLCanvasElement, r: RunResult, best: number, upt
     g.globalAlpha = 1;
   }
   // rings bend near a Singularity (a little when glimpsed, a lot when caught)
-  const warp = [0, 0.05, 0.08][mood];
+  const WARP = { none: 0, small: 0.025, lots: 0.08 } as const;
+  const wk = (new URLSearchParams(location.search).get("warp") ?? "small") as keyof typeof WARP;
+  const warp = (WARP[wk] ?? WARP.small) * [0, 0.6, 1][mood];
   const ringXY = (rr: number, a: number): [number, number] => {
     const k = 1 + warp * Math.sin(a * 3 + rr * 0.08), tw = warp * 1.6 * (1 - rr / 100);
     return [cx + Math.cos(a + tw) * rr * k, cy + Math.sin(a + tw) * rr * k];
