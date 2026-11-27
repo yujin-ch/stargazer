@@ -15,8 +15,14 @@ const localNights = (): Plugin => {
   return { name: "local-nights", configureServer: serve, configurePreviewServer: serve };
 };
 
+/** On Cloudflare Pages builds (CF_PAGES=1) drop Vercel's analytics tag; Cloudflare Web Analytics is switched on in its dashboard. */
+const dropVercelInsights = (): Plugin => ({
+  name: "drop-vercel-insights",
+  transformIndexHtml: (html) => (process.env.CF_PAGES ? html.replace(/\s*<script defer src="\/_vercel\/insights\/script.js"><\/script>/, "") : html),
+});
+
 export default defineConfig({
-  plugins: [localNights()],
+  plugins: [localNights(), dropVercelInsights()],
   build: { rollupOptions: { input: { main: "index.html", board: "board.html" } } },
   // true only on Vercel preview deployments (branches other than main), which can preview future nights
   define: { __PREVIEW__: JSON.stringify(process.env.VERCEL_ENV === "preview") },
