@@ -1,0 +1,317 @@
+{
+ "date": "2026-12-05",
+ "theme": "photos",
+ "bands": 5,
+ "items": [
+  {
+   "id": "horse",
+   "img": "a80d6855485a7bcc",
+   "band": 1,
+   "names": [
+    "horse",
+    "pony"
+   ],
+   "note": "Horses can sleep standing up"
+  },
+  {
+   "id": "friedegg",
+   "img": "feb6391622e83202",
+   "band": 1,
+   "names": [
+    "fried egg",
+    "egg",
+    "sunny side up"
+   ],
+   "note": "The yolk's colour comes from what the hen eats"
+  },
+  {
+   "id": "camera",
+   "img": "9447902a909c6e72",
+   "band": 1,
+   "names": [
+    "camera",
+    "dslr"
+   ],
+   "note": "The word camera is Latin for room"
+  },
+  {
+   "id": "zebra",
+   "img": "5788707f3af5a821",
+   "band": 2,
+   "names": [
+    "zebra"
+   ],
+   "note": "Every zebra's stripes are unique"
+  },
+  {
+   "id": "drill",
+   "img": "02a4251eed35abb6",
+   "band": 2,
+   "names": [
+    "drill",
+    "power drill",
+    "electric drill"
+   ],
+   "note": "The first electric drill was made in Australia in 1889"
+  },
+  {
+   "id": "candle",
+   "img": "178726c0c821d491",
+   "band": 2,
+   "names": [
+    "candle",
+    "wax candle"
+   ],
+   "note": "Candles were once used to tell the time"
+  },
+  {
+   "id": "corncob",
+   "img": "92c8e1672951e387",
+   "band": 2,
+   "names": [
+    "corn",
+    "corn cob",
+    "maize",
+    "corn on the cob",
+    "sweetcorn"
+   ],
+   "note": "A cob always has an even number of rows"
+  },
+  {
+   "id": "tent",
+   "img": "4285ac50d5f3344f",
+   "band": 2,
+   "names": [
+    "tent"
+   ],
+   "note": "Tents are among the oldest kinds of shelter"
+  },
+  {
+   "id": "sled",
+   "img": "fb3412702d0f5c22",
+   "band": 2,
+   "names": [
+    "sled",
+    "sledge",
+    "sleigh",
+    "toboggan"
+   ],
+   "note": "Sleds were used for moving heavy loads long before the wheel"
+  },
+  {
+   "id": "locomotive",
+   "img": "4fac35842179b7b4",
+   "band": 2,
+   "names": [
+    "steam locomotive",
+    "locomotive",
+    "steam train",
+    "train",
+    "engine"
+   ],
+   "note": "The first steam locomotive ran in Wales in 1804"
+  },
+  {
+   "id": "flute",
+   "img": "96a1a0a5955e8d15",
+   "band": 3,
+   "names": [
+    "flute"
+   ],
+   "note": "One of the oldest instruments; bone flutes are 40,000 years old"
+  },
+  {
+   "id": "manatee",
+   "img": "e667f5f505e5c071",
+   "band": 3,
+   "names": [
+    "manatee",
+    "sea cow"
+   ],
+   "note": "Sailors may have mistaken them for mermaids"
+  },
+  {
+   "id": "anvil",
+   "img": "532d6c8ae255e133",
+   "band": 3,
+   "names": [
+    "anvil"
+   ],
+   "note": "The horn is used to bend metal into curves"
+  },
+  {
+   "id": "espressomachine",
+   "img": "3e352cef81939483",
+   "band": 3,
+   "names": [
+    "espresso machine",
+    "coffee machine",
+    "espresso maker"
+   ],
+   "note": "Espresso is pushed through at nine times the air pressure"
+  },
+  {
+   "id": "catamaran",
+   "img": "00c77d719b958958",
+   "band": 3,
+   "names": [
+    "catamaran",
+    "cat",
+    "?sailboat",
+    "?boat"
+   ],
+   "note": "Two hulls make it steadier than a single hull"
+  },
+  {
+   "id": "magic8ball",
+   "img": "5ba9c2b039821e6d",
+   "band": 3,
+   "names": [
+    "magic 8 ball",
+    "magic eight ball",
+    "8 ball",
+    "eight ball"
+   ],
+   "note": "Inside floats a 20-sided die with an answer on each face"
+  },
+  {
+   "id": "genielamp",
+   "img": "0f815d6444d90f09",
+   "band": 3,
+   "names": [
+    "genie lamp",
+    "oil lamp",
+    "aladdin's lamp",
+    "magic lamp",
+    "lamp"
+   ],
+   "note": "Lamps like this burned olive oil through a wick in the spout"
+  },
+  {
+   "id": "kiwibird",
+   "img": "b372ce6d72ff5666",
+   "band": 4,
+   "names": [
+    "kiwi",
+    "kiwi bird"
+   ],
+   "note": "It lays one of the biggest eggs for its size of any bird"
+  },
+  {
+   "id": "oboe",
+   "img": "6688f78d6cafd5ae",
+   "band": 4,
+   "names": [
+    "oboe"
+   ],
+   "note": "The whole orchestra tunes to its A"
+  },
+  {
+   "id": "kumquat",
+   "img": "3cfd30e57fdaba5a",
+   "band": 4,
+   "names": [
+    "kumquat",
+    "cumquat"
+   ],
+   "note": "You eat it whole, sweet skin and sour inside"
+  },
+  {
+   "id": "croquetmallet",
+   "img": "853f0c1a3d787ed2",
+   "band": 4,
+   "names": [
+    "croquet mallet",
+    "mallet",
+    "croquet"
+   ],
+   "note": "Croquet was in the 1900 Olympics"
+  },
+  {
+   "id": "chessclock",
+   "img": "d65ab38833e907d4",
+   "band": 4,
+   "names": [
+    "chess clock",
+    "game clock"
+   ],
+   "note": "Pressing your button stops your time and starts your opponent's"
+  },
+  {
+   "id": "teslacoil",
+   "img": "86732862a16433e7",
+   "band": 4,
+   "names": [
+    "tesla coil"
+   ],
+   "note": "It can make lightning bolts of millions of volts"
+  },
+  {
+   "id": "fiddlehead",
+   "img": "ffbb3390425f52d6",
+   "band": 4,
+   "names": [
+    "fiddlehead",
+    "fiddlehead fern",
+    "fern"
+   ],
+   "note": "Named for its shape like the scroll of a violin"
+  },
+  {
+   "id": "gerenuk",
+   "img": "65c5a94cd3301e9e",
+   "band": 5,
+   "names": [
+    "gerenuk",
+    "giraffe gazelle",
+    "?antelope",
+    "?gazelle"
+   ],
+   "note": "It can live without ever drinking water"
+  },
+  {
+   "id": "oud",
+   "img": "4c11c8142152a3f3",
+   "band": 5,
+   "names": [
+    "oud",
+    "ud",
+    "?lute",
+    "?guitar"
+   ],
+   "note": "The ancestor of the European lute"
+  },
+  {
+   "id": "bathysphere",
+   "img": "61a3d2e075771f03",
+   "band": 5,
+   "names": [
+    "bathysphere",
+    "diving bell",
+    "?submarine"
+   ],
+   "note": "In 1934 it carried two men half a mile under the sea"
+  },
+  {
+   "id": "zoetrope",
+   "img": "8ce6d173fdb55a33",
+   "band": 5,
+   "names": [
+    "zoetrope"
+   ],
+   "note": "Look through the slits as it spins and the drawings move"
+  },
+  {
+   "id": "warmingpan",
+   "img": "5400b0cb581edf72",
+   "band": 6,
+   "names": [
+    "warming pan",
+    "bed warmer",
+    "bedwarmer",
+    "?pan"
+   ],
+   "note": "Filled with hot coals and run between the sheets before bed"
+  }
+ ]
+}

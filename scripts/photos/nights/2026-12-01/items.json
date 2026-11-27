@@ -32,9 +32,10 @@
   {
    "id": "magnifyingglass",
    "band": 2,
-   "desc": "magnifying glass with a round glass lens in a brass rim and a wooden handle",
+   "desc": "magnifying glass with a clear round glass lens in a brass rim and a dark wooden handle, lying diagonally, the lens enlarging part of the handle behind it",
    "names": "magnifying glass, magnifier, hand lens, loupe",
-   "note": "A water drop on a leaf works as a tiny magnifier"
+   "note": "A water drop on a leaf works as a tiny magnifier",
+   "bg": "grey"
   },
   {
    "id": "wrench",

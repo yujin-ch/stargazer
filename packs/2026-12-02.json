@@ -1,0 +1,315 @@
+{
+ "date": "2026-12-02",
+ "theme": "photos",
+ "bands": 5,
+ "items": [
+  {
+   "id": "carrot",
+   "img": "46b3df11f50ad80e",
+   "band": 1,
+   "names": [
+    "carrot"
+   ],
+   "note": "Carrots used to be purple"
+  },
+  {
+   "id": "frog",
+   "img": "a38a69523cb56991",
+   "band": 1,
+   "names": [
+    "frog",
+    "tree frog"
+   ],
+   "note": "A group of frogs is called an army"
+  },
+  {
+   "id": "toothbrush",
+   "img": "e4aabcb391b1bb65",
+   "band": 1,
+   "names": [
+    "toothbrush",
+    "tooth brush"
+   ],
+   "note": "The first bristle toothbrushes used hog hair"
+  },
+  {
+   "id": "watermelon",
+   "img": "039cb6232cf80823",
+   "band": 2,
+   "names": [
+    "watermelon",
+    "melon"
+   ],
+   "note": "A watermelon is about 92 percent water"
+  },
+  {
+   "id": "owl",
+   "img": "28981d16e4be12df",
+   "band": 2,
+   "names": [
+    "owl",
+    "barn owl"
+   ],
+   "note": "An owl can turn its head about 270 degrees"
+  },
+  {
+   "id": "thermometer",
+   "img": "f02e42fe04cb8e3e",
+   "band": 2,
+   "names": [
+    "thermometer"
+   ],
+   "note": "Fahrenheit set 0 at the coldest temperature he could make with ice and salt"
+  },
+  {
+   "id": "pliers",
+   "img": "3b2237392eaf0491",
+   "band": 2,
+   "names": [
+    "pliers",
+    "needle-nose pliers"
+   ],
+   "note": "Pliers go back to Bronze Age blacksmiths"
+  },
+  {
+   "id": "rockingchair",
+   "img": "9a20978acdd334c8",
+   "band": 2,
+   "names": [
+    "rocking chair",
+    "rocker"
+   ],
+   "note": "Benjamin Franklin is often said to have invented it"
+  },
+  {
+   "id": "helicopter",
+   "img": "427d1c6891d091b6",
+   "band": 2,
+   "names": [
+    "helicopter",
+    "chopper"
+   ],
+   "note": "Leonardo da Vinci sketched a screw-shaped helicopter in the 1480s"
+  },
+  {
+   "id": "yoyo",
+   "img": "c92e4f5ede2378be",
+   "band": 2,
+   "names": [
+    "yo-yo",
+    "yoyo",
+    "yo yo"
+   ],
+   "note": "In 1985 a yo-yo went to space on the shuttle Discovery"
+  },
+  {
+   "id": "snaredrum",
+   "img": "b53108e6cc20da17",
+   "band": 3,
+   "names": [
+    "snare drum",
+    "snare",
+    "?drum"
+   ],
+   "note": "The wires underneath give it its sharp rattle"
+  },
+  {
+   "id": "platypus",
+   "img": "7cfc32aca5f39c48",
+   "band": 3,
+   "names": [
+    "platypus",
+    "duck-billed platypus"
+   ],
+   "note": "A mammal that lays eggs"
+  },
+  {
+   "id": "pinata",
+   "img": "be8ab4e86771ffd6",
+   "band": 3,
+   "names": [
+    "pi\u00f1ata",
+    "pinata"
+   ],
+   "note": "Pi\u00f1atas came to Mexico by way of Spain, and maybe China before that"
+  },
+  {
+   "id": "sewingmachine",
+   "img": "53573af746a72e56",
+   "band": 3,
+   "names": [
+    "sewing machine"
+   ],
+   "note": "The needle's eye is near its tip, not the top"
+  },
+  {
+   "id": "jetski",
+   "img": "44577e2c72d5d2f4",
+   "band": 3,
+   "names": [
+    "jet ski",
+    "jetski",
+    "personal watercraft",
+    "waverunner",
+    "sea-doo"
+   ],
+   "note": "It moves by pumping a jet of water out the back"
+  },
+  {
+   "id": "rotaryphone",
+   "img": "8510b9de8c08bec6",
+   "band": 3,
+   "names": [
+    "rotary phone",
+    "rotary telephone",
+    "dial phone",
+    "telephone",
+    "phone"
+   ],
+   "note": "Dialling a 0 took the longest, ten clicks"
+  },
+  {
+   "id": "matryoshka",
+   "img": "6878f7f96422efbd",
+   "band": 3,
+   "names": [
+    "matryoshka",
+    "nesting dolls",
+    "russian dolls",
+    "babushka dolls",
+    "stacking dolls"
+   ],
+   "note": "The first set, from 1890, had eight dolls"
+  },
+  {
+   "id": "fennecfox",
+   "img": "16e02a9ce3b1f448",
+   "band": 4,
+   "names": [
+    "fennec fox",
+    "fennec",
+    "?fox"
+   ],
+   "note": "Its huge ears let heat escape in the desert"
+  },
+  {
+   "id": "didgeridoo",
+   "img": "d2078a5ffaeda923",
+   "band": 4,
+   "names": [
+    "didgeridoo",
+    "didjeridu",
+    "yidaki"
+   ],
+   "note": "Players keep a drone going by breathing in through the nose while blowing"
+  },
+  {
+   "id": "bunsenburner",
+   "img": "904c72c4480bfb9c",
+   "band": 4,
+   "names": [
+    "bunsen burner",
+    "burner"
+   ],
+   "note": "The collar at the bottom lets in air for a hotter blue flame"
+  },
+  {
+   "id": "vise",
+   "img": "96addc715da58627",
+   "band": 4,
+   "names": [
+    "vise",
+    "vice",
+    "bench vise",
+    "bench vice"
+   ],
+   "note": "The screw gives a huge squeeze from a small push"
+  },
+  {
+   "id": "jackfruit",
+   "img": "f331551738598fd0",
+   "band": 4,
+   "names": [
+    "jackfruit",
+    "jack fruit"
+   ],
+   "note": "The largest tree fruit: one can weigh over 40 kilograms"
+  },
+  {
+   "id": "mangosteen",
+   "img": "7c1382bf146df415",
+   "band": 4,
+   "names": [
+    "mangosteen"
+   ],
+   "note": "Called the queen of fruits"
+  },
+  {
+   "id": "hovercraft",
+   "img": "3a1850c1ed74c97f",
+   "band": 4,
+   "names": [
+    "hovercraft",
+    "air cushion vehicle"
+   ],
+   "note": "It floats on a cushion of air, so it can cross land and water"
+  },
+  {
+   "id": "proboscismonkey",
+   "img": "9aa9291d72a94980",
+   "band": 5,
+   "names": [
+    "proboscis monkey",
+    "long-nosed monkey",
+    "?monkey"
+   ],
+   "note": "The big nose may make its honking call louder"
+  },
+  {
+   "id": "koto",
+   "img": "4ee2aa33d943c047",
+   "band": 5,
+   "names": [
+    "koto",
+    "?zither"
+   ],
+   "note": "Its bridges are moved to tune each string"
+  },
+  {
+   "id": "orrery",
+   "img": "8290f2f29da07499",
+   "band": 5,
+   "names": [
+    "orrery",
+    "planetarium",
+    "solar system model"
+   ],
+   "note": "Named after the Earl of Orrery, who owned an early one"
+  },
+  {
+   "id": "tricornhat",
+   "img": "924f9bbfe2b85ae6",
+   "band": 5,
+   "names": [
+    "tricorne",
+    "tricorn",
+    "tricorn hat",
+    "tricorne hat",
+    "three-cornered hat",
+    "?hat",
+    "?pirate hat"
+   ],
+   "note": "The turned-up brim kept rain off and let soldiers carry muskets on the shoulder"
+  },
+  {
+   "id": "adze",
+   "img": "b95a704d87d53c0c",
+   "band": 6,
+   "names": [
+    "adze",
+    "adz"
+   ],
+   "note": "The blade runs across the handle, unlike an axe"
+  }
+ ]
+}

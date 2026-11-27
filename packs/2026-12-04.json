@@ -1,0 +1,314 @@
+{
+ "date": "2026-12-04",
+ "theme": "photos",
+ "bands": 5,
+ "items": [
+  {
+   "id": "cat",
+   "img": "5667e2cf9ca54d6b",
+   "band": 1,
+   "names": [
+    "cat",
+    "kitten",
+    "tabby"
+   ],
+   "note": "Cats sleep for about two thirds of their lives"
+  },
+  {
+   "id": "broccoli",
+   "img": "8055d0d37a7c1ea6",
+   "band": 1,
+   "names": [
+    "broccoli"
+   ],
+   "note": "Broccoli was bred from wild cabbage"
+  },
+  {
+   "id": "rocket",
+   "img": "64ccc7a5edc93595",
+   "band": 1,
+   "names": [
+    "rocket",
+    "spaceship",
+    "rocket ship"
+   ],
+   "note": "A rocket has to reach about 28,000 km/h to stay in orbit"
+  },
+  {
+   "id": "peacock",
+   "img": "5d56746e6283fb0d",
+   "band": 2,
+   "names": [
+    "peacock",
+    "peafowl"
+   ],
+   "note": "Only males have the big tail; females are peahens"
+  },
+  {
+   "id": "calculator",
+   "img": "f71e3e6717fe2dea",
+   "band": 2,
+   "names": [
+    "calculator"
+   ],
+   "note": "The first pocket calculators cost about as much as a used car"
+  },
+  {
+   "id": "screwdriver",
+   "img": "fb05ffa3ce4c119f",
+   "band": 2,
+   "names": [
+    "screwdriver",
+    "screw driver"
+   ],
+   "note": "The cross-head screw was patented by Henry Phillips"
+  },
+  {
+   "id": "clothesiron",
+   "img": "1356531fe80a78bd",
+   "band": 2,
+   "names": [
+    "iron",
+    "clothes iron",
+    "steam iron"
+   ],
+   "note": "Old irons were heated on the stove"
+  },
+  {
+   "id": "garlic",
+   "img": "0a1a17cb5615e627",
+   "band": 2,
+   "names": [
+    "garlic",
+    "garlic bulb",
+    "garlic clove"
+   ],
+   "note": "Ancient Egyptian pyramid builders were given garlic for strength"
+  },
+  {
+   "id": "frisbee",
+   "img": "c73318fbe6a46e18",
+   "band": 2,
+   "names": [
+    "frisbee",
+    "flying disc",
+    "disc",
+    "flying disk"
+   ],
+   "note": "Named after the Frisbie Pie Company, whose tins students threw"
+  },
+  {
+   "id": "motorcycle",
+   "img": "ce55ac9ecdcfea28",
+   "band": 2,
+   "names": [
+    "motorcycle",
+    "motorbike",
+    "bike"
+   ],
+   "note": "The first motorcycle was a wooden frame with an engine, in 1885"
+  },
+  {
+   "id": "tambourine",
+   "img": "d64e84b53f9f8499",
+   "band": 3,
+   "names": [
+    "tambourine"
+   ],
+   "note": "It goes back over 3,000 years"
+  },
+  {
+   "id": "redpanda",
+   "img": "435681082d6e448b",
+   "band": 3,
+   "names": [
+    "red panda",
+    "lesser panda",
+    "firefox"
+   ],
+   "note": "Named panda before the giant panda was"
+  },
+  {
+   "id": "hammock",
+   "img": "824018067eb02c80",
+   "band": 3,
+   "names": [
+    "hammock"
+   ],
+   "note": "Hammocks were used by Ta\u00edno people long before sailors"
+  },
+  {
+   "id": "kayak",
+   "img": "11aa1afd2a3e5e59",
+   "band": 3,
+   "names": [
+    "kayak",
+    "?canoe",
+    "?boat"
+   ],
+   "note": "Invented by Arctic peoples, from driftwood and sealskin"
+  },
+  {
+   "id": "jackinthebox",
+   "img": "29837fcebdb0940f",
+   "band": 3,
+   "names": [
+    "jack-in-the-box",
+    "jack in the box"
+   ],
+   "note": "Turn the crank long enough and the clown springs out"
+  },
+  {
+   "id": "slinky",
+   "img": "a7ae5935c7b48f50",
+   "band": 3,
+   "names": [
+    "slinky",
+    "spring",
+    "?coil"
+   ],
+   "note": "Invented by accident with a dropped spring in 1943"
+  },
+  {
+   "id": "stopwatch",
+   "img": "939a9535bbfd0008",
+   "band": 3,
+   "names": [
+    "stopwatch",
+    "stop watch",
+    "timer"
+   ],
+   "note": "Sprints are timed to a hundredth of a second"
+  },
+  {
+   "id": "hornbill",
+   "img": "24c2db4c1596ab47",
+   "band": 4,
+   "names": [
+    "hornbill",
+    "great hornbill"
+   ],
+   "note": "The female seals herself into the nest with mud"
+  },
+  {
+   "id": "concertina",
+   "img": "d57e9c340e2abf26",
+   "band": 4,
+   "names": [
+    "concertina",
+    "?accordion"
+   ],
+   "note": "Smaller than an accordion, played with buttons on both ends"
+  },
+  {
+   "id": "ricecooker",
+   "img": "88749643dce6d6dd",
+   "band": 4,
+   "names": [
+    "rice cooker"
+   ],
+   "note": "It switches off when the water is gone and the pot gets hotter than 100\u00b0C"
+  },
+  {
+   "id": "chisel",
+   "img": "5ab72a623c9b52d4",
+   "band": 4,
+   "names": [
+    "chisel",
+    "wood chisel"
+   ],
+   "note": "Some of the oldest chisels are made of stone"
+  },
+  {
+   "id": "persimmon",
+   "img": "31d38ab5545447f2",
+   "band": 4,
+   "names": [
+    "persimmon",
+    "kaki",
+    "sharon fruit"
+   ],
+   "note": "Unripe ones are very dry and bitter"
+  },
+  {
+   "id": "erlenmeyer",
+   "img": "9f18024b58cc4d26",
+   "band": 4,
+   "names": [
+    "erlenmeyer flask",
+    "conical flask",
+    "flask",
+    "erlenmeyer",
+    "?beaker"
+   ],
+   "note": "Named after a German chemist, Emil Erlenmeyer"
+  },
+  {
+   "id": "chinesejunk",
+   "img": "89c4d17e7f42c16e",
+   "band": 4,
+   "names": [
+    "junk",
+    "chinese junk",
+    "?boat",
+    "?ship"
+   ],
+   "note": "Junks had watertight compartments centuries before European ships"
+  },
+  {
+   "id": "ayeaye",
+   "img": "b8fc5f9c8834c220",
+   "band": 5,
+   "names": [
+    "aye-aye",
+    "aye aye",
+    "ayeaye",
+    "?lemur"
+   ],
+   "note": "It taps on wood and listens for grubs"
+  },
+  {
+   "id": "stirlingengine",
+   "img": "722c5cb8f9750102",
+   "band": 5,
+   "names": [
+    "stirling engine",
+    "hot air engine",
+    "?engine"
+   ],
+   "note": "Runs on any heat source, even a warm hand"
+  },
+  {
+   "id": "snakefruit",
+   "img": "4fb08472a7c6b6c9",
+   "band": 5,
+   "names": [
+    "snake fruit",
+    "salak",
+    "salacca"
+   ],
+   "note": "The skin looks like snakeskin"
+  },
+  {
+   "id": "cribbage",
+   "img": "841bd5f644c1b505",
+   "band": 5,
+   "names": [
+    "cribbage board",
+    "cribbage",
+    "crib board",
+    "crib"
+   ],
+   "note": "Cribbage was invented by an English poet, Sir John Suckling"
+  },
+  {
+   "id": "sheng",
+   "img": "37e138e77934644d",
+   "band": 6,
+   "names": [
+    "sheng"
+   ],
+   "note": "One of the oldest Chinese instruments, over 3,000 years old"
+  }
+ ]
+}

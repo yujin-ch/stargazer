@@ -1,0 +1,314 @@
+{
+ "date": "2026-12-06",
+ "theme": "photos",
+ "bands": 5,
+ "items": [
+  {
+   "id": "bee",
+   "img": "94ac440150109ea9",
+   "band": 1,
+   "names": [
+    "bee",
+    "honey bee",
+    "honeybee",
+    "bumblebee"
+   ],
+   "note": "A bee visits about 100 flowers on one trip"
+  },
+  {
+   "id": "cherries",
+   "img": "955bf309f26dd594",
+   "band": 1,
+   "names": [
+    "cherries",
+    "cherry"
+   ],
+   "note": "Cherry trees can live 100 years"
+  },
+  {
+   "id": "car",
+   "img": "886dc4cc9e2bcfab",
+   "band": 1,
+   "names": [
+    "car",
+    "automobile"
+   ],
+   "note": "The first car had three wheels"
+  },
+  {
+   "id": "hippo",
+   "img": "bb0a7048aa633fc9",
+   "band": 2,
+   "names": [
+    "hippo",
+    "hippopotamus"
+   ],
+   "note": "Hippos can't swim; they walk on the river bed"
+  },
+  {
+   "id": "piano",
+   "img": "84c1c7a80906c3e6",
+   "band": 2,
+   "names": [
+    "piano",
+    "grand piano"
+   ],
+   "note": "A piano has 88 keys"
+  },
+  {
+   "id": "toolbox",
+   "img": "f00f40448a27be98",
+   "band": 2,
+   "names": [
+    "toolbox",
+    "tool box",
+    "tool kit"
+   ],
+   "note": "The cantilever trays pull open like stairs"
+  },
+  {
+   "id": "rockinghorse",
+   "img": "81b537162b30ccb3",
+   "band": 2,
+   "names": [
+    "rocking horse",
+    "hobby horse"
+   ],
+   "note": "Some were made for royal children with real horsehair"
+  },
+  {
+   "id": "firetruck",
+   "img": "43b17b3bf1f206e6",
+   "band": 2,
+   "names": [
+    "fire truck",
+    "fire engine",
+    "firetruck"
+   ],
+   "note": "Early fire engines were pulled by horses"
+  },
+  {
+   "id": "eggplant",
+   "img": "e3ad682ce877d1da",
+   "band": 2,
+   "names": [
+    "eggplant",
+    "aubergine",
+    "brinjal"
+   ],
+   "note": "Early English ones were white and egg-shaped"
+  },
+  {
+   "id": "armchair",
+   "img": "805c81c1526e4550",
+   "band": 2,
+   "names": [
+    "armchair",
+    "chair",
+    "club chair"
+   ],
+   "note": "Armchairs were once only for the head of the house"
+  },
+  {
+   "id": "horseshoemagnet",
+   "img": "f92b55b09161dd9d",
+   "band": 3,
+   "names": [
+    "magnet",
+    "horseshoe magnet"
+   ],
+   "note": "Bending a bar into a horseshoe puts both poles side by side"
+  },
+  {
+   "id": "pinball",
+   "img": "ee7345d5cdb1106e",
+   "band": 3,
+   "names": [
+    "pinball",
+    "pinball machine"
+   ],
+   "note": "Pinball was banned in New York for over 30 years"
+  },
+  {
+   "id": "spacehelmet",
+   "img": "970521fcef6cc42c",
+   "band": 3,
+   "names": [
+    "space helmet",
+    "astronaut helmet",
+    "helmet"
+   ],
+   "note": "The gold visor reflects the sun's glare and heat"
+  },
+  {
+   "id": "peppergrinder",
+   "img": "1f66b68740476b5a",
+   "band": 3,
+   "names": [
+    "pepper grinder",
+    "pepper mill",
+    "peppermill",
+    "grinder"
+   ],
+   "note": "Pepper was once so precious it was used as money"
+  },
+  {
+   "id": "marimba",
+   "img": "fcc3a84656c8ea19",
+   "band": 3,
+   "names": [
+    "marimba",
+    "xylophone"
+   ],
+   "note": "The tubes under the bars make each note ring out"
+  },
+  {
+   "id": "segway",
+   "img": "1c28d97a0ef0f76a",
+   "band": 3,
+   "names": [
+    "segway",
+    "scooter",
+    "hoverboard"
+   ],
+   "note": "It balances using gyroscopes and tilt sensors"
+  },
+  {
+   "id": "trowel",
+   "img": "a2b40ae46dad5cb2",
+   "band": 3,
+   "names": [
+    "trowel",
+    "garden trowel"
+   ],
+   "note": "Masons use a flat trowel; gardeners a scooped one"
+  },
+  {
+   "id": "hoopoe",
+   "img": "b80e331a21b1ff19",
+   "band": 4,
+   "names": [
+    "hoopoe"
+   ],
+   "note": "Its call is a soft hoop-hoop-hoop"
+  },
+  {
+   "id": "lyrebird",
+   "img": "6d7020a319dd4a97",
+   "band": 4,
+   "names": [
+    "lyrebird",
+    "lyre bird"
+   ],
+   "note": "It can mimic chainsaws and camera shutters"
+  },
+  {
+   "id": "lotuspod",
+   "img": "4cf0f00381c56956",
+   "band": 4,
+   "names": [
+    "lotus pod",
+    "lotus seed pod",
+    "lotus"
+   ],
+   "note": "Lotus seeds can sprout after 1,300 years"
+  },
+  {
+   "id": "rambutan",
+   "img": "6589b16f41b95d26",
+   "band": 4,
+   "names": [
+    "rambutan"
+   ],
+   "note": "Its name comes from the Malay word for hair"
+  },
+  {
+   "id": "slideprojector",
+   "img": "ee88205888fc2aaf",
+   "band": 4,
+   "names": [
+    "slide projector",
+    "projector",
+    "carousel projector"
+   ],
+   "note": "The carousel tray holds 80 slides"
+  },
+  {
+   "id": "beesmoker",
+   "img": "cfc29128470e8f60",
+   "band": 4,
+   "names": [
+    "bee smoker",
+    "smoker"
+   ],
+   "note": "Smoke calms bees by masking their alarm scent"
+  },
+  {
+   "id": "carrom",
+   "img": "d9f770d9678d1255",
+   "band": 4,
+   "names": [
+    "carrom",
+    "carrom board",
+    "carom"
+   ],
+   "note": "The striker is flicked with a finger"
+  },
+  {
+   "id": "potoo",
+   "img": "e73cc1155bfbdd9a",
+   "band": 5,
+   "names": [
+    "potoo",
+    "common potoo",
+    "?owl"
+   ],
+   "note": "It sits so still it looks like part of the branch"
+  },
+  {
+   "id": "bandoneon",
+   "img": "666c9df041e9e123",
+   "band": 5,
+   "names": [
+    "bandoneon",
+    "bandonion",
+    "?accordion",
+    "?concertina"
+   ],
+   "note": "The heart of Argentine tango"
+  },
+  {
+   "id": "planisphere",
+   "img": "95d112caccb265ab",
+   "band": 5,
+   "names": [
+    "planisphere",
+    "star finder",
+    "star wheel",
+    "star chart"
+   ],
+   "note": "Turn it to tonight's date and hour to see the stars overhead"
+  },
+  {
+   "id": "coracle",
+   "img": "cef7a531836feaef",
+   "band": 5,
+   "names": [
+    "coracle",
+    "?boat"
+   ],
+   "note": "Light enough to carry on your back"
+  },
+  {
+   "id": "jabuticaba",
+   "img": "f7a64393dcb33d9e",
+   "band": 6,
+   "names": [
+    "jabuticaba",
+    "brazilian grape tree",
+    "?grape"
+   ],
+   "note": "The fruit grows straight out of the trunk"
+  }
+ ]
+}
