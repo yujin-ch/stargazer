@@ -15,7 +15,7 @@ import { Viewer } from "./viewer";
 import { store, type ItemResult, type RunResult } from "./storage";
 import { dayCurve, beatShare, ncdf, type Curve } from "./crowd";
 import { share, shareText, nightTitle, type Standing } from "./share";
-import { atlasScreen, type AtlasStar } from "./atlas";
+import { atlasScreen, type AtlasStar, type AtlasRegion } from "./atlas";
 import { introScreen } from "./intro";
 import { skyCenter, skyBlackHole, skyPulse, skyTravel, skyBoost } from "./themes/pixel-space/sky";
 import { THEMES } from "./library";
@@ -955,21 +955,21 @@ async function resultsScreen(r: RunResult, mode: Run["mode"], fresh = false) {
         <p class="constellation" id="constellation"></p>
         <canvas class="chart sky-chart" id="chart" aria-label="Your run drawn as a constellation"></canvas>
         <p class="legend">${bandsSeen.map((b) => `<span><i class="lg" style="background:${theme.bandColors[b]}"></i>${theme.bandNames[b]}</span>`).join("")}<span><i class="lg zoomed"></i>zoom</span><span><i class="lg skipped"></i>skipped</span></p>
-        <p class="caption">Around the dial: your minute, from the top. Further out: harder. Answers in a row join up; grey dashes on the rim are skips.</p>
+        <details class="how-read"><summary>How to read the dial</summary><p>Your minute runs clockwise from the top. Further out means harder. Answers in a row join up; grey dashes on the rim are skips.</p></details>
 
       </section>
       ${!daily || mystery || CONFIG.conditionsOn ? `<p class="date">${[daily ? "" : "Practice · not saved", mystery ? shownTheme : "", CONFIG.conditionsOn ? dayCondition(r.puzzle).name : ""].filter(Boolean).join(" · ")}</p>` : ""}
-      <div class="final"><span>${r.score}</span><small>POINTS</small></div>
+      <div class="score-block"><div class="final"><span>${r.score}</span><small>POINTS</small></div>
       ${r.partial ? `<p class="small">This run was cut short, so it counts as it stood.</p>` : ""}
-      <p class="verdict" id="verdict"></p>
+      <p class="verdict" id="verdict"></p></div>
       <section class="sb-block hill-block">
         <h3 class="sb-title">ON THE HILL TONIGHT</h3>
         <canvas class="chart hill-chart" id="hill" aria-label="Tonight's scores as a bell-shaped hill, with you standing in gold at your score"></canvas>
         <div class="hill-axis" id="hill-axis"></div>
         <p class="hill-line" id="hill-line"></p>
+        <p class="caption hill-note" id="crowd-note">The hill is the same for everyone: a crowd of stargazers on this exact sky.</p>
       </section>
-      <div class="share-row">${daily ? `<button class="btn primary" id="share">SHARE</button>` : ""}<button class="btn" id="to-universe">YOUR UNIVERSE ✦</button></div>${daily ? `${isTouch ? "" : `<p class="save-row"><button class="link-btn" id="save-card">save the picture</button></p>`}` : ""}
-      <p class="caption" id="crowd-note">Tonight's hill is the same for everyone: how a crowd of stargazers fares on this exact sky.</p>
+      <div class="res-actions"><div class="share-row">${daily ? `<button class="btn primary" id="share">SHARE</button>` : ""}<button class="btn" id="to-universe">YOUR UNIVERSE ✦</button></div>${daily ? `${isTouch ? "" : `<p class="save-row"><button class="link-btn" id="save-card">save the picture</button></p>`}` : ""}</div>
       ${mystery ? `<section class="link-box${r.link ? (r.link.ok ? " found" : " missed") : ""}" id="link-box"></section>` : ""}
       <h3 class="sb-title details-title">HOW THE NIGHT WENT</h3>
       ${breakdown(r)}
@@ -1607,11 +1607,38 @@ function showAtlas(focus = "tonight") {
       <p>Everything you've ever named, as moons, planets, nebulae and black holes around the night you found them.</p>
       <div class="card-actions"><button class="btn primary" id="card-cat">EXPLORE IT</button></div>`,
       wire: (c) => { c.querySelector<HTMLButtonElement>("#card-cat")!.onclick = () => void catalogueScreen(() => showAtlas("catalogue")); } },
-    { id: "community", x: 1640, y: 1180, size: "small", color: "#5a6988", dim: true, label: "COMMUNITY SKIES", sub: "coming soon",
-      card: () => `<h2>Community skies</h2><p>Soon: skies drawn and themed by other stargazers, out here on the edge of the map.</p>` },
+    { id: "community", x: 2200, y: 1600, size: "mid", color: "#e07ab8", dim: true, label: "COMMUNITY SKIES", sub: "coming soon",
+      card: () => `<h2>Community skies</h2><p>Soon: skies drawn and themed by other stargazers. Every empty ring out here is room for one.</p>` },
+    { id: "special", x: 1000, y: -100, size: "mid", color: "#7fe0c4", dim: true, label: "SPECIAL SKIES", sub: "coming soon",
+      card: () => `<h2>Special skies</h2><p>Soon: one-off skies for holidays, eclipses and themed weeks will rise here.</p>` },
+    { id: "galaxy", x: -200, y: 700, size: "mid", color: "#ffd37a", label: "YOUR GALAXY", sub: `${store.allDays().filter((d) => !d.partial).length} nights`, card: () => `<h2>Your galaxy</h2>
+      <p>Every night you've played, as a star system of the things you named.</p>
+      <div class="card-actions"><button class="btn primary" id="card-gal">FLY IN</button></div>`,
+      wire: (c) => { c.querySelector<HTMLButtonElement>("#card-gal")!.onclick = () => void catalogueScreen(() => showAtlas("galaxy")); } },
   ];
   stars.push(...menu);
-  atlasScreen(app, stars, { title: "STAR ATLAS", footer: fmtDate(localDateKey()), focus, onBack: () => { whoosh(false, 1.3, 0.07); frontPage(true); } });
+  // the trail of past nights winding down from PAST SKIES: one dated star per night, newest first
+  past.filter((p) => !p.test).slice(0, 14).forEach((p, i) => {
+    const d = new Date(p.key + "T12:00:00").toLocaleDateString(undefined, { month: "short", day: "numeric" }).toUpperCase();
+    stars.push({
+      id: `night-${p.key}`, x: 1000 + Math.sin(i * 0.85 + 0.6) * 150, y: 1420 + i * 150, size: "small",
+      color: p.test ? "#6e6890" : p.r ? "#c9c2ff" : "#8f88b8", dim: p.test,
+      label: d, sub: p.test ? "test run" : p.r ? `${p.r.score} pts` : "missed",
+      card: () => `<h2>${esc(shortDate(p.key))}</h2>
+        <p class="small">${p.test ? "A test run, from before the first real night." : p.r ? `You spotted <b>${p.r.score}</b> points that night.` : "You missed this one. You can still look; it just won't count."}</p>
+        <div class="card-actions">${p.r && !p.test ? `<button class="btn" data-log="${p.key}">LOG</button>` : ""}${p.test ? "" : `<button class="btn${p.r ? "" : " primary"}" data-replay="${p.key}">${p.r ? "AGAIN" : "LOOK"}</button>`}</div>`,
+      wire: (c) => {
+        c.querySelector<HTMLButtonElement>("[data-log]")?.addEventListener("click", async () => { await usePack(p.key); resultsScreen(store.today(p.key)!, "daily"); });
+        c.querySelector<HTMLButtonElement>("[data-replay]")?.addEventListener("click", () => void playPastNight(p.key));
+      },
+    });
+  });
+  const regions: AtlasRegion[] = [
+    { id: "community", label: "COMMUNITY SKIES", sub: "made by players · room for hundreds", x: 2200, y: 1600, rx: 560, ry: 420, color: "#e07ab8", slots: 34 },
+    { id: "special", label: "SPECIAL SKIES", sub: "holidays · eclipses · themed weeks", x: 1000, y: -100, rx: 520, ry: 270, color: "#7fe0c4", slots: 10 },
+    { id: "galaxy", label: "YOUR GALAXY", sub: "every night you've played", x: -200, y: 700, rx: 430, ry: 330, color: "#ffd37a", galaxy: true },
+  ];
+  atlasScreen(app, stars, { title: "STAR ATLAS", footer: fmtDate(localDateKey()), focus, regions, onBack: () => { whoosh(false, 1.3, 0.07); frontPage(true); } });
 }
 
 // tonight's own photo set, if one has been published (falls back to the rotating themes)
@@ -1654,6 +1681,11 @@ const MENU_CARDS: Record<string, { html: () => string; wire?: (c: HTMLElement) =
       const acct = c.querySelector<HTMLElement>("#acct");
       if (acct) { renderAccount(acct); onAccountChange(() => acct.isConnected && renderAccount(acct)); void warmUp().then(() => acct.isConnected && renderAccount(acct)); }
     } },
+  account: { html: () => `<h2>Your account</h2><div class="acct" id="acct"></div>`,
+    wire: (c) => {
+      const acct = c.querySelector<HTMLElement>("#acct")!;
+      renderAccount(acct); onAccountChange(() => acct.isConnected && renderAccount(acct)); void warmUp().then(() => acct.isConnected && renderAccount(acct));
+    } },
   credits: { html: () => `<h2>Credits</h2><p>${theme.credits}</p><p class="small">Photographs generated with Qwen-Image, cut out and pixelated for the telescope.</p>` },
 };
 
@@ -1686,6 +1718,41 @@ function renderAccount(box: HTMLElement) {
     const err = await signInWithEmail(email);
     msg.textContent = err || "Check your email for a sign-in link.";
   };
+}
+
+/** Top-right account badge on the front page, the atlas and the results: SIGN IN, or your initial in a brass ring. */
+const badge = document.createElement("button");
+badge.type = "button";
+badge.className = "acct-badge";
+badge.hidden = true;
+badge.onclick = () => { ui("tap"); menuSheet("account"); };
+function renderBadge() {
+  const email = signedInEmail();
+  if (email) {
+    badge.classList.add("in"); badge.classList.remove("wait");
+    badge.innerHTML = `<b>${esc(email.trim()[0]?.toUpperCase() ?? "✦")}</b><i aria-hidden="true"></i>`;
+    badge.setAttribute("aria-label", `Your account: signed in as ${email}`);
+  } else if (hadSession()) {
+    badge.classList.add("in", "wait");
+    badge.innerHTML = `<b>·</b>`;
+    badge.setAttribute("aria-label", "Your account");
+  } else {
+    badge.classList.remove("in", "wait");
+    badge.innerHTML = `SIGN IN`;
+    badge.setAttribute("aria-label", "Sign in to keep your nights on every device");
+  }
+}
+/** Show the badge only where it can't get in the way: not during a run, the replay or Your Universe. */
+function placeBadge() {
+  const ok = accountsOn && !!app.querySelector(":scope > .intro, :scope > .atlas, :scope > .results:not(.catalogue)") && !document.querySelector(".replay");
+  badge.hidden = !ok;
+  if (ok) renderBadge();
+}
+if (accountsOn) {
+  document.body.appendChild(badge);
+  onAccountChange(placeBadge);
+  new MutationObserver(placeBadge).observe(app, { childList: true });
+  new MutationObserver(placeBadge).observe(document.body, { childList: true });
 }
 
 /** A card over the front page; closes on ✕, Escape, or a tap outside it. */
