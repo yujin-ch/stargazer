@@ -32,7 +32,7 @@
 2026-12-01|1|pizza|whole pepperoni pizza with melted cheese, top view|pizza|Pizza margherita was named for a queen of Italy|
 2026-12-01|1|schoolbus|yellow American school bus, three-quarter view|school bus, bus|The yellow was picked in 1939 so drivers spot it in the dim early morning|
 2026-12-01|2|lobster|red cooked lobster with two big claws and long antennae, side view|lobster|Lobsters taste with hairs on their legs|
-2026-12-01|2|magnifyingglass|magnifying glass with a round glass lens in a brass rim and a wooden handle|magnifying glass, magnifier, hand lens, loupe|A water drop on a leaf works as a tiny magnifier|
+2026-12-01|2|magnifyingglass|magnifying glass with a clear round glass lens in a brass rim and a dark wooden handle, lying diagonally, the lens enlarging part of the handle behind it|magnifying glass, magnifier, hand lens, loupe|A water drop on a leaf works as a tiny magnifier|grey
 2026-12-01|2|wrench|chrome adjustable wrench, top view|wrench, spanner, adjustable wrench, adjustable spanner, monkey wrench|An adjustable wrench is called a "shifter" in Australia|
 2026-12-01|2|pretzel|large soft brown pretzel in the classic twisted knot shape, sprinkled with coarse salt|pretzel|The twist was said to look like arms folded in prayer|
 2026-12-01|2|slippers|pair of fluffy pink house slippers|slippers, slipper, house shoes|Cinderella's slipper may first have been fur, not glass|
@@ -90,7 +90,7 @@
 2026-12-03|1|basketball|orange basketball with black lines|basketball, ball|The first games used a peach basket as the hoop|
 2026-12-03|1|airplane|white passenger jet airliner flying, three-quarter view|airplane, aeroplane, plane, jet, airliner, aircraft|An airliner cruises at about 900 km/h|
 2026-12-03|2|kangaroo|red kangaroo standing upright on its strong hind legs with its long tail|kangaroo, roo|Kangaroos can't walk backward|
-2026-12-03|2|tennisracket|tennis racket with strings, and a yellow tennis ball|tennis racket, racket, racquet, tennis racquet|The fuzzy ball was made yellow in 1972 to show up on TV|
+2026-12-03|2|tennisracket|tennis racket with a black and red frame and plain white strings, lying diagonally, with one bright yellow tennis ball beside it|tennis racket, racket, racquet, tennis racquet|The fuzzy ball was made yellow in 1972 to show up on TV|
 2026-12-03|2|saw|carpenter's handsaw with a wooden handle and a toothed steel blade|saw, handsaw, hand saw|Saw teeth bend alternately left and right so the blade doesn't jam|
 2026-12-03|2|trumpet|brass trumpet with three valves, side view|trumpet, cornet|Trumpets were found in Tutankhamun's tomb|
 2026-12-03|2|telescope|brass refracting telescope on a wooden tripod|telescope, spyglass|Galileo's first telescope magnified only three times|
@@ -191,7 +191,7 @@
 2026-12-06|3|segway|Segway, a two-wheeled self-balancing scooter with a handle|segway, scooter, hoverboard|It balances using gyroscopes and tilt sensors|
 2026-12-06|3|trowel|garden trowel with a pointed steel blade and a wooden handle|trowel, garden trowel|Masons use a flat trowel; gardeners a scooped one|
 2026-12-06|4|hoopoe|hoopoe bird with orange plumage, black-and-white striped wings and a fanned crest|hoopoe|Its call is a soft hoop-hoop-hoop|
-2026-12-06|4|lyrebird|lyrebird with its long lacy tail fanned up in a lyre shape|lyrebird, lyre bird|It can mimic chainsaws and camera shutters|
+2026-12-06|4|lyrebird|male superb lyrebird standing on the ground, side view: a brown pheasant-sized bird with its long tail raised and fanned up over its back, two broad curved outer tail feathers banded brown and cream forming the outline of a lyre, filled with fine silvery-white lacy filament feathers between them|lyrebird, lyre bird|It can mimic chainsaws and camera shutters|
 2026-12-06|4|lotuspod|dried brown lotus seed pod, a flat-topped cone with round holes and seeds|lotus pod, lotus seed pod, lotus|Lotus seeds can sprout after 1,300 years|
 2026-12-06|4|rambutan|bunch of rambutans, red fruit covered in soft hairy spines|rambutan|Its name comes from the Malay word for hair|
 2026-12-06|4|slideprojector|vintage slide projector with a round carousel tray on top|slide projector, projector, carousel projector|The carousel tray holds 80 slides|
@@ -200,5 +200,5 @@
 2026-12-06|5|potoo|potoo bird, a camouflaged grey-brown bird perched upright on a broken branch with huge eyes|potoo, common potoo, ?owl|It sits so still it looks like part of the branch|
 2026-12-06|5|bandoneon|bandoneon, a square button concertina with pleated bellows|bandoneon, bandonion, ?accordion, ?concertina|The heart of Argentine tango|
 2026-12-06|5|planisphere|round planisphere star finder, a star chart disc with a rotating window|planisphere, star finder, star wheel, star chart|Turn it to tonight's date and hour to see the stars overhead|
-2026-12-06|5|coracle|coracle, a small round boat of woven willow covered in black hide, with a paddle|coracle, ?boat|Light enough to carry on your back|
-2026-12-06|6|jabuticaba|jabuticaba tree trunk covered in dark purple grape-like fruits growing straight on the bark|jabuticaba, brazilian grape tree, ?grape|The fruit grows straight out of the trunk|
+2026-12-06|5|coracle|traditional Welsh coracle: a small round bowl-shaped one-person boat, its outside covered in smooth black tarred hide, a woven willow lattice frame visible only around the rim and inside, a plank seat across the middle and one short wooden paddle leaning on it, three-quarter view from slightly above|coracle, ?boat|Light enough to carry on your back|
+2026-12-06|6|jabuticaba|close-up of one short, thick section of a jabuticaba tree trunk with two stubby forked branches, the grey-brown mottled bark densely covered all over in clusters of glossy round dark purple-black grape-like fruits growing straight out of the bark, filling most of the frame|jabuticaba, brazilian grape tree, ?grape|The fruit grows straight out of the trunk|
