@@ -96,7 +96,7 @@ export function atlasScreen(app: HTMLElement, starsIn: AtlasStar[], opts: { titl
       <button class="btn" id="atlas-in" aria-label="Zoom in">+</button>
       <button class="btn atlas-home" id="atlas-home" aria-label="Back to tonight's star">◎ HOME</button>
     </div>
-    <div class="atlas-mini-box"><canvas class="atlas-mini" id="atlas-mini" width="240" height="240" aria-label="Map of the whole charted sky; tap to fly there"></canvas><small>WHOLE SKY</small></div>
+    <div class="atlas-mini-box"><canvas class="atlas-mini" id="atlas-mini" width="240" height="240" aria-label="Map of the whole charted sky; tap to fly there"></canvas><small id="atlas-mini-label">CHARTED SKY</small></div>
     <p class="atlas-coord" id="atlas-coord" aria-live="off"></p>
     <section class="atlas-card hidden" id="atlas-card" role="dialog" aria-live="polite"></section>
     <p class="atlas-foot">${opts.footer}</p>
@@ -173,6 +173,9 @@ export function atlasScreen(app: HTMLElement, starsIn: AtlasStar[], opts: { titl
   const home = () => Math.max(minS(), Math.min(1, W() / 1100, H() / 1150));
   let far = false, painted = 0;
   let pickAt: { mx: number; my: number; x: number; y: number; ok: boolean } | null = null;
+  // the minimap's reach: the furthest charted thing from tonight's sky, plus a margin
+  const usedR = Math.max(0, ...stars.map((t) => Math.max(Math.abs(t.cx), Math.abs(t.cy)) + 300), ...regions.map((r) => Math.max(Math.abs(r.cx), Math.abs(r.cy)) + 400));
+  let miniR = WORLD;
 
   const paint = () => {
     painted = 0;
@@ -295,11 +298,18 @@ export function atlasScreen(app: HTMLElement, starsIn: AtlasStar[], opts: { titl
     });
     // the little map: the whole charted sky, north up. The home zone, the named regions, every star (community skies
     // as dots), and the box you're looking through. Tap it to fly there.
-    const M = mini.width, k = M / (2 * WORLD * K), o = M / 2;
+    // it shows as much of the sky as is in use (everything charted so far, plus where you're looking), at least
+    // +-2500, so the box you look through stays big enough to read; it grows to the whole +-5000 as skies spread out
+    const vcx = (w / 2 - view.x) / s / K, vcy = (h / 2 - view.y) / s / K, vhx = w / s / K / 2, vhy = h / s / K / 2;
+    miniR = Math.min(WORLD, Math.max(2500, usedR, Math.abs(vcx) + vhx, Math.abs(vcy) + vhy));
+    miniR = Math.ceil(miniR / 500) * 500;
+    const lbl = document.getElementById("atlas-mini-label");
+    if (lbl) lbl.textContent = miniR >= WORLD ? "WHOLE SKY" : `CHARTED SKY ±${miniR}`;
+    const M = mini.width, k = M / (2 * miniR * K), o = M / 2;
     mg.clearRect(0, 0, M, M);
     mg.fillStyle = "#0b0918"; mg.fillRect(0, 0, M, M);
     mg.fillStyle = "rgba(120,110,170,0.16)";
-    for (let c = -4000; c <= 4000; c += 1000) { const p = Math.round(o + c * K * k); mg.fillRect(p, 0, 1, M); mg.fillRect(0, p, M, 1); }
+    for (let c = -Math.floor(miniR / 1000) * 1000; c <= miniR; c += 1000) { const p = Math.round(o + c * K * k); mg.fillRect(p, 0, 1, M); mg.fillRect(0, p, M, 1); }
     if (opts.homeRadius) {
       mg.fillStyle = "rgba(242,211,138,0.10)"; mg.strokeStyle = "rgba(242,211,138,0.75)"; mg.lineWidth = 1.5;
       mg.setLineDash([3, 2]); mg.beginPath(); mg.arc(o, o, opts.homeRadius * K * k, 0, 7); mg.fill(); mg.stroke(); mg.setLineDash([]);
@@ -314,7 +324,7 @@ export function atlasScreen(app: HTMLElement, starsIn: AtlasStar[], opts: { titl
       mg.fillStyle = st.color; mg.fillRect(Math.round(o + st.x * k - big / 2), Math.round(o + st.y * k - big / 2), big, big);
     }
     if (pickAt) { mg.fillStyle = pickAt.ok ? "#9bd34a" : "#f6757a"; mg.fillRect(Math.round(o + pickAt.mx * k) - 3, Math.round(o + pickAt.my * k) - 3, 6, 6); }
-    const bw = Math.max(6, (w / s) * k), bh = Math.max(6, (h / s) * k);
+    const bw = Math.max(4, (w / s) * k), bh = Math.max(4, (h / s) * k);
     const bx = o + ((w / 2 - view.x) / s) * k - bw / 2, by = o + ((h / 2 - view.y) / s) * k - bh / 2;
     mg.strokeStyle = "#ffffff"; mg.lineWidth = 2;
     mg.strokeRect(Math.round(bx) + 0.5, Math.round(by) + 0.5, Math.round(bw), Math.round(bh));
@@ -400,7 +410,7 @@ export function atlasScreen(app: HTMLElement, starsIn: AtlasStar[], opts: { titl
   document.getElementById("atlas-out")!.onclick = () => zoomBy(1 / 1.4);
   document.getElementById("atlas-home")!.onclick = () => animateTo(0, 0, home(), 700);
   mini.onclick = (e) => {
-    const b = mini.getBoundingClientRect(), R = WORLD * K;
+    const b = mini.getBoundingClientRect(), R = miniR * K;
     animateTo((((e.clientX - b.left) / b.width) * 2 - 1) * R, (((e.clientY - b.top) / b.height) * 2 - 1) * R, Math.max(view.s, home() * 0.6), 700);
   };
   window.addEventListener("resize", apply);

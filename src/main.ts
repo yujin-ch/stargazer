@@ -1929,6 +1929,8 @@ function showAtlas(focus = "tonight") {
       <p>Everything you've ever named, as moons, planets, nebulae and black holes around the night you found them.</p>
       <div class="card-actions"><button class="btn primary" id="card-cat">EXPLORE IT</button></div>`,
       wire: (c) => { c.querySelector<HTMLButtonElement>("#card-cat")!.onclick = () => void catalogueScreen(() => showAtlas("catalogue")); } },
+    { id: "pvp", x: 480, y: -260, size: "mid", color: "#f6757a", dim: true, label: "PVP ARENA", sub: "coming soon",
+      card: () => `<h2>PvP arena</h2><p>Soon: race a friend or a stranger through the same sky, live, and see who names more before the clock runs out.</p>` },
     { id: "special", x: 0, y: 440, size: "mid", color: "#7fe0c4", dim: true, label: "SPECIAL SKIES", sub: "coming soon",
       card: () => `<h2>Special skies</h2><p>Soon: one-off skies for holidays, eclipses and themed weeks will rise here.</p>` },
     { id: "galaxy", x: -480, y: 120, size: "mid", color: "#ffd37a", label: "YOUR GALAXY", sub: `${store.allDays().filter((d) => !d.partial).length} nights`, card: () => `<h2>Your galaxy</h2>
@@ -1954,6 +1956,7 @@ function showAtlas(focus = "tonight") {
     });
   });
   const regions: AtlasRegion[] = [
+    { id: "pvp", label: "PVP ARENA", sub: "head to head · coming soon", x: 480, y: -260, rx: 200, ry: 130, color: "#f6757a", slots: 8 },
     { id: "special", label: "SPECIAL SKIES", sub: "holidays · eclipses · themed weeks", x: 0, y: 440, rx: 208, ry: 108, color: "#7fe0c4", slots: 10 },
     { id: "galaxy", label: "YOUR GALAXY", sub: "every night you've played", x: -480, y: 120, rx: 172, ry: 132, color: "#ffd37a", galaxy: true },
     ...communityRegions(),
