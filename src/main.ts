@@ -1573,7 +1573,7 @@ function showAtlas(focus = "tonight") {
   const cat = store.catalogue();
   const stars: AtlasStar[] = [];
   stars.push({
-    id: "tonight", x: 1000, y: 1000, size: "huge", color: "#fee761",
+    id: "tonight", x: 0, y: 0, size: "huge", color: "#fee761",
     label: "TONIGHT'S SKY",
     sub: done && !done.partial ? `${done.score} pts · next sky in ${nextSkyIn()}` : `60 seconds${CONFIG.conditionsOn ? ` · ${cond.name}` : ""}`,
     open: () => (done ? resultsScreen(done, "daily") : openPlay("daily")),
@@ -1586,7 +1586,7 @@ function showAtlas(focus = "tonight") {
     return { key, r, test: key < CONFIG.firstNight };
   });
   if (past.length) stars.push({
-    id: "past-label", x: 1000, y: 1260, size: "big", color: "#b8aed0",
+    id: "past-label", x: 0, y: -104, size: "big", color: "#b8aed0",
     label: "PAST SKIES", sub: past.some((p) => !p.test) ? `${past.filter((p) => p.r && !p.test).length} of ${past.filter((p) => !p.test).length} seen` : "test runs so far",
     card: () => `<h2>Past skies</h2>
       <p class="small">Missed nights can still be looked at. They just don't count.</p>
@@ -1599,19 +1599,19 @@ function showAtlas(focus = "tonight") {
     },
   });
   const menu: AtlasStar[] = [
-    { id: "log", x: 1320, y: 720, size: "big", color: "#e07ab8", label: "OBSERVING LOG", card: () => `<h2>Observing log</h2>
+    { id: "log", x: 128, y: 112, size: "big", color: "#e07ab8", label: "OBSERVING LOG", card: () => `<h2>Observing log</h2>
       <dl class="figures"><div><dt>NIGHTS</dt><dd>${stats.played}</dd></div><div><dt>BEST</dt><dd>${stats.best}</dd></div><div><dt>STREAK</dt><dd>${stats.streak}</dd></div><div><dt>FOUND</dt><dd>${cat.size}</dd></div></dl>
       ${done ? `<button class="btn" id="card-log">TONIGHT'S LOG</button>` : `<p class="small">Tonight's sky is still waiting.</p>`}`,
       wire: (c) => { const b = c.querySelector<HTMLButtonElement>("#card-log"); if (b) b.onclick = () => resultsScreen(done!, "daily"); } },
-    { id: "catalogue", x: 680, y: 720, size: "big", color: "#f2d38a", label: "YOUR UNIVERSE", sub: `${cat.size} found`, card: () => `<h2>Your universe</h2>
+    { id: "catalogue", x: -128, y: 112, size: "big", color: "#f2d38a", label: "YOUR UNIVERSE", sub: `${cat.size} found`, card: () => `<h2>Your universe</h2>
       <p>Everything you've ever named, as moons, planets, nebulae and black holes around the night you found them.</p>
       <div class="card-actions"><button class="btn primary" id="card-cat">EXPLORE IT</button></div>`,
       wire: (c) => { c.querySelector<HTMLButtonElement>("#card-cat")!.onclick = () => void catalogueScreen(() => showAtlas("catalogue")); } },
-    { id: "community", x: 2200, y: 1600, size: "mid", color: "#e07ab8", dim: true, label: "COMMUNITY SKIES", sub: "coming soon",
+    { id: "community", x: 480, y: -240, size: "mid", color: "#e07ab8", dim: true, label: "COMMUNITY SKIES", sub: "coming soon",
       card: () => `<h2>Community skies</h2><p>Soon: skies drawn and themed by other stargazers. Every empty ring out here is room for one.</p>` },
-    { id: "special", x: 1000, y: -100, size: "mid", color: "#7fe0c4", dim: true, label: "SPECIAL SKIES", sub: "coming soon",
+    { id: "special", x: 0, y: 440, size: "mid", color: "#7fe0c4", dim: true, label: "SPECIAL SKIES", sub: "coming soon",
       card: () => `<h2>Special skies</h2><p>Soon: one-off skies for holidays, eclipses and themed weeks will rise here.</p>` },
-    { id: "galaxy", x: -200, y: 700, size: "mid", color: "#ffd37a", label: "YOUR GALAXY", sub: `${store.allDays().filter((d) => !d.partial).length} nights`, card: () => `<h2>Your galaxy</h2>
+    { id: "galaxy", x: -480, y: 120, size: "mid", color: "#ffd37a", label: "YOUR GALAXY", sub: `${store.allDays().filter((d) => !d.partial).length} nights`, card: () => `<h2>Your galaxy</h2>
       <p>Every night you've played, as a star system of the things you named.</p>
       <div class="card-actions"><button class="btn primary" id="card-gal">FLY IN</button></div>`,
       wire: (c) => { c.querySelector<HTMLButtonElement>("#card-gal")!.onclick = () => void catalogueScreen(() => showAtlas("galaxy")); } },
@@ -1621,7 +1621,7 @@ function showAtlas(focus = "tonight") {
   past.filter((p) => !p.test).slice(0, 14).forEach((p, i) => {
     const d = new Date(p.key + "T12:00:00").toLocaleDateString(undefined, { month: "short", day: "numeric" }).toUpperCase();
     stars.push({
-      id: `night-${p.key}`, x: 1000 + Math.sin(i * 0.85 + 0.6) * 150, y: 1420 + i * 150, size: "small",
+      id: `night-${p.key}`, x: Math.round(Math.sin(i * 0.85 + 0.6) * 60 * 100) / 100, y: -168 - i * 60, size: "small",
       color: p.test ? "#6e6890" : p.r ? "#c9c2ff" : "#8f88b8", dim: p.test,
       label: d, sub: p.test ? "test run" : p.r ? `${p.r.score} pts` : "missed",
       card: () => `<h2>${esc(shortDate(p.key))}</h2>
@@ -1634,9 +1634,9 @@ function showAtlas(focus = "tonight") {
     });
   });
   const regions: AtlasRegion[] = [
-    { id: "community", label: "COMMUNITY SKIES", sub: "made by players · room for hundreds", x: 2200, y: 1600, rx: 560, ry: 420, color: "#e07ab8", slots: 34 },
-    { id: "special", label: "SPECIAL SKIES", sub: "holidays · eclipses · themed weeks", x: 1000, y: -100, rx: 520, ry: 270, color: "#7fe0c4", slots: 10 },
-    { id: "galaxy", label: "YOUR GALAXY", sub: "every night you've played", x: -200, y: 700, rx: 430, ry: 330, color: "#ffd37a", galaxy: true },
+    { id: "community", label: "COMMUNITY SKIES", sub: "made by players · room for hundreds", x: 480, y: -240, rx: 224, ry: 168, color: "#e07ab8", slots: 34 },
+    { id: "special", label: "SPECIAL SKIES", sub: "holidays · eclipses · themed weeks", x: 0, y: 440, rx: 208, ry: 108, color: "#7fe0c4", slots: 10 },
+    { id: "galaxy", label: "YOUR GALAXY", sub: "every night you've played", x: -480, y: 120, rx: 172, ry: 132, color: "#ffd37a", galaxy: true },
   ];
   atlasScreen(app, stars, { title: "STAR ATLAS", footer: fmtDate(localDateKey()), focus, regions, onBack: () => { whoosh(false, 1.3, 0.07); frontPage(true); } });
 }

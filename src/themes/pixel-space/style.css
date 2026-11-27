@@ -317,8 +317,8 @@ a { color: var(--cyan); }
 .atlas.dragging { cursor: grabbing; }
 .atlas.dragging .astar { pointer-events: none; }
 @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
-.atlas-map { -webkit-mask-image: radial-gradient(closest-side, #000 82%, transparent 100%); mask-image: radial-gradient(closest-side, #000 82%, transparent 100%); position: absolute; left: 0; top: 0; width: 5000px; height: 5000px; transform-origin: 0 0; will-change: transform; }
-.atlas-sky, .atlas-lines { position: absolute; inset: 0; width: 5000px; height: 5000px; image-rendering: pixelated; }
+.atlas-map { position: absolute; left: 0; top: 0; width: 0; height: 0; transform-origin: 0 0; will-change: transform; }
+.atlas-sky, .atlas-rulers { position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; pointer-events: none; }
 .atlas.diving .atlas-map { transition: filter 0.9s steps(6); filter: brightness(1.6); }
 .atlas.diving::after { content: ""; position: absolute; inset: 0; background: #07060f; animation: dive-out 0.9s steps(6) forwards; pointer-events: none; }
 @keyframes dive-out { 0%, 55% { opacity: 0; } 100% { opacity: 1; } }
@@ -786,3 +786,9 @@ body.bh-glow::after { animation: bh-glow 1.8s ease-out; }
 @media (max-width: 600px) { .atlas.far .aregion b { font-size: 9px; letter-spacing: 1px; } .atlas.far .aregion small { display: none; } }
 .atlas.mid .astar.small span small { display: none; }
 .atlas.far .astar.big span { display: none; }
+
+.atlas-coord { position: absolute; left: 50%; translate: -50% 0; bottom: max(8px, env(safe-area-inset-bottom)); margin: 0; padding: 2px 8px; font-size: 17px; color: var(--brass-hi); background: rgba(13,10,26,0.7); border: 1px solid #3a2f52; pointer-events: none; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.atlas-coord::before { content: "◎ "; color: var(--dim); }
+.atlas.card-open .atlas-coord { display: none; }
+.card-coord { margin: 10px 0 0 !important; font-size: 15px; color: var(--dim); font-variant-numeric: tabular-nums; }
+@media (max-width: 520px) { .atlas-coord { bottom: max(52px, calc(env(safe-area-inset-bottom) + 46px)); font-size: 15px; } }
