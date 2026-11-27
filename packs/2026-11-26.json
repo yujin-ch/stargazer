@@ -1,6 +1,7 @@
 {
  "date": "2026-11-26",
  "theme": "photos",
+ "bands": 5,
  "items": [
   {
    "id": "teapot",
@@ -282,25 +283,6 @@
    "img": "39e6b86fb512079b"
   },
   {
-   "id": "tapir",
-   "band": 3,
-   "names": [
-    "tapir",
-    "malayan tapir"
-   ],
-   "note": "Its short trunk is a nose and upper lip",
-   "img": "43f3f20a3037bc3d"
-  },
-  {
-   "id": "armadillo",
-   "band": 3,
-   "names": [
-    "armadillo"
-   ],
-   "note": "Almost always gives birth to identical quadruplets",
-   "img": "06b7ee4ae9536e2f"
-  },
-  {
    "id": "frenchhorn",
    "band": 3,
    "names": [
@@ -321,16 +303,6 @@
    ],
    "note": "One of the oldest tools in the kitchen",
    "img": "435ad6dca85163b2"
-  },
-  {
-   "id": "gyroscope",
-   "band": 3,
-   "names": [
-    "gyroscope",
-    "gyro"
-   ],
-   "note": "A spinning wheel that refuses to tip",
-   "img": "e8f3165a6865baf7"
   },
   {
    "id": "nautilus",
@@ -376,8 +348,37 @@
    "img": "e3499fcff68f7646"
   },
   {
+   "id": "tapir",
+   "band": 4,
+   "names": [
+    "tapir",
+    "malayan tapir"
+   ],
+   "note": "Its short trunk is a nose and upper lip",
+   "img": "43f3f20a3037bc3d"
+  },
+  {
+   "id": "armadillo",
+   "band": 4,
+   "names": [
+    "armadillo"
+   ],
+   "note": "Almost always gives birth to identical quadruplets",
+   "img": "06b7ee4ae9536e2f"
+  },
+  {
+   "id": "gyroscope",
+   "band": 4,
+   "names": [
+    "gyroscope",
+    "gyro"
+   ],
+   "note": "A spinning wheel that refuses to tip",
+   "img": "e8f3165a6865baf7"
+  },
+  {
    "id": "okapi",
-   "band": 3,
+   "band": 4,
    "names": [
     "okapi",
     "forest giraffe",
@@ -388,7 +389,7 @@
   },
   {
    "id": "pangolin",
-   "band": 3,
+   "band": 4,
    "names": [
     "pangolin",
     "scaly anteater"
@@ -398,7 +399,7 @@
   },
   {
    "id": "theremin",
-   "band": 4,
+   "band": 5,
    "names": [
     "theremin"
    ],

@@ -1,6 +1,7 @@
 {
  "date": "2026-11-27",
  "theme": "photos",
+ "bands": 5,
  "items": [
   {
    "id": "key",
@@ -73,17 +74,6 @@
    "img": "557f0a762fc5508b"
   },
   {
-   "id": "gramophone",
-   "band": 2,
-   "names": [
-    "gramophone",
-    "phonograph",
-    "record player"
-   ],
-   "note": "The horn made it loud with no electricity",
-   "img": "c383ae3c6a195b66"
-  },
-  {
    "id": "hourglass",
    "band": 2,
    "names": [
@@ -94,6 +84,17 @@
    ],
    "note": "Sailors used them to time the ship's watch",
    "img": "e334ad0b36628d32"
+  },
+  {
+   "id": "gramophone",
+   "band": 3,
+   "names": [
+    "gramophone",
+    "phonograph",
+    "record player"
+   ],
+   "note": "The horn made it loud with no electricity",
+   "img": "c383ae3c6a195b66"
   },
   {
    "id": "artichoke",
@@ -126,16 +127,6 @@
    "img": "ddeef9e23dabe1dc"
   },
   {
-   "id": "trebuchet",
-   "band": 3,
-   "names": [
-    "trebuchet",
-    "?catapult"
-   ],
-   "note": "A counterweight hurls the stone",
-   "img": "1e257e9e4694a605"
-  },
-  {
    "id": "dragonfruit",
    "band": 3,
    "names": [
@@ -147,6 +138,16 @@
    "img": "0a82500d0b890645"
   },
   {
+   "id": "trebuchet",
+   "band": 4,
+   "names": [
+    "trebuchet",
+    "?catapult"
+   ],
+   "note": "A counterweight hurls the stone",
+   "img": "1e257e9e4694a605"
+  },
+  {
    "id": "zither",
    "band": 4,
    "names": [
@@ -154,29 +155,6 @@
    ],
    "note": "Strings stretched over a flat box",
    "img": "a59ba6f8b50cc09e"
-  },
-  {
-   "id": "enigmamachine",
-   "band": 4,
-   "names": [
-    "enigma",
-    "enigma machine",
-    "cipher machine"
-   ],
-   "note": "Its code was broken at Bletchley Park",
-   "img": "0de89c983b2a84e5"
-  },
-  {
-   "id": "quern",
-   "band": 4,
-   "names": [
-    "quern",
-    "quern stone",
-    "millstone",
-    "hand mill"
-   ],
-   "note": "Two stones grind grain to flour",
-   "img": "32eef30d25ed924f"
   },
   {
    "id": "tarsier",
@@ -188,8 +166,31 @@
    "img": "f412183d437c200d"
   },
   {
+   "id": "enigmamachine",
+   "band": 5,
+   "names": [
+    "enigma",
+    "enigma machine",
+    "cipher machine"
+   ],
+   "note": "Its code was broken at Bletchley Park",
+   "img": "0de89c983b2a84e5"
+  },
+  {
+   "id": "quern",
+   "band": 5,
+   "names": [
+    "quern",
+    "quern stone",
+    "millstone",
+    "hand mill"
+   ],
+   "note": "Two stones grind grain to flour",
+   "img": "32eef30d25ed924f"
+  },
+  {
    "id": "nudibranch",
-   "band": 4,
+   "band": 5,
    "names": [
     "nudibranch",
     "sea slug"
@@ -199,7 +200,7 @@
   },
   {
    "id": "coelacanth",
-   "band": 4,
+   "band": 5,
    "names": [
     "coelacanth"
    ],

@@ -1,6 +1,6 @@
 import "@fontsource/press-start-2p";
 import "@fontsource/vt323";
-import { CONFIG, tierFor, answerPoints, SITE_URL, TIP_URL } from "./config";
+import { CONFIG, tierFor, answerPoints, BH, SITE_URL, TIP_URL } from "./config";
 import { drawShareCard, cardBlob } from "./sharecard";
 import { OBJECTS, BY_ID, loadDayPack, loadPackIndex, shownNames, themeName, themeInfo, photoHi, type SkyObject } from "./library";
 import { openUniverse, type UBody, type UNight } from "./universe";
@@ -513,7 +513,7 @@ function unpause(now: number) {
   run.phase = "playing";
   viewer.covered = false;
   el.overlay.textContent = "";
-  blackHole(run.sky[run.i]?.band === 3);
+  blackHole(run.sky[run.i]?.band === BH);
   if ((el.guess as HTMLInputElement).value) onTyped(el.guess as HTMLInputElement);
 }
 
@@ -539,7 +539,7 @@ function showObject(now: number) {
     return finish(now, true);
   }
   viewer.show(obj, now);
-  skyBoost(obj.band === 3 ? 0.4 : 1.2); // swing across space to the next object (a black hole pulls you up short)
+  skyBoost(obj.band === BH ? 0.4 : 1.2); // swing across space to the next object (a black hole pulls you up short)
   viewer.preload(run.sky.slice(run.i + 1, run.i + 3));
   warmth((el.guess as HTMLInputElement).value);
   run.attempt = "";
@@ -550,7 +550,7 @@ function showObject(now: number) {
   el.label.dataset.band = mysteryNight ? "" : String(obj.band);
   el.band.textContent = mysteryNight ? bandText : "\u00a0";
   el.band.dataset.band = String(obj.band);
-  blackHole(obj.band === 3);
+  blackHole(obj.band === BH);
   el.count.textContent = `${run.i + 1}/${run.sky.length}`;
 }
 
@@ -568,7 +568,7 @@ function named(obj: SkyObject, typed: string) {
   run.score += points;
   run.items.push({ id: obj.id, outcome: zoomed ? "zoomed" : "named", typed: typed.trim(), points, t: clockAt(now) });
   mini?.add(obj.band, viewer.spriteCanvas(obj, 1));
-  if (obj.band === 3) { document.body.classList.remove("bh-glow"); void document.body.offsetWidth; document.body.classList.add("bh-glow"); setTimeout(() => document.body.classList.remove("bh-glow"), 1800); }
+  if (obj.band === BH) { document.body.classList.remove("bh-glow"); void document.body.offsetWidth; document.body.classList.add("bh-glow"); setTimeout(() => document.body.classList.remove("bh-glow"), 1800); }
   (el.guess as HTMLInputElement).value = "";
   run.graceUntil = now + CONFIG.graceMs;
   run.graceObj = obj;
@@ -599,7 +599,7 @@ function named(obj: SkyObject, typed: string) {
  * next object is drawn from the band nearest that level. Everyone gets the same objects tonight, just in their own order.
  */
 function adapt(delta: number) {
-  run.level = Math.max(0, Math.min(3, run.level + delta));
+  run.level = Math.max(0, Math.min(BH, run.level + delta));
   mini?.setLevel(run.level);
   const want = Math.round(run.level), from = run.i + 1;
   if (from >= run.sky.length) return;
@@ -677,7 +677,7 @@ function blackHole(on: boolean) {
   announce("Black hole");
   const w = document.createElement("div");
   w.className = "bh-warn";
-  w.innerHTML = `<span>! BLACK HOLE !</span><small>${CONFIG.bands[3].points} PTS · ${CONFIG.bands[3].zoomedPoints} IF YOU CATCH IT EARLY</small>`;
+  w.innerHTML = `<span>! BLACK HOLE !</span><small>${CONFIG.bands[BH].points} PTS · ${CONFIG.bands[BH].zoomedPoints} IF YOU CATCH IT EARLY</small>`;
   el.scope.appendChild(w);
   setTimeout(() => w.remove(), 1400);
 }
@@ -685,7 +685,7 @@ function blackHole(on: boolean) {
 /** One pop at a time: the object's name and what it earned. */
 /** The harder the find, the bigger the moment: the sky pulses in the band's colour, the lens kicks, the room lights up. */
 function bandHit(band: number, zoomed: boolean) {
-  skyPulse(theme.bandColors[band], [0.25, 0.5, 0.85, 1.25][band] + (zoomed ? 0.2 : 0));
+  skyPulse(theme.bandColors[band], [0.25, 0.5, 0.68, 0.85, 1.25][band] + (zoomed ? 0.2 : 0));
   const play = app.querySelector<HTMLElement>(".play");
   if (!play) return;
   play.style.setProperty("--hit", theme.bandColors[band]);
@@ -1148,7 +1148,7 @@ async function resultsScreen(r: RunResult, mode: Run["mode"], fresh = false) {
   const missed = document.getElementById("missed")!;
   if (unseen.length) {
     missed.innerHTML = `<h2>STILL OUT THERE <small>${unseen.length} the clock ran out on</small></h2>`;
-    for (const b of [0, 1, 2, 3]) {
+    for (const b of CONFIG.bands.keys()) {
       const objs = unseen.filter((o) => o.band === b);
       if (!objs.length) continue;
       const d = document.createElement("details");
@@ -1310,7 +1310,7 @@ function replayNight(r: RunResult, best: number, target: HTMLCanvasElement, titl
         else {
           inARow++;
           theme.sounds.correct(it.outcome === "zoomed", inARow, band);
-          if (band === 3) { document.body.classList.remove("bh-glow"); void document.body.offsetWidth; document.body.classList.add("bh-glow"); setTimeout(() => document.body.classList.remove("bh-glow"), 1800); }
+          if (band === BH) { document.body.classList.remove("bh-glow"); void document.body.offsetWidth; document.body.classList.add("bh-glow"); setTimeout(() => document.body.classList.remove("bh-glow"), 1800); }
         }
         shown++;
         if (shown === n) endAt = now + per;
@@ -1358,15 +1358,15 @@ function replayNight(r: RunResult, best: number, target: HTMLCanvasElement, titl
 }
 
 function drawConstellation(c: HTMLCanvasElement, r: RunResult, best: number, upto = r.items.length) {
-  const W = 200, H = 200, cx = W / 2, cy = H / 2, R = [24, 42, 60, 78], RIM = 90;
+  const W = 200, H = 200, cx = W / 2, cy = H / 2, R = [22, 36, 50, 64, 78], RIM = 90;
   c.width = W; c.height = H;
   const g = c.getContext("2d")!;
   const px = (x: number, y: number, w = 1, h = 1) => g.fillRect(Math.round(x), Math.round(y), w, h);
   g.fillStyle = "#0d0a1a"; g.fillRect(0, 0, W, H);
   const rand = mulberry32(r.puzzle * 31 + 7);
   for (let i = 0; i < 120; i++) { g.fillStyle = rand() < 0.8 ? "#2c2648" : "#4a4068"; px(rand() * W, rand() * H); }
-  // the four difficulty bands, faintly tinted, with dotted orbits
-  for (let i = 3; i >= 0; i--) { g.globalAlpha = 0.1; g.fillStyle = theme.bandColors[i]; g.beginPath(); g.arc(cx, cy, R[i] + 9, 0, Math.PI * 2); g.fill(); }
+  // the five difficulty bands, faintly tinted, with dotted orbits
+  for (let i = R.length - 1; i >= 0; i--) { g.globalAlpha = 0.1; g.fillStyle = theme.bandColors[i]; g.beginPath(); g.arc(cx, cy, R[i] + 9, 0, Math.PI * 2); g.fill(); }
   g.globalAlpha = 1;
   g.fillStyle = "#0d0a1a"; g.beginPath(); g.arc(cx, cy, 13, 0, Math.PI * 2); g.fill();
   R.forEach((rr, i) => {
@@ -1491,7 +1491,7 @@ function drawHill(c: HTMLCanvasElement, curve: Curve, mine: number, friend: numb
 function breakdown(r: RunResult): string {
   const rows: string[] = [];
   let zoom = 0, steady = 0;
-  for (const b of [0, 1, 2, 3]) {
+  for (const b of CONFIG.bands.keys()) {
     const its = r.items.filter((it) => it.outcome !== "skipped" && BY_ID.get(it.id)?.band === b);
     if (!its.length) continue;
     const base = its.length * CONFIG.bands[b].points;
@@ -1584,7 +1584,7 @@ async function catalogueScreen(back: () => void, focus?: string) {
   if (loose.length) nights.push({ date: "", label: "Practice belt", sub: "found on practice and past skies", bodies: loose.map((o) => body(o)) });
   const scores = houseScores(days, (id) => BY_ID.get(id)?.band);
   openUniverse(app, {
-    nights, bandNames: theme.bandNames, bandColors: theme.bandColors, plural: ["Moons", "Planets", "Nebulae", "Black Holes"],
+    nights, bandNames: theme.bandNames, bandColors: theme.bandColors, plural: ["Moons", "Planets", "Comets", "Nebulae", "Black Holes"],
     scores, onBack: back, focus,
   });
 }
@@ -1770,9 +1770,9 @@ const MENU_CARDS: Record<string, { html: () => string; wire?: (c: HTMLElement) =
       <ul class="rules"><li><b>Type</b> what you see in the telescope. It moves on by itself.</li>
       <li><b>Zoomed in?</b> Name it before it pulls back for bonus points.</li>
       <li><b>Harder finds</b> are worth far more: ${CONFIG.bands.map((b) => b.points).join(" / ")} points by difficulty.</li>
-      <li><b>${CONFIG.combo[0].at} in a row</b> multiplies your points, up to ×${CONFIG.combo[CONFIG.combo.length - 1].mult}. A skip costs ${CONFIG.skipCost}s; every answer gives you ${CONFIG.timeBonus[0]}–${CONFIG.timeBonus[3]}s back (more for harder finds).</li>
+      <li><b>${CONFIG.combo[0].at} in a row</b> multiplies your points, up to ×${CONFIG.combo[CONFIG.combo.length - 1].mult}. A skip costs ${CONFIG.skipCost}s; every answer gives you ${CONFIG.timeBonus[0]}–${CONFIG.timeBonus[BH]}s back (more for harder finds).</li>
       <li><b>One sky a night</b>, the same for everyone.</li>
-      <li>Difficulty goes outward: ${theme.bandNames.slice(0, 3).join(", ")}, then <b>${theme.bandNames[3]}</b>.</li></ul>` },
+      <li>Difficulty goes outward: ${theme.bandNames.slice(0, BH).join(", ")}, then <b>${theme.bandNames[BH]}</b>.</li></ul>` },
   settings: { html: () => `<h2>Settings</h2>
       <div class="settings">
         <button class="btn" id="card-sound">SOUND: ${store.muted ? "OFF" : "ON"}</button>

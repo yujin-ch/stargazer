@@ -4,7 +4,7 @@
  * The same system appears in Your Universe afterwards.
  */
 const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const RADII = [0.19, 0.29, 0.38, 0.46];
+const RADII = [0.17, 0.245, 0.315, 0.385, 0.46];
 
 interface Dot { band: number; a0: number; r: number; born: number; sprite: HTMLCanvasElement | null }
 
@@ -33,7 +33,7 @@ export class MiniMap {
   add(band: number, sprite: HTMLCanvasElement | null) {
     const k = this.n[band]++;
     this.pulse = performance.now();
-    if (band === 3) this.quake = performance.now();
+    if (band === 4) this.quake = performance.now();
     this.dots.push({ band, a0: -Math.PI / 2 + k * 2.39996 + band * 0.7, r: RADII[band] + ((k % 3) - 1) * 0.018, born: performance.now(), sprite });
     this.c.parentElement?.classList.remove("ping"); void this.c.offsetWidth; this.c.parentElement?.classList.add("ping");
   }
@@ -70,7 +70,7 @@ export class MiniMap {
     g.globalAlpha = 1; g.fillStyle = glow; g.fillRect(cx - sr * 7, cy - sr * 7, sr * 14, sr * 14);
     g.fillStyle = "#fff6d8"; g.beginPath(); g.arc(cx, cy, sr, 0, Math.PI * 2); g.fill();
     if (qa < 1) {
-      g.globalAlpha = (1 - qa) * 0.9; g.strokeStyle = this.colors[3]; g.lineWidth = 2;
+      g.globalAlpha = (1 - qa) * 0.9; g.strokeStyle = this.colors[4]; g.lineWidth = 2;
       g.beginPath(); g.arc(cx, cy, S * (0.1 + qa * 0.45), 0, Math.PI * 2); g.stroke();
     }
     // skips on the rim
@@ -99,9 +99,9 @@ export class MiniMap {
         g.beginPath(); g.moveTo(p.x - (p.x + S * 0.2) * 0.35, p.y - (p.y + S * 0.2) * 0.35); g.lineTo(p.x, p.y); g.stroke();
       }
       // the find's own picture as its icon, in a little band-coloured bubble
-      const r = S * [0.05, 0.06, 0.065, 0.06][d.band] * (p.age < 1.3 ? 1 + Math.max(0, 1.3 - p.age) * 0.9 : 1);
+      const r = S * [0.05, 0.055, 0.06, 0.065, 0.06][d.band] * (p.age < 1.3 ? 1 + Math.max(0, 1.3 - p.age) * 0.9 : 1);
       g.globalAlpha = 1;
-      g.fillStyle = d.band === 3 ? "#05030a" : "rgba(20,14,40,0.9)";
+      g.fillStyle = d.band === 4 ? "#05030a" : "rgba(20,14,40,0.9)";
       g.beginPath(); g.arc(p.x, p.y, r, 0, Math.PI * 2); g.fill();
       if (d.sprite && r > 3) {
         const k = (r * 1.7) / Math.max(d.sprite.width, d.sprite.height);
@@ -110,7 +110,7 @@ export class MiniMap {
         g.drawImage(d.sprite, p.x - (d.sprite.width * k) / 2, p.y - (d.sprite.height * k) / 2, d.sprite.width * k, d.sprite.height * k);
         g.restore();
       }
-      g.strokeStyle = this.colors[d.band]; g.lineWidth = d.band === 3 ? 1.6 : 1.1;
+      g.strokeStyle = this.colors[d.band]; g.lineWidth = d.band === 4 ? 1.6 : 1.1;
       g.beginPath(); g.arc(p.x, p.y, r, 0, Math.PI * 2); g.stroke();
       if (p.age < 1.2) { g.globalAlpha = Math.max(0, 1.2 - p.age) * 0.9; g.strokeStyle = "#fee761"; g.lineWidth = 1; g.beginPath(); g.arc(p.x, p.y, r + 2 + p.age * 8, 0, Math.PI * 2); g.stroke(); }
     }

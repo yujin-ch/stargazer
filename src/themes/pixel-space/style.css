@@ -16,8 +16,9 @@
   /* difficulty bands: keep in step with bandColors in index.ts */
   --b0: #dbe2ee;
   --b1: #2ce8f5;
-  --b2: #e07ab8;
-  --b3: #feae34;
+  --b2: #a8f08a;
+  --b3: #e07ab8;
+  --b4: #feae34;
   --font-display: "Press Start 2P", ui-monospace, monospace;
   --font-body: "VT323", ui-monospace, monospace;
   --app-h: 100dvh;
@@ -90,6 +91,7 @@ a { color: var(--cyan); }
 .band[data-band="1"] { color: var(--b1); }
 .band[data-band="2"] { color: var(--b2); }
 .band[data-band="3"] { color: var(--b3); }
+.band[data-band="4"] { color: var(--b4); }
 .tier { font-family: var(--font-display); font-size: 10px; color: var(--cyan); margin: 0 0 4px; letter-spacing: 1px; }
 .tier span { font-family: var(--font-body); font-size: 18px; color: var(--dim); letter-spacing: 0; }
 .next { margin: 0 0 10px; }
@@ -243,11 +245,11 @@ a { color: var(--cyan); }
 .play::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: -1; opacity: 0; transition: opacity 300ms steps(3);
   background: radial-gradient(ellipse at 50% 42%, transparent 50%, rgba(190, 74, 47, 0.12) 70%, rgba(7, 6, 15, 0.7) 100%); }
 .play.blackhole::before { opacity: 1; animation: bh-pulse 1.6s steps(4) infinite alternate; }
-.play.blackhole .theme-label { border-color: var(--b3); color: var(--b3); box-shadow: 4px 4px 0 #000, 0 0 0 3px rgba(254, 174, 52, 0.25); }
+.play.blackhole .theme-label { border-color: var(--b4); color: var(--b4); box-shadow: 4px 4px 0 #000, 0 0 0 3px rgba(254, 174, 52, 0.25); }
 .play.blackhole .scope canvas { filter: drop-shadow(0 0 22px rgba(247, 118, 34, 0.45)); }
 .bh-warn { position: absolute; left: 0; right: 0; bottom: 2%; display: flex; flex-direction: column; align-items: center; gap: 6px; pointer-events: none;
-  font-family: var(--font-display); color: var(--b3); text-shadow: 3px 3px 0 #000; animation: bh-warn 1.4s steps(14) forwards; }
-.bh-warn span { font-size: 16px; padding: 6px 10px; border: 3px solid var(--b3); background: rgba(7, 6, 15, 0.85); box-shadow: 4px 4px 0 #000; }
+  font-family: var(--font-display); color: var(--b4); text-shadow: 3px 3px 0 #000; animation: bh-warn 1.4s steps(14) forwards; }
+.bh-warn span { font-size: 16px; padding: 6px 10px; border: 3px solid var(--b4); background: rgba(7, 6, 15, 0.85); box-shadow: 4px 4px 0 #000; }
 .bh-warn small { font-size: 8px; color: var(--accent); }
 @keyframes bh-pulse { from { filter: brightness(0.9); } to { filter: brightness(1.25); } }
 @keyframes bh-warn { 0%, 12%, 36% { opacity: 1; } 6%, 24% { opacity: 0.2; } 80% { opacity: 1; } 100% { opacity: 0; transform: translateY(-8px); } }
@@ -437,6 +439,7 @@ a { color: var(--cyan); }
 .theme-label[data-band="1"] { color: var(--b1); border-color: color-mix(in srgb, var(--b1) 45%, #5a4a70); }
 .theme-label[data-band="2"] { color: var(--b2); border-color: color-mix(in srgb, var(--b2) 45%, #5a4a70); }
 .theme-label[data-band="3"] { color: var(--b3); border-color: color-mix(in srgb, var(--b3) 45%, #5a4a70); }
+.theme-label[data-band="4"] { color: var(--b4); border-color: color-mix(in srgb, var(--b4) 45%, #5a4a70); }
 #guess { background: #120e22; }
 .scope canvas { filter: drop-shadow(0 0 22px rgba(201, 154, 74, 0.18)); }
 .seen li { background: linear-gradient(180deg, #211a38, #1a1530); }
@@ -492,17 +495,18 @@ a { color: var(--cyan); }
   background: radial-gradient(circle at 50% 42%, transparent 18%, color-mix(in srgb, var(--hit, #fff) 40%, transparent) 60%, color-mix(in srgb, var(--hit, #fff) 75%, transparent) 100%); }
 .play.hit-b0::after { animation: spot 600ms ease-out; --spot: 0.12; }
 .play.hit-b1::after { animation: spot 700ms ease-out; --spot: 0.25; }
-.play.hit-b2::after { animation: spot 850ms ease-out; --spot: 0.42; }
-.play.hit-b3::after { animation: spot 950ms ease-out; --spot: 0.6; }
+.play.hit-b2::after { animation: spot 780ms ease-out; --spot: 0.33; }
+.play.hit-b3::after { animation: spot 850ms ease-out; --spot: 0.42; }
+.play.hit-b4::after { animation: spot 950ms ease-out; --spot: 0.6; }
 @keyframes spot { 0% { opacity: var(--spot); } 100% { opacity: 0; } }
-.play.hit-b1 .scope canvas, .play.hit-b2 .scope canvas, .play.hit-b3 .scope canvas { filter: drop-shadow(0 0 26px var(--hit)); transition: filter 0.6s ease-out; }
-.play.hit-b2 .scope { animation: punch 320ms steps(4); --punch: 1.035; }
-.play.hit-b3 .scope { animation: punch 420ms steps(5); --punch: 1.07; }
+.play.hit-b1 .scope canvas, .play.hit-b2 .scope canvas, .play.hit-b3 .scope canvas, .play.hit-b4 .scope canvas { filter: drop-shadow(0 0 26px var(--hit)); transition: filter 0.6s ease-out; }
+.play.hit-b3 .scope { animation: punch 320ms steps(4); --punch: 1.035; }
+.play.hit-b4 .scope { animation: punch 420ms steps(5); --punch: 1.07; }
 @keyframes punch { 0% { transform: scale(1); } 30% { transform: scale(var(--punch)); } 100% { transform: scale(1); } }
 .pop-band { font-family: var(--font-display); font-size: 9px; color: var(--band); letter-spacing: 1px; text-shadow: 2px 2px 0 #000, 0 0 10px var(--band); }
-.play.hit-b2 .pop-band, .play.hit-b3 .pop-band { font-size: 12px; }
-.play.hit-b3 .pop-pts { font-size: 24px; }
-@media (prefers-reduced-motion: reduce) { .play.hit-b2 .scope, .play.hit-b3 .scope { animation: none; } }
+.play.hit-b3 .pop-band, .play.hit-b4 .pop-band { font-size: 12px; }
+.play.hit-b4 .pop-pts { font-size: 24px; }
+@media (prefers-reduced-motion: reduce) { .play.hit-b3 .scope, .play.hit-b4 .scope { animation: none; } }
 
 /* ------------------------------------------------ scoreboard */
 .final { margin: 4px 0 12px; }

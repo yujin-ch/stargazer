@@ -83,7 +83,7 @@ describe("themes and conditions", () => {
   it("puts a Black Hole object in every sky of a theme that has them", () => {
     for (let d = 1; d <= 30; d++) {
       const s = dailySky(d);
-      if (OBJECTS.some((o) => o.theme === s[0].theme && o.band === 3)) expect(s.some((o) => o.band === 3)).toBe(true);
+      if (OBJECTS.some((o) => o.theme === s[0].theme && o.band === 4)) expect(s.some((o) => o.band === 4)).toBe(true);
     }
   });
 });

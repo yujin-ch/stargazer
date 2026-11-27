@@ -1,5 +1,5 @@
 import { accessToken } from "./cloud";
-import { CONFIG, type BandIndex } from "./config";
+import { CONFIG, FROM_OLD4, type BandIndex } from "./config";
 import { parseTheme, renderSprite, toRGBA, SIZE, type SheetMeta, type SpriteDef } from "./art/board";
 
 /**
@@ -71,7 +71,7 @@ export const OBJECTS: SkyObject[] = parsed
       id: `${d.theme}:${d.id}`,
       sprite: i,
       theme: d.theme,
-      band: (d.band - 1) as BandIndex,
+      band: FROM_OLD4[d.band - 1] ?? 0,
       names: d.names.map((n) => n.replace(/^~/, "")),
       hidden: d.names.filter((n) => n.startsWith("~")).map((n) => n.slice(1)),
       kind,
@@ -101,6 +101,8 @@ export const BY_ID = new Map(OBJECTS.map((o) => [o.id, o]));
 export interface DayPack {
   date: string;
   theme?: string;
+  /** 5 = bands numbered 1-5 (Moon, Planet, Comet, Nebula, Black Hole); missing = the old 1-4 scale. */
+  bands?: number;
   items: { id: string; img?: string; band: number; names: string[]; note?: string }[];
 }
 const PACK_URLS = new Map<string, string>();
@@ -131,13 +133,13 @@ export async function loadDayPack(dateKey: string): Promise<SkyObject[]> {
   }
   const theme = pack.theme && INFO.has(pack.theme) ? pack.theme : "photos";
   const objs: SkyObject[] = pack.items
-    .filter((it) => it.id && it.names?.some((n) => !n.startsWith("?")) && it.band >= 1 && it.band <= 4)
+    .filter((it) => it.id && it.names?.some((n) => !n.startsWith("?")) && it.band >= 1 && it.band <= (pack.bands === 5 ? 5 : 4))
     .map((it, i) => {
       const id = `${theme}:${dateKey}/${it.id}`;
       PACK_URLS.set(id, `${base}${it.img ?? it.id}.png`);
       PACK_HI.set(id, `${base}${it.img ?? it.id}.hi.webp`);
       return {
-        id, sprite: OBJECTS.length + i, theme, band: (it.band - 1) as BandIndex,
+        id, sprite: OBJECTS.length + i, theme, band: (pack.bands === 5 ? it.band - 1 : FROM_OLD4[it.band - 1]) as BandIndex,
         names: it.names.filter((n) => !n.startsWith("?")).map((n) => n.replace(/^~/, "")),
         hidden: it.names.filter((n) => n.startsWith("~")).map((n) => n.slice(1)),
         vague: it.names.filter((n) => n.startsWith("?")).map((n) => n.slice(1)),

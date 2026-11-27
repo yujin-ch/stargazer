@@ -83,6 +83,12 @@ export function dayCondition(puzzle: number): (typeof CONFIG.conditions)[number]
 /** The objects of one theme. */
 export const themePool = (themeId: string) => OBJECTS.filter((o) => o.theme === themeId && !o.id.includes("/")); // day-pack objects ("theme:date/id") only play on their own night
 
+/** How many objects each band gives: picture themes sorted before the Comet band have none, so they keep the old mix. */
+function bandCounts(pool: SkyObject[], tier: number): readonly number[] {
+  const t = CONFIG.tiers[tier];
+  return pool.some((o) => o.band === 2) ? t.perBand : t.perBandNoComets;
+}
+
 /**
  * The sky for a puzzle number, drawn from that day's theme. Each band walks through its own shuffled deck, so an
  * object never repeats until every object in that band has been used once.
@@ -94,7 +100,7 @@ export function dailySky(puzzle: number, tier = 0, poolArg?: SkyObject[]): SkyOb
   // each theme only comes round every THEMES.length days, so count its own days (a pack is its own first day)
   const day = fromPack ? 0 : Math.floor(Math.max(0, puzzle - 1) / THEMES.length);
   const sky: SkyObject[] = [];
-  CONFIG.tiers[tier].perBand.forEach((k, band) => {
+  bandCounts(pool, tier).forEach((k, band) => {
     const items = pool.filter((o) => o.band === band).sort((a, b) => a.id.localeCompare(b.id));
     const L = items.length;
     const decks = new Map<number, SkyObject[]>();
@@ -123,9 +129,12 @@ export function dailySky(puzzle: number, tier = 0, poolArg?: SkyObject[]): SkyOb
 export function ramp(sky: SkyObject[]): SkyObject[] {
   const easy = sky.filter((o) => o.band === 0);
   const mid = sky.filter((o) => o.band === 1);
-  // hard picks: Nebula objects with Black Holes sprinkled through, a little denser toward the end
-  const neb = sky.filter((o) => o.band === 2), bh = sky.filter((o) => o.band === 3);
+  // hard picks: Comets first, then Nebula objects with Black Holes sprinkled through, a little denser toward the end
+  const comet = sky.filter((o) => o.band === 2), neb = sky.filter((o) => o.band === 3), bh = sky.filter((o) => o.band === 4);
   const hard: SkyObject[] = [];
+  // the first hard picks lean on comets, then comets and nebulae alternate until the comets run out
+  while (comet.length && (hard.length < 2 || !neb.length)) hard.push(comet.shift()!);
+  for (let k = 0; comet.length && neb.length; k++) hard.push(k % 2 ? neb.shift()! : comet.shift()!);
   let acc = 0;
   while (neb.length || bh.length) {
     acc += bh.length / (neb.length + bh.length);
@@ -146,5 +155,5 @@ export function ramp(sky: SkyObject[]): SkyObject[] {
 /** A random sky for practice runs. */
 export function practiceSky(tier = 0, pool: SkyObject[] = themePool(THEMES[Math.floor(Math.random() * THEMES.length)])): SkyObject[] {
   const rand = mulberry32((Math.random() * 2 ** 32) >>> 0);
-  return ramp(CONFIG.tiers[tier].perBand.flatMap((k, band) => shuffled(pool.filter((o) => o.band === band), rand).slice(0, k)));
+  return ramp(bandCounts(pool, tier).flatMap((k, band) => shuffled(pool.filter((o) => o.band === band), rand).slice(0, k)));
 }

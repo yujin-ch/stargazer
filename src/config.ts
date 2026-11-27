@@ -9,8 +9,8 @@ export const CONFIG = {
   runSeconds: 60,
   /** Seconds taken off the clock by a skip. */
   skipCost: 2,
-  /** Seconds added to the clock for each correct answer, by band (moon, planet, nebula, black hole). */
-  timeBonus: [1, 1, 2, 3],
+  /** Seconds added to the clock for each correct answer, by band (moon, planet, comet, nebula, black hole). */
+  timeBonus: [1, 1, 2, 2, 3],
   /** Countdown before the clock starts. */
   countdownSeconds: 3,
   /** Themes take turns in this order, one per night (any theme file not listed joins the end). */
@@ -21,26 +21,29 @@ export const CONFIG = {
   firstNight: "2026-11-27",
   /**
    * The sky everyone gets (yujin, 11-26: one sky for everyone, no harder streak skies).
-   * perBand = objects from each band of the day's theme, in order: clear, distant, deep space, uncharted
-   * (a band with fewer objects just gives what it has). Kept as a list so a future mode can add its own.
+   * perBand = objects from each band of the day's theme, in order: moon, planet, comet, nebula, black hole
+   * (a band with fewer objects just gives what it has). perBandNoComets is for the drawn picture themes,
+   * which were sorted before the Comet band existed. Kept as a list so a future mode can add its own.
    */
   tiers: [
-    { name: "Stargazer", minStreak: 0, perBand: [3, 8, 12, 6] },
+    { name: "Stargazer", minStreak: 0, perBand: [3, 7, 7, 7, 5], perBandNoComets: [3, 8, 0, 12, 6] },
   ],
   /** How fast the hard objects take over after the easy opener: the share of hard picks starts at
    *  rampStart and grows by rampStep per object until every pick is hard (while any are left). */
   rampStart: 0.3,
   rampStep: 0.07,
-  /** Adaptive difficulty during a run: how far each outcome moves the level (0 = Moon ... 3 = Black Hole).
+  /** Adaptive difficulty during a run: how far each outcome moves the level (0 = Moon ... 4 = Black Hole).
    *  The next object comes from the band nearest the level, so a streak climbs fast and a skip drops back fast. */
   adapt: { named: 0.6, zoomed: 0.85, skipped: -1.2 },
   bands: [
     // startZoom: how far in the telescope starts; pullBack: seconds to reach full view;
     // startBlur: how out of focus it starts, in sprite pixels (0 = sharp, max 2.4); points / zoomedPoints.
-    // points double with each band, so difficulty always matters most; a zoom answer is worth half again
+    // points climb with each band, so difficulty always matters most; a zoom answer is worth half again.
+    // Moon, Planet, Comet (the easier half of the old Nebula band), Nebula, Black Hole
     { startZoom: 1.6, pullBack: 1.8, startBlur: 0.4, points: 10, zoomedPoints: 15 },
     { startZoom: 2.2, pullBack: 2.4, startBlur: 0.7, points: 20, zoomedPoints: 30 },
-    { startZoom: 3, pullBack: 3, startBlur: 1.1, points: 40, zoomedPoints: 60 },
+    { startZoom: 2.6, pullBack: 2.7, startBlur: 0.9, points: 30, zoomedPoints: 45 },
+    { startZoom: 3, pullBack: 3, startBlur: 1.1, points: 50, zoomedPoints: 75 },
     { startZoom: 3.5, pullBack: 3.3, startBlur: 1.3, points: 80, zoomedPoints: 120 },
   ],
   /**
@@ -83,7 +86,11 @@ export function answerPoints(band: number, zoomed: boolean, inARow: number): num
   return Math.round((zoomed ? b.zoomedPoints : b.points) * mult);
 }
 
-export type BandIndex = 0 | 1 | 2 | 3;
+export type BandIndex = 0 | 1 | 2 | 3 | 4;
+/** The hardest band (Black Hole). */
+export const BH = 4 as const;
+/** Picture-theme files and pre-Comet packs number bands 1-4 (Moon, Planet, Nebula, Black Hole): where each lands now. */
+export const FROM_OLD4: readonly BandIndex[] = [0, 1, 3, 4];
 export type ConditionId = (typeof CONFIG.conditions)[number]["id"];
 
 /** Tier index for a streak (days in a row played, not counting today). */

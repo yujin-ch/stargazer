@@ -297,10 +297,10 @@ export function openUniverse(app: HTMLElement, o: UniverseOpts): () => void {
           if (selected === b) { g.globalAlpha = 1; g.strokeStyle = "#fee761"; g.lineWidth = 1.5; g.setLineDash([2, 3]); g.beginPath(); g.arc(p[0], p[1], 10 + Math.sin(t * 4) * 1.5, 0, 7); g.stroke(); g.setLineDash([]); }
           continue;
         }
-        const rad = BODY_R * z * (b.band === 3 ? 1.15 : 1);
+        const rad = BODY_R * z * (b.band === 4 ? 1.15 : 1);
         if (far || rad < 6) {
           // a star: glow in the house colour, brighter for harder finds
-          const s0 = (1.3 + b.band * 0.45) * Math.max(0.7, Math.min(2.2, z * 2.2));
+          const s0 = (1.3 + b.band * 0.36) * Math.max(0.7, Math.min(2.2, z * 2.2));
           const tw = twinkle ? 0.8 + 0.2 * Math.sin(t * 1.6 + b.a0) : 1;
           g.globalAlpha = (lit ? 1 : 0.12) * dimRing * tw;
           const gs = s0 * 4.2;

@@ -92,7 +92,7 @@ export function rankOf(v: number): string {
 
 export interface HouseScore { score: number; seen: number; named: number }
 
-const BAND_W = [1, 1.5, 2, 3];
+const BAND_W = [1, 1.5, 1.75, 2, 3];
 const PRIOR = 4;
 
 /**

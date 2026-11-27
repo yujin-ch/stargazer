@@ -7,7 +7,7 @@ gets it from /api/night, which only hands a night out once it has started somewh
     python3 scripts/photos/make_day.py <images dir> <items.json> <YYYY-MM-DD> [--skip id,id]
 
 <images dir> holds the raw generated images, named <id>.png (or .jpg), and <items.json> is the batch list
-(items with id, band 1-4, names "a, b, c" or a list, note). Every item with an image becomes a plate strip
+(items with id, band 1-5 = Moon, Planet, Comet, Nebula, Black Hole, names "a, b, c" or a list, note). Every item with an image becomes a plate strip
 (public/days/<date>/<id>.png, via build_photos.py) and an entry in pack.json. Items without an image, or in
 --skip, are left out and listed. The game loads the pack on that date and plays it instead of the rotating theme.
 """
@@ -51,6 +51,7 @@ def main():
     pack = {
         "date": date,
         "theme": "photos",
+        "bands": 5,
         "items": [{
             "id": it["id"],
             "img": imgs[it["id"]],
@@ -65,7 +66,7 @@ def main():
     idx = json.load(open(idx_path)) if os.path.exists(idx_path) else {}
     idx[date] = {"theme": pack["theme"], "items": len(keep)}
     json.dump(dict(sorted(idx.items())), open(idx_path, "w"), indent=1)
-    bands = [sum(1 for it in keep if int(it["band"]) == b) for b in (1, 2, 3, 4)]
+    bands = [sum(1 for it in keep if int(it["band"]) == b) for b in (1, 2, 3, 4, 5)]
     print(f"{date}: {len(keep)} items, bands {bands}" + (f"; left out: {', '.join(left)}" if left else ""))
 
 

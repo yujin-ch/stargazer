@@ -17,8 +17,8 @@ export interface Curve {
  * How sure a typical player is to know an object in each band, and how long they look before typing (seconds).
  * Set conservatively: a first-time player half-sees blurry, zoomed-in pictures, hesitates, and mistypes.
  */
-const KNOW = [0.93, 0.8, 0.58, 0.38];
-const LOOK = [1.5, 2.2, 2.9, 3.5];
+const KNOW = [0.93, 0.8, 0.68, 0.52, 0.36];
+const LOOK = [1.5, 2.2, 2.6, 3.0, 3.5];
 
 function gauss(rand: () => number) {
   return Math.sqrt(-2 * Math.log(1 - rand())) * Math.cos(2 * Math.PI * rand());
@@ -54,7 +54,7 @@ function play(sky: SkyObject[], eye: number, speed: number, rand: () => number, 
       if (t >= CONFIG.runSeconds) break;
       delta = CONFIG.adapt.skipped;
     }
-    level = Math.max(0, Math.min(3, level + delta));
+    level = Math.max(0, Math.min(4, level + delta));
     const want = Math.round(level);
     let bi = -1, bd = 9;
     left.forEach((x, j) => { const d = Math.abs(x.band - want); if (d < bd) { bd = d; bi = j; } });

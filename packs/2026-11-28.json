@@ -1,6 +1,7 @@
 {
  "date": "2026-11-28",
  "theme": "photos",
+ "bands": 5,
  "items": [
   {
    "id": "kite",
@@ -104,7 +105,7 @@
   },
   {
    "id": "shipswheel",
-   "band": 2,
+   "band": 3,
    "names": [
     "ship's wheel",
     "ships wheel",
@@ -122,17 +123,6 @@
    ],
    "note": "Heat makes the wax rise and fall",
    "img": "56e85a8e58d8185e"
-  },
-  {
-   "id": "kalimba",
-   "band": 3,
-   "names": [
-    "kalimba",
-    "thumb piano",
-    "mbira"
-   ],
-   "note": "Plucked metal tines",
-   "img": "57810467ee385d9c"
   },
   {
    "id": "kaleidoscope",
@@ -156,25 +146,6 @@
    "img": "731a544d5066db90"
   },
   {
-   "id": "rickshaw",
-   "band": 3,
-   "names": [
-    "rickshaw",
-    "pulled rickshaw"
-   ],
-   "note": "The name comes from Japanese for \"human-powered vehicle\"",
-   "img": "b41bfdd32b9dafcb"
-  },
-  {
-   "id": "cassowary",
-   "band": 3,
-   "names": [
-    "cassowary"
-   ],
-   "note": "The casque may help it hear low sounds",
-   "img": "8b2849ebc95e59b7"
-  },
-  {
    "id": "mantis",
    "band": 3,
    "names": [
@@ -183,36 +154,6 @@
    ],
    "note": "Can turn its head 180 degrees",
    "img": "e19eedd3f512e730"
-  },
-  {
-   "id": "axolotl",
-   "band": 3,
-   "names": [
-    "axolotl",
-    "mexican walking fish"
-   ],
-   "note": "It can regrow its limbs",
-   "img": "71d79ab39bb1dddc"
-  },
-  {
-   "id": "quokka",
-   "band": 3,
-   "names": [
-    "quokka"
-   ],
-   "note": "Called the happiest animal for its smile",
-   "img": "654cc48d7f86a928"
-  },
-  {
-   "id": "newtonscradle",
-   "band": 3,
-   "names": [
-    "newton's cradle",
-    "newtons cradle",
-    "executive ball clicker"
-   ],
-   "note": "Momentum passes through the middle balls",
-   "img": "bd6ca5f045593ab3"
   },
   {
    "id": "grandfatherclock",
@@ -235,47 +176,64 @@
    "img": "300cc14542ff60c2"
   },
   {
-   "id": "gharial",
+   "id": "kalimba",
    "band": 4,
    "names": [
-    "gharial",
-    "gavial",
-    "?crocodile"
+    "kalimba",
+    "thumb piano",
+    "mbira"
    ],
-   "note": "Its snout is made for catching fish",
-   "img": "d197e950ed363f10"
+   "note": "Plucked metal tines",
+   "img": "57810467ee385d9c"
   },
   {
-   "id": "sousaphone",
+   "id": "rickshaw",
    "band": 4,
    "names": [
-    "sousaphone",
-    "?tuba"
+    "rickshaw",
+    "pulled rickshaw"
    ],
-   "note": "Named after John Philip Sousa",
-   "img": "cf451765c09180c0"
+   "note": "The name comes from Japanese for \"human-powered vehicle\"",
+   "img": "b41bfdd32b9dafcb"
   },
   {
-   "id": "starnosedmole",
+   "id": "cassowary",
    "band": 4,
    "names": [
-    "star-nosed mole",
-    "star nosed mole",
-    "?mole"
+    "cassowary"
    ],
-   "note": "22 fleshy tentacles on its nose",
-   "img": "53e7cc302cd98be4"
+   "note": "The casque may help it hear low sounds",
+   "img": "8b2849ebc95e59b7"
   },
   {
-   "id": "saiga",
+   "id": "axolotl",
    "band": 4,
    "names": [
-    "saiga",
-    "saiga antelope",
-    "?antelope"
+    "axolotl",
+    "mexican walking fish"
    ],
-   "note": "Its big nose filters dust",
-   "img": "f87b99ce07e338dd"
+   "note": "It can regrow its limbs",
+   "img": "71d79ab39bb1dddc"
+  },
+  {
+   "id": "quokka",
+   "band": 4,
+   "names": [
+    "quokka"
+   ],
+   "note": "Called the happiest animal for its smile",
+   "img": "654cc48d7f86a928"
+  },
+  {
+   "id": "newtonscradle",
+   "band": 4,
+   "names": [
+    "newton's cradle",
+    "newtons cradle",
+    "executive ball clicker"
+   ],
+   "note": "Momentum passes through the middle balls",
+   "img": "bd6ca5f045593ab3"
   },
   {
    "id": "durian",
@@ -287,8 +245,51 @@
    "img": "0eaf8be4f3d16b68"
   },
   {
+   "id": "gharial",
+   "band": 5,
+   "names": [
+    "gharial",
+    "gavial",
+    "?crocodile"
+   ],
+   "note": "Its snout is made for catching fish",
+   "img": "d197e950ed363f10"
+  },
+  {
+   "id": "sousaphone",
+   "band": 5,
+   "names": [
+    "sousaphone",
+    "?tuba"
+   ],
+   "note": "Named after John Philip Sousa",
+   "img": "cf451765c09180c0"
+  },
+  {
+   "id": "starnosedmole",
+   "band": 5,
+   "names": [
+    "star-nosed mole",
+    "star nosed mole",
+    "?mole"
+   ],
+   "note": "22 fleshy tentacles on its nose",
+   "img": "53e7cc302cd98be4"
+  },
+  {
+   "id": "saiga",
+   "band": 5,
+   "names": [
+    "saiga",
+    "saiga antelope",
+    "?antelope"
+   ],
+   "note": "Its big nose filters dust",
+   "img": "f87b99ce07e338dd"
+  },
+  {
    "id": "secretarybird",
-   "band": 4,
+   "band": 5,
    "names": [
     "secretary bird",
     "secretarybird"
