@@ -405,7 +405,10 @@ export function atlasScreen(app: HTMLElement, starsIn: AtlasStar[], opts: { titl
   const up = (e: PointerEvent) => { pts.delete(e.pointerId); if (!pts.size) setTimeout(() => root.classList.remove("dragging"), 0); pinch = 0; };
   root.addEventListener("pointerup", up);
   root.addEventListener("pointercancel", up);
-  root.addEventListener("wheel", (e) => { e.preventDefault(); zoomBy(Math.exp(-e.deltaY * 0.0015), e.clientX, e.clientY); }, { passive: false });
+  root.addEventListener("wheel", (e) => {
+    // over a card (the past-skies list, a long description) the wheel scrolls the card, not the map
+    if ((e.target as HTMLElement).closest(".atlas-card")) return;
+    e.preventDefault(); zoomBy(Math.exp(-e.deltaY * 0.0015), e.clientX, e.clientY); }, { passive: false });
   document.getElementById("atlas-in")!.onclick = () => zoomBy(1.4);
   document.getElementById("atlas-out")!.onclick = () => zoomBy(1 / 1.4);
   document.getElementById("atlas-home")!.onclick = () => animateTo(0, 0, home(), 700);

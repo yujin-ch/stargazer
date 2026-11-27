@@ -355,7 +355,7 @@ a { color: var(--cyan); }
 .atlas-tools { position: absolute; right: 12px; bottom: max(12px, env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 6px; }
 .atlas-tools .btn { width: 40px; height: 40px; padding: 0; font-size: 16px; }
 .atlas-foot { position: absolute; left: 12px; bottom: max(8px, env(safe-area-inset-bottom)); margin: 0; color: var(--dim); font-size: 16px; pointer-events: none; }
-.atlas-card { position: absolute; left: 50%; bottom: max(64px, calc(env(safe-area-inset-bottom) + 56px)); translate: -50% 0; width: min(420px, calc(100% - 32px)); max-height: 60%; overflow: auto; background: var(--panel); border: 3px solid var(--panel-edge); box-shadow: 6px 6px 0 #000; padding: 14px 16px; cursor: auto; animation: fade-in 0.2s steps(3); }
+.atlas-card { position: absolute; left: 50%; bottom: max(64px, calc(env(safe-area-inset-bottom) + 56px)); translate: -50% 0; width: min(420px, calc(100% - 32px)); max-height: 60%; overflow: auto; background: var(--panel); border: 3px solid var(--panel-edge); box-shadow: 6px 6px 0 #000; padding: 14px 16px; cursor: auto; overscroll-behavior: contain; animation: fade-in 0.2s steps(3); }
 .atlas-card h2 { font-family: var(--font-display); font-size: 13px; color: var(--accent); margin: 0 30px 8px 0; line-height: 1.4; }
 .atlas-card p { margin: 6px 0; }
 .atlas-card .small b { color: var(--accent); font-weight: normal; }
