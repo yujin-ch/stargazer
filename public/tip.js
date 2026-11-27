@@ -18,7 +18,7 @@
   // changes a player's account or takes money can be clickjacked by the framing page.
   var framed = false;
   try { framed = window.top !== window.self; } catch (e) { framed = true; }
-  if (framed) css += ".acct-badge,.tip-row,.acct,.acct-mail{display:none!important}";
+  if (framed) css += ".acct-badge,.tip-row,.tip-link,.acct,.acct-mail{display:none!important}";
   var st = document.createElement("style"); st.textContent = css; document.head.appendChild(st);
   if (framed) return;
 
@@ -46,7 +46,7 @@
     m.querySelector(".tip-x").focus();
   }
   document.addEventListener("click", function (e) {
-    var a = e.target.closest && e.target.closest("a.tip-btn");
+    var a = e.target.closest && e.target.closest("a.tip-btn, a.tip-link");
     if (!a || e.ctrlKey || e.metaKey || e.shiftKey) return;
     e.preventDefault(); open(a.href, a);
   });

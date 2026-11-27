@@ -1099,7 +1099,6 @@ async function resultsScreen(r: RunResult, mode: Run["mode"], fresh = false) {
       </dl>
        </div>
       </div>
-      ${TIP_URL ? `<p class="tip-row"><a class="tip-btn" href="${esc(TIP_URL)}" target="_blank" rel="noopener">Keep the telescope lit ☕</a></p>` : ""}
     </section>
     ${daily ? "" : `<div class="actions">
       ${!store.today(localDateKey()) ? `<button class="btn primary" id="daily">TONIGHT'S SKY</button>` : `<button class="btn" id="back">TONIGHT'S LOG</button>`}
@@ -2115,7 +2114,7 @@ function frontPage(returning = false) {
     links: [{ id: "how", label: "HOW TO PLAY" }, { id: "settings", label: "SETTINGS" }, { id: "credits", label: "CREDITS" }],
     onLink: menuSheet,
   });
-  app.querySelector(".intro")?.insertAdjacentHTML("beforeend", `<p class="intro-foot"><a href="/about">About</a><i>·</i><a href="/privacy">Privacy</a></p>`);
+  app.querySelector(".intro")?.insertAdjacentHTML("beforeend", `<p class="intro-foot"><a href="/about">About</a><i>·</i><a href="/privacy">Privacy</a>${TIP_URL ? `<i>·</i><a class="tip-link" href="${esc(TIP_URL)}" target="_blank" rel="noopener">Keep the telescope lit ☕</a>` : ""}</p>`);
 }
 
 initCommunity({
