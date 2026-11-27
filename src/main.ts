@@ -1113,6 +1113,7 @@ async function resultsScreen(r: RunResult, mode: Run["mode"], fresh = false) {
   lastFresh = 0;
   moonrise();
   const chart = document.getElementById("chart") as HTMLCanvasElement;
+  chart.classList.add(["", "sing-seen", "sing-caught"][singMood(r)] || "no-sing");
   let standing: Standing | null = null;
   const sharePreview = () => { const pre = document.getElementById("share-preview"); if (pre) pre.textContent = shareText(r, theme, daily ? shareUrlFor(r) : SHARE_URL, standing, streakNow); };
   const best = bestFind(r);
@@ -1434,6 +1435,9 @@ function replayNight(r: RunResult, best: number, target: HTMLCanvasElement, titl
   });
 }
 
+/** A rough bell-shaped random number (sum of uniforms), for scattering pixels. */
+function gauss01(rand: () => number): number { return (rand() + rand() + rand() - 1.5) * 1.4; }
+
 /** 0 = no Singularity tonight (or not reached), 1 = it rose and you let it go, 2 = you caught it. */
 /** The Singularity's look on the dial and its log line: built, waiting for yujin's go-ahead (11-27). */
 const SING_LOOK = new URLSearchParams(location.search).has("singlook");
@@ -1500,8 +1504,8 @@ function drawConstellation(c: HTMLCanvasElement, r: RunResult, best: number, upt
   }
   // rings bend near a Singularity (a little when glimpsed, a lot when caught)
   const WARP = { none: 0, small: 0.025, lots: 0.08 } as const;
-  const wk = (new URLSearchParams(location.search).get("warp") ?? "small") as keyof typeof WARP;
-  const warp = (WARP[wk] ?? WARP.small) * [0, 0.6, 1][mood];
+  const wk = (new URLSearchParams(location.search).get("warp") ?? "none") as keyof typeof WARP;
+  const warp = (WARP[wk] ?? WARP.none) * [0, 0.6, 1][mood];
   const ringXY = (rr: number, a: number): [number, number] => {
     const k = 1 + warp * Math.sin(a * 3 + rr * 0.08), tw = warp * 1.6 * (1 - rr / 100);
     return [cx + Math.cos(a + tw) * rr * k, cy + Math.sin(a + tw) * rr * k];
@@ -1520,6 +1524,39 @@ function drawConstellation(c: HTMLCanvasElement, r: RunResult, best: number, upt
     for (let k = 0; k < n; k += 3) { const [x, y] = ringXY(rr, (k / n) * Math.PI * 2); px(x, y); }
   });
   g.globalAlpha = 1;
+  // beyond the orbits: a glimpse leaves a violet haze round the rim; a catch lights an Einstein ring and twin jets
+  if (mood) {
+    const rnd = mulberry32(r.puzzle * 7 + 3);
+    for (let i = 0; i < (mood === 2 ? 520 : 260); i++) {
+      const a = rnd() * Math.PI * 2, d = RIM + 2 + Math.abs(gauss01(rnd)) * (mood === 2 ? 4 : 3.5);
+      g.globalAlpha = mood === 2 ? 0.55 + rnd() * 0.45 : 0.25 + rnd() * 0.3;
+      g.fillStyle = mood === 2 ? (rnd() < 0.35 ? "#ffffff" : "#d9c2ff") : "#9d82d0";
+      px(cx + Math.cos(a) * d, cy + Math.sin(a) * d);
+    }
+    // motes drifting in from the corners toward the centre
+    for (let i = 0; i < (mood === 2 ? 40 : 16); i++) {
+      const a = rnd() * Math.PI * 2, d = 104 + rnd() * 40, tail = mood === 2 ? 6 : 3;
+      for (let k = 0; k < tail; k++) {
+        g.globalAlpha = (1 - k / tail) * (mood === 2 ? 0.7 : 0.4); g.fillStyle = "#d9c2ff";
+        px(cx + Math.cos(a + k * 0.012) * (d + k * 1.5), cy + Math.sin(a + k * 0.012) * (d + k * 1.5));
+      }
+    }
+    if (mood === 2) {
+      // twin jets out of the poles, faint across the dial and blazing once past the rim
+      for (const base of [-Math.PI / 3, (2 * Math.PI) / 3]) {
+        for (let d = 16; d < 150; d += 0.7) {
+          const out = d > RIM, w = out ? 1.5 + (d - RIM) * 0.12 : 0.6;
+          for (let k = -w; k <= w; k += 0.7) {
+            const a = base + (k / d) * 1.2;
+            g.globalAlpha = (out ? 0.85 : 0.12) * (1 - Math.abs(k) / (w + 0.5)) * (out ? Math.max(0.15, 1 - (d - RIM) / 60) : 1);
+            g.fillStyle = Math.abs(k) < 0.6 ? "#ffffff" : "#d9c2ff";
+            px(cx + Math.cos(a) * d, cy + Math.sin(a) * d);
+          }
+        }
+      }
+    }
+    g.globalAlpha = 1;
+  }
   // the minute: ticks every 5 s, longer every 15 s
   g.fillStyle = "#6a5f88";
   for (let sec = 0; sec < 60; sec += 5) {
