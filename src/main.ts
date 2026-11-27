@@ -1574,23 +1574,24 @@ function showAtlas(focus = "tonight") {
   stars.push({
     id: "tonight", x: 1000, y: 1000, size: "huge", color: "#fee761",
     label: "TONIGHT'S SKY",
-    sub: done && !done.partial ? `${done.score} pts · next sky in ${nextSkyIn()}` : `${themeInfo(tonightTheme)?.mystery ? "a mystery link · " : ""}60 seconds${CONFIG.conditionsOn ? ` · ${cond.name}` : ""}`,
+    sub: done && !done.partial ? `${done.score} pts · next sky in ${nextSkyIn()}` : `60 seconds${CONFIG.conditionsOn ? ` · ${cond.name}` : ""}`,
     open: () => (done ? resultsScreen(done, "daily") : openPlay("daily")),
   });
   // past skies: one star below tonight; its card is a logbook of earlier nights by date, newest first
   const shortDate = (key: string) => new Date(key + "T12:00:00").toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
   const past = Array.from({ length: Math.min(30, today - 1) }, (_, i) => {
     const n = today - 1 - i, key = dateKeyOfNight(n), r = store.today(key), id = dayTheme(n), info = themeInfo(id);
-    return { key, r, name: info?.mystery ? (r?.link ? `Link: ${themeName(id)}` : "Mystery link") : "" };
+    void id; void info;
+    return { key, r, test: key < CONFIG.firstNight };
   });
   if (past.length) stars.push({
     id: "past-label", x: 1000, y: 1260, size: "big", color: "#b8aed0",
-    label: "PAST SKIES", sub: `${past.filter((p) => p.r).length} of ${past.length} seen`,
+    label: "PAST SKIES", sub: past.some((p) => !p.test) ? `${past.filter((p) => p.r && !p.test).length} of ${past.filter((p) => !p.test).length} seen` : "test runs so far",
     card: () => `<h2>Past skies</h2>
       <p class="small">Missed nights can still be looked at. They just don't count.</p>
       <ul class="past-list">${past.map((p) => `<li class="${p.r ? "seen-night" : "missed-night"}">
-        <div><b>${esc(shortDate(p.key))}</b><small>${p.name ? `${esc(p.name)} · ` : ""}${p.r ? `${p.r.score} pts` : "missed"}</small></div>
-        ${p.r ? `<button class="btn" data-log="${p.key}">LOG</button>` : ""}<button class="btn${p.r ? "" : " primary"}" data-replay="${p.key}">${p.r ? "AGAIN" : "LOOK"}</button></li>`).join("")}</ul>`,
+        <div><b>${esc(shortDate(p.key))}</b><small>${p.test ? "Test run" : p.r ? `${p.r.score} pts` : "missed"}</small></div>
+        ${p.r && !p.test ? `<button class="btn" data-log="${p.key}">LOG</button>` : ""}<button class="btn${p.r || p.test ? "" : " primary"}" data-replay="${p.key}"${p.test ? " disabled" : ""}>${p.r && !p.test ? "AGAIN" : "LOOK"}</button></li>`).join("")}</ul>`,
     wire: (c) => {
       c.querySelectorAll<HTMLButtonElement>("[data-log]").forEach((b) => (b.onclick = async () => { const k = b.dataset.log!; await usePack(k); resultsScreen(store.today(k)!, "daily"); }));
       c.querySelectorAll<HTMLButtonElement>("[data-replay]").forEach((b) => (b.onclick = () => void playPastNight(b.dataset.replay!)));
@@ -1632,7 +1633,7 @@ const MENU_CARDS: Record<string, { html: () => string; wire?: (c: HTMLElement) =
       <li><b>Zoomed in?</b> Name it before it pulls back for bonus points.</li>
       <li><b>Harder finds</b> are worth far more: ${CONFIG.bands.map((b) => b.points).join(" / ")} points by difficulty.</li>
       <li><b>${CONFIG.combo[0].at} in a row</b> multiplies your points, up to ×${CONFIG.combo[CONFIG.combo.length - 1].mult}. A skip costs ${CONFIG.skipCost}s.</li>
-      <li><b>One sky a night</b>, the same for everyone. Some nights hide their theme: guess the <b>Mystery link</b> at the end.</li>
+      <li><b>One sky a night</b>, the same for everyone.</li>
       <li>Difficulty goes outward: ${theme.bandNames.slice(0, 3).join(", ")}, then <b>${theme.bandNames[3]}</b>.</li></ul>` },
   settings: { html: () => `<h2>Settings</h2>
       <div class="settings">

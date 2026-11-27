@@ -65,69 +65,6 @@
    "note": "Sailors used them to time the ship's watch"
   },
   {
-   "id": "harp",
-   "band": 2,
-   "desc": "tall golden concert harp",
-   "names": "harp",
-   "note": "A concert harp has 47 strings"
-  },
-  {
-   "id": "scarecrow",
-   "band": 2,
-   "desc": "scarecrow in a straw hat and patched shirt",
-   "names": "scarecrow",
-   "note": "Crows soon learn it's harmless"
-  },
-  {
-   "id": "sombrero",
-   "band": 3,
-   "desc": "wide-brimmed straw sombrero",
-   "names": "sombrero, hat",
-   "note": "The name comes from sombra, shade"
-  },
-  {
-   "id": "sitar",
-   "band": 3,
-   "desc": "sitar with a gourd body and long neck",
-   "names": "sitar",
-   "note": "Extra strings ring along on their own"
-  },
-  {
-   "id": "vise",
-   "band": 3,
-   "desc": "cast-iron bench vise",
-   "names": "vise, vice, bench vise",
-   "note": "Holds work still while you saw"
-  },
-  {
-   "id": "stickinsect",
-   "band": 3,
-   "desc": "brown stick insect on a twig",
-   "names": "stick insect, walking stick, phasmid",
-   "note": "Looks like a twig on purpose"
-  },
-  {
-   "id": "stereoscope",
-   "band": 3,
-   "desc": "antique wooden stereoscope viewer with a double photo card",
-   "names": "stereoscope, stereo viewer, viewmaster",
-   "note": "Two photos, one 3D picture"
-  },
-  {
-   "id": "weathervane",
-   "band": 3,
-   "desc": "copper rooster weathervane",
-   "names": "weathervane, weather vane, wind vane",
-   "note": "Points into the wind"
-  },
-  {
-   "id": "sliderule",
-   "band": 3,
-   "desc": "wooden slide rule",
-   "names": "slide rule",
-   "note": "Engineers' calculator before electronics"
-  },
-  {
    "id": "artichoke",
    "band": 3,
    "desc": "whole green artichoke",

@@ -15,6 +15,8 @@ export const CONFIG = {
   themeOrder: ["animals", "teeth", "birds", "rebus", "bugs", "secret", "photos"],
   /** Puzzle #1 is this local date. */
   launchDate: "2026-11-12",
+  /** The first real nightly sky; nights before it were test runs while the game was being built. */
+  firstNight: "2026-11-27",
   /**
    * The sky everyone gets (yujin, 11-26: one sky for everyone, no harder streak skies).
    * perBand = objects from each band of the day's theme, in order: clear, distant, deep space, uncharted
