@@ -25,5 +25,5 @@ Pages Function (`functions/api/night.ts`); the Vercel setup keeps working untouc
 
 ## Notes
 - Cloudflare preview addresses (other branches) are public; future nights stay private there (admin token only).
-- `public/_headers` mirrors `vercel.json`'s headers. Change both while both hosts exist.
+- `public/_headers` holds the security headers. Vercel is disconnected (11-27), so it's the only copy that counts.
 - Packs are bundled into the function at build time (`scripts/cf/gen-packs.mjs`), so a new pack still just needs a push to `main`.

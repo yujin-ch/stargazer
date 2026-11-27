@@ -1084,7 +1084,7 @@ async function resultsScreen(r: RunResult, mode: Run["mode"], fresh = false) {
         <p class="constellation" id="constellation"></p>
         <canvas class="chart sky-chart" id="chart" aria-label="Your run drawn as a constellation"></canvas>
         <p class="legend">${bandsSeen.map((b) => `<span><i class="lg" style="background:${theme.bandColors[b]}"></i>${theme.bandNames[b]}</span>`).join("")}<span><i class="lg zoomed"></i>zoom</span><span><i class="lg skipped"></i>skipped</span></p>
-        <details class="how-read"><summary>How to read the dial</summary><p>Your minute runs clockwise from the top. Further out means harder; a Singularity sits in the very centre. Answers in a row join up; grey dashes on the rim are skips.</p></details>
+        <details class="how-read"><summary>How to read the dial</summary><p>Your minute runs clockwise from the top. Further out means harder; the very centre is kept for something rarer still. Answers in a row join up; grey dashes on the rim are skips.</p></details>
 
       </section>
        </div>
@@ -1897,7 +1897,7 @@ function showAtlas(focus = "tonight") {
   stars.push({
     id: "tonight", x: 0, y: 0, size: "huge", color: "#fee761",
     label: "TONIGHT'S SKY",
-    sub: done && !done.partial ? `${done.score} pts · next sky in ${nextSkyIn()}` : `60 seconds${CONFIG.conditionsOn ? ` · ${cond.name}` : ""}`,
+    sub: done && !done.partial ? `${done.score} pts · next sky in ${nextSkyIn()}` : `${CONFIG.runSeconds} seconds${CONFIG.conditionsOn ? ` · ${cond.name}` : ""}`,
     open: () => (done ? resultsScreen(done, "daily") : openPlay("daily")),
   });
   // past skies: one star below tonight; its card is a logbook of earlier nights by date, newest first
@@ -1985,7 +1985,7 @@ const MENU_CARDS: Record<string, { html: () => string; wire?: (c: HTMLElement) =
       <li><b>Harder finds</b> are worth far more: ${CONFIG.bands.slice(0, SING).map((b) => b.points).join(" / ")} points by difficulty.</li>
       <li><b>${CONFIG.combo[0].at} in a row</b> multiplies your points, up to ×${CONFIG.combo[CONFIG.combo.length - 1].mult}. A skip costs ${CONFIG.skipCost}s; every answer gives you ${CONFIG.timeBonus[0]}–${CONFIG.timeBonus[BH]}s back (more for harder finds).</li>
       <li><b>One sky a night</b>, the same for everyone.</li>
-      <li>Difficulty goes outward: ${theme.bandNames.slice(0, BH).join(", ")}, then <b>${theme.bandNames[BH]}</b>.</li></ul>` },
+      <li>Difficulty goes outward: ${theme.bandNames.slice(0, BH).join(", ")}, then <b>${theme.bandNames[BH]}</b>. And some nights, something stranger: <b>???</b></li></ul>` },
   settings: { html: () => `<h2>Settings</h2>
       <div class="settings">
         <button class="btn" id="card-sound">SOUND: ${store.muted ? "OFF" : "ON"}</button>
@@ -2006,7 +2006,7 @@ const MENU_CARDS: Record<string, { html: () => string; wire?: (c: HTMLElement) =
       const acct = c.querySelector<HTMLElement>("#acct")!;
       renderAccount(acct); acct.insertAdjacentHTML("afterend", accountCommunityHtml()); wireAccountCommunity(c); onAccountChange(() => acct.isConnected && renderAccount(acct)); void warmUp().then(() => acct.isConnected && renderAccount(acct));
     } },
-  credits: { html: () => `<h2>Credits</h2><p>${theme.credits}</p><p class="small">Photographs generated with Qwen-Image, cut out and pixelated for the telescope.</p>` },
+  credits: { html: () => `<h2>Credits</h2><p>${theme.credits}</p><p class="small">Pictures generated with AI image tools, then cut out and pixelated for the telescope.</p>` },
 };
 
 /** The account part of Settings: sign in to keep your nights and universe on every device. */

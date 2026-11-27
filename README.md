@@ -17,9 +17,10 @@ A daily one-minute picture-naming game. Look through a pixel telescope and type 
 npm install
 npm run dev      # local dev server
 npm test         # matcher + library + daily-set tests
-npm run build    # static site in dist/ (what Vercel serves)
+npm run build:cf # static site + night API in dist/ (what Cloudflare Pages serves)
 ```
-Vercel: import the repo, framework preset "Vite" (build `npm run build`, output `dist`).
+Hosting: Cloudflare Pages builds `main` with `npm run build:cf` and serves playstargazer.io; other branches get preview
+addresses on *.stargazer-5pf.pages.dev. See docs/cloudflare-setup.md. (The old Vercel setup, `vercel.json` and `api/`, is no longer used.)
 
 ## Where things live
 - `src/config.ts`: every tuning number (run length, skip cost, zoom, blur, points, launch date).
@@ -47,20 +48,20 @@ Build one from a generated batch (raw green-screen images named <id>.png plus th
     python3 scripts/photos/make_day.py <images dir> <items.json> 2026-12-01 --skip=hurdygurdy,ayeaye
 
 On that local date the game fetches `days/<date>/pack.json`; if it exists, tonight's star shows Photographs and
-the sky is drawn from the pack (per-band counts from CONFIG.tiers, 3/8/12/6 for most players). No pack, no change.
-Push the folder to `main` and Vercel redeploys. Note: future packs are public files, so a curious player could peek.
+the sky is drawn from the pack (per-band counts from CONFIG.tiers: 3/7/7/7/4/1 for Moon, Planet, Comet, Nebula, Black Hole and the hidden sixth band). No pack, no change.
+Push the folder to `main` and Cloudflare Pages redeploys. Note: future packs are public files, so a curious player could peek.
 
 ## Site address, link previews, analytics, tips
 
-- `VITE_SITE_URL` in `.env` (or in Vercel's environment variables) is the public address. The share text, share picture and link-preview tags (`og:*`, `twitter:*` in `index.html`) are all built from it, so moving to a custom domain means changing this one line and redeploying.
+- `VITE_SITE_URL` in `.env` (or in the Cloudflare Pages project's environment variables) is the public address. The share text, share picture and link-preview tags (`og:*`, `twitter:*` in `index.html`) are all built from it, so moving to a custom domain means changing this one line and redeploying.
 - `public/og.png` is the 1200×630 link-preview image.
 - Shared links carry `?s=1`; a daily share also carries `&d=<date>&f=<score>`, so a friend who opens it tonight sees that score on the front page and as a rose stargazer on their hill (nothing is stored on a server).
-- `public/manifest.webmanifest` and `public/icons/` make "Add to Home Screen" give a proper app icon; the results offer it on phones. Vercel Web Analytics is loaded from `/_vercel/insights/script.js` and starts counting once Analytics is switched on in the Vercel project.
+- `public/manifest.webmanifest` and `public/icons/` make "Add to Home Screen" give a proper app icon; the results offer it on phones. Visits are counted by Cloudflare Web Analytics (switched on in the Pages project; no cookies).
 - `VITE_TIP_URL` (e.g. a Ko-fi page) shows a small tip link under the results; leave it empty to hide it.
 
 ## Security
 
-- `vercel.json` sets the security headers: a strict Content-Security-Policy (same-origin scripts, fonts, images and API only), HSTS, no framing, nosniff, a tight Referrer-Policy and Permissions-Policy.
+- `public/_headers` sets the security headers: a strict Content-Security-Policy (same-origin scripts, fonts, images and API only), HSTS, no framing, nosniff, a tight Referrer-Policy and Permissions-Policy.
 - No player scores are collected or stored. "On the hill tonight" is a set bell curve per night (`dayCurve` in `src/crowd.ts`), worked out from a simulated crowd playing that exact sky, so it's the same for everyone.
 - `?debug` (which reveals answers) only works on localhost, and `?date=` can't preview a future night on the public site.
 - The game runs in the browser, so a determined player can always read answers from the code. There's no leaderboard to protect.

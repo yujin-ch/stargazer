@@ -42,7 +42,7 @@ It should say "Success. No rows returned". Afterwards, **Advisors → Security A
 
 **Authentication → URL Configuration**
 - **Site URL**: `https://playstargazer.io`
-- **Redirect URLs** → Add URL, one at a time: `https://playstargazer.io/**`, `https://www.playstargazer.io/**` and `https://stargazer-*.vercel.app/**` (your preview deployments; check the pattern matches a preview URL in Vercel).
+- **Redirect URLs** → Add URL, one at a time: `https://playstargazer.io/**`, `https://www.playstargazer.io/**` and `https://*.stargazer-5pf.pages.dev/**` (Cloudflare preview addresses).
 
 **Email (magic links)**: under **Authentication → Sign In / Providers**, Email is on by default, so emailed links work as is. Supabase's built-in sender only sends a few emails an hour; later you can plug in your own sender under **Authentication → Emails → SMTP Settings**.
 
@@ -60,9 +60,9 @@ It should say "Success. No rows returned". Afterwards, **Advisors → Security A
 
 If Google says `redirect_uri_mismatch`, the redirect URI in the Google client doesn't exactly match Supabase's Callback URL. If it says the app is in testing, you haven't clicked Publish app under Audience.
 
-## 4. Vercel environment variables
+## 4. Cloudflare environment variables
 
-Vercel → stargazer → **Settings → Environment Variables** (Production and Preview):
+Cloudflare → Workers & Pages → stargazer → **Settings → Variables and Secrets** (Production and Preview):
 
 | Name | Value |
 |---|---|
@@ -70,7 +70,7 @@ Vercel → stargazer → **Settings → Environment Variables** (Production and 
 | `VITE_SUPABASE_ANON_KEY` | the Publishable key from step 1 (or the old anon key); the name stays "ANON" on purpose |
 | `ADMIN_EMAILS` | your email (comma-separate more admins); these accounts can open future nights early |
 
-Then redeploy (Deployments → … → Redeploy). Settings in the game now shows **Your account**.
+Then redeploy (Deployments → … → Retry deployment). Settings in the game now shows **Your account**.
 
 ## 5. Early access as an admin
 
@@ -82,4 +82,4 @@ night has started somewhere on Earth.
 
 Future nights live in `packs/<date>.json` (outside the public site) and their pictures have random file names. If the
 GitHub repository is public, anyone can still read `packs/` there, so make it private: GitHub → the repo → Settings →
-General → Danger Zone → Change visibility → Private. Vercel keeps deploying from a private repo.
+General → Danger Zone → Change visibility → Private. Cloudflare Pages keeps deploying from a private repo.
