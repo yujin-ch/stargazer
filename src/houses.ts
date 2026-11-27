@@ -3,6 +3,7 @@
  * 0–99 score per house for how well you name things from it. Scores come only from your own saved nights.
  */
 import type { RunResult } from "./storage";
+import { drawGlow, st } from "./pixelfx";
 
 export interface House {
   key: string;
@@ -164,14 +165,11 @@ export function drawChart(g: CanvasRenderingContext2D, cx: number, cy: number, R
   g.setLineDash([2, 4]); g.strokeStyle = "rgba(255,255,255,.08)";
   for (const v of [25, 50, 75]) { g.beginPath(); g.arc(cx, cy, R * 0.24 + R * 0.7 * (v / 100), 0, 7); g.stroke(); }
   g.setLineDash([]);
-  const grad = g.createRadialGradient(cx, cy, 0, cx, cy, R);
-  grad.addColorStop(0, "rgba(255,224,102,.05)"); grad.addColorStop(1, "rgba(255,224,102,.32)");
-  g.fillStyle = grad; g.beginPath(); scores.forEach((v, i) => { const [x, y] = pt(i, v); if (i) g.lineTo(x, y); else g.moveTo(x, y); }); g.closePath(); g.fill();
+  g.fillStyle = "rgba(255,224,102,.2)"; g.beginPath(); scores.forEach((v, i) => { const [x, y] = pt(i, v); if (i) g.lineTo(x, y); else g.moveTo(x, y); }); g.closePath(); g.fill();
   g.strokeStyle = "#ffe066"; g.lineWidth = 1.5; g.stroke();
   scores.forEach((v, i) => {
-    const [x, y] = pt(i, v), gr = g.createRadialGradient(x, y, 0, x, y, 9);
-    gr.addColorStop(0, "#fff"); gr.addColorStop(0.3, HOUSES[i].color); gr.addColorStop(1, "rgba(0,0,0,0)");
-    g.fillStyle = gr; g.fillRect(x - 9, y - 9, 18, 18);
+    const [x, y] = pt(i, v);
+    drawGlow(g, x, y, 9, [st(0, "#ffffff", 1), st(0.3, HOUSES[i].color, 1), st(1, HOUSES[i].color, 0)], 1);
   });
   g.fillStyle = "#140e2a"; g.beginPath(); g.arc(cx, cy, R * 0.2, 0, 7); g.fill();
   g.strokeStyle = "#b08a4a"; g.lineWidth = 1.5; g.stroke();

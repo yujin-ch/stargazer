@@ -1,3 +1,4 @@
+import { drawGlow, st } from "./pixelfx";
 /**
  * The live map in the corner of the eyepiece: tonight's little star system, filling in as you play. Each answer
  * shrinks out of the middle into its orbit (Moons close in, Black Holes at the edge); skips are grey dashes on the rim.
@@ -68,9 +69,8 @@ export class MiniMap {
     // tonight's star: brighter as the system fills, flaring on each find
     const pa = (now - this.pulse) / 600, flare = pa < 1 ? (1 - pa) : 0;
     const sr = S * (0.045 + Math.min(0.04, this.dots.length * 0.002)) * (1 + flare * 0.6 + (REDUCED ? 0 : Math.sin(t * 2.2) * 0.06));
-    const glow = g.createRadialGradient(cx, cy, 0, cx, cy, sr * (4 + flare * 3));
-    glow.addColorStop(0, "rgba(255,236,170,0.95)"); glow.addColorStop(1, "rgba(255,170,80,0)");
-    g.globalAlpha = 1; g.fillStyle = glow; g.fillRect(cx - sr * 7, cy - sr * 7, sr * 14, sr * 14);
+    g.globalAlpha = 1;
+    drawGlow(g, cx, cy, sr * (4 + flare * 3), [st(0, "#ffecaa", 0.95), st(1, "#ffaa50", 0)], 2);
     g.fillStyle = "#fff6d8"; g.beginPath(); g.arc(cx, cy, sr, 0, Math.PI * 2); g.fill();
     if (qa < 1) {
       g.globalAlpha = (1 - qa) * 0.9; g.strokeStyle = this.colors[4]; g.lineWidth = 2;

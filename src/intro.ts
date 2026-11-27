@@ -194,7 +194,8 @@ export function introScreen(app: HTMLElement, opts: { title: string; sub: string
     const W = window.innerWidth, H = window.innerHeight;
     if (W === lastW && H === lastH) return;
     lastW = W; lastH = H;
-    PX = Math.max(2, Math.min(5, Math.round(Math.min(W, H) / 170)));
+    // the near scene uses 4 px art pixels (2 on small phones), never odd sizes, so it matches the rest of the game
+    PX = Math.min(W, H) >= 560 ? 4 : 2;
     const cw = Math.ceil(W / PX), ch = Math.ceil(H / PX);
     cv.width = cw; cv.height = ch;
     cv.style.width = `${cw * PX}px`; cv.style.height = `${ch * PX}px`;

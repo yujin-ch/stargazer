@@ -6,6 +6,7 @@
  * Drag to pan, wheel or pinch to zoom, tap a find to read its card, tap a ring for that night.
  */
 import { mulberry32 } from "./daily";
+import { ditherRadial, drawGlow, st } from "./pixelfx";
 import { ui } from "./themes/chip";
 import { HOUSES, drawChart, drawGlyph, glyphCanvas, rankOf, type HouseScore } from "./houses";
 
@@ -158,9 +159,7 @@ export function openUniverse(app: HTMLElement, o: UniverseOpts): () => void {
   // pre-drawn glows, one per house colour, so hundreds of stars stay cheap
   const glow = HOUSES.map((h) => {
     const c = document.createElement("canvas"); c.width = c.height = 32;
-    const x = c.getContext("2d")!, gr = x.createRadialGradient(16, 16, 0, 16, 16, 16);
-    gr.addColorStop(0, h.color); gr.addColorStop(0.35, h.color + "88"); gr.addColorStop(1, "rgba(0,0,0,0)");
-    x.fillStyle = gr; x.fillRect(0, 0, 32, 32);
+    ditherRadial(c.getContext("2d")!, 32, 32, 16, 16, 16, 16, [st(0, h.color, 1), st(0.35, h.color, 0.53), st(1, h.color, 0)], 2);
     return c;
   });
 
@@ -218,9 +217,8 @@ export function openUniverse(app: HTMLElement, o: UniverseOpts): () => void {
   function drawFind(b: Placed, sx: number, sy: number, rad: number, lit: boolean) {
     const a = g.globalAlpha, ring = o.bandColors[b.band];
     if (lit) {
-      const halo = g.createRadialGradient(sx, sy, rad * 0.8, sx, sy, rad * 2.2);
-      halo.addColorStop(0, HOUSES[b.house].color + "88"); halo.addColorStop(1, "rgba(0,0,0,0)");
-      g.fillStyle = halo; g.fillRect(sx - rad * 2.2, sy - rad * 2.2, rad * 4.4, rad * 4.4);
+      const hc = HOUSES[b.house].color;
+      drawGlow(g, sx, sy, rad * 2.2, [st(0, hc, 0.53), st(0.36, hc, 0.53), st(1, hc, 0)], 2);
     }
     g.fillStyle = "#171030"; g.beginPath(); g.arc(sx, sy, rad, 0, Math.PI * 2); g.fill();
     g.save(); g.beginPath(); g.arc(sx, sy, rad, 0, Math.PI * 2); g.clip();
@@ -247,9 +245,7 @@ export function openUniverse(app: HTMLElement, o: UniverseOpts): () => void {
 
     g.setTransform(dpr, 0, 0, dpr, 0, 0);
     g.fillStyle = "#0b0818"; g.fillRect(0, 0, W, H);
-    const neb = g.createRadialGradient(W * 0.35, H * 0.4, 0, W * 0.35, H * 0.4, Math.max(W, H) * 0.8);
-    neb.addColorStop(0, "rgba(70,40,110,0.35)"); neb.addColorStop(1, "rgba(0,0,0,0)");
-    g.fillStyle = neb; g.fillRect(0, 0, W, H);
+    drawGlow(g, W * 0.35, H * 0.4, Math.max(W, H) * 0.8, [st(0, "#46286e", 0.35), st(1, "#46286e", 0)], 4);
     for (const s of bg) {
       const x = (((s.x * 3000 - cam.x * s.d) % W) + W) % W, y = (((s.y * 3000 - cam.y * s.d) % H) + H) % H;
       g.globalAlpha = REDUCED ? 0.7 : 0.45 + 0.4 * Math.sin(t * 1.3 + s.tw);
@@ -261,9 +257,7 @@ export function openUniverse(app: HTMLElement, o: UniverseOpts): () => void {
     const on = (b: Placed) => filter < 0 || b.house === filter;
     // the core
     const coreR = Math.max(30, Math.min(170, 150 * z));
-    const core = g.createRadialGradient(c0[0], c0[1], 0, c0[0], c0[1], coreR);
-    core.addColorStop(0, "rgba(255,240,205,0.75)"); core.addColorStop(0.3, "rgba(255,200,120,0.25)"); core.addColorStop(1, "rgba(255,150,80,0)");
-    g.fillStyle = core; g.fillRect(c0[0] - coreR, c0[1] - coreR, coreR * 2, coreR * 2);
+    drawGlow(g, c0[0], c0[1], Math.round(coreR / 8) * 8, [st(0, "#fff0cd", 0.75), st(0.3, "#ffc878", 0.25), st(1, "#ff9650", 0)], 2);
     // the rings: one per night, each week a little brighter, tonight's in gold
     g.lineWidth = 1;
     for (const s of systems) {
@@ -334,7 +328,7 @@ export function openUniverse(app: HTMLElement, o: UniverseOpts): () => void {
       const last = s.ring === lastRing;
       if (!last && ringSel !== s && !(z > 0.6 && z < 2.2 && s.ring % 7 === 6)) continue;
       const a = armAngle(0.5, s.ring), p = toScreen(Math.cos(a) * s.r, Math.sin(a) * s.r);
-      g.font = `${last || ringSel === s ? 8 : 7}px "Press Start 2P", monospace`;
+      g.font = `8px "Press Start 2P", monospace`;
       g.fillStyle = last || ringSel === s ? "#fee761" : "#b9a8e0"; g.globalAlpha = last || ringSel === s ? 0.95 : 0.6;
       g.fillText(last ? "TONIGHT" : s.night.label.replace(/^\w+, /, "").toUpperCase(), p[0], p[1] + 3);
     }
@@ -347,7 +341,7 @@ export function openUniverse(app: HTMLElement, o: UniverseOpts): () => void {
       const lit = filter < 0 || filter === i, small = W < 760;
       g.globalAlpha = lit ? 1 : 0.35;
       drawGlyph(g, h, p[0], p[1] - (small ? 18 : 22), small ? 15 : 20, 1, 1.1);
-      g.font = `${small ? 7 : 8}px "Press Start 2P", monospace`; g.fillStyle = h.color; g.fillText(h.name.replace("The ", "").toUpperCase(), p[0], p[1] + 2);
+      g.font = `8px "Press Start 2P", monospace`; g.fillStyle = h.color; g.fillText(h.name.replace("The ", "").toUpperCase(), p[0], p[1] + 2);
       g.font = `${small ? 16 : 19}px VT323, monospace`; g.fillStyle = "#fff"; g.fillText(String(scores[i]), p[0], p[1] + (small ? 17 : 20));
     });
     g.globalAlpha = 1;

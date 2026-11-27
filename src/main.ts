@@ -18,6 +18,7 @@ import { dayCurve, beatShare, ncdf, type Curve } from "./crowd";
 import { share, shareText, nightTitle, type Standing } from "./share";
 import { atlasScreen, type AtlasStar, type AtlasRegion } from "./atlas";
 import { introScreen } from "./intro";
+import { initPixelFx, drawGlow, ditherV, st } from "./pixelfx";
 import { skyCenter, skyBlackHole, skyPulse, skyTravel, skyBoost } from "./themes/pixel-space/sky";
 import { THEMES } from "./library";
 import { type CommunitySky } from "./community";
@@ -196,7 +197,9 @@ function sizeViewer() {
   if (!scope || !viewer) return;
   const avail = Math.min(scope.clientWidth, scope.clientHeight);
   let k = avail / viewer.V;
-  k = k >= 2 ? Math.floor(k * 2) / 2 : Math.max(0.75, k);
+  // whole screen pixels per art pixel on big screens (so every art pixel is the same size); half steps on phones,
+  // whose dense screens hide the difference
+  k = k >= 3 ? Math.floor(k) : k >= 2 ? Math.floor(k * 2) / 2 : Math.max(0.75, k);
   const canvas = scope.querySelector("canvas")!;
   canvas.style.width = canvas.style.height = `${Math.floor(viewer.V * k)}px`;
   const rc = scope.getBoundingClientRect();
@@ -1486,10 +1489,7 @@ function drawConstellation(c: HTMLCanvasElement, r: RunResult, best: number, upt
   }
   // the Singularity's pull: a glimpse leaves a violet haze at the centre; a catch winds the sky into an accretion swirl
   if (mood) {
-    const glow = g.createRadialGradient(cx, cy, 0, cx, cy, mood === 2 ? 100 : 80);
-    glow.addColorStop(0, mood === 2 ? "rgba(217,194,255,0.45)" : "rgba(170,120,240,0.42)");
-    glow.addColorStop(1, "rgba(60,20,110,0)");
-    g.fillStyle = glow; g.fillRect(0, 0, W, H);
+    drawGlow(g, cx, cy, mood === 2 ? 100 : 80, mood === 2 ? [st(0, "#d9c2ff", 0.45), st(1, "#3c146e", 0)] : [st(0, "#aa78f0", 0.42), st(1, "#3c146e", 0)], 1);
   }
   if (mood === 1) {
     // glimpsed: one faint wisp curling in, the start of a swirl you never saw finish
@@ -1658,10 +1658,9 @@ function drawHill(c: HTMLCanvasElement, curve: Curve, mine: number, friend: numb
   for (let x = 0; x <= W; x++) hill.lineTo(x, top(x));
   hill.lineTo(W, base); hill.closePath();
   const peak = base - amp;
-  const shade = (a: string, b: string) => { const gr = g.createLinearGradient(0, peak, 0, base); gr.addColorStop(0, a); gr.addColorStop(1, b); return gr; };
   g.save(); g.clip(hill);
-  g.fillStyle = shade("#3a2f56", "#17132a"); g.fillRect(youX, 0, W - youX, H);
-  g.fillStyle = shade("#7a5238", "#2a1d2e"); g.fillRect(0, 0, youX, H);
+  ditherV(g, youX, W, peak, base, "#3a2f56", "#17132a");
+  ditherV(g, 0, youX, peak, base, "#7a5238", "#2a1d2e");
   g.restore();
   for (let x = 0; x < W; x++) { g.fillStyle = x < youX ? "#e0b060" : "#6a5a88"; g.fillRect(x, top(x), 1, 1); }
   g.fillStyle = "#3a2f52"; g.fillRect(0, base, W, 1);
@@ -1685,9 +1684,7 @@ function drawHill(c: HTMLCanvasElement, curve: Curve, mine: number, friend: numb
   }
   // you
   const yy = top(youX) + 1;
-  const glow = g.createRadialGradient(youX, yy - 6, 0, youX, yy - 6, 16);
-  glow.addColorStop(0, "rgba(254, 231, 97, 0.28)"); glow.addColorStop(1, "rgba(254, 231, 97, 0)");
-  g.fillStyle = glow; g.fillRect(youX - 16, yy - 22, 32, 32);
+  drawGlow(g, youX, yy - 6, 16, [st(0, "#fee761", 0.3), st(1, "#fee761", 0)], 1);
   stargazer(g, youX, yy, youX < mx ? 1 : -1, "#fee761", "#feae34", 0);
   g.fillStyle = "#fee761";
   g.fillRect(youX, yy - 21, 1, 5); g.fillRect(youX - 2, yy - 19, 5, 1);
@@ -2117,6 +2114,7 @@ function frontPage(returning = false) {
   app.querySelector(".intro")?.insertAdjacentHTML("beforeend", `<p class="intro-foot"><a href="/about">About</a><i>·</i><a href="/privacy">Privacy</a>${TIP_URL ? `<i>·</i><a class="tip-link" href="${esc(TIP_URL)}" target="_blank" rel="noopener">Keep the telescope lit ☕</a>` : ""}</p>`);
 }
 
+initPixelFx();
 initCommunity({
   app,
   showAtlas,

@@ -3,7 +3,7 @@
  * that shift with the pointer (parallax), and the odd shooting star. Drawn at low resolution, upscaled crisp.
  */
 
-const SCALE = 3;
+const SCALE = 2; // far sky: 2 screen px per art pixel (near things use 4)
 
 interface Tint { top: string; bottom: string; glow: string; glowA: number }
 
@@ -18,6 +18,8 @@ export function skyTint(hour: number): Tint {
 
 const hex = (h: string) => { const n = parseInt(h.slice(1), 16); return [n >> 16, (n >> 8) & 255, n & 255]; };
 const mix = (a: number[], b: number[], t: number) => `rgb(${a.map((v, i) => Math.round(v + (b[i] - v) * t)).join(",")})`;
+
+import { bayer, posterize } from "../../pixelfx";
 
 const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
 
@@ -63,10 +65,17 @@ function galaxy(size: number, seed: number, kind: "spiral" | "edge" | "round"): 
     g.globalAlpha = a; g.fillStyle = col; g.fillRect(Math.floor(cx + px), Math.floor(cy + py), 1, 1);
   };
   // a faint haze of the whole disc, so the arms sit in a glow rather than floating
-  g.save(); g.translate(cx, cy); g.rotate(rot); g.scale(1, tilt);
-  const halo = g.createRadialGradient(0, 0, 0, 0, 0, R);
-  halo.addColorStop(0, "rgba(243,226,192,0.35)"); halo.addColorStop(0.35, "rgba(160,150,220,0.14)"); halo.addColorStop(1, "rgba(120,110,200,0)");
-  g.fillStyle = halo; g.beginPath(); g.arc(0, 0, R, 0, 6.29); g.fill(); g.restore();
+  // (dithered per pixel on the tilted disc, so it stays on the grid: no rotated, smoothed gradient)
+  for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
+    const dx = x + 0.5 - cx, dy = y + 0.5 - cy;
+    const u = dx * cosR + dy * sinR, v = (-dx * sinR + dy * cosR) / tilt, t = Math.hypot(u, v) / R;
+    if (t >= 1) continue;
+    const th = bayer(x, y), a = t < 0.35 ? 0.35 - (0.21 * t) / 0.35 : 0.14 * (1 - (t - 0.35) / 0.65);
+    const q = Math.floor(a * 6 + th) / 6;
+    if (q <= 0) continue;
+    g.globalAlpha = q; g.fillStyle = t < 0.3 ? "#f3e2c0" : "#a096dc"; g.fillRect(x, y, 1, 1);
+  }
+  g.globalAlpha = 1;
   const n = size * size * 1.3;
   for (let i = 0; i < n; i++) {
     const t = Math.pow(rand(), 0.8);
@@ -227,13 +236,13 @@ export function livingSky(canvas: HTMLCanvasElement) {
     const kinds = ["spiral", "edge", "spiral", "round", "spiral", "edge"] as const;
     const count = Math.max(3, Math.min(6, Math.round((W * H) / 22000)));
     gals = Array.from({ length: count }, (_, i) => {
-      const size = [26, 18, 34, 14, 22, 16][i];
+      const size = [40, 28, 50, 22, 34, 24][i]; // art pixels are 2 px now (were 3), so the galaxies hold their size on screen
       const left = i % 2 === 0;
       return {
         img: galaxy(size, 11 + i * 97, kinds[i]),
         x: left ? W * (0.04 + Math.random() * 0.2) : W * (0.76 + Math.random() * 0.18) - size,
         y: (H / count) * (i + Math.random() * 0.6),
-        depth: 0.4 + (size / 34) * 0.4,
+        depth: 0.4 + (size / 50) * 0.4,
         p: Math.random() * 6.28,
       };
     });
@@ -255,6 +264,8 @@ export function livingSky(canvas: HTMLCanvasElement) {
     rg.addColorStop(0.5, `rgba(${gc.join(",")},${tint.glowA * 0.5})`);
     rg.addColorStop(1, `rgba(${gc.join(",")},0)`);
     b.fillStyle = rg; b.fillRect(0, 0, bg.width, bg.height);
+    // step the smooth ramps into a few dithered bands, as a palette-limited sky would be
+    posterize(bg, 6);
   };
   resize();
   window.addEventListener("resize", resize);
@@ -280,7 +291,7 @@ export function livingSky(canvas: HTMLCanvasElement) {
     for (const ga of gals) {
       const k = ga.depth * 4;
       const gy = ((((ga.y + 12 - cur.y * k + driftY * ga.depth - scroll * (0.3 + ga.depth * 0.4)) % SH) + SH) % SH) - 12 - ga.img.height / 2;
-      g.globalAlpha = 0.75 + (reduce ? 0 : Math.sin(t / 4000 + ga.p) * 0.15);
+      g.globalAlpha = 0.75 + (reduce ? 0 : Math.round(Math.sin(t / 4000 + ga.p) * 2) * 0.075); // in steps, not a smooth throb
       g.drawImage(ga.img, Math.round(ga.x - cur.x * k + driftX * ga.depth), Math.round(gy));
     }
     g.globalAlpha = 1;

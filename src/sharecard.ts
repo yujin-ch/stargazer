@@ -49,7 +49,7 @@ export async function drawShareCard(o: CardInput): Promise<HTMLCanvasElement> {
   text(o.theme.title.toUpperCase(), W / 2, 140, '64px "Press Start 2P"', "#fee761");
   text(o.sky ? `${date} · ${o.sky}` : date, W / 2, 215, '54px "VT323"', "#f3ead8", 3);
   text(String(o.r.score), W / 2, 380, '128px "Press Start 2P"', "#fee761", 8);
-  text("POINTS", W / 2, 440, '28px "Press Start 2P"', "#a39bb8", 4);
+  text("POINTS", W / 2, 440, '32px "Press Start 2P"', "#a39bb8", 4);
   // the constellation in a brass frame
   const k = Math.min(840 / o.constellation.width, 520 / o.constellation.height);
   const fw = Math.round(o.constellation.width * k), fh = Math.round(o.constellation.height * k), fx = (W - fw) / 2, fy = 475;
@@ -72,7 +72,7 @@ export async function drawShareCard(o: CardInput): Promise<HTMLCanvasElement> {
     if (it.outcome === "zoomed") { g.fillStyle = "#fee761"; g.fillRect(x + sz / 2 - 6, yy + sz / 2 - 6, 12, 12); }
   });
   y += rows * (sz + gap) + 56;
-  text(o.title.toUpperCase() + (o.streak >= 2 ? ` · ${o.streak}-NIGHT STREAK` : ""), W / 2, Math.min(y, H - 130), '30px "Press Start 2P"', "#f2d38a", 4);
+  text(o.title.toUpperCase() + (o.streak >= 2 ? ` · ${o.streak}-NIGHT STREAK` : ""), W / 2, Math.min(y, H - 130), '32px "Press Start 2P"', "#f2d38a", 4);
   text(o.host, W / 2, H - 50, '44px "VT323"', "#2ce8f5", 3);
   return c;
 }
