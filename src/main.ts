@@ -1573,6 +1573,50 @@ function packDate(o: SkyObject): string {
   return /:(\d{4}-\d{2}-\d{2})\//.exec(o.id)?.[1] ?? "";
 }
 
+// ---------------------------------------------------------------- midnight
+
+/**
+ * Each night runs on the player's own calendar (local midnight). If the date changes while the game is open, stop
+ * everything behind a blurred screen: a daily run in progress is saved as it stands, and the only way on is to load
+ * the new night. Previews of a chosen date (?date=) are left alone.
+ */
+const BOOT_DAY = localDateKey();
+let midnightShown = false;
+function checkMidnight() {
+  if (midnightShown || DATE_Q || localDateKey() === BOOT_DAY) return;
+  midnightShown = true;
+  let line = "Tonight's sky has changed.";
+  if (run && run.mode === "daily" && (run.phase === "playing" || run.phase === "countdown" || run.phase === "paused") && run.items.length) {
+    clearTimeout(pendingTimer);
+    run.pending = null;
+    const result = buildResult(), prev = store.today(run.date);
+    store.addToCatalogue(run.items.filter((i) => i.outcome !== "skipped").map((i) => i.id));
+    if (!prev || prev.partial) store.save(result);
+    line = `Your run for ${fmtDate(run.date)} was stopped and saved at ${result.score} points.`;
+  }
+  if (run && run.phase !== "over") run.phase = "over";
+  cancelAnimationFrame(raf);
+  (document.activeElement as HTMLElement | null)?.blur();
+  const veil = document.createElement("div");
+  veil.className = "midnight";
+  veil.setAttribute("role", "dialog");
+  veil.setAttribute("aria-modal", "true");
+  veil.innerHTML = `<div class="midnight-card">
+    <p class="midnight-kicker">MIDNIGHT · ${fmtDate(localDateKey()).toUpperCase()}</p>
+    <h2>A NEW SKY HAS RISEN</h2>
+    <p>${line}</p>
+    <button class="btn primary" id="midnight-go" type="button">SEE TONIGHT'S SKY</button>
+  </div>`;
+  document.body.appendChild(veil);
+  const go = veil.querySelector<HTMLButtonElement>("#midnight-go")!;
+  go.onclick = () => location.reload();
+  go.focus();
+  try { theme.sounds.end(); } catch { /* sound is optional */ }
+}
+setInterval(checkMidnight, 5000);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) checkMidnight(); });
+window.addEventListener("focus", checkMidnight);
+
 // ---------------------------------------------------------------- boot
 
 // scores used to be sent to a server; nothing is now, so tidy away the old device id and "sent" marks

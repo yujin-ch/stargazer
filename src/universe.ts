@@ -1,8 +1,7 @@
 /**
  * Your Universe: a pinwheel galaxy that grows as you play. Each of the eight houses is a spiral arm and each night
  * you play adds a ring, from your first night at the core out to tonight at the edge; the arm's twist comes from
- * time. Within an arm, the things you named that night are joined like a little constellation, and the ones that got
- * away are faint dots beside them. So the galaxy's shape is your chart: the house you're best at has the fullest arm.
+ * time. The ones that got away are faint dots beside your finds. So the galaxy's shape is your chart: the house you're best at has the fullest arm.
  * Beside the map sits the Star Chart (0-99 per house), which doubles as a filter: tap a house and its arm lights up.
  * Drag to pan, wheel or pinch to zoom, tap a find to read its card, tap a ring for that night.
  */
@@ -65,7 +64,7 @@ interface Placed extends UBody {
   a0: number;
 }
 /** One night: a ring of the galaxy (the core holds practice finds). */
-interface Sys { night: UNight; bodies: Placed[]; belt: boolean; r: number; ring: number; links: [Placed, Placed][] }
+interface Sys { night: UNight; bodies: Placed[]; belt: boolean; r: number; ring: number }
 
 function hashStr(s: string): number {
   let h = 2166136261;
@@ -126,7 +125,7 @@ export function openUniverse(app: HTMLElement, o: UniverseOpts): () => void {
     const belt = !night.date, ring = belt ? -1 : dated.indexOf(night);
     const r = belt ? CORE_R : R0 + ring * STEP;
     const rand = mulberry32(hashStr(night.date || "practice"));
-    const sys: Sys = { night, bodies: [], belt, r, ring, links: [] };
+    const sys: Sys = { night, bodies: [], belt, r, ring };
     for (let h = 0; h < 8; h++) {
       const group = night.bodies.filter((b) => b.house === h);
       // found ones in the middle of the arm, the ones that got away at its edges
@@ -144,17 +143,6 @@ export function openUniverse(app: HTMLElement, o: UniverseOpts): () => void {
         placed.push({ ...b, sys: i, x: Math.cos(a) * rr, y: Math.sin(a) * rr, a0: rand() * 6.28 });
       });
       sys.bodies.push(...placed);
-      // that night's finds in this arm, joined like a little constellation (shortest lines that never cross)
-      const lit = placed.filter((b) => !b.unknown);
-      const inT = new Set<number>(lit.length ? [0] : []);
-      while (inT.size < lit.length) {
-        let bi = -1, bj = -1, bd = Infinity;
-        for (const x of inT) for (let y = 0; y < lit.length; y++) if (!inT.has(y)) {
-          const d = Math.hypot(lit[x].x - lit[y].x, lit[x].y - lit[y].y);
-          if (d < bd) { bd = d; bi = x; bj = y; }
-        }
-        sys.links.push([lit[bi], lit[bj]]); inT.add(bj);
-      }
     }
     return sys;
   });
@@ -286,14 +274,12 @@ export function openUniverse(app: HTMLElement, o: UniverseOpts): () => void {
       if (last || picked) g.setLineDash([3, 5]);
       g.beginPath(); g.arc(c0[0], c0[1], s.r * z, 0, Math.PI * 2); g.stroke(); g.setLineDash([]);
     }
-    // constellation lines within each arm
-    g.lineWidth = Math.max(1, Math.min(1.6, z * 1.2));
-    for (const s of systems) for (const [a, b] of s.links) {
-      const lit = on(a);
-      g.globalAlpha = (lit ? (filter >= 0 ? 0.6 : 0.32) : 0.06) * (ringSel && ringSel !== s ? 0.4 : 1);
-      g.strokeStyle = HOUSES[a.house].color;
-      const p = toScreen(a.x, a.y), q = toScreen(b.x, b.y);
-      g.beginPath(); g.moveTo(p[0], p[1]); g.lineTo(q[0], q[1]); g.stroke();
+    // a soft haze along each arm in its house colour, so the arms read as arms from far out
+    if (z < 0.9) for (const b of bodies) {
+      if (b.unknown || !on(b)) continue;
+      const p = toScreen(b.x, b.y), hr = 24 * z + 6;
+      if (p[0] < -hr || p[0] > W + hr || p[1] < -hr || p[1] > H + hr) continue;
+      g.globalAlpha = filter >= 0 ? 0.22 : 0.13; g.drawImage(glow[b.house], p[0] - hr, p[1] - hr, hr * 2, hr * 2);
     }
     // the finds
     const twinkle = !REDUCED;

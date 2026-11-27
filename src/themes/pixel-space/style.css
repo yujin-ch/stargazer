@@ -858,3 +858,11 @@ img, canvas { -webkit-user-drag: none; user-drag: none; }
 .hud-time.gain { animation: gain 0.5s steps(4); }
 @keyframes gain { 0% { color: #9cff9c; transform: scale(1.25); } 100% { transform: none; } }
 @keyframes pop-in { from { opacity: 0; transform: translateY(4px); } }
+
+/* midnight: the date changed while the game was open */
+.midnight { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: 16px; background: rgba(8, 5, 20, 0.55); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); animation: fade-in 0.6s steps(6); }
+.midnight-card { max-width: 380px; text-align: center; background: rgba(22, 16, 44, 0.96); border: 2px solid var(--accent); box-shadow: 4px 4px 0 #000, 0 0 40px rgba(247, 201, 92, 0.25); padding: 26px 22px 22px; color: #e9e0ff; }
+.midnight-card .midnight-kicker { margin: 0 0 10px; font-family: var(--font-display); font-size: 8px; letter-spacing: 1px; color: var(--dim); }
+.midnight-card h2 { margin: 0 0 12px; font-family: var(--font-display); font-weight: normal; font-size: 14px; line-height: 1.5; color: var(--accent); }
+.midnight-card p { font-size: 19px; margin: 0 0 18px; }
+.midnight-card .btn { width: 100%; }
