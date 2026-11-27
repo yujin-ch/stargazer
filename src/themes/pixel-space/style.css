@@ -849,3 +849,12 @@ body.bh-glow::after { animation: bh-glow 1.8s ease-out; }
 body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
 input, textarea, [contenteditable] { -webkit-user-select: text; user-select: text; }
 img, canvas { -webkit-user-drag: none; user-drag: none; }
+
+/* "did you mean …?": a near-miss waits for Enter or a tap, floating just above the entry box */
+.suggest { position: absolute; left: 0; right: 0; bottom: calc(100% + 6px); z-index: 3; margin: 0 auto; width: max-content; max-width: 100%; padding: 6px 12px; background: rgba(22, 16, 44, 0.96); border: 2px solid var(--accent-2); box-shadow: 3px 3px 0 #000; color: #e9e0ff; font-family: var(--font-body); font-size: 19px; cursor: pointer; animation: pop-in 0.15s steps(3); }
+.suggest b { color: var(--accent); font-weight: normal; }
+.suggest small { color: var(--dim); font-size: 15px; margin-left: 4px; }
+.suggest.hidden { display: none; }
+.hud-time.gain { animation: gain 0.5s steps(4); }
+@keyframes gain { 0% { color: #9cff9c; transform: scale(1.25); } 100% { transform: none; } }
+@keyframes pop-in { from { opacity: 0; transform: translateY(4px); } }

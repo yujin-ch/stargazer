@@ -120,6 +120,8 @@ interface Run {
   clearedBonus: number;
   /** A match waiting briefly in case a longer name is being typed. */
   pending: string | null;
+  /** A near-miss waiting for Enter: the name it was close to. */
+  suggest: string | null;
   /** Adaptive difficulty level, 0 (Moon) to 3 (Black Hole). */
   level: number;
 }
@@ -155,14 +157,15 @@ function playScreen() {
       <div class="entry">
         <input id="guess" type="text" inputmode="text" enterkeyhint="go" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" placeholder="type what you see" aria-label="Your guess" maxlength="40" />
         <button class="clear" id="clear" aria-label="Clear" tabindex="-1"><i></i></button>
+        <button class="suggest hidden" id="suggest" type="button" tabindex="-1" aria-live="polite"></button>
       </div>
       <button class="skip" id="skip" tabindex="-1">SKIP <small>-${CONFIG.skipCost}s</small></button>
     </div>
-    <div class="hint" id="hint">${isTouch ? "" : "Tab = skip · Esc = clear · no Enter needed"}</div>
+    <div class="hint" id="hint">${isTouch ? "" : "Tab = skip · Esc = clear · Enter = take a suggestion"}</div>
     <div class="start" id="start"></div>
     <div class="sr-only" id="live" aria-live="polite"></div>
   </main>`;
-  for (const id of ["score", "time", "count", "scope", "overlay", "pops", "label", "band", "bonus", "bonusbar", "controls", "guess", "clear", "skip", "hint", "start", "mute", "combo", "backbtn"])
+  for (const id of ["score", "time", "count", "scope", "overlay", "pops", "label", "band", "bonus", "bonusbar", "controls", "guess", "clear", "skip", "hint", "start", "mute", "combo", "backbtn", "suggest"])
     el[id] = document.getElementById(id)!;
   viewer = new Viewer(document.getElementById("eyepiece") as HTMLCanvasElement, theme);
   mini = new MiniMap(document.getElementById("minimap") as HTMLCanvasElement, theme.bandColors);
@@ -212,12 +215,18 @@ function wireInput() {
   });
   input.addEventListener("keydown", (e) => {
     if (e.key === "Tab") { e.preventDefault(); if (run.phase === "playing") skip(); }
-    else if (e.key === "Escape") { input.value = ""; dropPending(); }
+    else if (e.key === "Escape") { input.value = ""; dropPending(); hideSuggest(); }
     else if (e.key === "Enter") {
       e.preventDefault();
       if (run.phase !== "playing") return;
       if (run.pending !== null) acceptPending();
-      else if (input.value.trim()) { shake(); ui("nope"); input.value = ""; }
+      else if (run.suggest !== null) takeSuggestion();
+      else if (input.value.trim()) {
+        // a near-miss whose question hasn't shown yet still counts as asked
+        const obj = run.sky[run.i], m = obj ? matcher.test(input.value, obj.names) : null;
+        if (obj && m?.typo) named(obj, m.name ?? obj.names[0]);
+        else { shake(); ui("nope"); input.value = ""; }
+      }
     }
   });
   // buttons must not steal focus (that would close the phone keyboard)
@@ -227,6 +236,7 @@ function wireInput() {
   };
   noFocus(el.skip, () => { if (run.phase === "playing") skip(); });
   noFocus(el.clear, () => { input.value = ""; dropPending(); input.focus(); });
+  noFocus(el.suggest, () => { if (run.phase === "playing" && run.suggest !== null) takeSuggestion(); input.focus(); });
   noFocus(el.mute, () => { store.muted = !store.muted; setMuted(store.muted); renderMute(); });
   el.scope.addEventListener("pointerdown", (e) => { if (run.phase === "playing" || run.phase === "countdown") { e.preventDefault(); input.focus(); } });
 }
@@ -237,8 +247,20 @@ function wireInput() {
  * letters don't spill into the next guess. Typing something that isn't a longer name accepts at once
  * and carries the extra letters over to the next object.
  */
-let pendingTimer = 0;
+let pendingTimer = 0, suggestTimer = 0;
 function dropPending() { clearTimeout(pendingTimer); run.pending = null; }
+function showSuggest(name: string) {
+  run.suggest = name;
+  el.suggest.innerHTML = `did you mean <b>${name.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!)}</b>? <small>${isTouch ? "tap" : "Enter ↵"}</small>`;
+  el.suggest.classList.remove("hidden");
+}
+function hideSuggest() { clearTimeout(suggestTimer); run.suggest = null; el.suggest?.classList.add("hidden"); }
+function takeSuggestion() {
+  const obj = run.sky[run.i], name = run.suggest;
+  if (!obj || name === null || run.phase !== "playing") return;
+  hideSuggest();
+  named(obj, name);
+}
 function acceptPending() {
   const p = run.pending, obj = run.sky[run.i];
   if (p !== null && obj && run.phase === "playing") named(obj, p);
@@ -250,7 +272,17 @@ function onTyped(input: HTMLInputElement) {
   const p = run.pending;
   clearTimeout(pendingTimer);
   const m = matcher.test(value, obj.names);
-  if (m) {
+  clearTimeout(suggestTimer);
+  if (m?.typo && p === null) {
+    // close but not right: ask, and let Enter (or a tap) take it. One letter short is probably still being typed,
+    // so give that a moment before asking.
+    const name = m.name ?? obj.names[0];
+    if (m.early) { hideSuggest(); suggestTimer = window.setTimeout(() => { if (run.sky[run.i] === obj) showSuggest(name); }, 450); }
+    else showSuggest(name);
+    return;
+  }
+  hideSuggest();
+  if (m && !m.typo) {
     const n = normalize(value);
     const longer = m.early || longerNames(obj).some((f) => f.length > n.length && f.startsWith(n));
     // a generated plural ("cake" -> "cakes") gets a shorter wait, so a trailing "s" doesn't spill over
@@ -310,7 +342,7 @@ function newRun(mode: Run["mode"]): Run {
   const streak = store.streakThrough(puzzle - 1);
   const tier = tierFor(streak);
   const sky = mode === "daily" ? dailySky(puzzle, tier) : PREVIEW_NIGHT ? dailySky(PREVIEW_NIGHT, tier) : practiceSky(tier);
-  return { mode, puzzle: mode === "daily" ? puzzle : PREVIEW_NIGHT || puzzle, date, tier, streak, sky, i: 0, phase: "ready", pausedAt: 0, pausedFrom: null, countdownAt: 0, startAt: 0, penalty: 0, score: 0, items: [], attempt: "", lastTick: 99, combo: 0, bestCombo: 0, graceUntil: 0, graceObj: null, graceText: "", graceDropped: "", clearedBonus: 0, pending: null, level: 0 };
+  return { mode, puzzle: mode === "daily" ? puzzle : PREVIEW_NIGHT || puzzle, date, tier, streak, sky, i: 0, phase: "ready", pausedAt: 0, pausedFrom: null, countdownAt: 0, startAt: 0, penalty: 0, score: 0, items: [], attempt: "", lastTick: 99, combo: 0, bestCombo: 0, graceUntil: 0, graceObj: null, graceText: "", graceDropped: "", clearedBonus: 0, pending: null, suggest: null, level: 0 };
 }
 
 async function openPlay(mode: Run["mode"]) {
@@ -334,7 +366,7 @@ async function openPlay(mode: Run["mode"]) {
   el.start.innerHTML = `
     <p class="start-kicker">${mode === "daily" ? fmtDate(run.date).toUpperCase() : skyDate ? `${fmtDate(skyDate).toUpperCase()} · ${skyDate > localDateKey() ? "PREVIEW" : "NOT SAVED"}` : "PREVIEW · NOT SAVED"}</p>
     <h1 class="start-title">${mystery ? "A MYSTERY LINK" : mode === "daily" ? "TONIGHT'S SKY" : skyDate > localDateKey() ? "A SKY TO COME" : "AN OLD SKY"}</h1>
-    <p class="start-line">${mystery ? `Name what you see, then guess what links it all for +${CONFIG.linkBonus}.` : "Name what you see before the clock runs out."}<br><small>${CONFIG.runSeconds} seconds · ${run.sky.length} objects · ${isTouch ? "Skip" : "Tab skips"} for ${CONFIG.skipCost}s</small></p>
+    <p class="start-line">${mystery ? `Name what you see, then guess what links it all for +${CONFIG.linkBonus}.` : "Name what you see before the clock runs out."}<br><small>${CONFIG.runSeconds} seconds · ${run.sky.length} objects · ${isTouch ? "Skip" : "Tab skips"} for ${CONFIG.skipCost}s · answers add time</small></p>
     <button class="btn primary" id="go">OPEN THE SHUTTER</button>
     ${mode === "daily" && run.streak ? `<p class="small tier-mini">${run.streak}-night streak</p>` : ""}`;
   document.getElementById("go")!.onclick = begin;
@@ -506,6 +538,7 @@ function named(obj: SkyObject, typed: string) {
   const now = performance.now();
   clearTimeout(pendingTimer);
   run.pending = null;
+  hideSuggest();
   const band = CONFIG.bands[obj.band];
   const zoomed = band.pullBack > 0 && viewer.pullProgress(now) < 1;
   run.combo++;
@@ -521,7 +554,11 @@ function named(obj: SkyObject, typed: string) {
   run.graceText = typed;
   run.graceDropped = "";
   el.score.textContent = String(run.score);
-  pop(obj.names[0], `+${points}${zoomed ? " ZOOM" : ""}`, zoomed ? "gold" : "", obj.band);
+  // a little time back for every answer (more for harder ones), never past a full clock
+  const gain = Math.min(CONFIG.timeBonus[obj.band] ?? 0, Math.max(0, CONFIG.runSeconds - timeLeft(now)));
+  run.penalty -= gain;
+  if (gain > 0) { el.time.classList.remove("gain"); void el.time.offsetWidth; el.time.classList.add("gain"); }
+  pop(obj.names[0], `+${points}${zoomed ? " ZOOM" : ""}${gain >= 1 ? ` +${Math.round(gain)}s` : ""}`, zoomed ? "gold" : "", obj.band);
   bandHit(obj.band, zoomed);
   flyStar(zoomed ? "#fee761" : theme.bandColors[obj.band], zoomed);
   buzz(zoomed ? [18, 40, 28] : [12]);
@@ -558,6 +595,7 @@ function skip() {
   const now = performance.now();
   clearTimeout(pendingTimer);
   run.pending = null;
+  hideSuggest();
   const obj = run.sky[run.i];
   if (!obj) return;
   run.penalty += CONFIG.skipCost;
@@ -1667,7 +1705,7 @@ const MENU_CARDS: Record<string, { html: () => string; wire?: (c: HTMLElement) =
       <ul class="rules"><li><b>Type</b> what you see in the telescope. It moves on by itself.</li>
       <li><b>Zoomed in?</b> Name it before it pulls back for bonus points.</li>
       <li><b>Harder finds</b> are worth far more: ${CONFIG.bands.map((b) => b.points).join(" / ")} points by difficulty.</li>
-      <li><b>${CONFIG.combo[0].at} in a row</b> multiplies your points, up to ×${CONFIG.combo[CONFIG.combo.length - 1].mult}. A skip costs ${CONFIG.skipCost}s.</li>
+      <li><b>${CONFIG.combo[0].at} in a row</b> multiplies your points, up to ×${CONFIG.combo[CONFIG.combo.length - 1].mult}. A skip costs ${CONFIG.skipCost}s; every answer gives you ${CONFIG.timeBonus[0]}–${CONFIG.timeBonus[3]}s back (more for harder finds).</li>
       <li><b>One sky a night</b>, the same for everyone.</li>
       <li>Difficulty goes outward: ${theme.bandNames.slice(0, 3).join(", ")}, then <b>${theme.bandNames[3]}</b>.</li></ul>` },
   settings: { html: () => `<h2>Settings</h2>

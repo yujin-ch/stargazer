@@ -9,6 +9,8 @@ export const CONFIG = {
   runSeconds: 60,
   /** Seconds taken off the clock by a skip. */
   skipCost: 2,
+  /** Seconds added to the clock for each correct answer, by band (moon, planet, nebula, black hole). */
+  timeBonus: [1, 1, 2, 3],
   /** Countdown before the clock starts. */
   countdownSeconds: 3,
   /** Themes take turns in this order, one per night (any theme file not listed joins the end). */

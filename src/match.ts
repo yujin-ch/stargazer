@@ -80,6 +80,10 @@ export interface Match {
   /** True when it matched only thanks to typo tolerance and is shorter than the real name,
    *  i.e. the player may still be typing the last letter. */
   early: boolean;
+  /** True when it only matched thanks to typo tolerance: the game asks "did you mean …?" instead of accepting. */
+  typo?: boolean;
+  /** The listed name it was close to (for "did you mean"). */
+  name?: string;
 }
 
 export interface Matcher {
@@ -115,7 +119,7 @@ export function makeMatcher(allNames: string[][]): Matcher {
       // typo targets are the listed names only, not generated plurals ("swords" must not catch "words")
       for (const n of names) {
         const f = normalize(n);
-        if (f.length >= CONFIG.typoMinLength && withinOne(t, f)) return { form: f, early: t.length < f.length };
+        if (f.length >= CONFIG.typoMinLength && withinOne(t, f)) return { form: f, early: t.length < f.length, typo: true, name: n };
       }
       return null;
     },
