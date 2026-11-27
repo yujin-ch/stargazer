@@ -706,5 +706,5 @@ body.bh-glow::after { animation: bh-glow 1.8s ease-out; }
 @keyframes replay-in { from { opacity: 0; } }
 .sky-top { margin-top: 6px; padding-top: 4px; border-top: 0; }
 .share-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-.share-row .btn { flex: 1 1 140px; max-width: 230px; padding-left: 10px; padding-right: 10px; }
+.share-row .btn { flex: 1 1 140px; max-width: 230px; white-space: nowrap; padding-left: 10px; padding-right: 10px; }
 .past-list .btn:disabled { opacity: 0.35; filter: grayscale(1); cursor: not-allowed; box-shadow: none; }
