@@ -1054,13 +1054,8 @@ async function resultsScreen(r: RunResult, mode: Run["mode"], fresh = false) {
         <span>OBSERVING LOG</span>
         <span>${daily ? fmtDate(r.date).toUpperCase() : "PRACTICE"}</span>
       </header>
-      <section class="sb-block sky-block sky-top">
-        <p class="constellation" id="constellation"></p>
-        <canvas class="chart sky-chart" id="chart" aria-label="Your run drawn as a constellation"></canvas>
-        <p class="legend">${bandsSeen.map((b) => `<span><i class="lg" style="background:${theme.bandColors[b]}"></i>${theme.bandNames[b]}</span>`).join("")}<span><i class="lg zoomed"></i>zoom</span><span><i class="lg skipped"></i>skipped</span></p>
-        <details class="how-read"><summary>How to read the dial</summary><p>Your minute runs clockwise from the top. Further out means harder. Answers in a row join up; grey dashes on the rim are skips.</p></details>
-
-      </section>
+      <div class="log-grid">
+       <div class="log-score">
       ${!daily || mystery || CONFIG.conditionsOn ? `<p class="date">${[daily ? "" : "Practice · not saved", mystery ? shownTheme : "", CONFIG.conditionsOn ? dayCondition(r.puzzle).name : ""].filter(Boolean).join(" · ")}</p>` : ""}
       <div class="score-block"><div class="final"><span>${r.score}</span><small>POINTS</small></div>
       ${r.partial ? `<p class="small">This run was cut short, so it counts as it stood.</p>` : ""}
@@ -1074,6 +1069,17 @@ async function resultsScreen(r: RunResult, mode: Run["mode"], fresh = false) {
       </section>
       <div class="res-actions"><div class="share-row">${daily ? `<button class="btn primary" id="share">SHARE</button>` : ""}<button class="btn" id="to-universe">YOUR UNIVERSE ✦</button></div>${daily ? `${isTouch ? "" : `<p class="save-row"><button class="link-btn" id="save-card">save the picture</button></p>`}` : ""}</div>
       ${mystery ? `<section class="link-box${r.link ? (r.link.ok ? " found" : " missed") : ""}" id="link-box"></section>` : ""}
+       </div>
+       <div class="log-sky">
+      <section class="sb-block sky-block sky-top">
+        <p class="constellation" id="constellation"></p>
+        <canvas class="chart sky-chart" id="chart" aria-label="Your run drawn as a constellation"></canvas>
+        <p class="legend">${bandsSeen.map((b) => `<span><i class="lg" style="background:${theme.bandColors[b]}"></i>${theme.bandNames[b]}</span>`).join("")}<span><i class="lg zoomed"></i>zoom</span><span><i class="lg skipped"></i>skipped</span></p>
+        <details class="how-read"><summary>How to read the dial</summary><p>Your minute runs clockwise from the top. Further out means harder; a Singularity sits in the very centre. Answers in a row join up; grey dashes on the rim are skips.</p></details>
+
+      </section>
+       </div>
+       <div class="log-details">
       <h3 class="sb-title details-title">HOW THE NIGHT WENT</h3>
       ${breakdown(r)}
       <dl class="figures">
@@ -1082,6 +1088,8 @@ async function resultsScreen(r: RunResult, mode: Run["mode"], fresh = false) {
         <div><dt>STEADY</dt><dd>${r.bestCombo ?? 0}</dd></div>
         <div><dt>SKIPPED</dt><dd>${r.skipped}</dd></div>
       </dl>
+       </div>
+      </div>
       ${TIP_URL ? `<p class="tip-row"><a href="${esc(TIP_URL)}" target="_blank" rel="noopener">Enjoying the sky? Leave a tip for the stargazers who make it ☕</a></p>` : ""}
     </section>
     ${daily ? "" : `<div class="actions">
@@ -1319,8 +1327,10 @@ function starPositions(r: RunResult, W: number, H: number): { x: number; y: numb
  * Answers in a row join into a constellation; skips are grey dashes on the rim; the best find is ringed in gold.
  */
 /** Where each answer sits on the constellation dial (in the dial's 200 x 200 units). */
+/** Ring radius per band on the dial (200 x 200 units). The Singularity sits at the very centre. */
+const DIAL_R = [24, 38, 52, 66, 80, 0], DIAL_RIM = 92;
 function constellationPos(r: RunResult) {
-  const cx = 100, cy = 100, R = [24, 42, 60, 78], RIM = 90, n = r.items.length;
+  const cx = 100, cy = 100, R = DIAL_R, RIM = DIAL_RIM, n = r.items.length;
   return r.items.map((it, i) => {
     const t = it.t ?? ((i + 0.5) / n) * CONFIG.runSeconds;
     const a = (Math.min(t, CONFIG.runSeconds) / CONFIG.runSeconds) * Math.PI * 2 - Math.PI / 2;
@@ -1372,6 +1382,7 @@ function replayNight(r: RunResult, best: number, target: HTMLCanvasElement, titl
           inARow++;
           theme.sounds.correct(it.outcome === "zoomed", inARow, band);
           if (band === BH) { document.body.classList.remove("bh-glow"); void document.body.offsetWidth; document.body.classList.add("bh-glow"); setTimeout(() => document.body.classList.remove("bh-glow"), 1800); }
+          if (band === SING) { theme.sounds.singularityCaught?.(); wrap.classList.remove("sing"); void wrap.offsetWidth; wrap.classList.add("sing"); }
         }
         shown++;
         if (shown === n) endAt = now + per;
@@ -1419,7 +1430,7 @@ function replayNight(r: RunResult, best: number, target: HTMLCanvasElement, titl
 }
 
 function drawConstellation(c: HTMLCanvasElement, r: RunResult, best: number, upto = r.items.length) {
-  const W = 200, H = 200, cx = W / 2, cy = H / 2, R = [20, 33, 46, 59, 72, 84], RIM = 92;
+  const W = 200, H = 200, cx = W / 2, cy = H / 2, R = DIAL_R, RIM = DIAL_RIM;
   c.width = W; c.height = H;
   const g = c.getContext("2d")!;
   const px = (x: number, y: number, w = 1, h = 1) => g.fillRect(Math.round(x), Math.round(y), w, h);
@@ -1428,8 +1439,8 @@ function drawConstellation(c: HTMLCanvasElement, r: RunResult, best: number, upt
   for (let i = 0; i < 120; i++) { g.fillStyle = rand() < 0.8 ? "#2c2648" : "#4a4068"; px(rand() * W, rand() * H); }
   // the five difficulty bands, faintly tinted, with dotted orbits
   // the Black Hole ring only shows once you've caught one, the Singularity's once you've caught it
-  const has = (b: number) => r.items.some((it) => it.outcome !== "skipped" && BY_ID.get(it.id)?.band === b);
-  const ringOn = (i: number) => i < BH || has(i);
+  const has = (b: number) => r.items.slice(0, upto).some((it) => it.outcome !== "skipped" && BY_ID.get(it.id)?.band === b);
+  const ringOn = (i: number) => i < BH || (i === BH && has(i)); // the Singularity has no ring: it is the centre
   for (let i = R.length - 1; i >= 0; i--) { if (!ringOn(i)) continue; g.globalAlpha = 0.1; g.fillStyle = theme.bandColors[i]; g.beginPath(); g.arc(cx, cy, R[i] + 9, 0, Math.PI * 2); g.fill(); }
   g.globalAlpha = 1;
   g.fillStyle = "#0d0a1a"; g.beginPath(); g.arc(cx, cy, 13, 0, Math.PI * 2); g.fill();
@@ -1447,7 +1458,16 @@ function drawConstellation(c: HTMLCanvasElement, r: RunResult, best: number, upt
     for (let k = 0; k < len; k++) px(cx + Math.cos(a) * (RIM + 2 + k), cy + Math.sin(a) * (RIM + 2 + k));
   }
   // you, in the middle
-  g.fillStyle = "#fee761"; px(cx - 1, cy - 4, 3, 3); px(cx - 1, cy, 3, 4);
+  const singAt = r.items.slice(0, upto).findIndex((it) => it.outcome !== "skipped" && BY_ID.get(it.id)?.band === SING);
+  if (singAt < 0) { g.fillStyle = "#fee761"; px(cx - 1, cy - 4, 3, 3); px(cx - 1, cy, 3, 4); }
+  else {
+    // a caught Singularity takes the centre: a white core in violet rings
+    const col = theme.bandColors[SING];
+    g.globalAlpha = 0.35; g.fillStyle = col; g.beginPath(); g.arc(cx, cy, 11, 0, Math.PI * 2); g.fill();
+    g.globalAlpha = 1; g.strokeStyle = col; g.lineWidth = 1;
+    for (const rr of [6, 9]) { g.beginPath(); g.arc(cx + 0.5, cy + 0.5, rr, 0, Math.PI * 2); g.stroke(); }
+    g.fillStyle = "#fff"; px(cx - 2, cy - 2, 5, 5);
+  }
   const n = r.items.length;
   const pos = r.items.map((it, i) => {
     const t = it.t ?? ((i + 0.5) / n) * CONFIG.runSeconds; // older logs have no times: spread them evenly
@@ -1468,6 +1488,7 @@ function drawConstellation(c: HTMLCanvasElement, r: RunResult, best: number, upt
       for (let d = -1; d <= 1; d++) px(x - Math.sin(a) * d * 1.5, y + Math.cos(a) * d * 1.5);
       continue;
     }
+    if (band === SING) continue; // drawn as the centre itself
     const col = theme.bandColors[band], arm = band + 1;
     g.globalAlpha = 0.25; g.fillStyle = col; g.fillRect(x - arm, y - arm, arm * 2 + 1, arm * 2 + 1); g.globalAlpha = 1;
     g.fillStyle = col;

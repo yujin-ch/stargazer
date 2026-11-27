@@ -4,8 +4,8 @@
  * The same system appears in Your Universe afterwards.
  */
 const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const RADII = [0.15, 0.215, 0.28, 0.345, 0.41, 0.47];
-/** The outer orbits stay hidden until something lands on them: the Black Hole ring after your first, the Singularity's after it. */
+const RADII = [0.17, 0.245, 0.315, 0.385, 0.46, 0];
+/** The Black Hole orbit stays hidden until you catch one; the Singularity has no orbit, it lands on the star itself. */
 const SECRET_FROM = 4;
 
 interface Dot { band: number; a0: number; r: number; born: number; sprite: HTMLCanvasElement | null }
@@ -36,7 +36,7 @@ export class MiniMap {
     const k = this.n[band]++;
     this.pulse = performance.now();
     if (band >= 4) this.quake = performance.now();
-    this.dots.push({ band, a0: -Math.PI / 2 + k * 2.39996 + band * 0.7, r: RADII[band] + ((k % 3) - 1) * 0.018, born: performance.now(), sprite });
+    this.dots.push({ band, a0: -Math.PI / 2 + k * 2.39996 + band * 0.7, r: RADII[band] ? RADII[band] + ((k % 3) - 1) * 0.018 : 0, born: performance.now(), sprite });
     this.c.parentElement?.classList.remove("ping"); void this.c.offsetWidth; this.c.parentElement?.classList.add("ping");
   }
   /** The adaptive difficulty level (0..3): the orbit the next object will come from glows. */
@@ -58,7 +58,7 @@ export class MiniMap {
     this.shownLevel += (this.level - this.shownLevel) * 0.08;
     // orbits; the one the next object comes from glows and slowly turns
     RADII.forEach((r, b) => {
-      if (b >= SECRET_FROM && !this.n[b]) return;
+      if (!r || (b >= SECRET_FROM && !this.n[b])) return;
       const near = Math.max(0, 1 - Math.abs(this.shownLevel - b));
       g.globalAlpha = 0.14 + near * 0.5; g.strokeStyle = this.colors[b]; g.lineWidth = 1 + near * 1.5;
       if (near > 0.3) g.setLineDash([3, 4]);
@@ -85,7 +85,7 @@ export class MiniMap {
     // finds fly in from the eyepiece (up and to the left) along a little comet trail
     const pos = this.dots.map((d) => {
       const age = (now - d.born) / 800, e = Math.min(1, age), ease = 1 - Math.pow(1 - e, 3);
-      const a = d.a0 + (REDUCED ? 0 : (t - d.born / 1000) * (0.35 / (d.r * 4)));
+      const a = d.a0 + (REDUCED ? 0 : (t - d.born / 1000) * (0.35 / (Math.max(d.r, 0.08) * 4)));
       const tx = cx + Math.cos(a) * d.r * S, ty = cy + Math.sin(a) * d.r * S;
       return { d, x: -S * 0.2 + (tx + S * 0.2) * ease, y: -S * 0.2 + (ty + S * 0.2) * ease, ease, age };
     });
