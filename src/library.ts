@@ -153,15 +153,41 @@ export async function loadDayPack(dateKey: string): Promise<SkyObject[]> {
   return objs;
 }
 
+/** Register a community sky's objects (their pictures live in Supabase Storage) and return them. */
+export function registerCommunity(skyId: string, items: { idx: number; band: number; names: string[]; note: string; strip: string; hi: string }[]): SkyObject[] {
+  const objs = items.map((it, i) => {
+    const id = `community:${skyId}/${it.idx}`;
+    PACK_URLS.set(id, it.strip);
+    PACK_HI.set(id, it.hi);
+    const old = BY_ID.get(id);
+    if (old) return old;
+    const o: SkyObject = {
+      id, sprite: OBJECTS.length + i, theme: "community", band: Math.max(0, Math.min(4, it.band)) as BandIndex,
+      names: it.names.filter((n) => !n.startsWith("?")), hidden: [],
+      vague: it.names.filter((n) => n.startsWith("?")).map((n) => n.slice(1)),
+      kind: "photo", parts: [id], note: it.note ?? "",
+    };
+    OBJECTS.push(o);
+    BY_ID.set(id, o);
+    return o;
+  });
+  return objs;
+}
+
 // ---------------------------------------------------------------- pictures (browser only)
 
 const photoImgs = new Map<string, HTMLImageElement>();
+/** Pictures from another host (community skies, in Supabase Storage) load with CORS so canvases stay readable. */
+function corsSafe(img: HTMLImageElement, url: string) {
+  if (/^https?:/.test(url) && !url.startsWith(location.origin)) img.crossOrigin = "anonymous";
+}
 function photoImg(id: string): HTMLImageElement {
   let img = photoImgs.get(id);
   if (!img) {
     const url = PACK_URLS.get(id) ?? PHOTO_URLS[`./art/photos/${id.split(":")[1]}.png`];
     if (!url) throw new Error(`no photo for "${id}"`);
     img = new Image();
+    corsSafe(img, url);
     img.src = url;
     photoImgs.set(id, img);
   }
@@ -177,6 +203,7 @@ export function photoHi(o: SkyObject): HTMLImageElement | null {
     img = new Image();
     img.decoding = "async";
     img.onerror = () => hiImgs.set(o.id, null);
+    corsSafe(img, url);
     img.src = url;
   }
   hiImgs.set(o.id, img);

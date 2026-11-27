@@ -9,7 +9,7 @@ import { MiniMap } from "./minimap";
 import { accountsOn, initCloud, hadSession, signedInEmail, signInWithGoogle, signInWithEmail, signOut, deleteCloudSave, onAccountChange, warmUp } from "./cloud";
 let mini: MiniMap | null = null;
 import { makeMatcher, normalize, forms as formsOf, linkMatches } from "./match";
-import { dailySky, setDayPack, notePackNight, practiceSky, localDateKey, puzzleNumber, mulberry32, hash, dayTheme, dayCondition } from "./daily";
+import { ramp, dailySky, setDayPack, notePackNight, practiceSky, localDateKey, puzzleNumber, mulberry32, hash, dayTheme, dayCondition } from "./daily";
 import { theme } from "./themes";
 import { setMuted, unlockAudio, setAmbience, ui, whoosh, blip } from "./themes/chip";
 import { Viewer } from "./viewer";
@@ -20,6 +20,8 @@ import { atlasScreen, type AtlasStar, type AtlasRegion } from "./atlas";
 import { introScreen } from "./intro";
 import { skyCenter, skyBlackHole, skyPulse, skyTravel, skyBoost } from "./themes/pixel-space/sky";
 import { THEMES } from "./library";
+import { type CommunitySky } from "./community";
+import { initCommunity, communityStars, communityRegions, communityResults, liveSkies, accountCommunityHtml, wireAccountCommunity } from "./communityui";
 
 let matcher = makeMatcher(OBJECTS.map((o) => o.names));
 /** /?night=N plays night N's sky and condition as an unsaved preview (for trying themes and conditions). */
@@ -92,7 +94,7 @@ let viewer: Viewer;
 let el: Record<string, HTMLElement> = {};
 
 interface Run {
-  mode: "daily" | "practice";
+  mode: "daily" | "practice" | "community";
   puzzle: number;
   date: string;
   tier: number;
@@ -128,6 +130,11 @@ interface Run {
   level: number;
 }
 let run: Run;
+/** Length of the current run: 60 s, or what a community sky's maker chose. */
+let RUN_SECS: number = CONFIG.runSeconds;
+/** The community sky being played (set by playCommunity). */
+let COMMUNITY: { sky: CommunitySky; objs: SkyObject[] } | null = null;
+let liveSkiesSeen = false;
 
 function playScreen() {
   app.innerHTML = `
@@ -138,7 +145,7 @@ function playScreen() {
         <div class="hud-score"><span id="score">0</span><small>PTS</small></div>
         <div class="combo" id="combo"></div>
       </div>
-      <div class="hud-time" id="time">${CONFIG.runSeconds}</div>
+      <div class="hud-time" id="time">${RUN_SECS}</div>
       <div class="hud-right">
         <button class="mute" id="mute" aria-label="Toggle sound"></button>
         <div class="hud-count" id="count"></div>
@@ -364,7 +371,8 @@ function newRun(mode: Run["mode"]): Run {
   const puzzle = puzzleNumber(date);
   const streak = store.streakThrough(puzzle - 1);
   const tier = tierFor(streak);
-  const all = mode === "daily" ? dailySky(puzzle, tier) : PREVIEW_NIGHT ? dailySky(PREVIEW_NIGHT, tier) : practiceSky(tier);
+  RUN_SECS = mode === "community" && COMMUNITY ? COMMUNITY.sky.seconds : CONFIG.runSeconds;
+  const all = mode === "community" && COMMUNITY ? ramp(COMMUNITY.objs) : mode === "daily" ? dailySky(puzzle, tier) : PREVIEW_NIGHT ? dailySky(PREVIEW_NIGHT, tier) : practiceSky(tier);
   const sky = all.filter((o) => o.band !== SING), hidden = all.filter((o) => o.band === SING);
   return { mode, puzzle: mode === "daily" ? puzzle : PREVIEW_NIGHT || puzzle, date, tier, streak, sky, hidden, i: 0, phase: "ready", pausedAt: 0, pausedFrom: null, countdownAt: 0, startAt: 0, penalty: 0, score: 0, items: [], attempt: "", lastTick: 99, combo: 0, bestCombo: 0, graceUntil: 0, graceObj: null, graceText: "", graceDropped: "", clearedBonus: 0, pending: null, suggest: null, level: 0 };
 }
@@ -388,13 +396,13 @@ async function openPlay(mode: Run["mode"]) {
   const skyTheme = run.sky[0]?.theme ?? dayTheme(run.puzzle);
   const mystery = !!themeInfo(skyTheme)?.mystery;
   el.start.innerHTML = `
-    <p class="start-kicker">${mode === "daily" ? fmtDate(run.date).toUpperCase() : skyDate ? `${fmtDate(skyDate).toUpperCase()} · ${skyDate > localDateKey() ? "PREVIEW" : "NOT SAVED"}` : "PREVIEW · NOT SAVED"}</p>
-    <h1 class="start-title">${mystery ? "A MYSTERY LINK" : mode === "daily" ? "TONIGHT'S SKY" : skyDate > localDateKey() ? "A SKY TO COME" : "AN OLD SKY"}</h1>
-    <p class="start-line">${mystery ? `Name what you see, then guess what links it all for +${CONFIG.linkBonus}.` : "Name what you see before the clock runs out."}<br><small>${CONFIG.runSeconds} seconds · ${run.sky.length} objects · ${isTouch ? "Skip" : "Tab skips"} for ${CONFIG.skipCost}s · answers add time</small></p>
+    <p class="start-kicker">${mode === "community" && COMMUNITY ? `A COMMUNITY SKY · BY ${esc(COMMUNITY.sky.maker.toUpperCase())}` : mode === "daily" ? fmtDate(run.date).toUpperCase() : skyDate ? `${fmtDate(skyDate).toUpperCase()} · ${skyDate > localDateKey() ? "PREVIEW" : "NOT SAVED"}` : "PREVIEW · NOT SAVED"}</p>
+    <h1 class="start-title">${mode === "community" && COMMUNITY ? esc(COMMUNITY.sky.title.toUpperCase()) : mystery ? "A MYSTERY LINK" : mode === "daily" ? "TONIGHT'S SKY" : skyDate > localDateKey() ? "A SKY TO COME" : "AN OLD SKY"}</h1>
+    <p class="start-line">${mystery ? `Name what you see, then guess what links it all for +${CONFIG.linkBonus}.` : "Name what you see before the clock runs out."}<br><small>${RUN_SECS} seconds · ${run.sky.length} objects · ${isTouch ? "Skip" : "Tab skips"} for ${CONFIG.skipCost}s · answers add time</small></p>
     <button class="btn primary" id="go">OPEN THE SHUTTER</button>
     ${mode === "daily" && run.streak ? `<p class="small tier-mini">${run.streak}-night streak</p>` : ""}`;
   document.getElementById("go")!.onclick = begin;
-  el.backbtn.onclick = () => { cancelAnimationFrame(raf); skyTravel(false); showAtlas(); };
+  el.backbtn.onclick = () => { cancelAnimationFrame(raf); skyTravel(false); showAtlas(mode === "community" && COMMUNITY ? `sky-${COMMUNITY.sky.id}` : "tonight"); };
   sizeViewer();
   loop();
 }
@@ -477,7 +485,7 @@ function pause(now: number) {
   el.controls.classList.add("hidden");
   el.hint.classList.add("hidden");
   app.querySelector(".play")!.classList.add("ready", "paused");
-  const left = run.startAt ? Math.max(0, Math.ceil(timeLeft(now))) : CONFIG.runSeconds;
+  const left = run.startAt ? Math.max(0, Math.ceil(timeLeft(now))) : RUN_SECS;
   el.start.className = "start";
   el.start.innerHTML = `
     <p class="start-kicker">PAUSED</p>
@@ -580,7 +588,7 @@ function named(obj: SkyObject, typed: string) {
   run.graceDropped = "";
   el.score.textContent = String(run.score);
   // a little time back for every answer (more for harder ones), never past a full clock
-  const gain = Math.min(CONFIG.timeBonus[obj.band] ?? 0, Math.max(0, CONFIG.runSeconds - timeLeft(now)));
+  const gain = Math.min(CONFIG.timeBonus[obj.band] ?? 0, Math.max(0, RUN_SECS - timeLeft(now)));
   run.penalty -= gain;
   if (gain > 0) { el.time.classList.remove("gain"); void el.time.offsetWidth; el.time.classList.add("gain"); }
   pop(obj.names[0], `+${points}${zoomed ? " ZOOM" : ""}${gain >= 1 ? ` +${Math.round(gain)}s` : ""}`, zoomed ? "gold" : "", obj.band);
@@ -823,10 +831,10 @@ function renderCombo(broke: boolean) {
 }
 
 /** Seconds gone on the clock (skips included), rounded to a tenth. */
-function clockAt(now: number) { return Math.round(Math.min(CONFIG.runSeconds, CONFIG.runSeconds - timeLeft(now)) * 10) / 10; }
+function clockAt(now: number) { return Math.round(Math.min(RUN_SECS, RUN_SECS - timeLeft(now)) * 10) / 10; }
 
 function timeLeft(now: number) {
-  return CONFIG.runSeconds - (now - run.startAt) / 1000 - run.penalty;
+  return RUN_SECS - (now - run.startAt) / 1000 - run.penalty;
 }
 
 function finish(now: number, cleared = false) {
@@ -847,7 +855,7 @@ function finish(now: number, cleared = false) {
   (el.guess as HTMLInputElement).value = "";
   el.controls.classList.add("dim");
   const result = buildResult();
-  lastFresh += store.addToCatalogue(run.items.filter((i) => i.outcome !== "skipped").map((i) => i.id));
+  if (run.mode !== "community") lastFresh += store.addToCatalogue(run.items.filter((i) => i.outcome !== "skipped").map((i) => i.id));
   const prevBest = store.bestBefore(run.date);
   const prev = store.today(run.date);
   if (run.mode === "daily" && (!prev || prev.partial)) store.save(result);
@@ -1028,6 +1036,7 @@ function moonrise() {
 
 async function resultsScreen(r: RunResult, mode: Run["mode"], fresh = false) {
   cancelAnimationFrame(raf);
+  if (mode !== "community") RUN_SECS = CONFIG.runSeconds;
   if (!viewer) { viewer = new Viewer(document.createElement("canvas"), theme); }
   await viewer.load(OBJECTS.filter((o) => o.kind === "photo"));
   const today = puzzleNumber(localDateKey());
@@ -1119,8 +1128,8 @@ async function resultsScreen(r: RunResult, mode: Run["mode"], fresh = false) {
   const best = bestFind(r);
   const bestObj = best >= 0 ? BY_ID.get(r.items[best].id) : undefined;
   document.getElementById("constellation")!.innerHTML = bestObj
-    ? `<small>TONIGHT YOU DREW</small><b>THE ${esc(bestObj.names[0].toUpperCase())}</b><small>a constellation named for your best find</small>`
-    : `<small>TONIGHT YOU DREW</small><b>A CLOUDY SKY</b>`;
+    ? `<small>${daily ? "TONIGHT YOU DREW" : "YOU DREW"}</small><b>THE ${esc(bestObj.names[0].toUpperCase())}</b><small>a constellation named for your best find</small>`
+    : `<small>${daily ? "TONIGHT YOU DREW" : "YOU DREW"}</small><b>A CLOUDY SKY</b>`;
   const hill = document.getElementById("hill") as HTMLCanvasElement;
   if (fresh && !REDUCED_MOTION && r.items.length) {
     drawConstellation(chart, r, best);
@@ -1257,7 +1266,8 @@ async function resultsScreen(r: RunResult, mode: Run["mode"], fresh = false) {
     if (installPrompt) { const p = installPrompt; installPrompt = null; await p.prompt().catch(() => {}); document.querySelector(".home-row")?.remove(); return; }
     toast("Tap Safari's Share button, then “Add to Home Screen”.");
   });
-  document.getElementById("to-atlas")!.onclick = () => showAtlas();
+  document.getElementById("to-atlas")!.onclick = () => showAtlas(mode === "community" && COMMUNITY ? `sky-${COMMUNITY.sky.id}` : "tonight");
+  if (mode === "community" && COMMUNITY) communityResults(app, COMMUNITY.sky);
   document.getElementById("to-cat")!.onclick = () => void catalogueScreen(() => void resultsScreen(r, mode));
   const land = document.getElementById("to-universe");
   if (land) land.onclick = () => void catalogueScreen(() => void resultsScreen(r, mode), r.date);
@@ -1333,8 +1343,8 @@ const DIAL_R = [24, 38, 52, 66, 80, 0], DIAL_RIM = 92;
 function constellationPos(r: RunResult) {
   const cx = 100, cy = 100, R = DIAL_R, RIM = DIAL_RIM, n = r.items.length;
   return r.items.map((it, i) => {
-    const t = it.t ?? ((i + 0.5) / n) * CONFIG.runSeconds;
-    const a = (Math.min(t, CONFIG.runSeconds) / CONFIG.runSeconds) * Math.PI * 2 - Math.PI / 2;
+    const t = it.t ?? ((i + 0.5) / n) * RUN_SECS;
+    const a = (Math.min(t, RUN_SECS) / RUN_SECS) * Math.PI * 2 - Math.PI / 2;
     const rad = it.outcome === "skipped" ? RIM : R[BY_ID.get(it.id)?.band ?? 0];
     return { x: Math.round(cx + Math.cos(a) * rad), y: Math.round(cy + Math.sin(a) * rad), a };
   });
@@ -1583,8 +1593,8 @@ function drawConstellation(c: HTMLCanvasElement, r: RunResult, best: number, upt
   }
   const n = r.items.length;
   const pos = r.items.map((it, i) => {
-    const t = it.t ?? ((i + 0.5) / n) * CONFIG.runSeconds; // older logs have no times: spread them evenly
-    const a = (Math.min(t, CONFIG.runSeconds) / CONFIG.runSeconds) * Math.PI * 2 - Math.PI / 2;
+    const t = it.t ?? ((i + 0.5) / n) * RUN_SECS; // older logs have no times: spread them evenly
+    const a = (Math.min(t, RUN_SECS) / RUN_SECS) * Math.PI * 2 - Math.PI / 2;
     const rad = it.outcome === "skipped" ? RIM : R[BY_ID.get(it.id)?.band ?? 0];
     return { x: Math.round(cx + Math.cos(a) * rad), y: Math.round(cy + Math.sin(a) * rad), a };
   });
@@ -1874,6 +1884,9 @@ async function playPastNight(dateKey: string) {
 
 function showAtlas(focus = "tonight") {
   cancelAnimationFrame(raf);
+  // community skies arrive after the first draw; redraw once they land (if the atlas is still up)
+  const had = liveSkiesSeen;
+  void liveSkies().then((l) => { liveSkiesSeen = true; if (!had && l.length && app.querySelector(".atlas")) showAtlas(focus); });
   const today = puzzleNumber(localDateKey());
   const done = store.today(localDateKey());
   const tonightTheme = dayTheme(today);
@@ -1916,8 +1929,6 @@ function showAtlas(focus = "tonight") {
       <p>Everything you've ever named, as moons, planets, nebulae and black holes around the night you found them.</p>
       <div class="card-actions"><button class="btn primary" id="card-cat">EXPLORE IT</button></div>`,
       wire: (c) => { c.querySelector<HTMLButtonElement>("#card-cat")!.onclick = () => void catalogueScreen(() => showAtlas("catalogue")); } },
-    { id: "community", x: 480, y: -240, size: "mid", color: "#e07ab8", dim: true, label: "COMMUNITY SKIES", sub: "coming soon",
-      card: () => `<h2>Community skies</h2><p>Soon: skies drawn and themed by other stargazers. Every empty ring out here is room for one.</p>` },
     { id: "special", x: 0, y: 440, size: "mid", color: "#7fe0c4", dim: true, label: "SPECIAL SKIES", sub: "coming soon",
       card: () => `<h2>Special skies</h2><p>Soon: one-off skies for holidays, eclipses and themed weeks will rise here.</p>` },
     { id: "galaxy", x: -480, y: 120, size: "mid", color: "#ffd37a", label: "YOUR GALAXY", sub: `${store.allDays().filter((d) => !d.partial).length} nights`, card: () => `<h2>Your galaxy</h2>
@@ -1925,7 +1936,7 @@ function showAtlas(focus = "tonight") {
       <div class="card-actions"><button class="btn primary" id="card-gal">FLY IN</button></div>`,
       wire: (c) => { c.querySelector<HTMLButtonElement>("#card-gal")!.onclick = () => void catalogueScreen(() => showAtlas("galaxy")); } },
   ];
-  stars.push(...menu);
+  stars.push(...menu, ...communityStars());
   // the trail of past nights winding down from PAST SKIES: one dated star per night, newest first
   past.filter((p) => !p.test).slice(0, 14).forEach((p, i) => {
     const d = new Date(p.key + "T12:00:00").toLocaleDateString(undefined, { month: "short", day: "numeric" }).toUpperCase();
@@ -1943,11 +1954,11 @@ function showAtlas(focus = "tonight") {
     });
   });
   const regions: AtlasRegion[] = [
-    { id: "community", label: "COMMUNITY SKIES", sub: "made by players · room for hundreds", x: 480, y: -240, rx: 224, ry: 168, color: "#e07ab8", slots: 34 },
     { id: "special", label: "SPECIAL SKIES", sub: "holidays · eclipses · themed weeks", x: 0, y: 440, rx: 208, ry: 108, color: "#7fe0c4", slots: 10 },
     { id: "galaxy", label: "YOUR GALAXY", sub: "every night you've played", x: -480, y: 120, rx: 172, ry: 132, color: "#ffd37a", galaxy: true },
+    ...communityRegions(),
   ];
-  atlasScreen(app, stars, { title: "STAR ATLAS", footer: fmtDate(localDateKey()), focus, regions, onBack: () => { whoosh(false, 1.3, 0.07); frontPage(true); } });
+  atlasScreen(app, stars, { title: "STAR ATLAS", footer: fmtDate(localDateKey()), focus, regions, homeRadius: CONFIG.community.homeRadius, onBack: () => { whoosh(false, 1.3, 0.07); frontPage(true); } });
 }
 
 // tonight's own photo set, if one has been published (falls back to the rotating themes)
@@ -1990,7 +2001,7 @@ const MENU_CARDS: Record<string, { html: () => string; wire?: (c: HTMLElement) =
   account: { html: () => `<h2>Your account</h2><div class="acct" id="acct"></div>`,
     wire: (c) => {
       const acct = c.querySelector<HTMLElement>("#acct")!;
-      renderAccount(acct); onAccountChange(() => acct.isConnected && renderAccount(acct)); void warmUp().then(() => acct.isConnected && renderAccount(acct));
+      renderAccount(acct); acct.insertAdjacentHTML("afterend", accountCommunityHtml()); wireAccountCommunity(c); onAccountChange(() => acct.isConnected && renderAccount(acct)); void warmUp().then(() => acct.isConnected && renderAccount(acct));
     } },
   credits: { html: () => `<h2>Credits</h2><p>${theme.credits}</p><p class="small">Photographs generated with Qwen-Image, cut out and pixelated for the telescope.</p>` },
 };
@@ -2103,6 +2114,13 @@ function frontPage(returning = false) {
   });
   app.querySelector(".intro")?.insertAdjacentHTML("beforeend", `<p class="intro-foot"><a href="/about">About</a><i>·</i><a href="/privacy">Privacy</a></p>`);
 }
+
+initCommunity({
+  app,
+  showAtlas,
+  play: (sky, objs) => { COMMUNITY = { sky, objs }; matcher = makeMatcher(OBJECTS.map((o) => o.names)); void openPlay("community"); },
+  openAccount: () => menuSheet("account"),
+});
 
 void initCloud(() => { if (app.querySelector(".intro")) frontPage(); });
 if (PREVIEW_NIGHT) void openPlay("practice");

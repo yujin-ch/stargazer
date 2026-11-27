@@ -126,5 +126,10 @@ export async function deleteCloudSave(): Promise<string> {
   return "";
 }
 
+/** The Supabase client (loads it on first use), or null when accounts are off. For community skies. */
+export async function cloudClient(): Promise<SupabaseClient | null> { return getClient(); }
+/** The signed-in player's id, or null. */
+export function signedInId(): string | null { return session?.user?.id ?? null; }
+
 /** Make sure the client is loaded (when the account panel opens), so the panel can show who's signed in. */
 export async function warmUp() { await getClient(); }

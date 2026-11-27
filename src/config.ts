@@ -5,6 +5,22 @@ export const SITE_URL: string = (import.meta.env.VITE_SITE_URL as string | undef
 export const TIP_URL: string = (import.meta.env.VITE_TIP_URL as string | undefined) || "https://ko-fi.com/stargazergame";
 
 export const CONFIG = {
+  /** Community skies (player-made skies on the atlas). The database enforces the same limits (docs/community-setup.sql). */
+  community: {
+    minObjects: 10,
+    maxObjects: 50,
+    /** Run lengths a maker can choose, in seconds. */
+    times: [60, 90, 120, 180],
+    /** The home zone around tonight's sky (radius, in atlas units): reserved for the game's own skies. */
+    homeRadius: 1000,
+    /** Two community skies sit at least this far apart. */
+    spacing: 40,
+    /** Free skies per player while the atlas holds fewer than freeUntil skies (then 0; the supporter pass adds more). */
+    freeSkies: 1,
+    freeUntil: 100,
+    /** Reports that hide a live sky until it is reviewed. */
+    hideAfterReports: 3,
+  },
   /** Length of a run in seconds. */
   runSeconds: 60,
   /** Seconds taken off the clock by a skip. */

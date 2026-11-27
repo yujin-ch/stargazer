@@ -19,5 +19,5 @@ export default defineConfig({
   plugins: [localNights()],
   build: { rollupOptions: { input: { main: "index.html", board: "board.html" } } },
   // true only on Vercel preview deployments (branches other than main), which can preview future nights
-  define: { __PREVIEW__: JSON.stringify(process.env.VERCEL_ENV === "preview") },
+  define: { __PREVIEW__: JSON.stringify(process.env.VERCEL_ENV === "preview" || (process.env.CF_PAGES === "1" && !!process.env.CF_PAGES_BRANCH && process.env.CF_PAGES_BRANCH !== "main")) },
 });

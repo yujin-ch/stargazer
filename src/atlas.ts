@@ -52,7 +52,7 @@ export const WORLD = 5000;
 /** Map pixels per coordinate unit (at zoom 1). */
 const K = 2.5;
 /** How many coordinates the widest screen side may show when zoomed all the way out. */
-const MAX_SPAN = 2400;
+const MAX_SPAN = 6000;
 /** Sky tiles: TILE map pixels square, rendered at 1/4 resolution. */
 const TILE = 1000, TRES = 4;
 
@@ -67,25 +67,36 @@ export function fmtCoord(v: number) {
 
 // ---------------------------------------------------------------- atlas
 
-export function atlasScreen(app: HTMLElement, starsIn: AtlasStar[], opts: { title: string; footer: string; focus?: string; onBack?: () => void; regions?: AtlasRegion[] }) {
+/** Picking a spot for a new community sky: tap the sky, see whether the spot is free, take it. */
+export interface AtlasPick {
+  /** Why (x, y) can't be taken, or "" when it can. */
+  check: (x: number, y: number) => string;
+  onPick: (x: number, y: number) => void;
+  /** Shown in the card under the coordinates. */
+  hint: string;
+}
+
+export function atlasScreen(app: HTMLElement, starsIn: AtlasStar[], opts: { title: string; footer: string; focus?: string; onBack?: () => void; regions?: AtlasRegion[];
+  /** The home zone's radius: a dashed ring marks it (kept for the game's own skies). */
+  homeRadius?: number; pick?: AtlasPick; sub?: string }) {
   // coordinates -> map pixels (y flips: north is up on screen)
   const stars = starsIn.map((s) => ({ ...s, cx: s.x, cy: s.y, x: s.x * K, y: -s.y * K }));
   const regions = (opts.regions ?? []).map((r) => ({ ...r, cx: r.x, cy: r.y, x: r.x * K, y: -r.y * K, rx: r.rx * K, ry: r.ry * K }));
   app.innerHTML = `
-  <main class="atlas" id="atlas">
+  <main class="atlas${opts.pick ? " picking" : ""}" id="atlas">
     <canvas class="atlas-sky" id="atlas-sky" aria-hidden="true"></canvas>
     <canvas class="atlas-rulers" id="atlas-rulers" aria-hidden="true"></canvas>
     <div class="atlas-map" id="atlas-map"></div>
     <canvas class="atlas-meteors" id="atlas-meteors" aria-hidden="true"></canvas>
     ${opts.onBack ? `<button class="btn back-btn atlas-back" id="atlas-back" type="button" aria-label="Step back from the telescope to the front page">&lt; STEP BACK</button>` : ""}
-    <header class="atlas-head"><span><img class="mark" src="/logo.svg" alt="" width="24" height="24" />${opts.title}</span><small>drag to look around · pinch or scroll to zoom</small></header>
+    <header class="atlas-head"><span><img class="mark" src="/logo.svg" alt="" width="24" height="24" />${opts.title}</span><small>${opts.sub ?? "drag to look around · pinch or scroll to zoom"}</small></header>
     <div class="atlas-edges" id="atlas-edges"></div>
     <div class="atlas-tools">
       <button class="btn" id="atlas-out" aria-label="Zoom out">−</button>
       <button class="btn" id="atlas-in" aria-label="Zoom in">+</button>
       <button class="btn atlas-home" id="atlas-home" aria-label="Back to tonight's star">◎ HOME</button>
     </div>
-    <canvas class="atlas-mini" id="atlas-mini" width="110" height="110" aria-label="Map of the charted sky near home; tap to fly there"></canvas>
+    <div class="atlas-mini-box"><canvas class="atlas-mini" id="atlas-mini" width="240" height="240" aria-label="Map of the whole charted sky; tap to fly there"></canvas><small>WHOLE SKY</small></div>
     <p class="atlas-coord" id="atlas-coord" aria-live="off"></p>
     <section class="atlas-card hidden" id="atlas-card" role="dialog" aria-live="polite"></section>
     <p class="atlas-foot">${opts.footer}</p>
@@ -161,6 +172,7 @@ export function atlasScreen(app: HTMLElement, starsIn: AtlasStar[], opts: { titl
   const minS = () => Math.max(W(), H()) / (MAX_SPAN * K), maxS = () => 3.2;
   const home = () => Math.max(minS(), Math.min(1, W() / 1100, H() / 1150));
   let far = false, painted = 0;
+  let pickAt: { mx: number; my: number; x: number; y: number; ok: boolean } | null = null;
 
   const paint = () => {
     painted = 0;
@@ -183,6 +195,23 @@ export function atlasScreen(app: HTMLElement, starsIn: AtlasStar[], opts: { titl
       const ax = (view.x + a.x * s) / 2, ay = (view.y + a.y * s) / 2, bx = (view.x + b.x * s) / 2, by = (view.y + b.y * s) / 2;
       const n = Math.max(Math.abs(bx - ax), Math.abs(by - ay)), step = Math.max(2, (every * s) / 2);
       for (let i = 8; i <= n - 8; i += step) sg.fillRect(Math.round(ax + ((bx - ax) * i) / n), Math.round(ay + ((by - ay) * i) / n), 1, 1);
+    }
+    // the home zone: a dashed ring around tonight's sky, kept for the game's own skies
+    if (opts.homeRadius) {
+      const r = (opts.homeRadius * K * s) / 2, cx = view.x / 2, cy = view.y / 2;
+      const n = Math.max(48, Math.round((2 * Math.PI * r) / 2));
+      sg.fillStyle = "rgba(242, 211, 138, 0.6)";
+      for (let i = 0; i < n; i++) {
+        if (i % 6 >= 3) continue;
+        const a = (i / n) * Math.PI * 2, px = cx + Math.cos(a) * r, py = cy + Math.sin(a) * r;
+        if (px > -2 && py > -2 && px < cw + 2 && py < ch + 2) sg.fillRect(Math.round(px), Math.round(py), 1, 1);
+      }
+    }
+    if (pickAt) {
+      const px = (view.x + pickAt.mx * s) / 2, py = (view.y + pickAt.my * s) / 2;
+      sg.fillStyle = pickAt.ok ? "#9bd34a" : "#f6757a";
+      for (const [dx, dy] of [[-6, 0], [-5, 0], [-4, 0], [4, 0], [5, 0], [6, 0], [0, -6], [0, -5], [0, -4], [0, 4], [0, 5], [0, 6]]) sg.fillRect(Math.round(px + dx), Math.round(py + dy), 1, 1);
+      sg.fillRect(Math.round(px) - 1, Math.round(py) - 1, 3, 3);
     }
     // rulers: the coordinate grid's numbers along the top and left edges
     if (rulers.width !== w || rulers.height !== h) { rulers.width = w; rulers.height = h; }
@@ -209,6 +238,17 @@ export function atlasScreen(app: HTMLElement, starsIn: AtlasStar[], opts: { titl
       if (y < 110 || y > h - 170) continue;
       rg.fillRect(0, Math.round(y), 6, 1);
       rg.fillText(c === 0 ? "0" : `${c > 0 ? "+" : "−"}${Math.abs(c)}`, 9, y);
+    }
+    // the home zone's name, on its ring (only once the ring is small enough to see as a ring)
+    if (opts.homeRadius) {
+      const r = opts.homeRadius * pxPerCoord;
+      if (r < Math.max(w, h) * 0.75) {
+        rg.textAlign = "center"; rg.textBaseline = "bottom";
+        rg.fillStyle = "rgba(242, 211, 138, 0.8)";
+        rg.font = "16px VT323, ui-monospace, monospace";
+        rg.fillText("HOME ZONE · kept for the game's own skies", view.x, view.y - r - 6);
+        rg.fillText("COMMUNITY SKIES: anywhere outside this ring", view.x, view.y + r + 22);
+      }
     }
     // where the middle of the screen is
     const mx = (w / 2 - view.x) / pxPerCoord, my = -(h / 2 - view.y) / pxPerCoord;
@@ -253,16 +293,32 @@ export function atlasScreen(app: HTMLElement, starsIn: AtlasStar[], opts: { titl
       a.classList.toggle("at-right", dx * t > w * 0.25);
       a.classList.toggle("at-left", dx * t < -w * 0.25);
     });
-    // the little map: home's neighbourhood (±1500), regions, tonight, and the box you're looking through
-    const R = 1500 * K, k = mini.width / (2 * R), o = mini.width / 2;
-    mg.clearRect(0, 0, mini.width, mini.height);
-    mg.fillStyle = "rgba(13,10,26,0.85)"; mg.fillRect(0, 0, mini.width, mini.height);
-    mg.fillStyle = "rgba(120,110,170,0.25)"; mg.fillRect(o, 0, 1, mini.height); mg.fillRect(0, o, mini.width, 1);
-    for (const r of regions) { mg.globalAlpha = 0.55; mg.fillStyle = r.color; mg.beginPath(); mg.ellipse(o + r.x * k, o + r.y * k, Math.max(2, r.rx * k * 0.7), Math.max(2, r.ry * k * 0.7), 0, 0, 7); mg.fill(); }
+    // the little map: the whole charted sky, north up. The home zone, the named regions, every star (community skies
+    // as dots), and the box you're looking through. Tap it to fly there.
+    const M = mini.width, k = M / (2 * WORLD * K), o = M / 2;
+    mg.clearRect(0, 0, M, M);
+    mg.fillStyle = "#0b0918"; mg.fillRect(0, 0, M, M);
+    mg.fillStyle = "rgba(120,110,170,0.16)";
+    for (let c = -4000; c <= 4000; c += 1000) { const p = Math.round(o + c * K * k); mg.fillRect(p, 0, 1, M); mg.fillRect(0, p, M, 1); }
+    if (opts.homeRadius) {
+      mg.fillStyle = "rgba(242,211,138,0.10)"; mg.strokeStyle = "rgba(242,211,138,0.75)"; mg.lineWidth = 1.5;
+      mg.setLineDash([3, 2]); mg.beginPath(); mg.arc(o, o, opts.homeRadius * K * k, 0, 7); mg.fill(); mg.stroke(); mg.setLineDash([]);
+    }
+    for (const r of regions) {
+      mg.globalAlpha = r.slots === undefined && !r.galaxy ? 0.5 : 0.35; mg.fillStyle = r.color;
+      mg.beginPath(); mg.ellipse(o + r.x * k, o + r.y * k, Math.max(2, r.rx * k), Math.max(2, r.ry * k), 0, 0, 7); mg.fill();
+    }
     mg.globalAlpha = 1;
-    for (const st of stars) if (st.size !== "small") { mg.fillStyle = st.color; mg.fillRect(Math.round(o + st.x * k) - 1, Math.round(o + st.y * k) - 1, st.size === "huge" ? 3 : 2, st.size === "huge" ? 3 : 2); }
-    mg.strokeStyle = "#ffffff"; mg.lineWidth = 1;
-    mg.strokeRect(Math.round(o - view.x / s * k) + 0.5, Math.round(o - view.y / s * k) + 0.5, Math.max(3, Math.round(w / s * k)), Math.max(3, Math.round(h / s * k)));
+    for (const st of stars) {
+      const big = st.size === "huge" ? 5 : st.size === "small" ? 2 : 3;
+      mg.fillStyle = st.color; mg.fillRect(Math.round(o + st.x * k - big / 2), Math.round(o + st.y * k - big / 2), big, big);
+    }
+    if (pickAt) { mg.fillStyle = pickAt.ok ? "#9bd34a" : "#f6757a"; mg.fillRect(Math.round(o + pickAt.mx * k) - 3, Math.round(o + pickAt.my * k) - 3, 6, 6); }
+    const bw = Math.max(6, (w / s) * k), bh = Math.max(6, (h / s) * k);
+    const bx = o + ((w / 2 - view.x) / s) * k - bw / 2, by = o + ((h / 2 - view.y) / s) * k - bh / 2;
+    mg.strokeStyle = "#ffffff"; mg.lineWidth = 2;
+    mg.strokeRect(Math.round(bx) + 0.5, Math.round(by) + 0.5, Math.round(bw), Math.round(bh));
+    mg.strokeStyle = "rgba(242,211,138,0.6)"; mg.lineWidth = 2; mg.strokeRect(1, 1, M - 2, M - 2);
     schedule();
   };
   const place = () => {
@@ -279,7 +335,9 @@ export function atlasScreen(app: HTMLElement, starsIn: AtlasStar[], opts: { titl
   };
   const centerOn = (mx: number, my: number, s: number) => { view.s = s; view.x = W() / 2 - mx * s; view.y = H() / 2 - my * s; apply(); };
   const startAt = stars.find((s) => s.id === opts.focus) ?? stars[0];
-  centerOn(startAt?.x ?? 0, startAt?.y ?? 0, home());
+  // picking a spot starts far enough out to show the whole home zone and the space around it
+  const startS = opts.pick && opts.homeRadius ? Math.max(minS(), Math.min(W(), H()) / (opts.homeRadius * 2.8 * K)) : home();
+  centerOn(startAt?.x ?? 0, startAt?.y ?? 0, startS);
 
   let anim = 0;
   const easeInOut = (p: number) => (p < 0.5 ? 2 * p * p : 1 - (-2 * p + 2) ** 2 / 2);
@@ -308,7 +366,7 @@ export function atlasScreen(app: HTMLElement, starsIn: AtlasStar[], opts: { titl
   const pts = new Map<number, { x: number; y: number }>();
   let moved = 0, pinch = 0;
   root.addEventListener("pointerdown", (e) => {
-    if ((e.target as HTMLElement).closest(".atlas-card, .atlas-tools, .aedge, .atlas-mini")) return;
+    if ((e.target as HTMLElement).closest(".atlas-card, .atlas-tools, .aedge, .atlas-mini-box")) return;
     pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
     moved = 0;
     window.getSelection()?.removeAllRanges();
@@ -342,8 +400,8 @@ export function atlasScreen(app: HTMLElement, starsIn: AtlasStar[], opts: { titl
   document.getElementById("atlas-out")!.onclick = () => zoomBy(1 / 1.4);
   document.getElementById("atlas-home")!.onclick = () => animateTo(0, 0, home(), 700);
   mini.onclick = (e) => {
-    const b = mini.getBoundingClientRect(), R = 1500 * K;
-    animateTo((((e.clientX - b.left) / b.width) * 2 - 1) * R, (((e.clientY - b.top) / b.height) * 2 - 1) * R, view.s, 600);
+    const b = mini.getBoundingClientRect(), R = WORLD * K;
+    animateTo((((e.clientX - b.left) / b.width) * 2 - 1) * R, (((e.clientY - b.top) / b.height) * 2 - 1) * R, Math.max(view.s, home() * 0.6), 700);
   };
   window.addEventListener("resize", apply);
 
@@ -353,8 +411,27 @@ export function atlasScreen(app: HTMLElement, starsIn: AtlasStar[], opts: { titl
   root.addEventListener("click", (e) => {
     if (moved > 6) return; // that was a drag
     const t = e.target as HTMLElement;
-    if (t.closest(".atlas-card, .atlas-tools, .aedge, .atlas-mini, .atlas-back")) return;
+    if (t.closest(".atlas-card, .atlas-tools, .aedge, .atlas-mini-box, .atlas-back")) return;
     const b = t.closest(".astar") as HTMLElement | null;
+    if (!b && opts.pick) {
+      // picking a spot: where on the map was tapped, in coordinates (rounded to whole units)
+      const rb = root.getBoundingClientRect();
+      const mx = (e.clientX - rb.left - view.x) / view.s, my = (e.clientY - rb.top - view.y) / view.s;
+      const x = Math.round(mx / K), y = Math.round(-my / K);
+      const why = opts.pick.check(x, y);
+      pickAt = { mx: x * K, my: -y * K, x, y, ok: !why };
+      ui(why ? "back" : "star");
+      card.innerHTML = `<button class="card-x" aria-label="Close">✕</button><h2>${why ? "Not here" : "This spot?"}</h2>
+        <p class="card-coord">${fmtCoord(x)}, ${fmtCoord(y)}</p><p class="small">${why || opts.pick.hint}</p>
+        ${why ? "" : `<div class="card-actions"><button class="btn primary" id="pick-take">TAKE THIS SPOT</button></div>`}`;
+      card.classList.remove("hidden");
+      root.classList.add("card-open");
+      (card.querySelector(".card-x") as HTMLElement).onclick = () => { pickAt = null; closeCard(); overlay(); schedule(); };
+      const take = card.querySelector<HTMLButtonElement>("#pick-take");
+      if (take) take.onclick = () => opts.pick!.onPick(x, y);
+      overlay(); schedule();
+      return;
+    }
     if (!b) { if (!card.classList.contains("hidden")) ui("back"); closeCard(); return; }
     const s = stars.find((x) => x.id === b.dataset.id)!;
     ui(s.open ? "dive" : "star");
