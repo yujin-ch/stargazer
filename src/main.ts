@@ -1439,8 +1439,8 @@ function replayNight(r: RunResult, best: number, target: HTMLCanvasElement, titl
 function gauss01(rand: () => number): number { return (rand() + rand() + rand() - 1.5) * 1.4; }
 
 /** 0 = no Singularity tonight (or not reached), 1 = it rose and you let it go, 2 = you caught it. */
-/** The Singularity's look on the dial and its log line: built, waiting for yujin's go-ahead (11-27). */
-const SING_LOOK = new URLSearchParams(location.search).has("singlook");
+/** The Singularity's look on the dial and its log line (yujin approved 11-27, version A: orbits undistorted). */
+const SING_LOOK = true;
 function singMood(r: RunResult, upto = r.items.length): 0 | 1 | 2 {
   if (!SING_LOOK) return 0;
   const it = r.items.slice(0, upto).find((x) => BY_ID.get(x.id)?.band === SING);
