@@ -1,0 +1,271 @@
+{
+ "date": "2026-11-28",
+ "theme": "photos",
+ "items": [
+  {
+   "id": "kite",
+   "band": 1,
+   "names": [
+    "kite"
+   ],
+   "note": "Kites were flown in China over 2,000 years ago"
+  },
+  {
+   "id": "chair",
+   "band": 1,
+   "names": [
+    "chair",
+    "wooden chair",
+    "kitchen chair"
+   ],
+   "note": "Chairs were a luxury for most of history; people sat on stools and benches"
+  },
+  {
+   "id": "mushroom",
+   "band": 1,
+   "names": [
+    "mushroom",
+    "toadstool",
+    "fly agaric"
+   ],
+   "note": "Fly agaric: pretty, and poisonous"
+  },
+  {
+   "id": "wheelbarrow",
+   "band": 2,
+   "names": [
+    "wheelbarrow",
+    "barrow"
+   ],
+   "note": "Used in ancient China centuries before Europe"
+  },
+  {
+   "id": "banjo",
+   "band": 2,
+   "names": [
+    "banjo"
+   ],
+   "note": "Its drum head is like a tambourine's"
+  },
+  {
+   "id": "stethoscope",
+   "band": 2,
+   "names": [
+    "stethoscope"
+   ],
+   "note": "Invented in 1816 by a doctor too shy to put his ear to patients"
+  },
+  {
+   "id": "horseshoe",
+   "band": 2,
+   "names": [
+    "horseshoe",
+    "horse shoe"
+   ],
+   "note": "Hung ends up to keep the luck in"
+  },
+  {
+   "id": "icecream",
+   "band": 2,
+   "names": [
+    "ice cream",
+    "ice cream cone",
+    "cone"
+   ],
+   "note": "The waffle cone caught on at the 1904 World's Fair"
+  },
+  {
+   "id": "rollingpin",
+   "band": 2,
+   "names": [
+    "rolling pin"
+   ],
+   "note": "Marble ones stay cool for pastry"
+  },
+  {
+   "id": "trafficcone",
+   "band": 2,
+   "names": [
+    "traffic cone",
+    "cone",
+    "pylon"
+   ],
+   "note": "Invented in 1914 out of concrete"
+  },
+  {
+   "id": "shipswheel",
+   "band": 2,
+   "names": [
+    "ship's wheel",
+    "ships wheel",
+    "helm",
+    "wheel"
+   ],
+   "note": "Turning it moves the rudder"
+  },
+  {
+   "id": "lavalamp",
+   "band": 3,
+   "names": [
+    "lava lamp"
+   ],
+   "note": "Heat makes the wax rise and fall"
+  },
+  {
+   "id": "kalimba",
+   "band": 3,
+   "names": [
+    "kalimba",
+    "thumb piano",
+    "mbira"
+   ],
+   "note": "Plucked metal tines"
+  },
+  {
+   "id": "kaleidoscope",
+   "band": 3,
+   "names": [
+    "kaleidoscope"
+   ],
+   "note": "Mirrors inside repeat the pattern"
+  },
+  {
+   "id": "mantaray",
+   "band": 3,
+   "names": [
+    "manta ray",
+    "manta",
+    "ray",
+    "stingray"
+   ],
+   "note": "Largest brain of any fish"
+  },
+  {
+   "id": "rickshaw",
+   "band": 3,
+   "names": [
+    "rickshaw",
+    "pulled rickshaw"
+   ],
+   "note": "The name comes from Japanese for \"human-powered vehicle\""
+  },
+  {
+   "id": "cassowary",
+   "band": 3,
+   "names": [
+    "cassowary"
+   ],
+   "note": "The casque may help it hear low sounds"
+  },
+  {
+   "id": "mantis",
+   "band": 3,
+   "names": [
+    "praying mantis",
+    "mantis"
+   ],
+   "note": "Can turn its head 180 degrees"
+  },
+  {
+   "id": "axolotl",
+   "band": 3,
+   "names": [
+    "axolotl",
+    "mexican walking fish"
+   ],
+   "note": "It can regrow its limbs"
+  },
+  {
+   "id": "quokka",
+   "band": 3,
+   "names": [
+    "quokka"
+   ],
+   "note": "Called the happiest animal for its smile"
+  },
+  {
+   "id": "newtonscradle",
+   "band": 3,
+   "names": [
+    "newton's cradle",
+    "newtons cradle",
+    "executive ball clicker"
+   ],
+   "note": "Momentum passes through the middle balls"
+  },
+  {
+   "id": "grandfatherclock",
+   "band": 3,
+   "names": [
+    "grandfather clock",
+    "longcase clock",
+    "clock"
+   ],
+   "note": "The pendulum keeps time"
+  },
+  {
+   "id": "gong",
+   "band": 3,
+   "names": [
+    "gong"
+   ],
+   "note": "The note swells after you hit it"
+  },
+  {
+   "id": "gharial",
+   "band": 4,
+   "names": [
+    "gharial",
+    "gavial",
+    "crocodile"
+   ],
+   "note": "Its snout is made for catching fish"
+  },
+  {
+   "id": "sousaphone",
+   "band": 4,
+   "names": [
+    "sousaphone",
+    "tuba"
+   ],
+   "note": "Named after John Philip Sousa"
+  },
+  {
+   "id": "starnosedmole",
+   "band": 4,
+   "names": [
+    "star-nosed mole",
+    "star nosed mole",
+    "mole"
+   ],
+   "note": "22 fleshy tentacles on its nose"
+  },
+  {
+   "id": "saiga",
+   "band": 4,
+   "names": [
+    "saiga",
+    "saiga antelope",
+    "antelope"
+   ],
+   "note": "Its big nose filters dust"
+  },
+  {
+   "id": "durian",
+   "band": 4,
+   "names": [
+    "durian"
+   ],
+   "note": "Banned on some trains for its smell"
+  },
+  {
+   "id": "secretarybird",
+   "band": 4,
+   "names": [
+    "secretary bird",
+    "secretarybird"
+   ],
+   "note": "Stamps on snakes with its long legs"
+  }
+ ]
+}
