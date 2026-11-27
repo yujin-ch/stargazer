@@ -1,9 +1,10 @@
 /**
- * Your Universe: every night you played is a little solar system. Each thing you named that night sits on its
- * band's orbit (moons close in, black holes far out) and slowly circles the night's sun; the ones that got away are
- * faint dots on the same orbits. Things found only on practice skies drift in a quiet belt of their own.
- * Beside the map sits your Star Chart: a 0–99 score in each of eight houses, which doubles as a filter (tap a house
- * and its finds light up across every night). Drag to pan, wheel or pinch to zoom, tap a find to read its card.
+ * Your Universe: a pinwheel galaxy that grows as you play. Each of the eight houses is a spiral arm and each night
+ * you play adds a ring, from your first night at the core out to tonight at the edge; the arm's twist comes from
+ * time. Within an arm, the things you named that night are joined like a little constellation, and the ones that got
+ * away are faint dots beside them. So the galaxy's shape is your chart: the house you're best at has the fullest arm.
+ * Beside the map sits the Star Chart (0-99 per house), which doubles as a filter: tap a house and its arm lights up.
+ * Drag to pan, wheel or pinch to zoom, tap a find to read its card, tap a ring for that night.
  */
 import { mulberry32 } from "./daily";
 import { ui } from "./themes/chip";
@@ -51,33 +52,27 @@ export interface UniverseOpts {
 }
 
 const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const GOLDEN = Math.PI * (3 - Math.sqrt(5));
-const SPACING = 460;
-/** orbit radius per band, and how flat the orbits look (a tilted solar system) */
-const ORBIT = [66, 106, 148, 192];
-const TILT = 0.62;
-const BODY_R = 13;
-/** Your universe expands across real cosmic scales as you play: the first week is the Solar Neighbourhood, and so on out. */
-const REGIONS: [number, string, string][] = [
-  [7, "Solar Neighbourhood", "#7fb7ff"], [30, "Orion Arm", "#9f8cff"], [90, "Milky Way", "#e08ad0"],
-  [180, "Local Group", "#ffb36b"], [365, "Virgo Supercluster", "#7fe0c4"], [Infinity, "Laniakea", "#ffd86b"],
-];
-const regionOf = (i: number) => REGIONS.findIndex(([n]) => i < n);
-const regionEdge = (k: number) => SPACING * Math.sqrt(REGIONS[k][0] - 0.5) + 320;
+/** the core (practice finds), first night's ring, gap between nights, and how far each ring twists the arms */
+const CORE_R = 62, R0 = 120, STEP = 34, TWIST = 0.075;
+const WEDGE = (Math.PI * 2) / 8;
+const BODY_R = 11;
+const armAngle = (h: number, ring: number) => h * WEDGE - Math.PI / 2 + ring * TWIST;
 
 interface Placed extends UBody {
   sys: number;
-  /** orbit radius, start angle, angular speed (rad/s) */
-  r: number; a0: number; w: number;
   x: number; y: number;
+  /** a phase for twinkling */
+  a0: number;
 }
-interface Sys { x: number; y: number; night: UNight; bodies: Placed[]; seed: number; belt: boolean }
+/** One night: a ring of the galaxy (the core holds practice finds). */
+interface Sys { night: UNight; bodies: Placed[]; belt: boolean; r: number; ring: number; links: [Placed, Placed][] }
 
 function hashStr(s: string): number {
   let h = 2166136261;
   for (let i = 0; i < s.length; i++) h = Math.imul(h ^ s.charCodeAt(i), 16777619);
   return h >>> 0;
 }
+const ordinal = (n: number) => `${n}${["TH", "ST", "ND", "RD"][n % 100 >= 11 && n % 100 <= 13 ? 0 : Math.min(n % 10, 4) % 4] ?? "TH"}`;
 const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!);
 
 export function openUniverse(app: HTMLElement, o: UniverseOpts): () => void {
@@ -113,7 +108,7 @@ export function openUniverse(app: HTMLElement, o: UniverseOpts): () => void {
       </div>
     </aside>
     <p class="uni-hint">${total ? "Drag to look around · pinch or scroll to zoom · tap anything" : ""}</p>
-    ${total ? "" : `<div class="uni-empty"><p>Nothing out here yet.</p><p class="small">Everything you name in tonight's sky joins your universe, circling the night you found it.</p></div>`}
+    ${total ? "" : `<div class="uni-empty"><p>Nothing out here yet.</p><p class="small">Everything you name in tonight's sky becomes a star in your galaxy, on the arm of its house.</p></div>`}
     <aside class="uni-card" id="uni-card" hidden></aside>
   </main>`;
   const root = app.querySelector<HTMLElement>(".universe")!;
@@ -124,29 +119,62 @@ export function openUniverse(app: HTMLElement, o: UniverseOpts): () => void {
   const info = app.querySelector<HTMLElement>("#uni-house-info")!;
   rail.querySelectorAll<HTMLElement>(".uni-houses .g").forEach((el, i) => el.appendChild(glyphCanvas(HOUSES[i], 20)));
 
-  // ------------------------------------------------------------ layout: nights on a golden spiral, finds on band orbits
-  const systems: Sys[] = o.nights.map((night, i) => {
-    const rr = SPACING * Math.sqrt(i) * (i ? 1 : 0), th = i * GOLDEN;
-    const seed = hashStr(night.date || "wanderers");
-    const rand = mulberry32(seed);
-    const belt = !night.date;
-    const sys: Sys = { x: Math.cos(th) * rr, y: Math.sin(th) * rr, night, bodies: [], seed, belt };
-    const byBand = [0, 1, 2, 3].map((k) => night.bodies.filter((b) => b.band === k));
-    const spin = [0, 1, 2, 3].map(() => rand() * Math.PI * 2);
-    const seen = [0, 0, 0, 0];
-    for (const b of night.bodies) {
-      const k = seen[b.band]++, n = byBand[b.band].length;
-      // the belt: everything on one wide, slightly ragged ring; a night: evenly spaced around its band's orbit
-      const r = belt ? 150 + (rand() - 0.5) * 34 : ORBIT[b.band];
-      const a0 = belt ? rand() * Math.PI * 2 : spin[b.band] + (k / n) * Math.PI * 2;
-      const w = (b.band % 2 ? -1 : 1) * (0.5 / Math.pow(r, 0.9)) * (belt ? 0.4 : 1);
-      sys.bodies.push({ ...b, sys: i, r, a0, w, x: 0, y: 0 });
+  // ------------------------------------------------------------ layout: houses are arms, nights are rings
+  const dated = o.nights.filter((n) => n.date).sort((x, y) => (x.date < y.date ? -1 : 1));
+  const loose = o.nights.filter((n) => !n.date);
+  const systems: Sys[] = [...loose, ...dated].map((night, i) => {
+    const belt = !night.date, ring = belt ? -1 : dated.indexOf(night);
+    const r = belt ? CORE_R : R0 + ring * STEP;
+    const rand = mulberry32(hashStr(night.date || "practice"));
+    const sys: Sys = { night, bodies: [], belt, r, ring, links: [] };
+    for (let h = 0; h < 8; h++) {
+      const group = night.bodies.filter((b) => b.house === h);
+      // found ones in the middle of the arm, the ones that got away at its edges
+      group.sort((x, y) => Number(!!x.unknown) - Number(!!y.unknown));
+      // a crowded arm on an early (small) ring stacks into a few rows across the ring's width
+      const n = group.length, rows = Math.min(3, Math.max(1, Math.ceil((n * 28) / (r * WEDGE * 0.9))));
+      const perRow = Math.ceil(n / rows);
+      const order = group.map((_, k) => k).sort((x, y) => Math.abs(x - (n - 1) / 2) - Math.abs(y - (n - 1) / 2));
+      const placed: Placed[] = [];
+      group.forEach((b, k) => {
+        const slot = order.indexOf(k), row = slot % rows, col = Math.floor(slot / rows);
+        const inRow = Math.min(perRow, Math.ceil((n - row) / rows)), spread = Math.min(WEDGE * 0.92, (inRow * 28) / r);
+        const a = armAngle(h, belt ? 0 : ring) + (inRow > 1 ? (col / (inRow - 1) - 0.5) * spread : 0) + (rand() - 0.5) * 0.04;
+        const rr = r + (rows > 1 ? (row - (rows - 1) / 2) * STEP * 0.62 : (rand() - 0.5) * STEP * (belt ? 0.8 : 0.55));
+        placed.push({ ...b, sys: i, x: Math.cos(a) * rr, y: Math.sin(a) * rr, a0: rand() * 6.28 });
+      });
+      sys.bodies.push(...placed);
+      // that night's finds in this arm, joined like a little constellation (shortest lines that never cross)
+      const lit = placed.filter((b) => !b.unknown);
+      const inT = new Set<number>(lit.length ? [0] : []);
+      while (inT.size < lit.length) {
+        let bi = -1, bj = -1, bd = Infinity;
+        for (const x of inT) for (let y = 0; y < lit.length; y++) if (!inT.has(y)) {
+          const d = Math.hypot(lit[x].x - lit[y].x, lit[x].y - lit[y].y);
+          if (d < bd) { bd = d; bi = x; bj = y; }
+        }
+        sys.links.push([lit[bi], lit[bj]]); inT.add(bj);
+      }
     }
     return sys;
   });
   const bodies = systems.flatMap((s) => s.bodies);
   /** finds in the order you caught them, for PREV / NEXT */
-  const order = bodies.filter((b) => !b.unknown);
+  const order = systems.filter((s) => !s.belt).concat(systems.filter((s) => s.belt)).flatMap((s) => {
+    const src = s.night.bodies.filter((b) => !b.unknown);
+    return src.map((b) => s.bodies.find((x) => x.id === b.id)!).filter(Boolean);
+  });
+  const outerR = (dated.length ? R0 + (dated.length - 1) * STEP : CORE_R) + STEP;
+  const lastRing = dated.length - 1;
+
+  // pre-drawn glows, one per house colour, so hundreds of stars stay cheap
+  const glow = HOUSES.map((h) => {
+    const c = document.createElement("canvas"); c.width = c.height = 32;
+    const x = c.getContext("2d")!, gr = x.createRadialGradient(16, 16, 0, 16, 16, 16);
+    gr.addColorStop(0, h.color); gr.addColorStop(0.35, h.color + "88"); gr.addColorStop(1, "rgba(0,0,0,0)");
+    x.fillStyle = gr; x.fillRect(0, 0, 32, 32);
+    return c;
+  });
 
   // ------------------------------------------------------------ camera
   let W = 0, H = 0, dpr = 1;
@@ -170,14 +198,15 @@ export function openUniverse(app: HTMLElement, o: UniverseOpts): () => void {
   /** the visible middle of the map, leaving out the header and the rail */
   const midX = () => (W - railW()) / 2, midY = () => (H - railH()) / 2 + 30;
   const fit = () => {
-    if (!systems.length) return;
-    let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
-    for (const s of systems) { x0 = Math.min(x0, s.x - 220); x1 = Math.max(x1, s.x + 220); y0 = Math.min(y0, s.y - 160); y1 = Math.max(y1, s.y + 170); }
-    cam.x = (x0 + x1) / 2; cam.y = (y0 + y1) / 2;
-    cam.z = Math.max(0.12, Math.min(1.25, Math.min((W - railW() - 24) / (x1 - x0), (H - railH() - 130) / (y1 - y0))));
+    // leave room for the arm names at the tips (a fixed size on screen, not in the galaxy)
+    const half = Math.min((W - railW()) / 2, (H - railH() - 110) / 2) - (narrow() ? 34 : 62);
+    cam.x = 0; cam.y = 0;
+    cam.z = Math.max(0.03, Math.min(1.6, (half - (narrow() ? 22 : 36)) / (outerR + 14)));
   };
   fit();
-  const clampZ = (z: number) => Math.max(0.08, Math.min(5, z));
+  const fitZ = cam.z;
+  const clampZ = (z: number) => Math.max(Math.min(0.08, fitZ * 0.7), Math.min(5, z));
+  let ringSel: Sys | null = null;
   const toScreen = (x: number, y: number) => [(x - cam.x) * cam.z + midX(), (y - cam.y) * cam.z + midY()] as const;
   const toWorld = (sx: number, sy: number) => [(sx - midX()) / cam.z + cam.x, (sy - midY()) / cam.z + cam.y] as const;
   /** where a followed body sits on screen: left of centre on wide screens (card on its right), high on phones */
@@ -240,114 +269,114 @@ export function openUniverse(app: HTMLElement, o: UniverseOpts): () => void {
     }
     g.globalAlpha = 1;
 
-    const tt = REDUCED ? 0 : t;
-    for (const s of systems) for (const b of s.bodies) {
-      const a = b.a0 + b.w * tt;
-      b.x = s.x + Math.cos(a) * b.r; b.y = s.y + Math.sin(a) * b.r * TILT;
-    }
-    const far = cam.z < 0.3;
-    // the regions of the real universe your nights have reached, and the next frontier
-    const dated = systems.filter((s) => !s.belt).length;
-    const reached = dated ? regionOf(dated - 1) : 0;
-    const o0 = toScreen(0, 0);
-    for (let k = Math.min(REGIONS.length - 2, reached); k >= 0; k--) {
-      const R = regionEdge(k) * cam.z;
-      g.globalAlpha = k === reached ? 0.3 : 0.2; g.strokeStyle = REGIONS[k][2]; g.lineWidth = 1; g.setLineDash([6, 8]);
-      g.beginPath(); g.arc(o0[0], o0[1], R, 0, Math.PI * 2); g.stroke(); g.setLineDash([]);
-      const label = REGIONS[k][1].toUpperCase(), next = REGIONS[k + 1]?.[1].toUpperCase();
-      g.font = `${Math.max(8, Math.min(14, R * 0.03))}px "Press Start 2P", monospace`; g.textAlign = "center"; g.fillStyle = REGIONS[k][2];
-      g.globalAlpha = 0.7; g.fillText(label, o0[0], o0[1] - R + Math.max(14, R * 0.035));
-      if (k === reached && next) { g.globalAlpha = 0.4; g.fillStyle = REGIONS[k + 1][2]; g.fillText(`${next} · UNCHARTED`, o0[0], o0[1] - R - 10); }
-    }
-    g.globalAlpha = 1;
-    // your path from night to night: a faint dotted trail between suns
-    const path = systems.filter((s) => !s.belt);
-    if (path.length > 1) {
-      g.globalAlpha = 0.16; g.strokeStyle = "#f2d38a"; g.lineWidth = 1; g.setLineDash([1, 7]);
-      g.beginPath(); path.forEach((s, i) => { const p = toScreen(s.x, s.y); if (i) g.lineTo(p[0], p[1]); else g.moveTo(p[0], p[1]); }); g.stroke(); g.setLineDash([]);
-      g.globalAlpha = 1;
-    }
+    const z = cam.z, far = z < 0.55, c0 = toScreen(0, 0);
+    const on = (b: Placed) => filter < 0 || b.house === filter;
+    // the core
+    const coreR = Math.max(30, Math.min(170, 150 * z));
+    const core = g.createRadialGradient(c0[0], c0[1], 0, c0[0], c0[1], coreR);
+    core.addColorStop(0, "rgba(255,240,205,0.75)"); core.addColorStop(0.3, "rgba(255,200,120,0.25)"); core.addColorStop(1, "rgba(255,150,80,0)");
+    g.fillStyle = core; g.fillRect(c0[0] - coreR, c0[1] - coreR, coreR * 2, coreR * 2);
+    // the rings: one per night, each week a little brighter, tonight's in gold
+    g.lineWidth = 1;
     for (const s of systems) {
-      const sun = toScreen(s.x, s.y);
-      if (sun[0] < -260 * cam.z - 60 || sun[0] > W + 260 * cam.z + 60 || sun[1] < -200 * cam.z - 60 || sun[1] > H + 200 * cam.z + 60) continue;
-      const match = (b: Placed) => filter < 0 || b.house === filter;
-      // orbits: one thin ellipse per band that has anything on it
-      if (!far) {
-        g.lineWidth = 1;
-        const rings = s.belt ? [150] : [...new Set(s.bodies.map((b) => b.band))].map((k) => ORBIT[k]);
-        for (const r of rings) {
-          const k = ORBIT.indexOf(r);
-          g.globalAlpha = s.belt ? 0.12 : 0.22; g.strokeStyle = k >= 0 ? o.bandColors[k] : "#8a7cc0";
-          if (s.belt) g.setLineDash([2, 5]);
-          g.beginPath(); g.ellipse(sun[0], sun[1], r * cam.z, r * cam.z * TILT, 0, 0, Math.PI * 2); g.stroke(); g.setLineDash([]);
-        }
-      }
-      // the night's sun (the belt has none)
-      if (!s.belt) {
-        const sr = Math.max(3, 15 * cam.z);
-        const glow = g.createRadialGradient(sun[0], sun[1], 0, sun[0], sun[1], sr * 2.6);
-        glow.addColorStop(0, "rgba(255,246,214,1)"); glow.addColorStop(0.3, "rgba(255,220,130,0.75)"); glow.addColorStop(1, "rgba(255,170,80,0)");
-        g.globalAlpha = 1; g.fillStyle = glow; g.fillRect(sun[0] - sr * 2.6, sun[1] - sr * 2.6, sr * 5.2, sr * 5.2);
-      }
-      // the far side of the orbits first, so near things pass in front
-      const sorted = s.bodies.slice().sort((a, b) => a.y - b.y);
-      for (const b of sorted) {
+      if (s.belt) continue;
+      const last = s.ring === lastRing, week = s.ring % 7 === 6, picked = ringSel === s;
+      g.globalAlpha = picked ? 0.7 : last ? 0.5 : week ? 0.13 : 0.05;
+      g.strokeStyle = picked || last ? "#fee761" : "#b9a8e0";
+      if (last || picked) g.setLineDash([3, 5]);
+      g.beginPath(); g.arc(c0[0], c0[1], s.r * z, 0, Math.PI * 2); g.stroke(); g.setLineDash([]);
+    }
+    // constellation lines within each arm
+    g.lineWidth = Math.max(1, Math.min(1.6, z * 1.2));
+    for (const s of systems) for (const [a, b] of s.links) {
+      const lit = on(a);
+      g.globalAlpha = (lit ? (filter >= 0 ? 0.6 : 0.32) : 0.06) * (ringSel && ringSel !== s ? 0.4 : 1);
+      g.strokeStyle = HOUSES[a.house].color;
+      const p = toScreen(a.x, a.y), q = toScreen(b.x, b.y);
+      g.beginPath(); g.moveTo(p[0], p[1]); g.lineTo(q[0], q[1]); g.stroke();
+    }
+    // the finds
+    const twinkle = !REDUCED;
+    for (const s of systems) {
+      const dimRing = ringSel && ringSel !== s ? 0.35 : 1;
+      for (const b of s.bodies) {
         const p = toScreen(b.x, b.y);
-        const on = match(b);
+        if (p[0] < -30 || p[0] > W + 30 || p[1] < -30 || p[1] > H + 30) continue;
+        const lit = on(b);
         if (b.unknown) {
-          // still out there: a faint dot on its orbit
-          g.globalAlpha = (on ? 0.5 : 0.12) * (filter >= 0 && on ? 1 : 0.8);
-          g.fillStyle = o.bandColors[b.band];
-          const d = Math.max(1.5, 2.5 * Math.min(1.6, cam.z));
+          g.globalAlpha = (lit ? 0.35 : 0.08) * dimRing;
+          g.fillStyle = HOUSES[b.house].color;
+          const d = Math.max(1, Math.min(3, 2 * z));
           g.fillRect(Math.round(p[0] - d / 2), Math.round(p[1] - d / 2), Math.ceil(d), Math.ceil(d));
           if (selected === b) { g.globalAlpha = 1; g.strokeStyle = "#fee761"; g.lineWidth = 1.5; g.setLineDash([2, 3]); g.beginPath(); g.arc(p[0], p[1], 10 + Math.sin(t * 4) * 1.5, 0, 7); g.stroke(); g.setLineDash([]); }
           continue;
         }
-        const rad = Math.max(far ? 1.5 : 2.5, (b.band === 3 ? BODY_R + 2 : BODY_R) * cam.z);
-        g.globalAlpha = on ? 1 : 0.13;
-        if (far || rad < 5) {
-          g.fillStyle = filter >= 0 && on ? HOUSES[b.house].color : o.bandColors[b.band];
-          g.fillRect(Math.round(p[0] - rad / 2), Math.round(p[1] - rad / 2), Math.ceil(rad), Math.ceil(rad));
-          continue;
+        const rad = BODY_R * z * (b.band === 3 ? 1.15 : 1);
+        if (far || rad < 6) {
+          // a star: glow in the house colour, brighter for harder finds
+          const s0 = (1.3 + b.band * 0.45) * Math.max(0.7, Math.min(2.2, z * 2.2));
+          const tw = twinkle ? 0.8 + 0.2 * Math.sin(t * 1.6 + b.a0) : 1;
+          g.globalAlpha = (lit ? 1 : 0.12) * dimRing * tw;
+          const gs = s0 * 4.2;
+          g.drawImage(glow[b.house], p[0] - gs, p[1] - gs, gs * 2, gs * 2);
+          g.fillStyle = "#fff"; g.fillRect(Math.round(p[0] - s0 / 2), Math.round(p[1] - s0 / 2), Math.ceil(s0), Math.ceil(s0));
+        } else {
+          g.globalAlpha = (lit ? 1 : 0.13) * dimRing;
+          drawFind(b, p[0], p[1], rad, filter >= 0 && lit);
+          if (z > 2.1) {
+            g.globalAlpha = (lit ? 1 : 0.2) * Math.min(1, (z - 2.1) * 2);
+            g.font = "15px VT323, monospace"; g.textAlign = "center"; g.fillStyle = "#e9e0ff";
+            g.fillText(b.name, p[0], p[1] + rad + 13);
+          }
         }
-        drawFind(b, p[0], p[1], rad, filter >= 0 && on);
         if (fresh === s && now < freshUntil) {
           const k = (freshUntil - now) / 6000;
           g.globalAlpha = Math.min(1, k * 2) * (0.5 + 0.5 * Math.sin(t * 5 + b.a0 * 3));
           g.strokeStyle = "#fee761"; g.lineWidth = 1.5;
-          g.beginPath(); g.arc(p[0], p[1], rad + 6, 0, Math.PI * 2); g.stroke();
+          g.beginPath(); g.arc(p[0], p[1], Math.max(rad, 4) + 5, 0, Math.PI * 2); g.stroke();
         }
         if (selected === b) {
           g.globalAlpha = 1; g.strokeStyle = "#fee761"; g.lineWidth = 2;
-          g.beginPath(); g.arc(p[0], p[1], rad + 5 + Math.sin(t * 4) * 1.5, 0, Math.PI * 2); g.stroke();
-        }
-        if (cam.z > 1.7) {
-          g.globalAlpha = (on ? 1 : 0.2) * Math.min(1, (cam.z - 1.7) * 2);
-          g.font = "16px VT323, monospace"; g.textAlign = "center"; g.fillStyle = "#e9e0ff";
-          g.fillText(b.name, p[0], p[1] + rad + 15);
+          g.beginPath(); g.arc(p[0], p[1], Math.max(rad, 4) + 5 + Math.sin(t * 4) * 1.5, 0, Math.PI * 2); g.stroke();
         }
       }
-      // the card sits beside the selected find on wide screens, with a dotted leader to it
-      if (selected && selected.sys === systems.indexOf(s) && !narrow() && !card.hidden) {
-        const p = toScreen(selected.x, selected.y), rad = BODY_R * cam.z;
-        const cw = card.offsetWidth, ch = card.offsetHeight, gap = rad + 34;
-        let left = p[0] + gap, top = p[1] - ch / 2;
-        if (left + cw > W - railW() - 8) left = p[0] - gap - cw;
-        top = Math.max(80, Math.min(H - ch - 20, top));
-        card.style.left = `${Math.round(left)}px`; card.style.top = `${Math.round(top)}px`;
-        g.globalAlpha = 0.6; g.strokeStyle = o.bandColors[selected.band]; g.lineWidth = 1; g.setLineDash([2, 4]);
-        const ex = left > p[0] ? left : left + cw;
-        g.beginPath(); g.moveTo(p[0] + Math.sign(ex - p[0]) * (rad + 6), p[1]); g.lineTo(ex, Math.max(top + 12, Math.min(top + ch - 12, p[1]))); g.stroke(); g.setLineDash([]);
-      }
+    }
+    g.globalAlpha = 1; g.textAlign = "center";
+    // night labels in the gap between two arms: every ring up close, every week from further out, always tonight
+    for (const s of systems) {
+      if (s.belt) continue;
+      const last = s.ring === lastRing;
+      if (!last && ringSel !== s && !(z > 0.6 && z < 2.2 && s.ring % 7 === 6)) continue;
+      const a = armAngle(0.5, s.ring), p = toScreen(Math.cos(a) * s.r, Math.sin(a) * s.r);
+      g.font = `${last || ringSel === s ? 8 : 7}px "Press Start 2P", monospace`;
+      g.fillStyle = last || ringSel === s ? "#fee761" : "#b9a8e0"; g.globalAlpha = last || ringSel === s ? 0.95 : 0.6;
+      g.fillText(last ? "TONIGHT" : s.night.label.replace(/^\w+, /, "").toUpperCase(), p[0], p[1] + 3);
+    }
+    const core0 = systems.find((s) => s.belt);
+    if (core0 && z > 0.5) { g.font = "15px VT323, monospace"; g.fillStyle = "#b9a8e0"; g.globalAlpha = 0.7; g.fillText("practice", c0[0], c0[1] + 4); }
+    // the arms' names at their tips, with your score
+    HOUSES.forEach((h, i) => {
+      const a = armAngle(i, Math.max(0, lastRing)), R = outerR + 14 + (W < 760 ? 22 : 36) / z;
+      const p = toScreen(Math.cos(a) * R, Math.sin(a) * R);
+      const lit = filter < 0 || filter === i, small = W < 760;
+      g.globalAlpha = lit ? 1 : 0.35;
+      drawGlyph(g, h, p[0], p[1] - (small ? 18 : 22), small ? 15 : 20, 1, 1.1);
+      g.font = `${small ? 7 : 8}px "Press Start 2P", monospace`; g.fillStyle = h.color; g.fillText(h.name.replace("The ", "").toUpperCase(), p[0], p[1] + 2);
+      g.font = `${small ? 16 : 19}px VT323, monospace`; g.fillStyle = "#fff"; g.fillText(String(scores[i]), p[0], p[1] + (small ? 17 : 20));
+    });
+    g.globalAlpha = 1;
+    // the card sits beside the selected find on wide screens, with a dotted leader to it
+    if (selected && !narrow() && !card.hidden) {
+      const p = toScreen(selected.x, selected.y), rad = Math.max(4, BODY_R * z);
+      const cw = card.offsetWidth, ch = card.offsetHeight, gap = rad + 34;
+      let left = p[0] + gap, top = p[1] - ch / 2;
+      if (left + cw > W - railW() - 8) left = p[0] - gap - cw;
+      top = Math.max(80, Math.min(H - ch - 20, top));
+      card.style.left = `${Math.round(left)}px`; card.style.top = `${Math.round(top)}px`;
+      g.globalAlpha = 0.6; g.strokeStyle = HOUSES[selected.house].color; g.lineWidth = 1; g.setLineDash([2, 4]);
+      const ex = left > p[0] ? left : left + cw;
+      g.beginPath(); g.moveTo(p[0] + Math.sign(ex - p[0]) * (rad + 6), p[1]); g.lineTo(ex, Math.max(top + 12, Math.min(top + ch - 12, p[1]))); g.stroke(); g.setLineDash([]);
       g.globalAlpha = 1;
-      if (cam.z > 0.16) {
-        const ly = sun[1] + (s.belt ? 0 : Math.max(18, 206 * TILT * cam.z + 14));
-        g.font = `${cam.z > 0.5 ? 9 : 8}px "Press Start 2P", monospace`; g.textAlign = "center";
-        g.fillStyle = s.belt ? "#b9a8e0" : "#f2d38a";
-        g.globalAlpha = Math.min(1, (cam.z - 0.16) * 5) * (s.belt ? 0.75 : 1);
-        g.fillText(s.belt ? "PRACTICE BELT" : s.night.label.toUpperCase(), sun[0], ly);
-        g.globalAlpha = 1;
-      }
     }
     raf = requestAnimationFrame(frame);
   }
@@ -408,16 +437,18 @@ export function openUniverse(app: HTMLElement, o: UniverseOpts): () => void {
     let best: Placed | null = null, bd = Infinity;
     for (const b of bodies) {
       if (filter >= 0 && b.house !== filter) continue;
-      const p = toScreen(b.x, b.y), rad = b.unknown ? 12 : Math.max(14, BODY_R * cam.z * 1.2);
+      const p = toScreen(b.x, b.y), rad = b.unknown ? 10 : Math.max(12, BODY_R * cam.z * 1.2);
       const d = Math.hypot(p[0] - sx, p[1] - sy);
-      if (d < rad && d < bd && (!b.unknown || cam.z > 0.6)) { best = b; bd = d; }
+      if (d < rad && d < bd && (!b.unknown || cam.z > 1.2)) { best = b; bd = d; }
     }
     if (best) return best;
-    for (const s of systems) {
-      const p = toScreen(s.x, s.y);
-      if (Math.hypot(p[0] - sx, p[1] - sy) < Math.max(20, 40 * cam.z)) return s;
-    }
-    return null;
+    // no find under the finger: the ring (night) you tapped on, if you're close enough to tell them apart
+    if (cam.z < 0.35) return null;
+    const w = toWorld(sx, sy), d = Math.hypot(w[0], w[1]);
+    let ring: Sys | null = null, rd = STEP * 0.5;
+    for (const s of systems) if (!s.belt && Math.abs(d - s.r) < rd) { rd = Math.abs(d - s.r); ring = s; }
+    if (!ring && d < CORE_R + STEP * 0.6) ring = systems.find((s) => s.belt) ?? null;
+    return ring;
   }
   function picture(b: Placed): HTMLElement {
     const img = b.hi && b.hi.complete && b.hi.naturalWidth ? (b.hi.cloneNode() as HTMLImageElement) : null;
@@ -435,7 +466,7 @@ export function openUniverse(app: HTMLElement, o: UniverseOpts): () => void {
     if (next) { next.disabled = i < 0 || i >= list.length - 1; next.onclick = () => { ui("tap"); showBody(list[i + 1]); }; }
   }
   function showBody(b: Placed) {
-    selected = b;
+    selected = b; ringSel = null;
     rail.classList.remove("open");
     const night = systems[b.sys].night, house = HOUSES[b.house];
     card.hidden = false;
@@ -477,15 +508,18 @@ export function openUniverse(app: HTMLElement, o: UniverseOpts): () => void {
     const byHouse = HOUSES.map((_, h) => mine.filter((b) => b.house === h).length);
     const lost = s.bodies.filter((b) => b.unknown).length;
     card.innerHTML = `<button class="card-x" aria-label="Close">✕</button>
-      <p class="uni-kind"><i></i>${s.belt ? "PRACTICE BELT" : `A NIGHT IN THE ${REGIONS[regionOf(systems.filter((x) => !x.belt).indexOf(s))][1].toUpperCase()}`}</p>
+      <p class="uni-kind"><i></i>${s.belt ? "THE CORE · PRACTICE FINDS" : `YOUR ${ordinal(s.ring + 1)} NIGHT`}</p>
       <h2>${esc(s.night.label)}</h2>
       ${s.night.sub ? `<p class="small">${esc(s.night.sub)}</p>` : ""}
       ${lead ? `<p class="uni-note">${esc(lead)}</p>` : s.night.title ? `<p class="uni-note">Best find: ${esc(s.night.title)}.</p>` : ""}
       <ul class="uni-tally">${byHouse.map((n, h) => (n ? `<li style="--c:${HOUSES[h].color}"><i></i>${n} · ${HOUSES[h].name}</li>` : "")).join("")}${lost ? `<li style="--c:#5a5078"><i></i>${lost} still out there</li>` : ""}</ul>`;
     wireCard();
-    flyTo(s.x, s.y, narrow() ? 1.15 : 1.5);
+    ringSel = s;
+    // show the whole ring, nudged so the card doesn't cover it
+    const zz = Math.min(1.6, Math.min((W - railW() - (narrow() ? 24 : 380)) / (2 * s.r + 120), (H - railH() - (narrow() ? H * 0.45 : 140)) / (2 * s.r + 120)));
+    flyTo(narrow() ? 0 : 150 / zz, narrow() ? (H * 0.2) / zz : 0, zz);
   }
-  function closeCard() { card.hidden = true; selected = null; following = null; }
+  function closeCard() { card.hidden = true; selected = null; following = null; ringSel = null; }
 
   // ------------------------------------------------------------ input
   const pts = new Map<number, { x: number; y: number }>();
@@ -552,7 +586,6 @@ export function openUniverse(app: HTMLElement, o: UniverseOpts): () => void {
   if (focusSys) {
     freshUntil = performance.now() + 6000;
     fresh = focusSys;
-    if (systems.length > 1) cam.z = Math.min(cam.z, 0.3);
     const n = focusSys.bodies.filter((b) => !b.unknown).length;
     setTimeout(() => { ui("dive"); showSystem(focusSys, `Tonight's ${n} ${n === 1 ? "find" : "finds"} joined your universe.`); }, REDUCED ? 0 : 500);
   }

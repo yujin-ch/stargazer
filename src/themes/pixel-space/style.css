@@ -687,7 +687,8 @@ h1.wordmark { display: inline-flex; align-items: center; gap: 14px; }
 .uni-away:hover, .uni-away:focus-visible { background: rgba(255, 255, 255, 0.05); }
 .uni-all { width: 100%; margin-top: auto; }
 .universe .uni-card { z-index: 3; }
-.uni-hint { right: 284px; }
+.uni-hint { right: 284px; animation: uni-hint 7s forwards; }
+@keyframes uni-hint { 0%, 80% { opacity: 0.8; } 100% { opacity: 0; } }
 /* the item card */
 .uni-card .uni-top { display: flex; gap: 14px; align-items: center; }
 .uni-card .uni-top > div:last-child { min-width: 0; }
