@@ -374,9 +374,9 @@ async function openPlay(mode: Run["mode"]) {
   run = newRun(mode);
   playScreen();
   const cond = dayCondition(run.puzzle);
-  await viewer.load(run.sky);
+  await viewer.load(run.sky.concat(run.hidden));
   viewer.condition = cond.id;
-  viewer.preload(run.sky.slice(0, 3));
+  viewer.preload(run.sky.slice(0, 3).concat(run.hidden));
   el.count.textContent = `0/${run.sky.length}`;
   el.controls.classList.add("hidden");
   el.hint.classList.add("hidden");
@@ -1059,7 +1059,7 @@ async function resultsScreen(r: RunResult, mode: Run["mode"], fresh = false) {
       ${!daily || mystery || CONFIG.conditionsOn ? `<p class="date">${[daily ? "" : "Practice · not saved", mystery ? shownTheme : "", CONFIG.conditionsOn ? dayCondition(r.puzzle).name : ""].filter(Boolean).join(" · ")}</p>` : ""}
       <div class="score-block"><div class="final"><span>${r.score}</span><small>POINTS</small></div>
       ${r.partial ? `<p class="small">This run was cut short, so it counts as it stood.</p>` : ""}
-      <p class="verdict" id="verdict"></p></div>
+      <p class="verdict" id="verdict"></p>${singLine(r, crowd)}</div>
       <section class="sb-block hill-block">
         <h3 class="sb-title">ON THE HILL TONIGHT</h3>
         <canvas class="chart hill-chart" id="hill" aria-label="Tonight's scores as a bell-shaped hill, with you standing in gold at your score"></canvas>
@@ -1359,6 +1359,9 @@ function replayNight(r: RunResult, best: number, target: HTMLCanvasElement, titl
     const sprites = r.items.map((it) => { const o = BY_ID.get(it.id); return o && it.outcome !== "skipped" ? viewer.spriteCanvas(o, 1) : null; });
     const per = Math.max(200, Math.min(430, 5600 / n));
     const t0 = performance.now() + 450;
+    // each find gets a full beat; a skip just ticks the rim and the replay moves straight on
+    const at: number[] = [];
+    r.items.reduce((t, it, i) => { at[i] = t; return t + (it.outcome === "skipped" ? per * 0.25 : per); }, t0);
     let shown = 0, endAt = 0, finished = false, inARow = 0;
     const view = { x: pos[0]?.x ?? 100, y: pos[0]?.y ?? 100, z: 1.7 };
     const finish = () => {
@@ -1375,7 +1378,7 @@ function replayNight(r: RunResult, best: number, target: HTMLCanvasElement, titl
     const frame = (now: number) => {
       if (!wrap.isConnected) return;
       // reveal the next answer on its beat
-      while (shown < n && now >= t0 + shown * per) {
+      while (shown < n && now >= at[shown]) {
         const it = r.items[shown], band = BY_ID.get(it.id)?.band ?? 0;
         if (it.outcome === "skipped") { inARow = 0; blip([233], 0.05, "triangle", 0.035); }
         else {
@@ -1387,8 +1390,10 @@ function replayNight(r: RunResult, best: number, target: HTMLCanvasElement, titl
         shown++;
         if (shown === n) endAt = now + per;
       }
-      // camera: follows the newest find while zoomed in, then pulls back to the whole dial
-      const last = pos[Math.max(0, shown - 1)];
+      // camera: follows the newest find while zoomed in (a skip ticks the rim but the camera stays put), then pulls back
+      let li = shown - 1;
+      while (li > 0 && r.items[li].outcome === "skipped") li--;
+      const last = pos[Math.max(0, li)];
       const out = endAt && now > endAt ? Math.min(1, (now - endAt) / 900) : 0;
       const eo = 1 - Math.pow(1 - out, 3);
       const tz = 1.7 - 0.7 * eo, tx = last ? last.x + (100 - last.x) * eo : 100, ty = last ? last.y + (100 - last.y) * eo : 100;
@@ -1406,7 +1411,7 @@ function replayNight(r: RunResult, best: number, target: HTMLCanvasElement, titl
         const sp = sprites[i];
         if (!sp) continue;
         const band = BY_ID.get(r.items[i].id)?.band ?? 0;
-        const age = Math.min(1, (now - (t0 + i * per)) / 380), pop = age < 1 ? 1 + Math.sin(age * Math.PI) * 0.6 : 1;
+        const age = Math.min(1, (now - at[i]) / 380), pop = age < 1 ? 1 + Math.sin(age * Math.PI) * 0.6 : 1;
         const rad = S * 0.034 * Math.sqrt(view.z) * pop, x = ox + pos[i].x * k, y = oy + pos[i].y * k;
         g.fillStyle = "rgba(13,10,26,0.92)"; g.beginPath(); g.arc(x, y, rad, 0, Math.PI * 2); g.fill();
         g.save(); g.beginPath(); g.arc(x, y, rad, 0, Math.PI * 2); g.clip();
@@ -1429,14 +1434,75 @@ function replayNight(r: RunResult, best: number, target: HTMLCanvasElement, titl
   });
 }
 
+/** 0 = no Singularity tonight (or not reached), 1 = it rose and you let it go, 2 = you caught it. */
+/** The Singularity's look on the dial and its log line: built, waiting for yujin's go-ahead (11-27). */
+const SING_LOOK = new URLSearchParams(location.search).has("singlook");
+function singMood(r: RunResult, upto = r.items.length): 0 | 1 | 2 {
+  if (!SING_LOOK) return 0;
+  const it = r.items.slice(0, upto).find((x) => BY_ID.get(x.id)?.band === SING);
+  return !it ? 0 : it.outcome === "skipped" ? 1 : 2;
+}
+
+/** The observing log's line about the Singularity: a glimpse, or how rare catching it was in tonight's crowd. */
+function singLine(r: RunResult, crowd: Curve): string {
+  const m = singMood(r);
+  if (!m) return "";
+  if (m === 1) return `<p class="sing-line seen">You caught a glimpse of the Singularity.</p>`;
+  const share = crowd.singCaught ?? 0;
+  const pct = share >= 0.1 ? `${Math.round(share * 100)}%` : share >= 0.01 ? `${Math.round(share * 100)}%` : "less than 1%";
+  return `<p class="sing-line caught">You're one of the <b>${pct}</b> of stargazers who caught the Singularity tonight.</p>`;
+}
+
 function drawConstellation(c: HTMLCanvasElement, r: RunResult, best: number, upto = r.items.length) {
   const W = 200, H = 200, cx = W / 2, cy = H / 2, R = DIAL_R, RIM = DIAL_RIM;
   c.width = W; c.height = H;
   const g = c.getContext("2d")!;
   const px = (x: number, y: number, w = 1, h = 1) => g.fillRect(Math.round(x), Math.round(y), w, h);
-  g.fillStyle = "#0d0a1a"; g.fillRect(0, 0, W, H);
+  const mood = singMood(r, upto);
+  g.fillStyle = ["#0d0a1a", "#150b2c", "#14072a"][mood]; g.fillRect(0, 0, W, H);
   const rand = mulberry32(r.puzzle * 31 + 7);
-  for (let i = 0; i < 120; i++) { g.fillStyle = rand() < 0.8 ? "#2c2648" : "#4a4068"; px(rand() * W, rand() * H); }
+  if (mood < 2) for (let i = 0; i < 120; i++) { g.fillStyle = rand() < 0.8 ? "#2c2648" : "#4a4068"; px(rand() * W, rand() * H); }
+  else {
+    // caught: the whole sky is being pulled round the centre: stars streak into short arcs
+    for (let i = 0; i < 140; i++) {
+      const a = rand() * Math.PI * 2, d = 14 + rand() * 120, len = 0.05 + (60 / d) * 0.06;
+      g.fillStyle = rand() < 0.7 ? "#3c2a5c" : "#7a5fb0";
+      for (let t = 0; t < len; t += 0.012) px(cx + Math.cos(a + t) * d, cy + Math.sin(a + t) * d);
+    }
+  }
+  // the Singularity's pull: a glimpse leaves a violet haze at the centre; a catch winds the sky into an accretion swirl
+  if (mood) {
+    const glow = g.createRadialGradient(cx, cy, 0, cx, cy, mood === 2 ? 100 : 80);
+    glow.addColorStop(0, mood === 2 ? "rgba(217,194,255,0.45)" : "rgba(170,120,240,0.42)");
+    glow.addColorStop(1, "rgba(60,20,110,0)");
+    g.fillStyle = glow; g.fillRect(0, 0, W, H);
+  }
+  if (mood === 1) {
+    // glimpsed: one faint wisp curling in, the start of a swirl you never saw finish
+    for (let t = 0; t < 1; t += 0.006) {
+      const d = 14 + t * 80, a = -Math.PI / 2 + t * 4.2;
+      g.globalAlpha = (1 - t) * 0.4; g.fillStyle = "#b9a6dc";
+      px(cx + Math.cos(a) * d, cy + Math.sin(a) * d);
+    }
+    g.globalAlpha = 1;
+  }
+  if (mood === 2) {
+    for (let arm = 0; arm < 3; arm++) {
+      for (let t = 0; t < 1; t += 0.004) {
+        const d = 10 + t * 95, a = arm * (Math.PI * 2 / 3) + t * 5.2 + (rand() - 0.5) * 0.08;
+        g.globalAlpha = (1 - t) * 0.75;
+        g.fillStyle = t < 0.35 ? "#ffffff" : t < 0.6 ? "#d9c2ff" : "#feae34";
+        px(cx + Math.cos(a) * d, cy + Math.sin(a) * d, t < 0.2 ? 2 : 1, t < 0.2 ? 2 : 1);
+      }
+    }
+    g.globalAlpha = 1;
+  }
+  // rings bend near a Singularity (a little when glimpsed, a lot when caught)
+  const warp = [0, 0.05, 0.08][mood];
+  const ringXY = (rr: number, a: number): [number, number] => {
+    const k = 1 + warp * Math.sin(a * 3 + rr * 0.08), tw = warp * 1.6 * (1 - rr / 100);
+    return [cx + Math.cos(a + tw) * rr * k, cy + Math.sin(a + tw) * rr * k];
+  };
   // the five difficulty bands, faintly tinted, with dotted orbits
   // the Black Hole ring only shows once you've caught one, the Singularity's once you've caught it
   const has = (b: number) => r.items.slice(0, upto).some((it) => it.outcome !== "skipped" && BY_ID.get(it.id)?.band === b);
@@ -1448,7 +1514,7 @@ function drawConstellation(c: HTMLCanvasElement, r: RunResult, best: number, upt
     if (!ringOn(i)) return;
     g.fillStyle = theme.bandColors[i]; g.globalAlpha = 0.45;
     const n = Math.round(rr * 6.28);
-    for (let k = 0; k < n; k += 3) { const a = (k / n) * Math.PI * 2; px(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr); }
+    for (let k = 0; k < n; k += 3) { const [x, y] = ringXY(rr, (k / n) * Math.PI * 2); px(x, y); }
   });
   g.globalAlpha = 1;
   // the minute: ticks every 5 s, longer every 15 s
@@ -1459,7 +1525,14 @@ function drawConstellation(c: HTMLCanvasElement, r: RunResult, best: number, upt
   }
   // you, in the middle
   const singAt = r.items.slice(0, upto).findIndex((it) => it.outcome !== "skipped" && BY_ID.get(it.id)?.band === SING);
-  if (singAt < 0) { g.fillStyle = "#fee761"; px(cx - 1, cy - 4, 3, 3); px(cx - 1, cy, 3, 4); }
+  if (singAt < 0) {
+    g.fillStyle = "#fee761"; px(cx - 1, cy - 4, 3, 3); px(cx - 1, cy, 3, 4);
+    if (mood === 1) {
+      // it rose and got away: a dashed violet horizon round you, a question left open
+      g.fillStyle = theme.bandColors[SING];
+      for (let k = 0; k < 28; k++) if (k % 4 !== 3) { const a = (k / 28) * Math.PI * 2; px(cx + Math.cos(a) * 16, cy + Math.sin(a) * 16); }
+    }
+  }
   else {
     // a caught Singularity takes the centre: a white core in violet rings
     const col = theme.bandColors[SING];

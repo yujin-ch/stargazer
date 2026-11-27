@@ -945,3 +945,8 @@ details.secret summary span { letter-spacing: 3px; color: var(--b5); }
   .log-details .figures { grid-template-columns: repeat(2, 1fr); row-gap: 12px; }
 }
 @media (min-width: 1000px) { .log-score .res-actions .share-row .btn { font-size: 11px; letter-spacing: 0; } }
+/* the observing log's Singularity line */
+.sing-line { margin: 0; max-width: 360px; font-size: 18px; line-height: 1.25; text-align: center; }
+.sing-line.seen { color: #b9a6dc; }
+.sing-line.caught { color: #fff; padding: 8px 12px; border: 2px solid var(--b5); background: rgba(217, 194, 255, 0.08); box-shadow: 0 0 18px rgba(217, 194, 255, 0.35); text-shadow: 0 0 10px rgba(217, 194, 255, 0.6); }
+.sing-line.caught b { color: var(--b5); font-weight: normal; }

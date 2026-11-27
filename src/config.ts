@@ -46,7 +46,7 @@ export const CONFIG = {
     { startZoom: 3, pullBack: 3, startBlur: 1.1, points: 50, zoomedPoints: 75 },
     { startZoom: 3.5, pullBack: 3.3, startBlur: 1.3, points: 80, zoomedPoints: 120 },
     // Singularity: one a night, the hardest object, hidden until you have named singularityAfter Black Holes
-    { startZoom: 4, pullBack: 3.6, startBlur: 1.6, points: 200, zoomedPoints: 300 },
+    { startZoom: 3.5, pullBack: 3.3, startBlur: 1.3, points: 200, zoomedPoints: 300 },
   ],
   /** Black Holes to name (not skip) in a run before the night's Singularity rises. */
   singularityAfter: 2,

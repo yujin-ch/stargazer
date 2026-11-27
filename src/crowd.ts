@@ -11,6 +11,8 @@ export interface Curve {
   mean: number; sd: number;
   /** The crowd's score at each percentile, 0..100: scores bunch low with a long tail, so ranks come from these. */
   q?: number[];
+  /** Share of the simulated crowd that met / caught the Singularity tonight. */
+  singMet?: number; singCaught?: number;
 }
 
 /**
@@ -47,6 +49,7 @@ function play(sky: SkyObject[], eye: number, speed: number, rand: () => number, 
       combo++;
       const zoomed = band.pullBack > 0 && at < band.pullBack;
       score += answerPoints(o.band, zoomed, combo);
+      if (o.band === 5) tally.caught++;
       delta = zoomed ? CONFIG.adapt.zoomed : CONFIG.adapt.named;
       if (o.band === 4 && ++bhNamed === CONFIG.singularityAfter) rises = secret.shift();
     } else {
@@ -59,15 +62,19 @@ function play(sky: SkyObject[], eye: number, speed: number, rand: () => number, 
     level = Math.max(0, Math.min(4, level + delta));
     const want = Math.round(level);
     let bi = -1, bd = 9;
-    if (rises) { o = rises; rises = undefined; continue; }
+    if (rises) { o = rises; rises = undefined; tally.met++; continue; }
     left.forEach((x, j) => { const d = Math.abs(x.band - want); if (d < bd) { bd = d; bi = j; } });
     o = bi >= 0 ? left.splice(bi, 1)[0] : undefined;
   }
   return score;
 }
 
+/** How many of the last simulated crowd met and caught the night's Singularity. */
+const tally = { met: 0, caught: 0, n: 1 };
+
 /** Sorted scores for a crowd of n players on this sky (same crowd for everyone on the same night). */
 export function crowdScores(sky: SkyObject[], seed: number, condition: ConditionId = "clear", n = 400): number[] {
+  tally.met = tally.caught = 0; tally.n = n;
   const rand = mulberry32(seed * 2654435761 + 97);
   const out: number[] = [];
   for (let i = 0; i < n; i++) {
@@ -84,7 +91,7 @@ export function dayCurve(sky: SkyObject[], seed: number, condition: ConditionId 
   const mean = s.reduce((a, b) => a + b, 0) / (s.length || 1);
   const sd = Math.sqrt(s.reduce((a, b) => a + (b - mean) ** 2, 0) / (s.length || 1));
   const q = Array.from({ length: 101 }, (_, i) => s[Math.min(s.length - 1, Math.round((i / 100) * (s.length - 1)))] ?? 0);
-  return { mean: Math.round(mean / 5) * 5, sd: Math.max(10, Math.round(sd / 5) * 5), q };
+  return { mean: Math.round(mean / 5) * 5, sd: Math.max(10, Math.round(sd / 5) * 5), q, singMet: tally.met / tally.n, singCaught: tally.caught / tally.n };
 }
 
 /** Normal CDF (Abramowitz-Stegun). */
