@@ -6,5 +6,5 @@ dist-single
 dist-board
 scripts/photos/nights/*/raw/
 scripts/photos/nights/*/review.png
-cf/
+/cf/
 .wrangler/
