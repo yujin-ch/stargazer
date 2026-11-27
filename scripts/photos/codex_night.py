@@ -71,7 +71,7 @@ def main():
             continue
         print(f"[{n}/{len(items)}] {it['id']}: {it['desc']} ...", flush=True)
         t0 = time.time()
-        cmd = [codex, "exec", "--full-auto", "--skip-git-repo-check", prompt(it, name)]
+        cmd = [codex, "exec", "--sandbox", "workspace-write", "--skip-git-repo-check", prompt(it, name)]
         try:
             res = subprocess.run(cmd, cwd=out, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=600)
             log.write(f"\n===== {it['id']} (exit {res.returncode}, {time.time() - t0:.0f}s)\n{res.stdout[-4000:]}\n{res.stderr[-2000:]}\n")
