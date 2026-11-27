@@ -4,7 +4,9 @@
  * The same system appears in Your Universe afterwards.
  */
 const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const RADII = [0.17, 0.245, 0.315, 0.385, 0.46];
+const RADII = [0.15, 0.215, 0.28, 0.345, 0.41, 0.47];
+/** The outer orbits stay hidden until something lands on them: the Black Hole ring after your first, the Singularity's after it. */
+const SECRET_FROM = 4;
 
 interface Dot { band: number; a0: number; r: number; born: number; sprite: HTMLCanvasElement | null }
 
@@ -12,7 +14,7 @@ export class MiniMap {
   private dots: Dot[] = [];
   private skips: { a: number; born: number }[] = [];
   private raf = 0;
-  private n = [0, 0, 0, 0];
+  private n = [0, 0, 0, 0, 0, 0];
   private level = 0;
   private shownLevel = 0;
   private pulse = -9;
@@ -33,7 +35,7 @@ export class MiniMap {
   add(band: number, sprite: HTMLCanvasElement | null) {
     const k = this.n[band]++;
     this.pulse = performance.now();
-    if (band === 4) this.quake = performance.now();
+    if (band >= 4) this.quake = performance.now();
     this.dots.push({ band, a0: -Math.PI / 2 + k * 2.39996 + band * 0.7, r: RADII[band] + ((k % 3) - 1) * 0.018, born: performance.now(), sprite });
     this.c.parentElement?.classList.remove("ping"); void this.c.offsetWidth; this.c.parentElement?.classList.add("ping");
   }
@@ -56,6 +58,7 @@ export class MiniMap {
     this.shownLevel += (this.level - this.shownLevel) * 0.08;
     // orbits; the one the next object comes from glows and slowly turns
     RADII.forEach((r, b) => {
+      if (b >= SECRET_FROM && !this.n[b]) return;
       const near = Math.max(0, 1 - Math.abs(this.shownLevel - b));
       g.globalAlpha = 0.14 + near * 0.5; g.strokeStyle = this.colors[b]; g.lineWidth = 1 + near * 1.5;
       if (near > 0.3) g.setLineDash([3, 4]);
@@ -99,9 +102,9 @@ export class MiniMap {
         g.beginPath(); g.moveTo(p.x - (p.x + S * 0.2) * 0.35, p.y - (p.y + S * 0.2) * 0.35); g.lineTo(p.x, p.y); g.stroke();
       }
       // the find's own picture as its icon, in a little band-coloured bubble
-      const r = S * [0.05, 0.055, 0.06, 0.065, 0.06][d.band] * (p.age < 1.3 ? 1 + Math.max(0, 1.3 - p.age) * 0.9 : 1);
+      const r = S * [0.05, 0.055, 0.06, 0.065, 0.06, 0.075][d.band] * (p.age < 1.3 ? 1 + Math.max(0, 1.3 - p.age) * 0.9 : 1);
       g.globalAlpha = 1;
-      g.fillStyle = d.band === 4 ? "#05030a" : "rgba(20,14,40,0.9)";
+      g.fillStyle = d.band >= 4 ? "#05030a" : "rgba(20,14,40,0.9)";
       g.beginPath(); g.arc(p.x, p.y, r, 0, Math.PI * 2); g.fill();
       if (d.sprite && r > 3) {
         const k = (r * 1.7) / Math.max(d.sprite.width, d.sprite.height);
@@ -110,7 +113,7 @@ export class MiniMap {
         g.drawImage(d.sprite, p.x - (d.sprite.width * k) / 2, p.y - (d.sprite.height * k) / 2, d.sprite.width * k, d.sprite.height * k);
         g.restore();
       }
-      g.strokeStyle = this.colors[d.band]; g.lineWidth = d.band === 4 ? 1.6 : 1.1;
+      g.strokeStyle = this.colors[d.band]; g.lineWidth = d.band >= 4 ? 1.6 : 1.1;
       g.beginPath(); g.arc(p.x, p.y, r, 0, Math.PI * 2); g.stroke();
       if (p.age < 1.2) { g.globalAlpha = Math.max(0, 1.2 - p.age) * 0.9; g.strokeStyle = "#fee761"; g.lineWidth = 1; g.beginPath(); g.arc(p.x, p.y, r + 2 + p.age * 8, 0, Math.PI * 2); g.stroke(); }
     }

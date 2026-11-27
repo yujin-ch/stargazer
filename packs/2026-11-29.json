@@ -279,17 +279,6 @@
    "note": "Invented by Benjamin Franklin"
   },
   {
-   "id": "mangle",
-   "img": "7f2ca376469112f7",
-   "band": 5,
-   "names": [
-    "mangle",
-    "wringer",
-    "clothes wringer"
-   ],
-   "note": "Squeezed water out before spin dryers"
-  },
-  {
    "id": "markhor",
    "img": "a17b11640b631720",
    "band": 5,
@@ -298,6 +287,17 @@
     "?goat"
    ],
    "note": "Pakistan's national animal"
+  },
+  {
+   "id": "mangle",
+   "img": "7f2ca376469112f7",
+   "band": 6,
+   "names": [
+    "mangle",
+    "wringer",
+    "clothes wringer"
+   ],
+   "note": "Squeezed water out before spin dryers"
   }
  ]
 }

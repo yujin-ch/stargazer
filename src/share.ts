@@ -7,7 +7,7 @@ import { dayTheme } from "./daily";
 export interface Standing { beat: number; live: boolean; players: number }
 
 /** One glyph per object you met, in order: the band's sky glyph when named, a cloud when skipped. */
-const BAND_GLYPH = ["🌕", "🪐", "☄️", "🌌", "🕳️"] as const;
+const BAND_GLYPH = ["🌕", "🪐", "☄️", "🌌", "🕳️", "🌀"] as const;
 
 /** A title for how the night went, from the share of the crowd you out-spotted. */
 export function nightTitle(beat: number): string {

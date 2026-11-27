@@ -14,7 +14,7 @@ cw, ch = T * S * 3 + 20, T * S + 28
 rows = (len(items) + cols - 1) // cols
 sheet = Image.new("RGB", (cw * cols, ch * rows), (24, 20, 37))
 d = ImageDraw.Draw(sheet)
-bandc = [(254, 231, 97), (44, 232, 245), (168, 240, 138), (224, 122, 184), (255, 80, 80)]
+bandc = [(254, 231, 97), (44, 232, 245), (168, 240, 138), (224, 122, 184), (255, 80, 80), (217, 194, 255)]
 for k, it in enumerate(items):
     x, y = (k % cols) * cw + 6, (k // cols) * ch + 4
     sheet.paste(Image.open(f"{RAW}/{it['id']}.png").convert("RGB").resize((T * S, T * S)), (x, y))

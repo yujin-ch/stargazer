@@ -297,7 +297,7 @@ export function openUniverse(app: HTMLElement, o: UniverseOpts): () => void {
           if (selected === b) { g.globalAlpha = 1; g.strokeStyle = "#fee761"; g.lineWidth = 1.5; g.setLineDash([2, 3]); g.beginPath(); g.arc(p[0], p[1], 10 + Math.sin(t * 4) * 1.5, 0, 7); g.stroke(); g.setLineDash([]); }
           continue;
         }
-        const rad = BODY_R * z * (b.band === 4 ? 1.15 : 1);
+        const rad = BODY_R * z * (b.band >= 4 ? 1.15 : 1);
         if (far || rad < 6) {
           // a star: glow in the house colour, brighter for harder finds
           const s0 = (1.3 + b.band * 0.36) * Math.max(0.7, Math.min(2.2, z * 2.2));
@@ -461,7 +461,7 @@ export function openUniverse(app: HTMLElement, o: UniverseOpts): () => void {
     if (b.unknown) {
       card.innerHTML = `<button class="card-x" aria-label="Close">✕</button>
         <div class="uni-top"><div class="uni-pic unknown"><span>?</span></div><div>
-        <p class="uni-kind"><i></i>${o.bandNames[b.band].toUpperCase()} · UNDISCOVERED</p>
+        <p class="uni-kind"><i></i>${b.band === 5 && !b.skipped ? "???" : o.bandNames[b.band].toUpperCase()} · UNDISCOVERED</p>
         <h2>Still out there</h2>${houseLine}</div></div>
         <p class="uni-note">${b.skipped ? `It rose in your telescope ${esc(night.label)} and you let it go.` : `It was in the sky ${esc(night.label)} but rose after your time ran out.`}</p>
         <p class="small">Play that night again from Past Skies in the Star Atlas to catch it.</p>`;

@@ -143,13 +143,14 @@ export function ramp(sky: SkyObject[]): SkyObject[] {
     else hard.push(bh.shift()!);
   }
   const out = easy.slice();
+  const secret = sky.filter((o) => o.band === 5); // the Singularity waits at the end; a run holds it back until it rises
   let want = 0, took = 0;
   for (let step = 0; mid.length || hard.length; step++) {
     want += Math.min(1, CONFIG.rampStart + CONFIG.rampStep * step);
     const pickHard = hard.length && (!mid.length || took + 1 <= want + 0.001);
     if (pickHard) { out.push(hard.shift()!); took++; } else out.push(mid.shift()!);
   }
-  return out;
+  return out.concat(secret);
 }
 
 /** A random sky for practice runs. */

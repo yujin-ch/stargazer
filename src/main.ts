@@ -1,6 +1,6 @@
 import "@fontsource/press-start-2p";
 import "@fontsource/vt323";
-import { CONFIG, tierFor, answerPoints, BH, SITE_URL, TIP_URL } from "./config";
+import { CONFIG, tierFor, answerPoints, BH, SING, SITE_URL, TIP_URL } from "./config";
 import { drawShareCard, cardBlob } from "./sharecard";
 import { OBJECTS, BY_ID, loadDayPack, loadPackIndex, shownNames, themeName, themeInfo, photoHi, type SkyObject } from "./library";
 import { openUniverse, type UBody, type UNight } from "./universe";
@@ -98,6 +98,8 @@ interface Run {
   tier: number;
   streak: number;
   sky: SkyObject[];
+  /** The night's Singularity, held back until enough Black Holes are named. */
+  hidden: SkyObject[];
   i: number;
   phase: "ready" | "countdown" | "playing" | "paused" | "over";
   /** When the run was paused (the tab hidden), and what it was doing then. */
@@ -362,8 +364,9 @@ function newRun(mode: Run["mode"]): Run {
   const puzzle = puzzleNumber(date);
   const streak = store.streakThrough(puzzle - 1);
   const tier = tierFor(streak);
-  const sky = mode === "daily" ? dailySky(puzzle, tier) : PREVIEW_NIGHT ? dailySky(PREVIEW_NIGHT, tier) : practiceSky(tier);
-  return { mode, puzzle: mode === "daily" ? puzzle : PREVIEW_NIGHT || puzzle, date, tier, streak, sky, i: 0, phase: "ready", pausedAt: 0, pausedFrom: null, countdownAt: 0, startAt: 0, penalty: 0, score: 0, items: [], attempt: "", lastTick: 99, combo: 0, bestCombo: 0, graceUntil: 0, graceObj: null, graceText: "", graceDropped: "", clearedBonus: 0, pending: null, suggest: null, level: 0 };
+  const all = mode === "daily" ? dailySky(puzzle, tier) : PREVIEW_NIGHT ? dailySky(PREVIEW_NIGHT, tier) : practiceSky(tier);
+  const sky = all.filter((o) => o.band !== SING), hidden = all.filter((o) => o.band === SING);
+  return { mode, puzzle: mode === "daily" ? puzzle : PREVIEW_NIGHT || puzzle, date, tier, streak, sky, hidden, i: 0, phase: "ready", pausedAt: 0, pausedFrom: null, countdownAt: 0, startAt: 0, penalty: 0, score: 0, items: [], attempt: "", lastTick: 99, combo: 0, bestCombo: 0, graceUntil: 0, graceObj: null, graceText: "", graceDropped: "", clearedBonus: 0, pending: null, suggest: null, level: 0 };
 }
 
 async function openPlay(mode: Run["mode"]) {
@@ -544,13 +547,14 @@ function showObject(now: number) {
   warmth((el.guess as HTMLInputElement).value);
   run.attempt = "";
   const band = CONFIG.bands[obj.band];
-  const bandText = `${theme.bandNames[obj.band].toUpperCase()} · ${band.points} PT${band.points > 1 ? "S" : ""}`;
+  const bandText = obj.band === SING ? `?? ${theme.bandNames[obj.band].toUpperCase()} ??` : `${theme.bandNames[obj.band].toUpperCase()} · ${band.points} PT${band.points > 1 ? "S" : ""}`;
   const mysteryNight = !!themeInfo(obj.theme)?.mystery;
   el.label.textContent = mysteryNight ? "???" : bandText;
   el.label.dataset.band = mysteryNight ? "" : String(obj.band);
   el.band.textContent = mysteryNight ? bandText : "\u00a0";
   el.band.dataset.band = String(obj.band);
   blackHole(obj.band === BH);
+  singularity(obj.band === SING);
   el.count.textContent = `${run.i + 1}/${run.sky.length}`;
 }
 
@@ -590,8 +594,47 @@ function named(obj: SkyObject, typed: string) {
   if (zoomed) { el.scope.classList.remove("jolt"); void el.scope.offsetWidth; el.scope.classList.add("jolt"); }
   renderCombo(false);
   adapt(zoomed ? CONFIG.adapt.zoomed : CONFIG.adapt.named);
+  if (obj.band === SING) singularityCaught(points);
+  // enough Black Holes named: the night's Singularity rises next
+  if (obj.band === BH && run.hidden.length && run.items.filter((it) => it.outcome !== "skipped" && BY_ID.get(it.id)?.band === BH).length >= CONFIG.singularityAfter) {
+    const s = run.hidden.shift()!;
+    run.sky.splice(run.i + 1, 0, s);
+    viewer.preload([s]);
+  }
   run.i++;
   showObject(now);
+}
+
+/** The Singularity rises: the room goes dark, the eyepiece rings in violet and a warning glitches in. */
+function singularity(on: boolean) {
+  const play = app.querySelector(".play");
+  if (!play) return;
+  const was = play.classList.contains("singularity");
+  play.classList.toggle("singularity", on);
+  if (!on || was) return;
+  theme.sounds.singularity?.();
+  buzz([40, 80, 40, 80, 40]);
+  announce("A singularity has appeared");
+  document.body.classList.remove("sing-rise"); void document.body.offsetWidth; document.body.classList.add("sing-rise");
+  setTimeout(() => document.body.classList.remove("sing-rise"), 2400);
+  const w = document.createElement("div");
+  w.className = "sing-warn";
+  w.innerHTML = `<span>??? SINGULARITY ???</span><small>THE RAREST OBJECT TONIGHT · ${CONFIG.bands[SING].points} PTS</small>`;
+  el.scope.appendChild(w);
+  setTimeout(() => w.remove(), 2600);
+}
+
+/** Caught it: a white-out, a shockwave, and an achievement banner. */
+function singularityCaught(points: number) {
+  theme.sounds.singularityCaught?.();
+  buzz([30, 50, 30, 50, 160]);
+  document.body.classList.remove("sing-catch"); void document.body.offsetWidth; document.body.classList.add("sing-catch");
+  setTimeout(() => document.body.classList.remove("sing-catch"), 2600);
+  const b = document.createElement("div");
+  b.className = "achieve";
+  b.innerHTML = `<i></i><small>NEW ACHIEVEMENT</small><b>SINGULARITY CAUGHT</b><span>+${points}</span>`;
+  app.querySelector(".play")?.appendChild(b);
+  setTimeout(() => b.remove(), 3200);
 }
 
 /**
@@ -685,11 +728,11 @@ function blackHole(on: boolean) {
 /** One pop at a time: the object's name and what it earned. */
 /** The harder the find, the bigger the moment: the sky pulses in the band's colour, the lens kicks, the room lights up. */
 function bandHit(band: number, zoomed: boolean) {
-  skyPulse(theme.bandColors[band], [0.25, 0.5, 0.68, 0.85, 1.25][band] + (zoomed ? 0.2 : 0));
+  skyPulse(theme.bandColors[band], [0.25, 0.5, 0.68, 0.85, 1.25, 1.8][band] + (zoomed ? 0.2 : 0));
   const play = app.querySelector<HTMLElement>(".play");
   if (!play) return;
   play.style.setProperty("--hit", theme.bandColors[band]);
-  for (let b = 0; b < 4; b++) play.classList.remove(`hit-b${b}`);
+  for (let b = 0; b < CONFIG.bands.length; b++) play.classList.remove(`hit-b${b}`);
   void play.offsetWidth;
   play.classList.add(`hit-b${band}`);
   clearTimeout(bandHitTimer);
@@ -1147,23 +1190,29 @@ async function resultsScreen(r: RunResult, mode: Run["mode"], fresh = false) {
   const unseen = crowdSky.filter((o) => !reached.has(o.id));
   const missed = document.getElementById("missed")!;
   if (unseen.length) {
-    missed.innerHTML = `<h2>STILL OUT THERE <small>${unseen.length} the clock ran out on</small></h2>`;
+    const plain = unseen.filter((o) => o.band !== SING).length;
+    missed.innerHTML = `<h2>STILL OUT THERE <small>${plain ? `${plain} the clock ran out on` : "one you never met"}</small></h2>`;
     for (const b of CONFIG.bands.keys()) {
       const objs = unseen.filter((o) => o.band === b);
       if (!objs.length) continue;
       const d = document.createElement("details");
       d.style.setProperty("--band", theme.bandColors[b]);
-      d.innerHTML = `<summary><i class="lg" style="background:${theme.bandColors[b]}"></i><span>${theme.bandNames[b]}</span><small>${objs.length} left · ${objs.length * CONFIG.bands[b].points} pts were waiting</small></summary>`;
+      const secret = b === SING; // never met: no name, no picture, just its shape
+      if (secret) d.classList.add("secret");
+      d.innerHTML = secret
+        ? `<summary><i class="lg" style="background:#000;border:1px solid ${theme.bandColors[b]}"></i><span>???</span><small>something rarer was out there tonight</small></summary>`
+        : `<summary><i class="lg" style="background:${theme.bandColors[b]}"></i><span>${theme.bandNames[b]}</span><small>${objs.length} left · ${objs.length * CONFIG.bands[b].points} pts were waiting</small></summary>`;
       const ul = document.createElement("ul");
       ul.className = "unseen-grid";
       for (const o of objs) {
         const li = document.createElement("li");
         li.style.setProperty("--band", theme.bandColors[b]);
-        li.appendChild(lens(viewer.spriteCanvas(o, 2)));
+        li.appendChild(lens(secret ? silhouette(viewer.spriteCanvas(o, 2)) : viewer.spriteCanvas(o, 2)));
         const others = shownNames(o).slice(0, 3).join(", ");
         const div = document.createElement("div");
-        div.innerHTML = `<b>${esc(o.names[0])}</b>`;
-        if (revealed && o.note) li.title = o.note; else if (others) li.title = `also: ${others}`;
+        div.innerHTML = `<b>${secret ? "???" : esc(o.names[0])}</b>`;
+        if (secret) li.title = `Name ${CONFIG.singularityAfter} black holes in one night to make it rise.`;
+        else if (revealed && o.note) li.title = o.note; else if (others) li.title = `also: ${others}`;
         li.appendChild(div);
         ul.appendChild(li);
       }
@@ -1215,6 +1264,18 @@ async function resultsScreen(r: RunResult, mode: Run["mode"], fresh = false) {
  * (fewest points on the left), with you standing among them in gold.
  */
 /** A picture in a little round brass eyepiece, for the lists. */
+/** A picture as a flat black shape, for the Singularity you never met. */
+function silhouette(src: HTMLCanvasElement): HTMLCanvasElement {
+  const c = document.createElement("canvas");
+  c.width = src.width; c.height = src.height;
+  const g = c.getContext("2d")!;
+  g.drawImage(src, 0, 0);
+  g.globalCompositeOperation = "source-in";
+  g.fillStyle = "#000"; g.fillRect(0, 0, c.width, c.height);
+  c.className = "silhouette";
+  return c;
+}
+
 function lens(c: HTMLCanvasElement): HTMLElement {
   const d = document.createElement("div");
   d.className = "lens";
@@ -1358,7 +1419,7 @@ function replayNight(r: RunResult, best: number, target: HTMLCanvasElement, titl
 }
 
 function drawConstellation(c: HTMLCanvasElement, r: RunResult, best: number, upto = r.items.length) {
-  const W = 200, H = 200, cx = W / 2, cy = H / 2, R = [22, 36, 50, 64, 78], RIM = 90;
+  const W = 200, H = 200, cx = W / 2, cy = H / 2, R = [20, 33, 46, 59, 72, 84], RIM = 92;
   c.width = W; c.height = H;
   const g = c.getContext("2d")!;
   const px = (x: number, y: number, w = 1, h = 1) => g.fillRect(Math.round(x), Math.round(y), w, h);
@@ -1366,10 +1427,14 @@ function drawConstellation(c: HTMLCanvasElement, r: RunResult, best: number, upt
   const rand = mulberry32(r.puzzle * 31 + 7);
   for (let i = 0; i < 120; i++) { g.fillStyle = rand() < 0.8 ? "#2c2648" : "#4a4068"; px(rand() * W, rand() * H); }
   // the five difficulty bands, faintly tinted, with dotted orbits
-  for (let i = R.length - 1; i >= 0; i--) { g.globalAlpha = 0.1; g.fillStyle = theme.bandColors[i]; g.beginPath(); g.arc(cx, cy, R[i] + 9, 0, Math.PI * 2); g.fill(); }
+  // the Black Hole ring only shows once you've caught one, the Singularity's once you've caught it
+  const has = (b: number) => r.items.some((it) => it.outcome !== "skipped" && BY_ID.get(it.id)?.band === b);
+  const ringOn = (i: number) => i < BH || has(i);
+  for (let i = R.length - 1; i >= 0; i--) { if (!ringOn(i)) continue; g.globalAlpha = 0.1; g.fillStyle = theme.bandColors[i]; g.beginPath(); g.arc(cx, cy, R[i] + 9, 0, Math.PI * 2); g.fill(); }
   g.globalAlpha = 1;
   g.fillStyle = "#0d0a1a"; g.beginPath(); g.arc(cx, cy, 13, 0, Math.PI * 2); g.fill();
   R.forEach((rr, i) => {
+    if (!ringOn(i)) return;
     g.fillStyle = theme.bandColors[i]; g.globalAlpha = 0.45;
     const n = Math.round(rr * 6.28);
     for (let k = 0; k < n; k += 3) { const a = (k / n) * Math.PI * 2; px(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr); }
@@ -1584,7 +1649,7 @@ async function catalogueScreen(back: () => void, focus?: string) {
   if (loose.length) nights.push({ date: "", label: "Practice belt", sub: "found on practice and past skies", bodies: loose.map((o) => body(o)) });
   const scores = houseScores(days, (id) => BY_ID.get(id)?.band);
   openUniverse(app, {
-    nights, bandNames: theme.bandNames, bandColors: theme.bandColors, plural: ["Moons", "Planets", "Comets", "Nebulae", "Black Holes"],
+    nights, bandNames: theme.bandNames, bandColors: theme.bandColors, plural: ["Moons", "Planets", "Comets", "Nebulae", "Black Holes", "Singularities"],
     scores, onBack: back, focus,
   });
 }
@@ -1769,7 +1834,7 @@ const MENU_CARDS: Record<string, { html: () => string; wire?: (c: HTMLElement) =
   how: { html: () => `<h2>How to play</h2>
       <ul class="rules"><li><b>Type</b> what you see in the telescope. It moves on by itself.</li>
       <li><b>Zoomed in?</b> Name it before it pulls back for bonus points.</li>
-      <li><b>Harder finds</b> are worth far more: ${CONFIG.bands.map((b) => b.points).join(" / ")} points by difficulty.</li>
+      <li><b>Harder finds</b> are worth far more: ${CONFIG.bands.slice(0, SING).map((b) => b.points).join(" / ")} points by difficulty.</li>
       <li><b>${CONFIG.combo[0].at} in a row</b> multiplies your points, up to ×${CONFIG.combo[CONFIG.combo.length - 1].mult}. A skip costs ${CONFIG.skipCost}s; every answer gives you ${CONFIG.timeBonus[0]}–${CONFIG.timeBonus[BH]}s back (more for harder finds).</li>
       <li><b>One sky a night</b>, the same for everyone.</li>
       <li>Difficulty goes outward: ${theme.bandNames.slice(0, BH).join(", ")}, then <b>${theme.bandNames[BH]}</b>.</li></ul>` },

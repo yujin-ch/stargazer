@@ -277,17 +277,6 @@
    "img": "53e7cc302cd98be4"
   },
   {
-   "id": "saiga",
-   "band": 5,
-   "names": [
-    "saiga",
-    "saiga antelope",
-    "?antelope"
-   ],
-   "note": "Its big nose filters dust",
-   "img": "f87b99ce07e338dd"
-  },
-  {
    "id": "secretarybird",
    "band": 5,
    "names": [
@@ -296,6 +285,17 @@
    ],
    "note": "Stamps on snakes with its long legs",
    "img": "5194308669058cb5"
+  },
+  {
+   "id": "saiga",
+   "band": 6,
+   "names": [
+    "saiga",
+    "saiga antelope",
+    "?antelope"
+   ],
+   "note": "Its big nose filters dust",
+   "img": "f87b99ce07e338dd"
   }
  ]
 }

@@ -101,7 +101,7 @@ export const BY_ID = new Map(OBJECTS.map((o) => [o.id, o]));
 export interface DayPack {
   date: string;
   theme?: string;
-  /** 5 = bands numbered 1-5 (Moon, Planet, Comet, Nebula, Black Hole); missing = the old 1-4 scale. */
+  /** 5 = bands numbered 1-6 (Moon, Planet, Comet, Nebula, Black Hole, Singularity); missing = the old 1-4 scale. */
   bands?: number;
   items: { id: string; img?: string; band: number; names: string[]; note?: string }[];
 }
@@ -133,7 +133,7 @@ export async function loadDayPack(dateKey: string): Promise<SkyObject[]> {
   }
   const theme = pack.theme && INFO.has(pack.theme) ? pack.theme : "photos";
   const objs: SkyObject[] = pack.items
-    .filter((it) => it.id && it.names?.some((n) => !n.startsWith("?")) && it.band >= 1 && it.band <= (pack.bands === 5 ? 5 : 4))
+    .filter((it) => it.id && it.names?.some((n) => !n.startsWith("?")) && it.band >= 1 && it.band <= (pack.bands === 5 ? 6 : 4))
     .map((it, i) => {
       const id = `${theme}:${dateKey}/${it.id}`;
       PACK_URLS.set(id, `${base}${it.img ?? it.id}.png`);

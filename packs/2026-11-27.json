@@ -177,18 +177,6 @@
    "img": "0de89c983b2a84e5"
   },
   {
-   "id": "quern",
-   "band": 5,
-   "names": [
-    "quern",
-    "quern stone",
-    "millstone",
-    "hand mill"
-   ],
-   "note": "Two stones grind grain to flour",
-   "img": "32eef30d25ed924f"
-  },
-  {
    "id": "nudibranch",
    "band": 5,
    "names": [
@@ -206,6 +194,18 @@
    ],
    "note": "Thought extinct until 1938",
    "img": "810e800c52621ba6"
+  },
+  {
+   "id": "quern",
+   "band": 6,
+   "names": [
+    "quern",
+    "quern stone",
+    "millstone",
+    "hand mill"
+   ],
+   "note": "Two stones grind grain to flour",
+   "img": "32eef30d25ed924f"
   }
  ]
 }

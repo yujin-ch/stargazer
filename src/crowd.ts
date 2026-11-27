@@ -17,8 +17,8 @@ export interface Curve {
  * How sure a typical player is to know an object in each band, and how long they look before typing (seconds).
  * Set conservatively: a first-time player half-sees blurry, zoomed-in pictures, hesitates, and mistypes.
  */
-const KNOW = [0.93, 0.8, 0.68, 0.52, 0.36];
-const LOOK = [1.5, 2.2, 2.6, 3.0, 3.5];
+const KNOW = [0.93, 0.8, 0.68, 0.52, 0.36, 0.2];
+const LOOK = [1.5, 2.2, 2.6, 3.0, 3.5, 4];
 
 function gauss(rand: () => number) {
   return Math.sqrt(-2 * Math.log(1 - rand())) * Math.cos(2 * Math.PI * rand());
@@ -30,7 +30,8 @@ const SLOWER: Record<string, number> = { clear: 1, eclipse: 1.35, keyhole: 1.45,
 /** Score one simulated player against a sky, with the same adaptive order the game uses. */
 function play(sky: SkyObject[], eye: number, speed: number, rand: () => number, slow: number): number {
   let t = 0, score = 0, combo = 0, level = 0;
-  const left = sky.slice();
+  const left = sky.filter((x) => x.band !== 5), secret = sky.filter((x) => x.band === 5);
+  let bhNamed = 0, rises: SkyObject | undefined;
   let o: SkyObject | undefined = left.shift();
   while (o) {
     const band = CONFIG.bands[o.band];
@@ -47,6 +48,7 @@ function play(sky: SkyObject[], eye: number, speed: number, rand: () => number, 
       const zoomed = band.pullBack > 0 && at < band.pullBack;
       score += answerPoints(o.band, zoomed, combo);
       delta = zoomed ? CONFIG.adapt.zoomed : CONFIG.adapt.named;
+      if (o.band === 4 && ++bhNamed === CONFIG.singularityAfter) rises = secret.shift();
     } else {
       // stare a while, try a wrong guess or two, then skip
       t += look + 2.5 + rand() * 3 + CONFIG.skipCost;
@@ -57,6 +59,7 @@ function play(sky: SkyObject[], eye: number, speed: number, rand: () => number, 
     level = Math.max(0, Math.min(4, level + delta));
     const want = Math.round(level);
     let bi = -1, bd = 9;
+    if (rises) { o = rises; rises = undefined; continue; }
     left.forEach((x, j) => { const d = Math.abs(x.band - want); if (d < bd) { bd = d; bi = j; } });
     o = bi >= 0 ? left.splice(bi, 1)[0] : undefined;
   }

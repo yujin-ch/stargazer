@@ -82,7 +82,7 @@ export class Viewer {
   }
 
   /** Coarsest photo stage each band starts from (index into the plate: 7 = 6 px ... 3 = 24 px). */
-  private static PHOTO_START = [4, 5, 6, 6, 7];
+  private static PHOTO_START = [4, 5, 6, 6, 7, 7];
 
   load(objs: SkyObject[] = [], hi = true): Promise<void> {
     return picturesReady(objs, hi);

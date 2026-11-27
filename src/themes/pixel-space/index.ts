@@ -107,9 +107,9 @@ export const pixelSpace: Theme = {
   title: "Stargazer",
   tagline: "One minute at the telescope. Name what drifts by.",
   // in order of distance, so harder reads as further out
-  bandNames: ["Moon", "Planet", "Comet", "Nebula", "Black Hole"],
+  bandNames: ["Moon", "Planet", "Comet", "Nebula", "Black Hole", "Singularity"],
   // silver moonlight, planet cyan, comet green, nebula pink, the orange glow round a black hole
-  bandColors: ["#dbe2ee", "#2ce8f5", "#a8f08a", "#e07ab8", "#feae34"],
+  bandColors: ["#dbe2ee", "#2ce8f5", "#a8f08a", "#e07ab8", "#feae34", "#d9c2ff"],
   shareIcon: "🔭",
   viewSize: V,
   spriteScale: 2,
@@ -180,7 +180,7 @@ export const pixelSpace: Theme = {
     correct: (bonus, combo, band = 0) => {
       const k = 2 ** (Math.min(combo, 12) / 12); // climbs a semitone per answer in a row
       // harder finds ring out with more notes: Moon one bell, Planet two, Comet a bright pair, Nebula a shimmer, Black Hole a boom and a chord
-      const chord = [[784], [659, 988], [740, 1109, 1480], [659, 880, 1319], [523, 784, 1047, 1568]][band].map((f) => f * k);
+      const chord = [[784], [659, 988], [740, 1109, 1480], [659, 880, 1319], [523, 784, 1047, 1568], [392, 587, 784, 1175, 1568, 2349]][band].map((f) => f * k);
       chord.forEach((f, i) => bell(f, i * 0.055, 0.05 - i * 0.006, 1 + band * 0.32, (i % 2 ? 0.3 : -0.3) * (band ? 1 : 0)));
       blip([chord[0] * 2], 0.04, "square", 0.05);
       if (band === 4) { blip([110, 82], 0.12, "sine", 0.14); whoosh(false, 0.7, 0.06); }
@@ -188,6 +188,18 @@ export const pixelSpace: Theme = {
     },
     best: () => [784, 988, 1175, 1568].forEach((f, i) => bell(f, i * 0.1, 0.05, 1.8)),
     comboBreak: () => blip([392, 330, 262], 0.07, "triangle", 0.08),
+    // the Singularity: the floor drops out (a long falling sweep under a slow throb), then it hangs there
+    singularity: () => {
+      blip([440, 330, 247, 185, 139, 104, 78, 58], 0.14, "sawtooth", 0.07);
+      whoosh(false, 2.2, 0.09);
+      blip([55, 52, 55, 49], 0.45, "sine", 0.15);
+    },
+    // caught: a boom, then a rising fanfare that keeps climbing past where the chords usually stop
+    singularityCaught: () => {
+      blip([98, 65, 49], 0.16, "sine", 0.2); whoosh(true, 1.4, 0.1);
+      [523, 659, 784, 1047, 1319, 1568, 2093].forEach((f, i) => bell(f, 0.25 + i * 0.09, 0.05, 2.2, i % 2 ? 0.4 : -0.4));
+      [1047, 1319, 1568, 2093].forEach((f) => bell(f, 1.0, 0.035, 3.2, 0));
+    },
     blackHole: () => { blip([220, 165, 110, 82], 0.1, "sawtooth", 0.08); whoosh(false, 1.2, 0.07); },
     skip: () => { blip([300, 200], 0.07, "triangle", 0.1); whoosh(true, 0.35, 0.04); },
     tick: () => blip([1200], 0.03, "square", 0.05),

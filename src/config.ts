@@ -10,7 +10,7 @@ export const CONFIG = {
   /** Seconds taken off the clock by a skip. */
   skipCost: 2,
   /** Seconds added to the clock for each correct answer, by band (moon, planet, comet, nebula, black hole). */
-  timeBonus: [1, 1, 2, 2, 3],
+  timeBonus: [1, 1, 2, 2, 3, 5],
   /** Countdown before the clock starts. */
   countdownSeconds: 3,
   /** Themes take turns in this order, one per night (any theme file not listed joins the end). */
@@ -26,7 +26,7 @@ export const CONFIG = {
    * which were sorted before the Comet band existed. Kept as a list so a future mode can add its own.
    */
   tiers: [
-    { name: "Stargazer", minStreak: 0, perBand: [3, 7, 7, 7, 5], perBandNoComets: [3, 8, 0, 12, 6] },
+    { name: "Stargazer", minStreak: 0, perBand: [3, 7, 7, 7, 4, 1], perBandNoComets: [3, 8, 0, 12, 6, 0] },
   ],
   /** How fast the hard objects take over after the easy opener: the share of hard picks starts at
    *  rampStart and grows by rampStep per object until every pick is hard (while any are left). */
@@ -45,7 +45,11 @@ export const CONFIG = {
     { startZoom: 2.6, pullBack: 2.7, startBlur: 0.9, points: 30, zoomedPoints: 45 },
     { startZoom: 3, pullBack: 3, startBlur: 1.1, points: 50, zoomedPoints: 75 },
     { startZoom: 3.5, pullBack: 3.3, startBlur: 1.3, points: 80, zoomedPoints: 120 },
+    // Singularity: one a night, the hardest object, hidden until you have named singularityAfter Black Holes
+    { startZoom: 4, pullBack: 3.6, startBlur: 1.6, points: 200, zoomedPoints: 300 },
   ],
+  /** Black Holes to name (not skip) in a run before the night's Singularity rises. */
+  singularityAfter: 2,
   /**
    * Sky conditions: one per night, the same for everyone, picked by the night number.
    * revealAfter: seconds after the zoom finishes before the condition lifts completely.
@@ -86,9 +90,11 @@ export function answerPoints(band: number, zoomed: boolean, inARow: number): num
   return Math.round((zoomed ? b.zoomedPoints : b.points) * mult);
 }
 
-export type BandIndex = 0 | 1 | 2 | 3 | 4;
+export type BandIndex = 0 | 1 | 2 | 3 | 4 | 5;
 /** The hardest band (Black Hole). */
 export const BH = 4 as const;
+/** The secret last band: one object a night that only appears after two Black Holes. */
+export const SING = 5 as const;
 /** Picture-theme files and pre-Comet packs number bands 1-4 (Moon, Planet, Nebula, Black Hole): where each lands now. */
 export const FROM_OLD4: readonly BandIndex[] = [0, 1, 3, 4];
 export type ConditionId = (typeof CONFIG.conditions)[number]["id"];
