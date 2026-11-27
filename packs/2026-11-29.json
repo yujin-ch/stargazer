@@ -1,0 +1,302 @@
+{
+ "date": "2026-11-29",
+ "theme": "photos",
+ "items": [
+  {
+   "id": "headphones",
+   "img": "6e651a3b720d18df",
+   "band": 1,
+   "names": [
+    "headphones",
+    "headset",
+    "earphones",
+    "cans"
+   ],
+   "note": "The first headphones were made for telephone operators"
+  },
+  {
+   "id": "cupcake",
+   "img": "2155277a36660083",
+   "band": 1,
+   "names": [
+    "cupcake",
+    "cup cake",
+    "fairy cake"
+   ],
+   "note": "Named for being baked by the cupful"
+  },
+  {
+   "id": "anchor",
+   "img": "36069e18bf040911",
+   "band": 1,
+   "names": [
+    "anchor"
+   ],
+   "note": "An anchor holds by digging into the seabed, not by its weight alone"
+  },
+  {
+   "id": "porcupine",
+   "img": "9d960065cb130b26",
+   "band": 2,
+   "names": [
+    "porcupine"
+   ],
+   "note": "It can't shoot its quills"
+  },
+  {
+   "id": "wateringcan",
+   "img": "8056731355e2a699",
+   "band": 2,
+   "names": [
+    "watering can",
+    "watering pot"
+   ],
+   "note": "The rose on the spout spreads the water gently"
+  },
+  {
+   "id": "quill",
+   "img": "282b03c97e5b652c",
+   "band": 2,
+   "names": [
+    "quill",
+    "quill pen",
+    "feather pen",
+    "inkwell"
+   ],
+   "note": "Goose feathers were the classic choice"
+  },
+  {
+   "id": "compass",
+   "img": "7a03d1344f396676",
+   "band": 2,
+   "names": [
+    "compass"
+   ],
+   "note": "The needle points to magnetic north, not the North Pole"
+  },
+  {
+   "id": "snowglobe",
+   "img": "8d1a40529048b6b9",
+   "band": 2,
+   "names": [
+    "snow globe",
+    "snowglobe"
+   ],
+   "note": "Invented by accident while trying to improve a lamp"
+  },
+  {
+   "id": "violin",
+   "img": "26b0f8a14c7681d7",
+   "band": 2,
+   "names": [
+    "violin",
+    "fiddle"
+   ],
+   "note": "A violin has about 70 separate wooden parts"
+  },
+  {
+   "id": "koala",
+   "img": "8f2241fbdf0390bd",
+   "band": 2,
+   "names": [
+    "koala",
+    "koala bear"
+   ],
+   "note": "Sleeps up to 20 hours a day"
+  },
+  {
+   "id": "walrus",
+   "img": "bdb7b85ad048b4bd",
+   "band": 2,
+   "names": [
+    "walrus"
+   ],
+   "note": "Tusks help it haul out onto the ice"
+  },
+  {
+   "id": "ocarina",
+   "img": "e2f13331e154ec2a",
+   "band": 3,
+   "names": [
+    "ocarina"
+   ],
+   "note": "A clay flute shaped like an egg"
+  },
+  {
+   "id": "castanets",
+   "img": "5dfc68456c27f6eb",
+   "band": 3,
+   "names": [
+    "castanets"
+   ],
+   "note": "Clicked in the palm while dancing"
+  },
+  {
+   "id": "cashregister",
+   "img": "31316f4aa86df1da",
+   "band": 3,
+   "names": [
+    "cash register",
+    "till",
+    "register"
+   ],
+   "note": "Invented to stop clerks pocketing cash"
+  },
+  {
+   "id": "starfruit",
+   "img": "4cb1b6edd977ed63",
+   "band": 3,
+   "names": [
+    "starfruit",
+    "star fruit",
+    "carambola"
+   ],
+   "note": "Slices make little stars"
+  },
+  {
+   "id": "chandelier",
+   "img": "3e87fe845c08e1ff",
+   "band": 3,
+   "names": [
+    "chandelier"
+   ],
+   "note": "The word comes from French for candle-holder"
+  },
+  {
+   "id": "bonsai",
+   "img": "905a5c79ec6f66ba",
+   "band": 3,
+   "names": [
+    "bonsai",
+    "bonsai tree",
+    "tree"
+   ],
+   "note": "Some bonsai are centuries old"
+  },
+  {
+   "id": "hammerhead",
+   "img": "513cbeaccc792ba8",
+   "band": 3,
+   "names": [
+    "hammerhead shark",
+    "hammerhead",
+    "shark"
+   ],
+   "note": "Wide-set eyes see above and below"
+  },
+  {
+   "id": "periscope",
+   "img": "2ab5f1299cecc3d2",
+   "band": 3,
+   "names": [
+    "periscope"
+   ],
+   "note": "Two mirrors at 45 degrees"
+  },
+  {
+   "id": "butterchurn",
+   "img": "f975a0500f0280b1",
+   "band": 3,
+   "names": [
+    "butter churn",
+    "churn"
+   ],
+   "note": "Cream becomes butter with enough plunging"
+  },
+  {
+   "id": "spinningtop",
+   "img": "88d6360a3a8c1b17",
+   "band": 3,
+   "names": [
+    "spinning top",
+    "top",
+    "whipping top"
+   ],
+   "note": "Spin keeps it upright"
+  },
+  {
+   "id": "snowshoe",
+   "img": "62b5e2a61fd1f30d",
+   "band": 3,
+   "names": [
+    "snowshoe",
+    "snowshoes"
+   ],
+   "note": "Spreads your weight over the snow"
+  },
+  {
+   "id": "pufferfish",
+   "img": "0b92d1bd196667ea",
+   "band": 3,
+   "names": [
+    "pufferfish",
+    "puffer fish",
+    "blowfish",
+    "fugu"
+   ],
+   "note": "Puffs up with water"
+  },
+  {
+   "id": "erhu",
+   "img": "4f26a4baef1aa10c",
+   "band": 4,
+   "names": [
+    "erhu"
+   ],
+   "note": "The bow passes between the two strings"
+  },
+  {
+   "id": "cameraobscura",
+   "img": "23edc6a3496ef8f2",
+   "band": 4,
+   "names": [
+    "camera obscura",
+    "pinhole camera"
+   ],
+   "note": "A dark room that projects the scene outside"
+  },
+  {
+   "id": "glassharmonica",
+   "img": "2aab99370e2108df",
+   "band": 4,
+   "names": [
+    "glass harmonica",
+    "armonica",
+    "glass armonica"
+   ],
+   "note": "Invented by Benjamin Franklin"
+  },
+  {
+   "id": "mangle",
+   "img": "7f2ca376469112f7",
+   "band": 4,
+   "names": [
+    "mangle",
+    "wringer",
+    "clothes wringer"
+   ],
+   "note": "Squeezed water out before spin dryers"
+  },
+  {
+   "id": "markhor",
+   "img": "a17b11640b631720",
+   "band": 4,
+   "names": [
+    "markhor",
+    "goat"
+   ],
+   "note": "Pakistan's national animal"
+  },
+  {
+   "id": "shoebill",
+   "img": "058e7f713c5ecae2",
+   "band": 4,
+   "names": [
+    "shoebill",
+    "shoebill stork",
+    "whale-headed stork"
+   ],
+   "note": "Stands still for hours"
+  }
+ ]
+}
