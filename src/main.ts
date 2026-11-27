@@ -4,6 +4,7 @@ import { CONFIG, tierFor, answerPoints, SITE_URL, TIP_URL } from "./config";
 import { drawShareCard, cardBlob } from "./sharecard";
 import { OBJECTS, BY_ID, loadDayPack, loadPackIndex, shownNames, themeName, themeInfo, photoHi, type SkyObject } from "./library";
 import { openUniverse, type UBody, type UNight } from "./universe";
+import { houseOf, houseScores } from "./houses";
 import { MiniMap } from "./minimap";
 import { accountsOn, initCloud, hadSession, signedInEmail, signInWithGoogle, signInWithEmail, signOut, deleteCloudSave, onAccountChange, warmUp } from "./cloud";
 let mini: MiniMap | null = null;
@@ -1490,8 +1491,13 @@ async function catalogueScreen(back: () => void, focus?: string) {
   const placed = new Set<string>();
   const want: SkyObject[] = [...seen].map((id) => BY_ID.get(id)).filter((o): o is SkyObject => !!o);
   await viewer.load(want, true);
-  const body = (o: SkyObject, zoomed: boolean): UBody => ({
-    id: o.id, band: o.band, name: o.names[0], others: shownNames(o).slice(0, 3), note: o.note ?? "", zoomed,
+  // how many of your nights each thing rose in, and which ones you let go
+  const rose = new Map<string, number>(), skippedIds = new Set<string>();
+  for (const d of days) for (const it of d.items) { rose.set(it.id, (rose.get(it.id) ?? 0) + 1); if (it.outcome === "skipped") skippedIds.add(it.id); }
+  const dot = document.createElement("canvas"); dot.width = dot.height = 1;
+  const body = (o: SkyObject, it?: { outcome: string; t?: number; points: number }): UBody => ({
+    id: o.id, band: o.band, house: houseOf(o.id), name: o.names[0], others: shownNames(o).slice(0, 3), note: o.note ?? "",
+    zoomed: it?.outcome === "zoomed", t: it?.t, points: it?.points, seen: rose.get(o.id),
     sprite: viewer.spriteCanvas(o, 1), hi: o.kind === "photo" ? photoHi(o) : null,
   });
   const nights: UNight[] = [];
@@ -1501,25 +1507,26 @@ async function catalogueScreen(back: () => void, focus?: string) {
       const o = BY_ID.get(it.id);
       if (!o || it.outcome === "skipped" || placed.has(o.id)) continue;
       placed.add(o.id);
-      bodies.push(body(o, it.outcome === "zoomed"));
+      bodies.push(body(o, it));
     }
-    // the ones that got away that night, as shadows
+    // the ones that got away that night (skipped, or never reached): faint dots on their orbits
     const sky = dailySky(d.puzzle, Math.min(d.tier ?? 0, CONFIG.tiers.length - 1));
-    const lost = sky.filter((o) => !seen.has(o.id) && !placed.has(o.id));
-    await viewer.load(lost, false);
-    for (const o of lost) {
+    const skippedHere = d.items.filter((it) => it.outcome === "skipped").map((it) => BY_ID.get(it.id)).filter((o): o is SkyObject => !!o);
+    for (const o of [...skippedHere, ...sky]) {
+      if (seen.has(o.id) || placed.has(o.id)) continue;
       placed.add(o.id);
-      bodies.push({ ...body(o, false), name: "???", others: [], note: "", hi: null, sprite: viewer.silhouette(o, 1), unknown: true });
+      bodies.push({ id: o.id, band: o.band, house: houseOf(o.id), name: "", others: [], note: "", zoomed: false, sprite: dot, hi: null, unknown: true, skipped: skippedIds.has(o.id) });
     }
     const bi = bestFind(d), bo = bi >= 0 ? BY_ID.get(d.items[bi].id) : undefined;
     if (bodies.length) nights.push({ date: d.date, label: fmtDate(d.date), sub: `${d.score} points · ${d.named} named`, title: bo ? `the ${bo.names[0]}` : undefined, bodies });
   }
-  // found on practice skies only: a loose cluster of wanderers
+  // found on practice skies only: a quiet belt of their own
   const loose = want.filter((o) => !placed.has(o.id));
-  if (loose.length) nights.push({ date: "", label: "Wanderers", sub: "found on practice and past skies", bodies: loose.map((o) => body(o, false)) });
+  if (loose.length) nights.push({ date: "", label: "Practice belt", sub: "found on practice and past skies", bodies: loose.map((o) => body(o)) });
+  const scores = houseScores(days, (id) => BY_ID.get(id)?.band);
   openUniverse(app, {
     nights, bandNames: theme.bandNames, bandColors: theme.bandColors, plural: ["Moons", "Planets", "Nebulae", "Black Holes"],
-    onBack: back, focus,
+    scores, onBack: back, focus,
   });
 }
 
