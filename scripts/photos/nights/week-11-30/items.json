@@ -1,0 +1,1439 @@
+{
+ "date": "week-11-30",
+ "items": [
+  {
+   "id": "strawberry",
+   "band": 1,
+   "desc": "ripe red strawberry with its leafy cap, seen from the side",
+   "names": "strawberry",
+   "note": "Strawberries wear their seeds on the outside, about 200 each",
+   "bg": "grey"
+  },
+  {
+   "id": "lightbulb",
+   "band": 1,
+   "desc": "classic clear glass incandescent light bulb with a glowing coiled filament and a silver screw base",
+   "names": "light bulb, lightbulb, bulb, globe",
+   "note": "Most of the energy in an old bulb came out as heat, not light"
+  },
+  {
+   "id": "penguin",
+   "band": 1,
+   "desc": "emperor penguin standing upright, black back, white belly, yellow-orange patch at the neck",
+   "names": "penguin, emperor penguin, king penguin",
+   "note": "Emperor penguins can dive deeper than 500 metres"
+  },
+  {
+   "id": "toaster",
+   "band": 2,
+   "desc": "retro chrome two-slot toaster with two slices of toast popping up",
+   "names": "toaster",
+   "note": "Sliced bread came after the pop-up toaster, not before"
+  },
+  {
+   "id": "snail",
+   "band": 2,
+   "desc": "garden snail with a brown spiral shell and both eye stalks raised",
+   "names": "snail, garden snail, ?slug",
+   "note": "A snail can sleep for up to three years in a dry spell"
+  },
+  {
+   "id": "globe",
+   "band": 2,
+   "desc": "desk globe of the Earth on a tilted brass half-ring stand with a wooden base, blue oceans",
+   "names": "globe, world globe, terrestrial globe",
+   "note": "The oldest surviving globe, from 1492, has no Americas on it"
+  },
+  {
+   "id": "ladder",
+   "band": 2,
+   "desc": "wooden A-frame step ladder, opened, three-quarter view",
+   "names": "ladder, stepladder, step ladder",
+   "note": "Walking under a ladder was unlucky because of the triangle it makes with the wall"
+  },
+  {
+   "id": "sunflower",
+   "band": 2,
+   "desc": "single tall sunflower head with yellow petals and a dark brown seed centre, short stem",
+   "names": "sunflower",
+   "note": "A sunflower head is hundreds of tiny flowers packed in spirals",
+   "bg": "grey"
+  },
+  {
+   "id": "skateboard",
+   "band": 2,
+   "desc": "wooden skateboard with red wheels, tilted three-quarter view showing the deck and trucks",
+   "names": "skateboard, skate board",
+   "note": "Skateboards began as surfers' way to surf on dry days"
+  },
+  {
+   "id": "sailboat",
+   "band": 2,
+   "desc": "small white sailboat with one tall triangular sail and a blue hull",
+   "names": "sailboat, sailing boat, yacht, dinghy, ?boat",
+   "note": "A sailboat can sail faster than the wind that pushes it"
+  },
+  {
+   "id": "harp",
+   "band": 3,
+   "desc": "tall golden concert harp with its curved neck and many strings",
+   "names": "harp, concert harp, pedal harp",
+   "note": "A concert harp has 47 strings and 7 pedals"
+  },
+  {
+   "id": "frenchpress",
+   "band": 3,
+   "desc": "glass French press coffee maker with a silver plunger and frame, half full of coffee",
+   "names": "french press, cafetiere, coffee press, press pot, plunger",
+   "note": "The plunger's mesh traps the grounds at the bottom"
+  },
+  {
+   "id": "narwhal",
+   "band": 3,
+   "desc": "narwhal whale with a long straight spiral tusk, grey mottled skin, side view",
+   "names": "narwhal",
+   "note": "The tusk is a tooth, and it can grow 3 metres long"
+  },
+  {
+   "id": "cuckooclock",
+   "band": 3,
+   "desc": "carved brown wooden Black Forest cuckoo clock with a little bird at the open door, pine-cone weights hanging on chains",
+   "names": "cuckoo clock, ?clock",
+   "note": "The pine-cone weights are what keep it running"
+  },
+  {
+   "id": "pomegranate",
+   "band": 3,
+   "desc": "whole red pomegranate next to a cut half showing ruby seeds",
+   "names": "pomegranate",
+   "note": "One pomegranate can hold over 600 seeds"
+  },
+  {
+   "id": "unicycle",
+   "band": 3,
+   "desc": "unicycle with a single wheel, a seat on a straight post and pedals on the wheel hub",
+   "names": "unicycle",
+   "note": "With no gears, one pedal turn is one wheel turn"
+  },
+  {
+   "id": "waffleiron",
+   "band": 3,
+   "desc": "black cast-iron stovetop waffle iron, open, showing the square grid plates",
+   "names": "waffle iron, waffle maker",
+   "note": "Waffle irons were once made with family crests on the plates"
+  },
+  {
+   "id": "bassoon",
+   "band": 4,
+   "desc": "wooden bassoon, long reddish-brown tube with silver keys and a curved metal crook",
+   "names": "bassoon, fagotto",
+   "note": "Unfolded, a bassoon's tube would be about 2.5 metres long"
+  },
+  {
+   "id": "loom",
+   "band": 4,
+   "desc": "small wooden table loom with warp threads and a half-woven colourful cloth",
+   "names": "loom, weaving loom, handloom",
+   "note": "The punched cards of the Jacquard loom inspired early computers"
+  },
+  {
+   "id": "dreidel",
+   "band": 4,
+   "desc": "wooden four-sided spinning top with a Hebrew letter on each face and a short handle",
+   "names": "dreidel, dreidl, sevivon",
+   "note": "Each of the four letters tells you what to take or give"
+  },
+  {
+   "id": "curlingstone",
+   "band": 4,
+   "desc": "granite curling stone, grey polished round stone with a red handle on top",
+   "names": "curling stone, curling rock, ?stone",
+   "note": "Most curling stones come from one Scottish island, Ailsa Craig"
+  },
+  {
+   "id": "snowmobile",
+   "band": 4,
+   "desc": "red and black snowmobile with front skis and a rear track",
+   "names": "snowmobile, skidoo, ski-doo, snow machine",
+   "note": "The first snowmobile was built to reach patients in snowy Quebec"
+  },
+  {
+   "id": "capybara",
+   "band": 4,
+   "desc": "capybara, a big brown rodent with a blunt square face, sitting",
+   "names": "capybara",
+   "note": "The world's largest rodent, and a strong swimmer"
+  },
+  {
+   "id": "pennyfarthing",
+   "band": 4,
+   "desc": "penny-farthing bicycle with a huge front wheel and a tiny rear wheel",
+   "names": "penny-farthing, penny farthing, high wheeler, ordinary",
+   "note": "The big wheel made it faster, since pedals turned the wheel directly"
+  },
+  {
+   "id": "samovar",
+   "band": 5,
+   "desc": "ornate brass Russian samovar urn with a tap, side handles and a small teapot on top",
+   "names": "samovar",
+   "note": "Its central pipe once held burning charcoal to keep the water hot"
+  },
+  {
+   "id": "shamisen",
+   "band": 5,
+   "desc": "Japanese shamisen, a three-stringed lute with a square drum body and a long thin neck",
+   "names": "shamisen, samisen, sangen",
+   "note": "It is plucked with a large fan-shaped plectrum called a bachi"
+  },
+  {
+   "id": "babirusa",
+   "band": 5,
+   "desc": "babirusa wild pig, grey nearly hairless skin, with upper tusks that grow up through the snout and curve back toward the forehead",
+   "names": "babirusa, deer pig, ?pig, ?boar",
+   "note": "Its upper tusks grow up through the top of its snout"
+  },
+  {
+   "id": "romanesco",
+   "band": 5,
+   "desc": "head of romanesco broccoli with pointed spiralling fractal cones, lime green",
+   "names": "romanesco, romanesco broccoli, romanesque cauliflower, ?broccoli, ?cauliflower",
+   "note": "Each cone is made of smaller cones in a spiral pattern",
+   "bg": "grey"
+  },
+  {
+   "id": "theodolite",
+   "band": 6,
+   "desc": "surveyor's theodolite, an instrument with a telescope sight on a rotating yellow and black body, standing on a wooden tripod",
+   "names": "theodolite, transit, total station",
+   "note": "It measures angles to map the land, from the pyramids to modern roads"
+  },
+  {
+   "id": "crab",
+   "band": 1,
+   "desc": "bright red crab with two big claws, top view",
+   "names": "crab",
+   "note": "Crabs walk sideways because their legs bend that way"
+  },
+  {
+   "id": "pizza",
+   "band": 1,
+   "desc": "whole pepperoni pizza with melted cheese, top view",
+   "names": "pizza",
+   "note": "Pizza margherita was named for a queen of Italy"
+  },
+  {
+   "id": "schoolbus",
+   "band": 1,
+   "desc": "yellow American school bus, three-quarter view",
+   "names": "school bus, bus",
+   "note": "The yellow was picked in 1939 so drivers spot it in the dim early morning"
+  },
+  {
+   "id": "lobster",
+   "band": 2,
+   "desc": "red cooked lobster with two big claws and long antennae, side view",
+   "names": "lobster",
+   "note": "Lobsters taste with hairs on their legs"
+  },
+  {
+   "id": "magnifyingglass",
+   "band": 2,
+   "desc": "magnifying glass with a round glass lens in a brass rim and a wooden handle",
+   "names": "magnifying glass, magnifier, hand lens, loupe",
+   "note": "A water drop on a leaf works as a tiny magnifier"
+  },
+  {
+   "id": "wrench",
+   "band": 2,
+   "desc": "chrome adjustable wrench, top view",
+   "names": "wrench, spanner, adjustable wrench, adjustable spanner, monkey wrench",
+   "note": "An adjustable wrench is called a \"shifter\" in Australia"
+  },
+  {
+   "id": "pretzel",
+   "band": 2,
+   "desc": "large soft brown pretzel in the classic twisted knot shape, sprinkled with coarse salt",
+   "names": "pretzel",
+   "note": "The twist was said to look like arms folded in prayer"
+  },
+  {
+   "id": "slippers",
+   "band": 2,
+   "desc": "pair of fluffy pink house slippers",
+   "names": "slippers, slipper, house shoes",
+   "note": "Cinderella's slipper may first have been fur, not glass"
+  },
+  {
+   "id": "bowlingpin",
+   "band": 2,
+   "desc": "white bowling pin with two red stripes around the neck",
+   "names": "bowling pin, skittle, pin",
+   "note": "A bowling pin is made of maple wood under its white coat"
+  },
+  {
+   "id": "canoe",
+   "band": 2,
+   "desc": "red wooden canoe with pointed ends and a paddle resting across it, side view",
+   "names": "canoe, ?boat",
+   "note": "The oldest known boat in the world is a dugout canoe"
+  },
+  {
+   "id": "cello",
+   "band": 3,
+   "desc": "wooden cello standing upright on its spike, with its bow",
+   "names": "cello, violoncello, ?violin",
+   "note": "A cello is played sitting down, held between the knees"
+  },
+  {
+   "id": "seaurchin",
+   "band": 3,
+   "desc": "purple sea urchin, a round shell covered in long spines",
+   "names": "sea urchin, urchin",
+   "note": "Its mouth is underneath, with five teeth called Aristotle's lantern"
+  },
+  {
+   "id": "candelabra",
+   "band": 3,
+   "desc": "silver five-armed candelabra holding lit white candles",
+   "names": "candelabra, candelabrum, candlestick, candle holder",
+   "note": "A seven- or nine-branched candelabra is a menorah"
+  },
+  {
+   "id": "shuttlecock",
+   "band": 3,
+   "desc": "badminton shuttlecock with white feathers and a round cork base",
+   "names": "shuttlecock, shuttle, birdie, badminton",
+   "note": "The best ones use 16 feathers from the left wing of a goose"
+  },
+  {
+   "id": "hermitcrab",
+   "band": 3,
+   "desc": "hermit crab poking out of a spiral seashell, orange legs and claws",
+   "names": "hermit crab, ?crab",
+   "note": "It moves to a bigger shell as it grows, and sometimes swaps with others"
+  },
+  {
+   "id": "steeldrum",
+   "band": 3,
+   "desc": "Caribbean steel drum, a shiny silver pan with dimpled note areas on top, and two rubber-tipped sticks",
+   "names": "steel drum, steel pan, steelpan, pan, ?drum",
+   "note": "Made from oil drums in Trinidad in the 1930s"
+  },
+  {
+   "id": "bamboosteamer",
+   "band": 3,
+   "desc": "round woven bamboo steamer basket, stacked two high with a lid, holding dumplings",
+   "names": "bamboo steamer, steamer, steamer basket, dim sum basket",
+   "note": "Stacked baskets cook several dishes over one pot"
+  },
+  {
+   "id": "sliderule",
+   "band": 4,
+   "desc": "wooden slide rule, long ruler with a sliding middle strip and a clear cursor",
+   "names": "slide rule, slipstick",
+   "note": "Apollo astronauts carried slide rules as a backup"
+  },
+  {
+   "id": "spiritlevel",
+   "band": 4,
+   "desc": "yellow aluminium spirit level with three small liquid vials showing a bubble",
+   "names": "spirit level, level, bubble level",
+   "note": "The bubble always floats to the highest point"
+  },
+  {
+   "id": "lychee",
+   "band": 4,
+   "desc": "bunch of lychees with bumpy red skin, one peeled showing white flesh",
+   "names": "lychee, litchi, lichee",
+   "note": "A favourite of a Chinese empress, brought by horse relay from the south"
+  },
+  {
+   "id": "tagine",
+   "band": 4,
+   "desc": "terracotta Moroccan tagine pot with a tall cone-shaped lid, painted patterns",
+   "names": "tagine, tajine",
+   "note": "The cone sends steam back down into the food"
+  },
+  {
+   "id": "tuktuk",
+   "band": 4,
+   "desc": "colourful three-wheeled auto rickshaw tuk-tuk with a canopy roof",
+   "names": "tuk-tuk, tuk tuk, auto rickshaw, rickshaw, autorickshaw",
+   "note": "Named for the sound its little engine makes"
+  },
+  {
+   "id": "stereoscope",
+   "band": 4,
+   "desc": "antique wooden handheld stereoscope viewer with two lenses and a double photo card in the holder",
+   "names": "stereoscope, stereo viewer, stereopticon",
+   "note": "Two photos taken a few centimetres apart fool the eyes into 3D"
+  },
+  {
+   "id": "kohlrabi",
+   "band": 4,
+   "desc": "purple kohlrabi, a round bulb with a few leaf stalks sprouting from the top",
+   "names": "kohlrabi, german turnip, ?turnip",
+   "note": "Its name is German for cabbage turnip",
+   "bg": "grey"
+  },
+  {
+   "id": "horseshoecrab",
+   "band": 5,
+   "desc": "horseshoe crab, a brown domed shell with a long spiky tail, top view",
+   "names": "horseshoe crab, limulus, ?crab",
+   "note": "Its blue blood is used to test medicines for germs"
+  },
+  {
+   "id": "astrolabe",
+   "band": 5,
+   "desc": "antique brass astrolabe, a disc with a pierced star map plate, a rotating pointer and a ring at the top",
+   "names": "astrolabe",
+   "note": "An astrolabe could tell the time from the height of a star"
+  },
+  {
+   "id": "dhow",
+   "band": 5,
+   "desc": "Arab dhow sailing ship with a wooden hull and large triangular lateen sails",
+   "names": "dhow, ?boat, ?ship, ?sailboat",
+   "note": "Dhows sailed the monsoon winds between Africa, Arabia and India"
+  },
+  {
+   "id": "kendama",
+   "band": 5,
+   "desc": "wooden kendama toy, a handle with cups on a cross-piece, a spike on top and a red ball tied on a string",
+   "names": "kendama, cup and ball",
+   "note": "The aim is to land the ball in the cups or on the spike"
+  },
+  {
+   "id": "handpan",
+   "band": 6,
+   "desc": "steel handpan, a flying-saucer-shaped instrument with a central dome and dimpled note areas around it",
+   "names": "handpan, hang, hang drum, pantam, ?drum",
+   "note": "First built in Switzerland in 2000 and called the Hang, \"hand\" in Bernese German"
+  },
+  {
+   "id": "carrot",
+   "band": 1,
+   "desc": "orange carrot with leafy tops",
+   "names": "carrot",
+   "note": "Carrots used to be purple",
+   "bg": "grey"
+  },
+  {
+   "id": "frog",
+   "band": 1,
+   "desc": "green tree frog sitting, with red eyes and orange toes",
+   "names": "frog, tree frog",
+   "note": "A group of frogs is called an army",
+   "bg": "grey"
+  },
+  {
+   "id": "toothbrush",
+   "band": 1,
+   "desc": "blue and white toothbrush, side view showing the bristles",
+   "names": "toothbrush, tooth brush",
+   "note": "The first bristle toothbrushes used hog hair"
+  },
+  {
+   "id": "watermelon",
+   "band": 2,
+   "desc": "watermelon wedge with red flesh, black seeds and striped green rind",
+   "names": "watermelon, melon",
+   "note": "A watermelon is about 92 percent water",
+   "bg": "grey"
+  },
+  {
+   "id": "owl",
+   "band": 2,
+   "desc": "brown barn owl perched, with a heart-shaped white face",
+   "names": "owl, barn owl",
+   "note": "An owl can turn its head about 270 degrees"
+  },
+  {
+   "id": "thermometer",
+   "band": 2,
+   "desc": "old glass mercury thermometer with a red column and printed scale on a wooden backing",
+   "names": "thermometer",
+   "note": "Fahrenheit set 0 at the coldest temperature he could make with ice and salt"
+  },
+  {
+   "id": "pliers",
+   "band": 2,
+   "desc": "pair of steel pliers with red rubber handles",
+   "names": "pliers, needle-nose pliers",
+   "note": "Pliers go back to Bronze Age blacksmiths"
+  },
+  {
+   "id": "rockingchair",
+   "band": 2,
+   "desc": "wooden rocking chair with curved runners, three-quarter view",
+   "names": "rocking chair, rocker",
+   "note": "Benjamin Franklin is often said to have invented it"
+  },
+  {
+   "id": "helicopter",
+   "band": 2,
+   "desc": "red helicopter with main rotor blades and a tail rotor, side view",
+   "names": "helicopter, chopper",
+   "note": "Leonardo da Vinci sketched a screw-shaped helicopter in the 1480s"
+  },
+  {
+   "id": "yoyo",
+   "band": 2,
+   "desc": "red wooden yo-yo with its string wound and a loop at the end",
+   "names": "yo-yo, yoyo, yo yo",
+   "note": "In 1985 a yo-yo went to space on the shuttle Discovery"
+  },
+  {
+   "id": "snaredrum",
+   "band": 3,
+   "desc": "snare drum with a chrome shell, white head and a pair of drumsticks",
+   "names": "snare drum, snare, ?drum",
+   "note": "The wires underneath give it its sharp rattle"
+  },
+  {
+   "id": "platypus",
+   "band": 3,
+   "desc": "platypus with a brown furry body, a flat duck-like bill and webbed feet",
+   "names": "platypus, duck-billed platypus",
+   "note": "A mammal that lays eggs"
+  },
+  {
+   "id": "pinata",
+   "band": 3,
+   "desc": "star-shaped pi\u00f1ata with colourful paper fringes and cone points",
+   "names": "pi\u00f1ata, pinata",
+   "note": "Pi\u00f1atas came to Mexico by way of Spain, and maybe China before that"
+  },
+  {
+   "id": "sewingmachine",
+   "band": 3,
+   "desc": "antique black sewing machine with gold decoration and a hand wheel",
+   "names": "sewing machine",
+   "note": "The needle's eye is near its tip, not the top"
+  },
+  {
+   "id": "jetski",
+   "band": 3,
+   "desc": "blue and white personal watercraft jet ski, three-quarter view",
+   "names": "jet ski, jetski, personal watercraft, waverunner, sea-doo",
+   "note": "It moves by pumping a jet of water out the back"
+  },
+  {
+   "id": "rotaryphone",
+   "band": 3,
+   "desc": "black rotary dial telephone with a coiled cord",
+   "names": "rotary phone, rotary telephone, dial phone, telephone, phone",
+   "note": "Dialling a 0 took the longest, ten clicks"
+  },
+  {
+   "id": "matryoshka",
+   "band": 3,
+   "desc": "set of Russian nesting dolls, painted red and gold, in a row from big to small",
+   "names": "matryoshka, nesting dolls, russian dolls, babushka dolls, stacking dolls",
+   "note": "The first set, from 1890, had eight dolls"
+  },
+  {
+   "id": "fennecfox",
+   "band": 4,
+   "desc": "fennec fox, small sandy fox with huge ears, sitting",
+   "names": "fennec fox, fennec, ?fox",
+   "note": "Its huge ears let heat escape in the desert"
+  },
+  {
+   "id": "didgeridoo",
+   "band": 4,
+   "desc": "didgeridoo, a long wooden wind tube painted with Aboriginal dot patterns",
+   "names": "didgeridoo, didjeridu, yidaki",
+   "note": "Players keep a drone going by breathing in through the nose while blowing"
+  },
+  {
+   "id": "bunsenburner",
+   "band": 4,
+   "desc": "laboratory Bunsen burner with a blue flame on top of the metal tube and a rubber gas hose",
+   "names": "bunsen burner, burner",
+   "note": "The collar at the bottom lets in air for a hotter blue flame"
+  },
+  {
+   "id": "vise",
+   "band": 4,
+   "desc": "cast-iron bench vise painted blue, with steel jaws and a T-shaped handle",
+   "names": "vise, vice, bench vise, bench vice",
+   "note": "The screw gives a huge squeeze from a small push"
+  },
+  {
+   "id": "jackfruit",
+   "band": 4,
+   "desc": "whole jackfruit with bumpy spiky green-yellow skin next to a cut piece showing yellow pods",
+   "names": "jackfruit, jack fruit",
+   "note": "The largest tree fruit: one can weigh over 40 kilograms",
+   "bg": "grey"
+  },
+  {
+   "id": "mangosteen",
+   "band": 4,
+   "desc": "mangosteen fruit, round dark purple rind with a green cap, one opened to show white segments",
+   "names": "mangosteen",
+   "note": "Called the queen of fruits"
+  },
+  {
+   "id": "hovercraft",
+   "band": 4,
+   "desc": "hovercraft with a black rubber skirt and a big rear propeller fan",
+   "names": "hovercraft, air cushion vehicle",
+   "note": "It floats on a cushion of air, so it can cross land and water"
+  },
+  {
+   "id": "proboscismonkey",
+   "band": 5,
+   "desc": "proboscis monkey with reddish fur and a large long drooping nose, sitting",
+   "names": "proboscis monkey, long-nosed monkey, ?monkey",
+   "note": "The big nose may make its honking call louder"
+  },
+  {
+   "id": "koto",
+   "band": 5,
+   "desc": "Japanese koto, a long wooden zither lying flat, with 13 strings over movable white bridges",
+   "names": "koto, ?zither",
+   "note": "Its bridges are moved to tune each string"
+  },
+  {
+   "id": "orrery",
+   "band": 5,
+   "desc": "brass clockwork orrery model of the solar system, with planet balls on arms around a central sun",
+   "names": "orrery, planetarium, solar system model",
+   "note": "Named after the Earl of Orrery, who owned an early one"
+  },
+  {
+   "id": "tricornhat",
+   "band": 5,
+   "desc": "black tricorne hat with three sides of the brim turned up into a triangle, with gold trim",
+   "names": "tricorne, tricorn, tricorn hat, tricorne hat, three-cornered hat, ?hat, ?pirate hat",
+   "note": "The turned-up brim kept rain off and let soldiers carry muskets on the shoulder"
+  },
+  {
+   "id": "adze",
+   "band": 6,
+   "desc": "old woodworking adze, a long wooden handle with a curved steel blade set crosswise like a hoe",
+   "names": "adze, adz",
+   "note": "The blade runs across the handle, unlike an axe"
+  },
+  {
+   "id": "cheese",
+   "band": 1,
+   "desc": "wedge of yellow cheese with round holes",
+   "names": "cheese, swiss cheese, emmental, cheese wedge",
+   "note": "The holes come from gas made by bacteria"
+  },
+  {
+   "id": "basketball",
+   "band": 1,
+   "desc": "orange basketball with black lines",
+   "names": "basketball, ball",
+   "note": "The first games used a peach basket as the hoop"
+  },
+  {
+   "id": "airplane",
+   "band": 1,
+   "desc": "white passenger jet airliner flying, three-quarter view",
+   "names": "airplane, aeroplane, plane, jet, airliner, aircraft",
+   "note": "An airliner cruises at about 900 km/h"
+  },
+  {
+   "id": "kangaroo",
+   "band": 2,
+   "desc": "red kangaroo standing upright on its strong hind legs with its long tail",
+   "names": "kangaroo, roo",
+   "note": "Kangaroos can't walk backward"
+  },
+  {
+   "id": "tennisracket",
+   "band": 2,
+   "desc": "tennis racket with strings, and a yellow tennis ball",
+   "names": "tennis racket, racket, racquet, tennis racquet",
+   "note": "The fuzzy ball was made yellow in 1972 to show up on TV"
+  },
+  {
+   "id": "saw",
+   "band": 2,
+   "desc": "carpenter's handsaw with a wooden handle and a toothed steel blade",
+   "names": "saw, handsaw, hand saw",
+   "note": "Saw teeth bend alternately left and right so the blade doesn't jam"
+  },
+  {
+   "id": "trumpet",
+   "band": 2,
+   "desc": "brass trumpet with three valves, side view",
+   "names": "trumpet, cornet",
+   "note": "Trumpets were found in Tutankhamun's tomb"
+  },
+  {
+   "id": "telescope",
+   "band": 2,
+   "desc": "brass refracting telescope on a wooden tripod",
+   "names": "telescope, spyglass",
+   "note": "Galileo's first telescope magnified only three times"
+  },
+  {
+   "id": "avocado",
+   "band": 2,
+   "desc": "avocado cut in half with the brown pit in one half, next to the dark skinned whole fruit",
+   "names": "avocado",
+   "note": "Its name comes from the Aztec word ahuacatl",
+   "bg": "grey"
+  },
+  {
+   "id": "tractor",
+   "band": 2,
+   "desc": "red farm tractor with big rear wheels and small front wheels, side view",
+   "names": "tractor",
+   "note": "The big back wheels give grip in soft soil"
+  },
+  {
+   "id": "lantern",
+   "band": 3,
+   "desc": "old metal camping lantern with a glass chimney and a carry handle, lit",
+   "names": "lantern, oil lantern, hurricane lamp, lamp",
+   "note": "The glass chimney keeps the wind from blowing it out"
+  },
+  {
+   "id": "anteater",
+   "band": 3,
+   "desc": "giant anteater with a long tube-shaped snout, bushy tail and grey-black stripe",
+   "names": "anteater, giant anteater",
+   "note": "Its tongue flicks 150 times a minute"
+  },
+  {
+   "id": "puffin",
+   "band": 3,
+   "desc": "Atlantic puffin standing, black and white with a big orange and grey striped bill",
+   "names": "puffin, atlantic puffin",
+   "note": "A puffin can carry a dozen fish crosswise in its bill"
+  },
+  {
+   "id": "bagpipes",
+   "band": 3,
+   "desc": "Scottish bagpipes with a tartan bag, three drone pipes and a chanter",
+   "names": "bagpipes, bagpipe, pipes, great highland bagpipe",
+   "note": "The bag holds air so the sound never stops for breath"
+  },
+  {
+   "id": "boomerang",
+   "band": 3,
+   "desc": "wooden boomerang, a curved L-shaped throwing stick with painted dots",
+   "names": "boomerang",
+   "note": "Only the light curved ones come back; hunting ones fly straight"
+  },
+  {
+   "id": "pogostick",
+   "band": 3,
+   "desc": "pogo stick with handlebars, foot pegs and a spring",
+   "names": "pogo stick, pogo",
+   "note": "Modern ones use air springs to jump over 3 metres"
+  },
+  {
+   "id": "cablecar",
+   "band": 3,
+   "desc": "red aerial cable car cabin hanging from a cable",
+   "names": "cable car, gondola, aerial tramway, ropeway, cable way",
+   "note": "The car has no engine; the cable pulls it"
+  },
+  {
+   "id": "fonduepot",
+   "band": 4,
+   "desc": "red enamel cheese fondue pot on a stand with a burner and long fondue forks",
+   "names": "fondue pot, fondue, caquelon",
+   "note": "Lose your bread in the pot and tradition says you buy the next round"
+  },
+  {
+   "id": "bokchoy",
+   "band": 4,
+   "desc": "bok choy cabbage with white stalks and dark green leaves",
+   "names": "bok choy, pak choi, pak choy, chinese cabbage, ?cabbage",
+   "note": "It has been grown in China for over 1500 years",
+   "bg": "grey"
+  },
+  {
+   "id": "foldingfan",
+   "band": 4,
+   "desc": "open Japanese folding fan with a painted paper leaf and wooden ribs",
+   "names": "folding fan, hand fan, fan, sensu",
+   "note": "The folding fan is said to have been invented in Japan"
+  },
+  {
+   "id": "plumbbob",
+   "band": 4,
+   "desc": "brass plumb bob, a pointed weight hanging from a string",
+   "names": "plumb bob, plumb line, plumb",
+   "note": "\"Plumb\" comes from plumbum, Latin for lead"
+  },
+  {
+   "id": "geigercounter",
+   "band": 4,
+   "desc": "handheld Geiger counter with a needle dial and a wand probe on a cord",
+   "names": "geiger counter, geiger, radiation detector, dosimeter",
+   "note": "The clicks are single particles passing through the tube"
+  },
+  {
+   "id": "barometer",
+   "band": 4,
+   "desc": "round brass aneroid barometer with a dial reading Rain, Change, Fair",
+   "names": "barometer",
+   "note": "A falling barometer means a storm may be coming"
+  },
+  {
+   "id": "buddhashand",
+   "band": 4,
+   "desc": "Buddha's hand citron, a yellow fruit split into many long finger-like segments",
+   "names": "buddha's hand, buddhas hand, fingered citron, ?citron",
+   "note": "It has almost no juice or pulp, and is kept for its scent"
+  },
+  {
+   "id": "dikdik",
+   "band": 5,
+   "desc": "dik-dik, a tiny antelope with big dark eyes, a long pointed snout and small straight horns",
+   "names": "dik-dik, dikdik, dik dik, ?antelope, ?deer",
+   "note": "Named for its alarm call"
+  },
+  {
+   "id": "hurdygurdy",
+   "band": 5,
+   "desc": "hurdy-gurdy, a wooden violin-shaped instrument with a crank handle at the tail and a box of keys on the neck",
+   "names": "hurdy-gurdy, hurdy gurdy, wheel fiddle",
+   "note": "A cranked wheel rubs the strings like an endless bow"
+  },
+  {
+   "id": "armillarysphere",
+   "band": 5,
+   "desc": "brass armillary sphere, nested rings around a central ball, on a stand",
+   "names": "armillary sphere, armillary, armilla",
+   "note": "The rings show the circles of the sky around the Earth"
+  },
+  {
+   "id": "sampan",
+   "band": 5,
+   "desc": "small wooden Chinese sampan boat with a curved woven bamboo canopy",
+   "names": "sampan, ?boat",
+   "note": "The name means three planks"
+  },
+  {
+   "id": "drawknife",
+   "band": 6,
+   "desc": "antique drawknife, a long straight blade with a wooden handle at each end bent toward the user",
+   "names": "drawknife, draw knife, drawshave, draw shave",
+   "note": "You pull it toward yourself to shave wood"
+  },
+  {
+   "id": "cat",
+   "band": 1,
+   "desc": "orange tabby cat sitting",
+   "names": "cat, kitten, tabby",
+   "note": "Cats sleep for about two thirds of their lives"
+  },
+  {
+   "id": "broccoli",
+   "band": 1,
+   "desc": "head of green broccoli",
+   "names": "broccoli",
+   "note": "Broccoli was bred from wild cabbage",
+   "bg": "grey"
+  },
+  {
+   "id": "rocket",
+   "band": 1,
+   "desc": "white space rocket with red fins standing upright",
+   "names": "rocket, spaceship, rocket ship",
+   "note": "A rocket has to reach about 28,000 km/h to stay in orbit"
+  },
+  {
+   "id": "peacock",
+   "band": 2,
+   "desc": "peacock with its tail feathers fanned open showing the eye spots",
+   "names": "peacock, peafowl",
+   "note": "Only males have the big tail; females are peahens",
+   "bg": "grey"
+  },
+  {
+   "id": "calculator",
+   "band": 2,
+   "desc": "grey pocket calculator with buttons and a digital display",
+   "names": "calculator",
+   "note": "The first pocket calculators cost about as much as a used car"
+  },
+  {
+   "id": "screwdriver",
+   "band": 2,
+   "desc": "screwdriver with a red and clear handle and a steel shaft",
+   "names": "screwdriver, screw driver",
+   "note": "The cross-head screw was patented by Henry Phillips"
+  },
+  {
+   "id": "clothesiron",
+   "band": 2,
+   "desc": "white and blue steam clothes iron, side view",
+   "names": "iron, clothes iron, steam iron",
+   "note": "Old irons were heated on the stove"
+  },
+  {
+   "id": "garlic",
+   "band": 2,
+   "desc": "bulb of garlic with a few loose cloves",
+   "names": "garlic, garlic bulb, garlic clove",
+   "note": "Ancient Egyptian pyramid builders were given garlic for strength"
+  },
+  {
+   "id": "frisbee",
+   "band": 2,
+   "desc": "bright orange plastic flying disc",
+   "names": "frisbee, flying disc, disc, flying disk",
+   "note": "Named after the Frisbie Pie Company, whose tins students threw"
+  },
+  {
+   "id": "motorcycle",
+   "band": 2,
+   "desc": "red sport motorcycle, side view",
+   "names": "motorcycle, motorbike, bike",
+   "note": "The first motorcycle was a wooden frame with an engine, in 1885"
+  },
+  {
+   "id": "tambourine",
+   "band": 3,
+   "desc": "wooden tambourine with pairs of small brass jingles around the frame and a white skin",
+   "names": "tambourine",
+   "note": "It goes back over 3,000 years"
+  },
+  {
+   "id": "redpanda",
+   "band": 3,
+   "desc": "red panda with rusty-red fur, a white-marked face and a ringed bushy tail",
+   "names": "red panda, lesser panda, firefox",
+   "note": "Named panda before the giant panda was"
+  },
+  {
+   "id": "hammock",
+   "band": 3,
+   "desc": "striped rope hammock hanging between two short wooden posts",
+   "names": "hammock",
+   "note": "Hammocks were used by Ta\u00edno people long before sailors"
+  },
+  {
+   "id": "kayak",
+   "band": 3,
+   "desc": "bright yellow kayak with a double-bladed paddle",
+   "names": "kayak, ?canoe, ?boat",
+   "note": "Invented by Arctic peoples, from driftwood and sealskin"
+  },
+  {
+   "id": "jackinthebox",
+   "band": 3,
+   "desc": "jack-in-the-box, a colourful toy box with a crank handle and a clown springing out on a spring",
+   "names": "jack-in-the-box, jack in the box",
+   "note": "Turn the crank long enough and the clown springs out"
+  },
+  {
+   "id": "slinky",
+   "band": 3,
+   "desc": "metal Slinky spring toy arched over like it's walking down a step",
+   "names": "slinky, spring, ?coil",
+   "note": "Invented by accident with a dropped spring in 1943"
+  },
+  {
+   "id": "stopwatch",
+   "band": 3,
+   "desc": "silver mechanical stopwatch with a crown button on top and a white dial",
+   "names": "stopwatch, stop watch, timer",
+   "note": "Sprints are timed to a hundredth of a second"
+  },
+  {
+   "id": "hornbill",
+   "band": 4,
+   "desc": "great hornbill with a big yellow curved bill and a casque on top, black and white feathers",
+   "names": "hornbill, great hornbill",
+   "note": "The female seals herself into the nest with mud"
+  },
+  {
+   "id": "concertina",
+   "band": 4,
+   "desc": "hexagonal concertina with leather bellows and button ends",
+   "names": "concertina, ?accordion",
+   "note": "Smaller than an accordion, played with buttons on both ends"
+  },
+  {
+   "id": "ricecooker",
+   "band": 4,
+   "desc": "white electric rice cooker with a lid and a small control panel",
+   "names": "rice cooker",
+   "note": "It switches off when the water is gone and the pot gets hotter than 100\u00b0C"
+  },
+  {
+   "id": "chisel",
+   "band": 4,
+   "desc": "woodworking chisel with a wooden handle and a flat steel blade",
+   "names": "chisel, wood chisel",
+   "note": "Some of the oldest chisels are made of stone"
+  },
+  {
+   "id": "persimmon",
+   "band": 4,
+   "desc": "two orange persimmons with dark leafy caps",
+   "names": "persimmon, kaki, sharon fruit",
+   "note": "Unripe ones are very dry and bitter"
+  },
+  {
+   "id": "erlenmeyer",
+   "band": 4,
+   "desc": "Erlenmeyer flask, a conical glass lab flask with a narrow neck, half full of blue liquid",
+   "names": "erlenmeyer flask, conical flask, flask, erlenmeyer, ?beaker",
+   "note": "Named after a German chemist, Emil Erlenmeyer"
+  },
+  {
+   "id": "chinesejunk",
+   "band": 4,
+   "desc": "Chinese junk sailing ship with red ribbed fan-like sails and a high stern",
+   "names": "junk, chinese junk, ?boat, ?ship",
+   "note": "Junks had watertight compartments centuries before European ships"
+  },
+  {
+   "id": "ayeaye",
+   "band": 5,
+   "desc": "aye-aye lemur with big eyes, large ears and a long thin bony middle finger",
+   "names": "aye-aye, aye aye, ayeaye, ?lemur",
+   "note": "It taps on wood and listens for grubs"
+  },
+  {
+   "id": "stirlingengine",
+   "band": 5,
+   "desc": "small brass Stirling engine model with a flywheel, a cylinder and a heat plate",
+   "names": "stirling engine, hot air engine, ?engine",
+   "note": "Runs on any heat source, even a warm hand"
+  },
+  {
+   "id": "snakefruit",
+   "band": 5,
+   "desc": "salak snake fruit, pear-shaped with scaly reddish-brown skin like a snake, one peeled to show cream segments",
+   "names": "snake fruit, salak, salacca",
+   "note": "The skin looks like snakeskin"
+  },
+  {
+   "id": "cribbage",
+   "band": 5,
+   "desc": "wooden cribbage board with rows of peg holes and coloured pegs, with playing cards",
+   "names": "cribbage board, cribbage, crib board, crib",
+   "note": "Cribbage was invented by an English poet, Sir John Suckling"
+  },
+  {
+   "id": "sheng",
+   "band": 6,
+   "desc": "Chinese sheng mouth organ, a round cup base with a mouthpiece and a bundle of vertical bamboo pipes",
+   "names": "sheng",
+   "note": "One of the oldest Chinese instruments, over 3,000 years old"
+  },
+  {
+   "id": "horse",
+   "band": 1,
+   "desc": "brown horse standing, side view",
+   "names": "horse, pony",
+   "note": "Horses can sleep standing up"
+  },
+  {
+   "id": "friedegg",
+   "band": 1,
+   "desc": "sunny-side-up fried egg with a yellow yolk, top view",
+   "names": "fried egg, egg, sunny side up",
+   "note": "The yolk's colour comes from what the hen eats"
+  },
+  {
+   "id": "camera",
+   "band": 1,
+   "desc": "black digital camera with a big lens, three-quarter view",
+   "names": "camera, dslr",
+   "note": "The word camera is Latin for room"
+  },
+  {
+   "id": "zebra",
+   "band": 2,
+   "desc": "zebra standing, side view",
+   "names": "zebra",
+   "note": "Every zebra's stripes are unique"
+  },
+  {
+   "id": "drill",
+   "band": 2,
+   "desc": "cordless power drill with a battery and a drill bit",
+   "names": "drill, power drill, electric drill",
+   "note": "The first electric drill was made in Australia in 1889"
+  },
+  {
+   "id": "candle",
+   "band": 2,
+   "desc": "white lit pillar candle with melted wax drips",
+   "names": "candle, wax candle",
+   "note": "Candles were once used to tell the time"
+  },
+  {
+   "id": "corncob",
+   "band": 2,
+   "desc": "yellow corn cob with the husk peeled back",
+   "names": "corn, corn cob, maize, corn on the cob, sweetcorn",
+   "note": "A cob always has an even number of rows"
+  },
+  {
+   "id": "tent",
+   "band": 2,
+   "desc": "orange dome camping tent with the door open",
+   "names": "tent",
+   "note": "Tents are among the oldest kinds of shelter"
+  },
+  {
+   "id": "sled",
+   "band": 2,
+   "desc": "wooden sled with red metal runners",
+   "names": "sled, sledge, sleigh, toboggan",
+   "note": "Sleds were used for moving heavy loads long before the wheel"
+  },
+  {
+   "id": "locomotive",
+   "band": 2,
+   "desc": "black steam locomotive with a smokestack and red wheels, side view",
+   "names": "steam locomotive, locomotive, steam train, train, engine",
+   "note": "The first steam locomotive ran in Wales in 1804"
+  },
+  {
+   "id": "flute",
+   "band": 3,
+   "desc": "silver concert flute with its keys, lying diagonally",
+   "names": "flute",
+   "note": "One of the oldest instruments; bone flutes are 40,000 years old"
+  },
+  {
+   "id": "manatee",
+   "band": 3,
+   "desc": "manatee, a large grey sea mammal with a round paddle tail and flippers",
+   "names": "manatee, sea cow",
+   "note": "Sailors may have mistaken them for mermaids"
+  },
+  {
+   "id": "anvil",
+   "band": 3,
+   "desc": "black blacksmith's anvil with a pointed horn",
+   "names": "anvil",
+   "note": "The horn is used to bend metal into curves"
+  },
+  {
+   "id": "espressomachine",
+   "band": 3,
+   "desc": "chrome espresso machine with a portafilter handle and a cup",
+   "names": "espresso machine, coffee machine, espresso maker",
+   "note": "Espresso is pushed through at nine times the air pressure"
+  },
+  {
+   "id": "catamaran",
+   "band": 3,
+   "desc": "white catamaran sailboat with two hulls and a sail",
+   "names": "catamaran, cat, ?sailboat, ?boat",
+   "note": "Two hulls make it steadier than a single hull"
+  },
+  {
+   "id": "magic8ball",
+   "band": 3,
+   "desc": "black magic 8 ball with a white circle showing the number 8",
+   "names": "magic 8 ball, magic eight ball, 8 ball, eight ball",
+   "note": "Inside floats a 20-sided die with an answer on each face"
+  },
+  {
+   "id": "genielamp",
+   "band": 3,
+   "desc": "golden oil lamp with a long spout and a curved handle, the genie lamp shape",
+   "names": "genie lamp, oil lamp, aladdin's lamp, magic lamp, lamp",
+   "note": "Lamps like this burned olive oil through a wick in the spout"
+  },
+  {
+   "id": "kiwibird",
+   "band": 4,
+   "desc": "kiwi bird, round brown fluffy body with a long thin beak",
+   "names": "kiwi, kiwi bird",
+   "note": "It lays one of the biggest eggs for its size of any bird"
+  },
+  {
+   "id": "oboe",
+   "band": 4,
+   "desc": "black wooden oboe with silver keys and a double reed",
+   "names": "oboe",
+   "note": "The whole orchestra tunes to its A"
+  },
+  {
+   "id": "kumquat",
+   "band": 4,
+   "desc": "small oval orange kumquats, a few with leaves",
+   "names": "kumquat, cumquat",
+   "note": "You eat it whole, sweet skin and sour inside"
+  },
+  {
+   "id": "croquetmallet",
+   "band": 4,
+   "desc": "wooden croquet mallet and a red ball beside it",
+   "names": "croquet mallet, mallet, croquet",
+   "note": "Croquet was in the 1900 Olympics"
+  },
+  {
+   "id": "chessclock",
+   "band": 4,
+   "desc": "wooden chess clock with two dials and two buttons on top",
+   "names": "chess clock, game clock",
+   "note": "Pressing your button stops your time and starts your opponent's"
+  },
+  {
+   "id": "teslacoil",
+   "band": 4,
+   "desc": "Tesla coil, a tall copper-wound coil with a metal donut on top, shooting purple lightning",
+   "names": "tesla coil",
+   "note": "It can make lightning bolts of millions of volts"
+  },
+  {
+   "id": "fiddlehead",
+   "band": 4,
+   "desc": "curled fiddlehead fern fronds",
+   "names": "fiddlehead, fiddlehead fern, fern",
+   "note": "Named for its shape like the scroll of a violin",
+   "bg": "grey"
+  },
+  {
+   "id": "gerenuk",
+   "band": 5,
+   "desc": "gerenuk, a long-necked antelope standing on its hind legs to eat from a tree",
+   "names": "gerenuk, giraffe gazelle, ?antelope, ?gazelle",
+   "note": "It can live without ever drinking water"
+  },
+  {
+   "id": "oud",
+   "band": 5,
+   "desc": "Arabic oud, a lute with a big pear-shaped body, a short neck and a backward bent pegbox",
+   "names": "oud, ud, ?lute, ?guitar",
+   "note": "The ancestor of the European lute"
+  },
+  {
+   "id": "bathysphere",
+   "band": 5,
+   "desc": "bathysphere, a steel ball with small round windows hanging from a cable",
+   "names": "bathysphere, diving bell, ?submarine",
+   "note": "In 1934 it carried two men half a mile under the sea"
+  },
+  {
+   "id": "zoetrope",
+   "band": 5,
+   "desc": "zoetrope, a spinning drum with slits on a stand, with a strip of drawings inside",
+   "names": "zoetrope",
+   "note": "Look through the slits as it spins and the drawings move"
+  },
+  {
+   "id": "warmingpan",
+   "band": 6,
+   "desc": "antique copper bed warming pan, a lidded round pan on a long wooden handle",
+   "names": "warming pan, bed warmer, bedwarmer, ?pan",
+   "note": "Filled with hot coals and run between the sheets before bed"
+  },
+  {
+   "id": "bee",
+   "band": 1,
+   "desc": "honey bee with yellow and black stripes and clear wings",
+   "names": "bee, honey bee, honeybee, bumblebee",
+   "note": "A bee visits about 100 flowers on one trip"
+  },
+  {
+   "id": "cherries",
+   "band": 1,
+   "desc": "pair of red cherries joined at the stems",
+   "names": "cherries, cherry",
+   "note": "Cherry trees can live 100 years"
+  },
+  {
+   "id": "car",
+   "band": 1,
+   "desc": "red car, side view",
+   "names": "car, automobile",
+   "note": "The first car had three wheels"
+  },
+  {
+   "id": "hippo",
+   "band": 2,
+   "desc": "hippopotamus standing on land, side view",
+   "names": "hippo, hippopotamus",
+   "note": "Hippos can't swim; they walk on the river bed"
+  },
+  {
+   "id": "piano",
+   "band": 2,
+   "desc": "black grand piano with the lid up",
+   "names": "piano, grand piano",
+   "note": "A piano has 88 keys"
+  },
+  {
+   "id": "toolbox",
+   "band": 2,
+   "desc": "red metal toolbox with a handle, open showing tools",
+   "names": "toolbox, tool box, tool kit",
+   "note": "The cantilever trays pull open like stairs"
+  },
+  {
+   "id": "rockinghorse",
+   "band": 2,
+   "desc": "wooden rocking horse with curved rockers and a painted mane",
+   "names": "rocking horse, hobby horse",
+   "note": "Some were made for royal children with real horsehair"
+  },
+  {
+   "id": "firetruck",
+   "band": 2,
+   "desc": "red fire engine with a ladder, side view",
+   "names": "fire truck, fire engine, firetruck",
+   "note": "Early fire engines were pulled by horses"
+  },
+  {
+   "id": "eggplant",
+   "band": 2,
+   "desc": "purple eggplant aubergine",
+   "names": "eggplant, aubergine, brinjal",
+   "note": "Early English ones were white and egg-shaped"
+  },
+  {
+   "id": "armchair",
+   "band": 2,
+   "desc": "upholstered brown leather armchair, three-quarter view",
+   "names": "armchair, chair, club chair",
+   "note": "Armchairs were once only for the head of the house"
+  },
+  {
+   "id": "horseshoemagnet",
+   "band": 3,
+   "desc": "red horseshoe magnet with silver tips",
+   "names": "magnet, horseshoe magnet",
+   "note": "Bending a bar into a horseshoe puts both poles side by side"
+  },
+  {
+   "id": "pinball",
+   "band": 3,
+   "desc": "pinball machine with a lit backglass and a playfield",
+   "names": "pinball, pinball machine",
+   "note": "Pinball was banned in New York for over 30 years"
+  },
+  {
+   "id": "spacehelmet",
+   "band": 3,
+   "desc": "white astronaut space helmet with a gold visor",
+   "names": "space helmet, astronaut helmet, helmet",
+   "note": "The gold visor reflects the sun's glare and heat"
+  },
+  {
+   "id": "peppergrinder",
+   "band": 3,
+   "desc": "wooden pepper grinder with peppercorns beside it",
+   "names": "pepper grinder, pepper mill, peppermill, grinder",
+   "note": "Pepper was once so precious it was used as money"
+  },
+  {
+   "id": "marimba",
+   "band": 3,
+   "desc": "wooden marimba with long wooden bars and resonator tubes underneath, with mallets",
+   "names": "marimba, xylophone",
+   "note": "The tubes under the bars make each note ring out"
+  },
+  {
+   "id": "segway",
+   "band": 3,
+   "desc": "Segway, a two-wheeled self-balancing scooter with a handle",
+   "names": "segway, scooter, hoverboard",
+   "note": "It balances using gyroscopes and tilt sensors"
+  },
+  {
+   "id": "trowel",
+   "band": 3,
+   "desc": "garden trowel with a pointed steel blade and a wooden handle",
+   "names": "trowel, garden trowel",
+   "note": "Masons use a flat trowel; gardeners a scooped one"
+  },
+  {
+   "id": "hoopoe",
+   "band": 4,
+   "desc": "hoopoe bird with orange plumage, black-and-white striped wings and a fanned crest",
+   "names": "hoopoe",
+   "note": "Its call is a soft hoop-hoop-hoop"
+  },
+  {
+   "id": "lyrebird",
+   "band": 4,
+   "desc": "lyrebird with its long lacy tail fanned up in a lyre shape",
+   "names": "lyrebird, lyre bird",
+   "note": "It can mimic chainsaws and camera shutters"
+  },
+  {
+   "id": "lotuspod",
+   "band": 4,
+   "desc": "dried brown lotus seed pod, a flat-topped cone with round holes and seeds",
+   "names": "lotus pod, lotus seed pod, lotus",
+   "note": "Lotus seeds can sprout after 1,300 years"
+  },
+  {
+   "id": "rambutan",
+   "band": 4,
+   "desc": "bunch of rambutans, red fruit covered in soft hairy spines",
+   "names": "rambutan",
+   "note": "Its name comes from the Malay word for hair"
+  },
+  {
+   "id": "slideprojector",
+   "band": 4,
+   "desc": "vintage slide projector with a round carousel tray on top",
+   "names": "slide projector, projector, carousel projector",
+   "note": "The carousel tray holds 80 slides"
+  },
+  {
+   "id": "beesmoker",
+   "band": 4,
+   "desc": "beekeeper's smoker, a metal can with a spout and bellows on the side",
+   "names": "bee smoker, smoker",
+   "note": "Smoke calms bees by masking their alarm scent"
+  },
+  {
+   "id": "carrom",
+   "band": 4,
+   "desc": "square wooden carrom board with pockets at the corners and round coins on it",
+   "names": "carrom, carrom board, carom",
+   "note": "The striker is flicked with a finger"
+  },
+  {
+   "id": "potoo",
+   "band": 5,
+   "desc": "potoo bird, a camouflaged grey-brown bird perched upright on a broken branch with huge eyes",
+   "names": "potoo, common potoo, ?owl",
+   "note": "It sits so still it looks like part of the branch"
+  },
+  {
+   "id": "bandoneon",
+   "band": 5,
+   "desc": "bandoneon, a square button concertina with pleated bellows",
+   "names": "bandoneon, bandonion, ?accordion, ?concertina",
+   "note": "The heart of Argentine tango"
+  },
+  {
+   "id": "planisphere",
+   "band": 5,
+   "desc": "round planisphere star finder, a star chart disc with a rotating window",
+   "names": "planisphere, star finder, star wheel, star chart",
+   "note": "Turn it to tonight's date and hour to see the stars overhead"
+  },
+  {
+   "id": "coracle",
+   "band": 5,
+   "desc": "coracle, a small round boat of woven willow covered in black hide, with a paddle",
+   "names": "coracle, ?boat",
+   "note": "Light enough to carry on your back"
+  },
+  {
+   "id": "jabuticaba",
+   "band": 6,
+   "desc": "jabuticaba tree trunk covered in dark purple grape-like fruits growing straight on the bark",
+   "names": "jabuticaba, brazilian grape tree, ?grape",
+   "note": "The fruit grows straight out of the trunk"
+  }
+ ]
+}

@@ -1,0 +1,209 @@
+{
+ "date": "2026-12-05",
+ "items": [
+  {
+   "id": "horse",
+   "band": 1,
+   "desc": "brown horse standing, side view",
+   "names": "horse, pony",
+   "note": "Horses can sleep standing up"
+  },
+  {
+   "id": "friedegg",
+   "band": 1,
+   "desc": "sunny-side-up fried egg with a yellow yolk, top view",
+   "names": "fried egg, egg, sunny side up",
+   "note": "The yolk's colour comes from what the hen eats"
+  },
+  {
+   "id": "camera",
+   "band": 1,
+   "desc": "black digital camera with a big lens, three-quarter view",
+   "names": "camera, dslr",
+   "note": "The word camera is Latin for room"
+  },
+  {
+   "id": "zebra",
+   "band": 2,
+   "desc": "zebra standing, side view",
+   "names": "zebra",
+   "note": "Every zebra's stripes are unique"
+  },
+  {
+   "id": "drill",
+   "band": 2,
+   "desc": "cordless power drill with a battery and a drill bit",
+   "names": "drill, power drill, electric drill",
+   "note": "The first electric drill was made in Australia in 1889"
+  },
+  {
+   "id": "candle",
+   "band": 2,
+   "desc": "white lit pillar candle with melted wax drips",
+   "names": "candle, wax candle",
+   "note": "Candles were once used to tell the time"
+  },
+  {
+   "id": "corncob",
+   "band": 2,
+   "desc": "yellow corn cob with the husk peeled back",
+   "names": "corn, corn cob, maize, corn on the cob, sweetcorn",
+   "note": "A cob always has an even number of rows"
+  },
+  {
+   "id": "tent",
+   "band": 2,
+   "desc": "orange dome camping tent with the door open",
+   "names": "tent",
+   "note": "Tents are among the oldest kinds of shelter"
+  },
+  {
+   "id": "sled",
+   "band": 2,
+   "desc": "wooden sled with red metal runners",
+   "names": "sled, sledge, sleigh, toboggan",
+   "note": "Sleds were used for moving heavy loads long before the wheel"
+  },
+  {
+   "id": "locomotive",
+   "band": 2,
+   "desc": "black steam locomotive with a smokestack and red wheels, side view",
+   "names": "steam locomotive, locomotive, steam train, train, engine",
+   "note": "The first steam locomotive ran in Wales in 1804"
+  },
+  {
+   "id": "flute",
+   "band": 3,
+   "desc": "silver concert flute with its keys, lying diagonally",
+   "names": "flute",
+   "note": "One of the oldest instruments; bone flutes are 40,000 years old"
+  },
+  {
+   "id": "manatee",
+   "band": 3,
+   "desc": "manatee, a large grey sea mammal with a round paddle tail and flippers",
+   "names": "manatee, sea cow",
+   "note": "Sailors may have mistaken them for mermaids"
+  },
+  {
+   "id": "anvil",
+   "band": 3,
+   "desc": "black blacksmith's anvil with a pointed horn",
+   "names": "anvil",
+   "note": "The horn is used to bend metal into curves"
+  },
+  {
+   "id": "espressomachine",
+   "band": 3,
+   "desc": "chrome espresso machine with a portafilter handle and a cup",
+   "names": "espresso machine, coffee machine, espresso maker",
+   "note": "Espresso is pushed through at nine times the air pressure"
+  },
+  {
+   "id": "catamaran",
+   "band": 3,
+   "desc": "white catamaran sailboat with two hulls and a sail",
+   "names": "catamaran, cat, ?sailboat, ?boat",
+   "note": "Two hulls make it steadier than a single hull"
+  },
+  {
+   "id": "magic8ball",
+   "band": 3,
+   "desc": "black magic 8 ball with a white circle showing the number 8",
+   "names": "magic 8 ball, magic eight ball, 8 ball, eight ball",
+   "note": "Inside floats a 20-sided die with an answer on each face"
+  },
+  {
+   "id": "genielamp",
+   "band": 3,
+   "desc": "golden oil lamp with a long spout and a curved handle, the genie lamp shape",
+   "names": "genie lamp, oil lamp, aladdin's lamp, magic lamp, lamp",
+   "note": "Lamps like this burned olive oil through a wick in the spout"
+  },
+  {
+   "id": "kiwibird",
+   "band": 4,
+   "desc": "kiwi bird, round brown fluffy body with a long thin beak",
+   "names": "kiwi, kiwi bird",
+   "note": "It lays one of the biggest eggs for its size of any bird"
+  },
+  {
+   "id": "oboe",
+   "band": 4,
+   "desc": "black wooden oboe with silver keys and a double reed",
+   "names": "oboe",
+   "note": "The whole orchestra tunes to its A"
+  },
+  {
+   "id": "kumquat",
+   "band": 4,
+   "desc": "small oval orange kumquats, a few with leaves",
+   "names": "kumquat, cumquat",
+   "note": "You eat it whole, sweet skin and sour inside"
+  },
+  {
+   "id": "croquetmallet",
+   "band": 4,
+   "desc": "wooden croquet mallet and a red ball beside it",
+   "names": "croquet mallet, mallet, croquet",
+   "note": "Croquet was in the 1900 Olympics"
+  },
+  {
+   "id": "chessclock",
+   "band": 4,
+   "desc": "wooden chess clock with two dials and two buttons on top",
+   "names": "chess clock, game clock",
+   "note": "Pressing your button stops your time and starts your opponent's"
+  },
+  {
+   "id": "teslacoil",
+   "band": 4,
+   "desc": "Tesla coil, a tall copper-wound coil with a metal donut on top, shooting purple lightning",
+   "names": "tesla coil",
+   "note": "It can make lightning bolts of millions of volts"
+  },
+  {
+   "id": "fiddlehead",
+   "band": 4,
+   "desc": "curled fiddlehead fern fronds",
+   "names": "fiddlehead, fiddlehead fern, fern",
+   "note": "Named for its shape like the scroll of a violin",
+   "bg": "grey"
+  },
+  {
+   "id": "gerenuk",
+   "band": 5,
+   "desc": "gerenuk, a long-necked antelope standing on its hind legs to eat from a tree",
+   "names": "gerenuk, giraffe gazelle, ?antelope, ?gazelle",
+   "note": "It can live without ever drinking water"
+  },
+  {
+   "id": "oud",
+   "band": 5,
+   "desc": "Arabic oud, a lute with a big pear-shaped body, a short neck and a backward bent pegbox",
+   "names": "oud, ud, ?lute, ?guitar",
+   "note": "The ancestor of the European lute"
+  },
+  {
+   "id": "bathysphere",
+   "band": 5,
+   "desc": "bathysphere, a steel ball with small round windows hanging from a cable",
+   "names": "bathysphere, diving bell, ?submarine",
+   "note": "In 1934 it carried two men half a mile under the sea"
+  },
+  {
+   "id": "zoetrope",
+   "band": 5,
+   "desc": "zoetrope, a spinning drum with slits on a stand, with a strip of drawings inside",
+   "names": "zoetrope",
+   "note": "Look through the slits as it spins and the drawings move"
+  },
+  {
+   "id": "warmingpan",
+   "band": 6,
+   "desc": "antique copper bed warming pan, a lidded round pan on a long wooden handle",
+   "names": "warming pan, bed warmer, bedwarmer, ?pan",
+   "note": "Filled with hot coals and run between the sheets before bed"
+  }
+ ]
+}

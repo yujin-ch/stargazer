@@ -2,207 +2,208 @@
  "date": "2026-12-01",
  "items": [
   {
-   "id": "ladder",
+   "id": "crab",
    "band": 1,
-   "desc": "wooden stepladder, open, three-quarter view",
-   "names": "ladder, stepladder, step ladder",
-   "note": "Walking under one is unlucky, or just unwise"
+   "desc": "bright red crab with two big claws, top view",
+   "names": "crab",
+   "note": "Crabs walk sideways because their legs bend that way"
   },
   {
-   "id": "envelope",
+   "id": "pizza",
    "band": 1,
-   "desc": "sealed white paper envelope with a red wax seal, slightly angled",
-   "names": "envelope, letter",
-   "note": "The self-sealing gummed envelope came in the 1800s"
+   "desc": "whole pepperoni pizza with melted cheese, top view",
+   "names": "pizza",
+   "note": "Pizza margherita was named for a queen of Italy"
   },
   {
-   "id": "lighthouse",
+   "id": "schoolbus",
    "band": 1,
-   "desc": "red and white striped lighthouse on a small rock",
-   "names": "lighthouse",
-   "note": "Each lighthouse flashes its own pattern"
-  },
-  {
-   "id": "bowlingpin",
-   "band": 2,
-   "desc": "white bowling pin with red stripes",
-   "names": "bowling pin, skittle, pin",
-   "note": "Ten pins, set in a triangle"
+   "desc": "yellow American school bus, three-quarter view",
+   "names": "school bus, bus",
+   "note": "The yellow was picked in 1939 so drivers spot it in the dim early morning"
   },
   {
    "id": "lobster",
    "band": 2,
-   "desc": "red lobster with big claws, top view",
+   "desc": "red cooked lobster with two big claws and long antennae, side view",
    "names": "lobster",
-   "note": "Lobsters taste with their legs"
+   "note": "Lobsters taste with hairs on their legs"
   },
   {
-   "id": "tambourine",
+   "id": "magnifyingglass",
    "band": 2,
-   "desc": "wooden tambourine with metal jingles",
-   "names": "tambourine",
-   "note": "The jingles are called zils"
+   "desc": "magnifying glass with a round glass lens in a brass rim and a wooden handle",
+   "names": "magnifying glass, magnifier, hand lens, loupe",
+   "note": "A water drop on a leaf works as a tiny magnifier"
   },
   {
-   "id": "chameleon",
+   "id": "wrench",
    "band": 2,
-   "desc": "chameleon on a short twig, curled tail, side view",
-   "names": "chameleon, lizard",
-   "note": "Its eyes swivel separately"
+   "desc": "chrome adjustable wrench, top view",
+   "names": "wrench, spanner, adjustable wrench, adjustable spanner, monkey wrench",
+   "note": "An adjustable wrench is called a \"shifter\" in Australia"
   },
   {
-   "id": "platypus",
+   "id": "pretzel",
    "band": 2,
-   "desc": "platypus, side view",
-   "names": "platypus, duck-billed platypus",
-   "note": "A mammal that lays eggs"
+   "desc": "large soft brown pretzel in the classic twisted knot shape, sprinkled with coarse salt",
+   "names": "pretzel",
+   "note": "The twist was said to look like arms folded in prayer"
   },
   {
-   "id": "firehydrant",
+   "id": "slippers",
    "band": 2,
-   "desc": "red fire hydrant",
-   "names": "fire hydrant, hydrant, fire plug",
-   "note": "Some cities paint them by water pressure"
+   "desc": "pair of fluffy pink house slippers",
+   "names": "slippers, slipper, house shoes",
+   "note": "Cinderella's slipper may first have been fur, not glass"
   },
   {
-   "id": "beehive",
+   "id": "bowlingpin",
    "band": 2,
-   "desc": "old-fashioned straw beehive (skep) with a few bees",
-   "names": "beehive, bee hive, hive, skep",
-   "note": "A strong hive holds tens of thousands of bees"
+   "desc": "white bowling pin with two red stripes around the neck",
+   "names": "bowling pin, skittle, pin",
+   "note": "A bowling pin is made of maple wood under its white coat"
   },
   {
-   "id": "peacock",
+   "id": "canoe",
    "band": 2,
-   "desc": "peacock with its tail fanned out, front view",
-   "names": "peacock, peafowl",
-   "note": "Only the males have the fan"
+   "desc": "red wooden canoe with pointed ends and a paddle resting across it, side view",
+   "names": "canoe, ?boat",
+   "note": "The oldest known boat in the world is a dugout canoe"
   },
   {
-   "id": "galleon",
+   "id": "cello",
    "band": 3,
-   "desc": "wooden sailing galleon with full sails",
-   "names": "galleon, ship, sailing ship, tall ship",
-   "note": "Spanish treasure fleets used them"
+   "desc": "wooden cello standing upright on its spike, with its bow",
+   "names": "cello, violoncello, ?violin",
+   "note": "A cello is played sitting down, held between the knees"
   },
   {
-   "id": "barometer",
+   "id": "seaurchin",
    "band": 3,
-   "desc": "round brass aneroid barometer with a dial reading rain, change, fair",
-   "names": "barometer",
-   "note": "Falling pressure often means rain is coming"
+   "desc": "purple sea urchin, a round shell covered in long spines",
+   "names": "sea urchin, urchin",
+   "note": "Its mouth is underneath, with five teeth called Aristotle's lantern"
   },
   {
-   "id": "mokapot",
+   "id": "candelabra",
    "band": 3,
-   "desc": "aluminum moka pot",
-   "names": "moka pot, stovetop espresso, coffee pot, espresso maker",
-   "note": "Steam pushes water up through the coffee"
+   "desc": "silver five-armed candelabra holding lit white candles",
+   "names": "candelabra, candelabrum, candlestick, candle holder",
+   "note": "A seven- or nine-branched candelabra is a menorah"
   },
   {
-   "id": "geode",
+   "id": "shuttlecock",
    "band": 3,
-   "desc": "geode cracked open with purple crystals",
-   "names": "geode, amethyst, crystal",
-   "note": "Hollow rock lined with crystals"
+   "desc": "badminton shuttlecock with white feathers and a round cork base",
+   "names": "shuttlecock, shuttle, birdie, badminton",
+   "note": "The best ones use 16 feathers from the left wing of a goose"
   },
   {
-   "id": "venusflytrap",
+   "id": "hermitcrab",
    "band": 3,
-   "desc": "venus flytrap plant in a small pot",
-   "names": "venus flytrap, flytrap, venus fly trap",
-   "note": "Snaps shut in a fraction of a second"
+   "desc": "hermit crab poking out of a spiral seashell, orange legs and claws",
+   "names": "hermit crab, ?crab",
+   "note": "It moves to a bigger shell as it grows, and sometimes swaps with others"
   },
   {
-   "id": "rotaryphone",
+   "id": "steeldrum",
    "band": 3,
-   "desc": "black rotary dial telephone",
-   "names": "rotary phone, telephone, phone, dial phone",
-   "note": "Dialling 9 took longer than 1"
+   "desc": "Caribbean steel drum, a shiny silver pan with dimpled note areas on top, and two rubber-tipped sticks",
+   "names": "steel drum, steel pan, steelpan, pan, ?drum",
+   "note": "Made from oil drums in Trinidad in the 1930s"
   },
   {
-   "id": "inkwell",
+   "id": "bamboosteamer",
    "band": 3,
-   "desc": "glass inkwell with a dip pen",
-   "names": "inkwell, ink pot, ink bottle, dip pen",
-   "note": "Dip, write, dip again"
+   "desc": "round woven bamboo steamer basket, stacked two high with a lid, holding dumplings",
+   "names": "bamboo steamer, steamer, steamer basket, dim sum basket",
+   "note": "Stacked baskets cook several dishes over one pot"
   },
   {
-   "id": "loom",
-   "band": 3,
-   "desc": "small wooden weaving loom with colored threads",
-   "names": "loom, weaving loom",
-   "note": "A loom works by lifting threads to let the weft through"
-  },
-  {
-   "id": "pitchfork",
-   "band": 3,
-   "desc": "wooden-handled pitchfork",
-   "names": "pitchfork, hay fork, fork",
-   "note": "For tossing hay"
-  },
-  {
-   "id": "bassoon",
-   "band": 3,
-   "desc": "bassoon, the tall wooden woodwind",
-   "names": "bassoon",
-   "note": "Its tube is over 2.5 metres long folded in two"
-  },
-  {
-   "id": "fossil",
-   "band": 3,
-   "desc": "ammonite fossil in rock",
-   "names": "ammonite, fossil",
-   "note": "Spiral shells from the age of dinosaurs"
-  },
-  {
-   "id": "tophat",
-   "band": 3,
-   "desc": "black silk top hat",
-   "names": "top hat, tophat, hat",
-   "note": "Magicians pull rabbits out of them"
-  },
-  {
-   "id": "serpent",
+   "id": "sliderule",
    "band": 4,
-   "desc": "serpent, the snake-shaped bass wind instrument",
-   "names": "serpent",
-   "note": "Played in church bands for centuries"
+   "desc": "wooden slide rule, long ruler with a sliding middle strip and a clear cursor",
+   "names": "slide rule, slipstick",
+   "note": "Apollo astronauts carried slide rules as a backup"
   },
   {
-   "id": "pincenez",
+   "id": "spiritlevel",
    "band": 4,
-   "desc": "pince-nez spectacles",
-   "names": "pince-nez, pince nez, spectacles, glasses",
-   "note": "Pinches the nose, no arms"
+   "desc": "yellow aluminium spirit level with three small liquid vials showing a bubble",
+   "names": "spirit level, level, bubble level",
+   "note": "The bubble always floats to the highest point"
   },
   {
-   "id": "pithhelmet",
+   "id": "lychee",
    "band": 4,
-   "desc": "khaki pith helmet",
-   "names": "pith helmet, sun helmet, safari hat",
-   "note": "Made of pith from a plant"
+   "desc": "bunch of lychees with bumpy red skin, one peeled showing white flesh",
+   "names": "lychee, litchi, lichee",
+   "note": "A favourite of a Chinese empress, brought by horse relay from the south"
   },
   {
-   "id": "armillarysphere",
+   "id": "tagine",
    "band": 4,
-   "desc": "brass armillary sphere on a stand",
-   "names": "armillary sphere, armillary, celestial sphere",
-   "note": "Rings that map the sky"
+   "desc": "terracotta Moroccan tagine pot with a tall cone-shaped lid, painted patterns",
+   "names": "tagine, tajine",
+   "note": "The cone sends steam back down into the food"
   },
   {
-   "id": "frilledlizard",
+   "id": "tuktuk",
    "band": 4,
-   "desc": "frilled lizard with its frill spread",
-   "names": "frilled lizard, frill-necked lizard, lizard",
-   "note": "Opens its frill to look bigger"
+   "desc": "colourful three-wheeled auto rickshaw tuk-tuk with a canopy roof",
+   "names": "tuk-tuk, tuk tuk, auto rickshaw, rickshaw, autorickshaw",
+   "note": "Named for the sound its little engine makes"
   },
   {
-   "id": "theodolite",
+   "id": "stereoscope",
    "band": 4,
-   "desc": "surveyor's theodolite on a tripod",
-   "names": "theodolite, transit, surveying instrument",
-   "note": "Surveyors measure angles with it"
+   "desc": "antique wooden handheld stereoscope viewer with two lenses and a double photo card in the holder",
+   "names": "stereoscope, stereo viewer, stereopticon",
+   "note": "Two photos taken a few centimetres apart fool the eyes into 3D"
+  },
+  {
+   "id": "kohlrabi",
+   "band": 4,
+   "desc": "purple kohlrabi, a round bulb with a few leaf stalks sprouting from the top",
+   "names": "kohlrabi, german turnip, ?turnip",
+   "note": "Its name is German for cabbage turnip",
+   "bg": "grey"
+  },
+  {
+   "id": "horseshoecrab",
+   "band": 5,
+   "desc": "horseshoe crab, a brown domed shell with a long spiky tail, top view",
+   "names": "horseshoe crab, limulus, ?crab",
+   "note": "Its blue blood is used to test medicines for germs"
+  },
+  {
+   "id": "astrolabe",
+   "band": 5,
+   "desc": "antique brass astrolabe, a disc with a pierced star map plate, a rotating pointer and a ring at the top",
+   "names": "astrolabe",
+   "note": "An astrolabe could tell the time from the height of a star"
+  },
+  {
+   "id": "dhow",
+   "band": 5,
+   "desc": "Arab dhow sailing ship with a wooden hull and large triangular lateen sails",
+   "names": "dhow, ?boat, ?ship, ?sailboat",
+   "note": "Dhows sailed the monsoon winds between Africa, Arabia and India"
+  },
+  {
+   "id": "kendama",
+   "band": 5,
+   "desc": "wooden kendama toy, a handle with cups on a cross-piece, a spike on top and a red ball tied on a string",
+   "names": "kendama, cup and ball",
+   "note": "The aim is to land the ball in the cups or on the spike"
+  },
+  {
+   "id": "handpan",
+   "band": 6,
+   "desc": "steel handpan, a flying-saucer-shaped instrument with a central dome and dimpled note areas around it",
+   "names": "handpan, hang, hang drum, pantam, ?drum",
+   "note": "First built in Switzerland in 2000 and called the Hang, \"hand\" in Bernese German"
   }
  ]
 }

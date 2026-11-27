@@ -1,0 +1,210 @@
+{
+ "date": "2026-12-04",
+ "items": [
+  {
+   "id": "cat",
+   "band": 1,
+   "desc": "orange tabby cat sitting",
+   "names": "cat, kitten, tabby",
+   "note": "Cats sleep for about two thirds of their lives"
+  },
+  {
+   "id": "broccoli",
+   "band": 1,
+   "desc": "head of green broccoli",
+   "names": "broccoli",
+   "note": "Broccoli was bred from wild cabbage",
+   "bg": "grey"
+  },
+  {
+   "id": "rocket",
+   "band": 1,
+   "desc": "white space rocket with red fins standing upright",
+   "names": "rocket, spaceship, rocket ship",
+   "note": "A rocket has to reach about 28,000 km/h to stay in orbit"
+  },
+  {
+   "id": "peacock",
+   "band": 2,
+   "desc": "peacock with its tail feathers fanned open showing the eye spots",
+   "names": "peacock, peafowl",
+   "note": "Only males have the big tail; females are peahens",
+   "bg": "grey"
+  },
+  {
+   "id": "calculator",
+   "band": 2,
+   "desc": "grey pocket calculator with buttons and a digital display",
+   "names": "calculator",
+   "note": "The first pocket calculators cost about as much as a used car"
+  },
+  {
+   "id": "screwdriver",
+   "band": 2,
+   "desc": "screwdriver with a red and clear handle and a steel shaft",
+   "names": "screwdriver, screw driver",
+   "note": "The cross-head screw was patented by Henry Phillips"
+  },
+  {
+   "id": "clothesiron",
+   "band": 2,
+   "desc": "white and blue steam clothes iron, side view",
+   "names": "iron, clothes iron, steam iron",
+   "note": "Old irons were heated on the stove"
+  },
+  {
+   "id": "garlic",
+   "band": 2,
+   "desc": "bulb of garlic with a few loose cloves",
+   "names": "garlic, garlic bulb, garlic clove",
+   "note": "Ancient Egyptian pyramid builders were given garlic for strength"
+  },
+  {
+   "id": "frisbee",
+   "band": 2,
+   "desc": "bright orange plastic flying disc",
+   "names": "frisbee, flying disc, disc, flying disk",
+   "note": "Named after the Frisbie Pie Company, whose tins students threw"
+  },
+  {
+   "id": "motorcycle",
+   "band": 2,
+   "desc": "red sport motorcycle, side view",
+   "names": "motorcycle, motorbike, bike",
+   "note": "The first motorcycle was a wooden frame with an engine, in 1885"
+  },
+  {
+   "id": "tambourine",
+   "band": 3,
+   "desc": "wooden tambourine with pairs of small brass jingles around the frame and a white skin",
+   "names": "tambourine",
+   "note": "It goes back over 3,000 years"
+  },
+  {
+   "id": "redpanda",
+   "band": 3,
+   "desc": "red panda with rusty-red fur, a white-marked face and a ringed bushy tail",
+   "names": "red panda, lesser panda, firefox",
+   "note": "Named panda before the giant panda was"
+  },
+  {
+   "id": "hammock",
+   "band": 3,
+   "desc": "striped rope hammock hanging between two short wooden posts",
+   "names": "hammock",
+   "note": "Hammocks were used by Ta\u00edno people long before sailors"
+  },
+  {
+   "id": "kayak",
+   "band": 3,
+   "desc": "bright yellow kayak with a double-bladed paddle",
+   "names": "kayak, ?canoe, ?boat",
+   "note": "Invented by Arctic peoples, from driftwood and sealskin"
+  },
+  {
+   "id": "jackinthebox",
+   "band": 3,
+   "desc": "jack-in-the-box, a colourful toy box with a crank handle and a clown springing out on a spring",
+   "names": "jack-in-the-box, jack in the box",
+   "note": "Turn the crank long enough and the clown springs out"
+  },
+  {
+   "id": "slinky",
+   "band": 3,
+   "desc": "metal Slinky spring toy arched over like it's walking down a step",
+   "names": "slinky, spring, ?coil",
+   "note": "Invented by accident with a dropped spring in 1943"
+  },
+  {
+   "id": "stopwatch",
+   "band": 3,
+   "desc": "silver mechanical stopwatch with a crown button on top and a white dial",
+   "names": "stopwatch, stop watch, timer",
+   "note": "Sprints are timed to a hundredth of a second"
+  },
+  {
+   "id": "hornbill",
+   "band": 4,
+   "desc": "great hornbill with a big yellow curved bill and a casque on top, black and white feathers",
+   "names": "hornbill, great hornbill",
+   "note": "The female seals herself into the nest with mud"
+  },
+  {
+   "id": "concertina",
+   "band": 4,
+   "desc": "hexagonal concertina with leather bellows and button ends",
+   "names": "concertina, ?accordion",
+   "note": "Smaller than an accordion, played with buttons on both ends"
+  },
+  {
+   "id": "ricecooker",
+   "band": 4,
+   "desc": "white electric rice cooker with a lid and a small control panel",
+   "names": "rice cooker",
+   "note": "It switches off when the water is gone and the pot gets hotter than 100\u00b0C"
+  },
+  {
+   "id": "chisel",
+   "band": 4,
+   "desc": "woodworking chisel with a wooden handle and a flat steel blade",
+   "names": "chisel, wood chisel",
+   "note": "Some of the oldest chisels are made of stone"
+  },
+  {
+   "id": "persimmon",
+   "band": 4,
+   "desc": "two orange persimmons with dark leafy caps",
+   "names": "persimmon, kaki, sharon fruit",
+   "note": "Unripe ones are very dry and bitter"
+  },
+  {
+   "id": "erlenmeyer",
+   "band": 4,
+   "desc": "Erlenmeyer flask, a conical glass lab flask with a narrow neck, half full of blue liquid",
+   "names": "erlenmeyer flask, conical flask, flask, erlenmeyer, ?beaker",
+   "note": "Named after a German chemist, Emil Erlenmeyer"
+  },
+  {
+   "id": "chinesejunk",
+   "band": 4,
+   "desc": "Chinese junk sailing ship with red ribbed fan-like sails and a high stern",
+   "names": "junk, chinese junk, ?boat, ?ship",
+   "note": "Junks had watertight compartments centuries before European ships"
+  },
+  {
+   "id": "ayeaye",
+   "band": 5,
+   "desc": "aye-aye lemur with big eyes, large ears and a long thin bony middle finger",
+   "names": "aye-aye, aye aye, ayeaye, ?lemur",
+   "note": "It taps on wood and listens for grubs"
+  },
+  {
+   "id": "stirlingengine",
+   "band": 5,
+   "desc": "small brass Stirling engine model with a flywheel, a cylinder and a heat plate",
+   "names": "stirling engine, hot air engine, ?engine",
+   "note": "Runs on any heat source, even a warm hand"
+  },
+  {
+   "id": "snakefruit",
+   "band": 5,
+   "desc": "salak snake fruit, pear-shaped with scaly reddish-brown skin like a snake, one peeled to show cream segments",
+   "names": "snake fruit, salak, salacca",
+   "note": "The skin looks like snakeskin"
+  },
+  {
+   "id": "cribbage",
+   "band": 5,
+   "desc": "wooden cribbage board with rows of peg holes and coloured pegs, with playing cards",
+   "names": "cribbage board, cribbage, crib board, crib",
+   "note": "Cribbage was invented by an English poet, Sir John Suckling"
+  },
+  {
+   "id": "sheng",
+   "band": 6,
+   "desc": "Chinese sheng mouth organ, a round cup base with a mouthpiece and a bundle of vertical bamboo pipes",
+   "names": "sheng",
+   "note": "One of the oldest Chinese instruments, over 3,000 years old"
+  }
+ ]
+}

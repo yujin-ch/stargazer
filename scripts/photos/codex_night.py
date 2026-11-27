@@ -32,9 +32,14 @@ STYLE = (
 )
 
 
+GREY = "plain, uniform, flat light grey background (#D9D9D9)"
+GREEN = "perfectly flat, uniform chroma-key green background (#00B140)"
+
+
 def prompt(item, out_name):
+    style = STYLE.replace(GREEN, GREY).replace(", no green tint or green light on the object", "") if item.get("bg") == "grey" else STYLE
     return (
-        f"$imagegen Generate exactly one image of: {item['desc']}. Style: {STYLE} "
+        f"$imagegen Generate exactly one image of: {item['desc']}. Style: {style} "
         f"Save the final image as a PNG named {out_name} in the current folder. "
         "Do not create, edit or delete any other files, and do not ask me anything: just make the image and save it."
     )
@@ -45,16 +50,17 @@ def grid(n):
 
 
 def sheet_prompt(objs, out_name):
+    """Green objects (bg "grey") go on their own sheets on light grey, since a green key would cut them away."""
+    grey = objs[0].get("bg") == "grey"
     rows, cols = grid(len(objs))
     what = f"a {rows} by {cols} grid of {len(objs)}" if rows > 1 else f"a single row of {len(objs)}"
-    extra = " Leave the unused cells empty green." if rows * cols > len(objs) else ""
+    extra = " Leave the unused cells empty." if rows * cols > len(objs) else ""
     listing = " ".join(f"{i + 1}. {o['desc']}." for i, o in enumerate(objs))
     return (
         f"$imagegen Generate exactly ONE {'square' if rows == cols else 'wide'} image: {what} separate studio product photos, "
-        "read left to right, top to bottom, in exactly this order, all on one perfectly flat, uniform chroma-key green "
-        "background (#00B140) that fills the whole image. Each object sits centered in its own cell, whole and fully visible, "
+        f"read left to right, top to bottom, in exactly this order, all on one {GREY if grey else GREEN} that fills the whole image. Each object sits centered in its own cell, whole and fully visible, "
         "with clear empty space around it; objects never touch, overlap or cross into another cell. No grid lines, no borders, "
-        "no frames, no numbers, no text, no labels, no floor, no shadows, no green tint on the objects. Soft, even, neutral "
+        f"no frames, no numbers, no text, no labels, no floor, no shadows{'' if grey else ', no green tint on the objects'}. Soft, even, neutral "
         "lighting, true colors, matte finish, all objects at a similar size. Accuracy matters most: someone must be able to "
         f"name each object from its picture alone, so get its real shape and parts right.{extra} Objects: {listing} "
         f"Save the final image as a PNG named {out_name} in the current folder. "
@@ -83,7 +89,10 @@ def main():
     if "limit" in opts:
         items = items[: int(opts["limit"])]
     if "sheets" in sys.argv[1:] or "--sheets" in sys.argv[1:]:
-        groups = [items[i:i + 9] for i in range(0, len(items), 9)]
+        # green-screen objects first, then the grey-background ones (green objects) on their own sheets
+        groups = []
+        for part in ([it for it in items if it.get("bg") != "grey"], [it for it in items if it.get("bg") == "grey"]):
+            groups += [part[i:i + 9] for i in range(0, len(part), 9)]
         os.makedirs(out, exist_ok=True)
         json.dump([{"file": f"sheet-{k + 1}.png", "grid": "%dx%d" % grid(len(g)), "ids": [o["id"] for o in g]} for k, g in enumerate(groups)],
                   open(os.path.join(out, "sheets.json"), "w"), indent=1)

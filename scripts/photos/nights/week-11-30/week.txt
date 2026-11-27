@@ -1,0 +1,204 @@
+# date | band (1 Moon 2 Planet 3 Comet 4 Nebula 5 Black Hole 6 Singularity) | id | what to draw | names (?word = too vague, asks "what kind of ...?") | note | bg (grey = not on green, for green objects)
+2026-11-30|1|strawberry|ripe red strawberry with its leafy cap, seen from the side|strawberry|Strawberries wear their seeds on the outside, about 200 each|grey
+2026-11-30|1|lightbulb|classic clear glass incandescent light bulb with a glowing coiled filament and a silver screw base|light bulb, lightbulb, bulb, globe|Most of the energy in an old bulb came out as heat, not light|
+2026-11-30|1|penguin|emperor penguin standing upright, black back, white belly, yellow-orange patch at the neck|penguin, emperor penguin, king penguin|Emperor penguins can dive deeper than 500 metres|
+2026-11-30|2|toaster|retro chrome two-slot toaster with two slices of toast popping up|toaster|Sliced bread came after the pop-up toaster, not before|
+2026-11-30|2|snail|garden snail with a brown spiral shell and both eye stalks raised|snail, garden snail, ?slug|A snail can sleep for up to three years in a dry spell|
+2026-11-30|2|globe|desk globe of the Earth on a tilted brass half-ring stand with a wooden base, blue oceans|globe, world globe, terrestrial globe|The oldest surviving globe, from 1492, has no Americas on it|
+2026-11-30|2|ladder|wooden A-frame step ladder, opened, three-quarter view|ladder, stepladder, step ladder|Walking under a ladder was unlucky because of the triangle it makes with the wall|
+2026-11-30|2|sunflower|single tall sunflower head with yellow petals and a dark brown seed centre, short stem|sunflower|A sunflower head is hundreds of tiny flowers packed in spirals|grey
+2026-11-30|2|skateboard|wooden skateboard with red wheels, tilted three-quarter view showing the deck and trucks|skateboard, skate board|Skateboards began as surfers' way to surf on dry days|
+2026-11-30|2|sailboat|small white sailboat with one tall triangular sail and a blue hull|sailboat, sailing boat, yacht, dinghy, ?boat|A sailboat can sail faster than the wind that pushes it|
+2026-11-30|3|harp|tall golden concert harp with its curved neck and many strings|harp, concert harp, pedal harp|A concert harp has 47 strings and 7 pedals|
+2026-11-30|3|frenchpress|glass French press coffee maker with a silver plunger and frame, half full of coffee|french press, cafetiere, coffee press, press pot, plunger|The plunger's mesh traps the grounds at the bottom|
+2026-11-30|3|narwhal|narwhal whale with a long straight spiral tusk, grey mottled skin, side view|narwhal|The tusk is a tooth, and it can grow 3 metres long|
+2026-11-30|3|cuckooclock|carved brown wooden Black Forest cuckoo clock with a little bird at the open door, pine-cone weights hanging on chains|cuckoo clock, ?clock|The pine-cone weights are what keep it running|
+2026-11-30|3|pomegranate|whole red pomegranate next to a cut half showing ruby seeds|pomegranate|One pomegranate can hold over 600 seeds|
+2026-11-30|3|unicycle|unicycle with a single wheel, a seat on a straight post and pedals on the wheel hub|unicycle|With no gears, one pedal turn is one wheel turn|
+2026-11-30|3|waffleiron|black cast-iron stovetop waffle iron, open, showing the square grid plates|waffle iron, waffle maker|Waffle irons were once made with family crests on the plates|
+2026-11-30|4|bassoon|wooden bassoon, long reddish-brown tube with silver keys and a curved metal crook|bassoon, fagotto|Unfolded, a bassoon's tube would be about 2.5 metres long|
+2026-11-30|4|loom|small wooden table loom with warp threads and a half-woven colourful cloth|loom, weaving loom, handloom|The punched cards of the Jacquard loom inspired early computers|
+2026-11-30|4|dreidel|wooden four-sided spinning top with a Hebrew letter on each face and a short handle|dreidel, dreidl, sevivon|Each of the four letters tells you what to take or give|
+2026-11-30|4|curlingstone|granite curling stone, grey polished round stone with a red handle on top|curling stone, curling rock, ?stone|Most curling stones come from one Scottish island, Ailsa Craig|
+2026-11-30|4|snowmobile|red and black snowmobile with front skis and a rear track|snowmobile, skidoo, ski-doo, snow machine|The first snowmobile was built to reach patients in snowy Quebec|
+2026-11-30|4|capybara|capybara, a big brown rodent with a blunt square face, sitting|capybara|The world's largest rodent, and a strong swimmer|
+2026-11-30|4|pennyfarthing|penny-farthing bicycle with a huge front wheel and a tiny rear wheel|penny-farthing, penny farthing, high wheeler, ordinary|The big wheel made it faster, since pedals turned the wheel directly|
+2026-11-30|5|samovar|ornate brass Russian samovar urn with a tap, side handles and a small teapot on top|samovar|Its central pipe once held burning charcoal to keep the water hot|
+2026-11-30|5|shamisen|Japanese shamisen, a three-stringed lute with a square drum body and a long thin neck|shamisen, samisen, sangen|It is plucked with a large fan-shaped plectrum called a bachi|
+2026-11-30|5|babirusa|babirusa wild pig, grey nearly hairless skin, with upper tusks that grow up through the snout and curve back toward the forehead|babirusa, deer pig, ?pig, ?boar|Its upper tusks grow up through the top of its snout|
+2026-11-30|5|romanesco|head of romanesco broccoli with pointed spiralling fractal cones, lime green|romanesco, romanesco broccoli, romanesque cauliflower, ?broccoli, ?cauliflower|Each cone is made of smaller cones in a spiral pattern|grey
+2026-11-30|6|theodolite|surveyor's theodolite, an instrument with a telescope sight on a rotating yellow and black body, standing on a wooden tripod|theodolite, transit, total station|It measures angles to map the land, from the pyramids to modern roads|
+2026-12-01|1|crab|bright red crab with two big claws, top view|crab|Crabs walk sideways because their legs bend that way|
+2026-12-01|1|pizza|whole pepperoni pizza with melted cheese, top view|pizza|Pizza margherita was named for a queen of Italy|
+2026-12-01|1|schoolbus|yellow American school bus, three-quarter view|school bus, bus|The yellow was picked in 1939 so drivers spot it in the dim early morning|
+2026-12-01|2|lobster|red cooked lobster with two big claws and long antennae, side view|lobster|Lobsters taste with hairs on their legs|
+2026-12-01|2|magnifyingglass|magnifying glass with a round glass lens in a brass rim and a wooden handle|magnifying glass, magnifier, hand lens, loupe|A water drop on a leaf works as a tiny magnifier|
+2026-12-01|2|wrench|chrome adjustable wrench, top view|wrench, spanner, adjustable wrench, adjustable spanner, monkey wrench|An adjustable wrench is called a "shifter" in Australia|
+2026-12-01|2|pretzel|large soft brown pretzel in the classic twisted knot shape, sprinkled with coarse salt|pretzel|The twist was said to look like arms folded in prayer|
+2026-12-01|2|slippers|pair of fluffy pink house slippers|slippers, slipper, house shoes|Cinderella's slipper may first have been fur, not glass|
+2026-12-01|2|bowlingpin|white bowling pin with two red stripes around the neck|bowling pin, skittle, pin|A bowling pin is made of maple wood under its white coat|
+2026-12-01|2|canoe|red wooden canoe with pointed ends and a paddle resting across it, side view|canoe, ?boat|The oldest known boat in the world is a dugout canoe|
+2026-12-01|3|cello|wooden cello standing upright on its spike, with its bow|cello, violoncello, ?violin|A cello is played sitting down, held between the knees|
+2026-12-01|3|seaurchin|purple sea urchin, a round shell covered in long spines|sea urchin, urchin|Its mouth is underneath, with five teeth called Aristotle's lantern|
+2026-12-01|3|candelabra|silver five-armed candelabra holding lit white candles|candelabra, candelabrum, candlestick, candle holder|A seven- or nine-branched candelabra is a menorah|
+2026-12-01|3|shuttlecock|badminton shuttlecock with white feathers and a round cork base|shuttlecock, shuttle, birdie, badminton|The best ones use 16 feathers from the left wing of a goose|
+2026-12-01|3|hermitcrab|hermit crab poking out of a spiral seashell, orange legs and claws|hermit crab, ?crab|It moves to a bigger shell as it grows, and sometimes swaps with others|
+2026-12-01|3|steeldrum|Caribbean steel drum, a shiny silver pan with dimpled note areas on top, and two rubber-tipped sticks|steel drum, steel pan, steelpan, pan, ?drum|Made from oil drums in Trinidad in the 1930s|
+2026-12-01|3|bamboosteamer|round woven bamboo steamer basket, stacked two high with a lid, holding dumplings|bamboo steamer, steamer, steamer basket, dim sum basket|Stacked baskets cook several dishes over one pot|
+2026-12-01|4|sliderule|wooden slide rule, long ruler with a sliding middle strip and a clear cursor|slide rule, slipstick|Apollo astronauts carried slide rules as a backup|
+2026-12-01|4|spiritlevel|yellow aluminium spirit level with three small liquid vials showing a bubble|spirit level, level, bubble level|The bubble always floats to the highest point|
+2026-12-01|4|lychee|bunch of lychees with bumpy red skin, one peeled showing white flesh|lychee, litchi, lichee|A favourite of a Chinese empress, brought by horse relay from the south|
+2026-12-01|4|tagine|terracotta Moroccan tagine pot with a tall cone-shaped lid, painted patterns|tagine, tajine|The cone sends steam back down into the food|
+2026-12-01|4|tuktuk|colourful three-wheeled auto rickshaw tuk-tuk with a canopy roof|tuk-tuk, tuk tuk, auto rickshaw, rickshaw, autorickshaw|Named for the sound its little engine makes|
+2026-12-01|4|stereoscope|antique wooden handheld stereoscope viewer with two lenses and a double photo card in the holder|stereoscope, stereo viewer, stereopticon|Two photos taken a few centimetres apart fool the eyes into 3D|
+2026-12-01|4|kohlrabi|purple kohlrabi, a round bulb with a few leaf stalks sprouting from the top|kohlrabi, german turnip, ?turnip|Its name is German for cabbage turnip|grey
+2026-12-01|5|horseshoecrab|horseshoe crab, a brown domed shell with a long spiky tail, top view|horseshoe crab, limulus, ?crab|Its blue blood is used to test medicines for germs|
+2026-12-01|5|astrolabe|antique brass astrolabe, a disc with a pierced star map plate, a rotating pointer and a ring at the top|astrolabe|An astrolabe could tell the time from the height of a star|
+2026-12-01|5|dhow|Arab dhow sailing ship with a wooden hull and large triangular lateen sails|dhow, ?boat, ?ship, ?sailboat|Dhows sailed the monsoon winds between Africa, Arabia and India|
+2026-12-01|5|kendama|wooden kendama toy, a handle with cups on a cross-piece, a spike on top and a red ball tied on a string|kendama, cup and ball|The aim is to land the ball in the cups or on the spike|
+2026-12-01|6|handpan|steel handpan, a flying-saucer-shaped instrument with a central dome and dimpled note areas around it|handpan, hang, hang drum, pantam, ?drum|First built in Switzerland in 2000 and called the Hang, "hand" in Bernese German|
+2026-12-02|1|carrot|orange carrot with leafy tops|carrot|Carrots used to be purple|grey
+2026-12-02|1|frog|green tree frog sitting, with red eyes and orange toes|frog, tree frog|A group of frogs is called an army|grey
+2026-12-02|1|toothbrush|blue and white toothbrush, side view showing the bristles|toothbrush, tooth brush|The first bristle toothbrushes used hog hair|
+2026-12-02|2|watermelon|watermelon wedge with red flesh, black seeds and striped green rind|watermelon, melon|A watermelon is about 92 percent water|grey
+2026-12-02|2|owl|brown barn owl perched, with a heart-shaped white face|owl, barn owl|An owl can turn its head about 270 degrees|
+2026-12-02|2|thermometer|old glass mercury thermometer with a red column and printed scale on a wooden backing|thermometer|Fahrenheit set 0 at the coldest temperature he could make with ice and salt|
+2026-12-02|2|pliers|pair of steel pliers with red rubber handles|pliers, needle-nose pliers|Pliers go back to Bronze Age blacksmiths|
+2026-12-02|2|rockingchair|wooden rocking chair with curved runners, three-quarter view|rocking chair, rocker|Benjamin Franklin is often said to have invented it|
+2026-12-02|2|helicopter|red helicopter with main rotor blades and a tail rotor, side view|helicopter, chopper|Leonardo da Vinci sketched a screw-shaped helicopter in the 1480s|
+2026-12-02|2|yoyo|red wooden yo-yo with its string wound and a loop at the end|yo-yo, yoyo, yo yo|In 1985 a yo-yo went to space on the shuttle Discovery|
+2026-12-02|3|snaredrum|snare drum with a chrome shell, white head and a pair of drumsticks|snare drum, snare, ?drum|The wires underneath give it its sharp rattle|
+2026-12-02|3|platypus|platypus with a brown furry body, a flat duck-like bill and webbed feet|platypus, duck-billed platypus|A mammal that lays eggs|
+2026-12-02|3|pinata|star-shaped piñata with colourful paper fringes and cone points|piñata, pinata|Piñatas came to Mexico by way of Spain, and maybe China before that|
+2026-12-02|3|sewingmachine|antique black sewing machine with gold decoration and a hand wheel|sewing machine|The needle's eye is near its tip, not the top|
+2026-12-02|3|jetski|blue and white personal watercraft jet ski, three-quarter view|jet ski, jetski, personal watercraft, waverunner, sea-doo|It moves by pumping a jet of water out the back|
+2026-12-02|3|rotaryphone|black rotary dial telephone with a coiled cord|rotary phone, rotary telephone, dial phone, telephone, phone|Dialling a 0 took the longest, ten clicks|
+2026-12-02|3|matryoshka|set of Russian nesting dolls, painted red and gold, in a row from big to small|matryoshka, nesting dolls, russian dolls, babushka dolls, stacking dolls|The first set, from 1890, had eight dolls|
+2026-12-02|4|fennecfox|fennec fox, small sandy fox with huge ears, sitting|fennec fox, fennec, ?fox|Its huge ears let heat escape in the desert|
+2026-12-02|4|didgeridoo|didgeridoo, a long wooden wind tube painted with Aboriginal dot patterns|didgeridoo, didjeridu, yidaki|Players keep a drone going by breathing in through the nose while blowing|
+2026-12-02|4|bunsenburner|laboratory Bunsen burner with a blue flame on top of the metal tube and a rubber gas hose|bunsen burner, burner|The collar at the bottom lets in air for a hotter blue flame|
+2026-12-02|4|vise|cast-iron bench vise painted blue, with steel jaws and a T-shaped handle|vise, vice, bench vise, bench vice|The screw gives a huge squeeze from a small push|
+2026-12-02|4|jackfruit|whole jackfruit with bumpy spiky green-yellow skin next to a cut piece showing yellow pods|jackfruit, jack fruit|The largest tree fruit: one can weigh over 40 kilograms|grey
+2026-12-02|4|mangosteen|mangosteen fruit, round dark purple rind with a green cap, one opened to show white segments|mangosteen|Called the queen of fruits|
+2026-12-02|4|hovercraft|hovercraft with a black rubber skirt and a big rear propeller fan|hovercraft, air cushion vehicle|It floats on a cushion of air, so it can cross land and water|
+2026-12-02|5|proboscismonkey|proboscis monkey with reddish fur and a large long drooping nose, sitting|proboscis monkey, long-nosed monkey, ?monkey|The big nose may make its honking call louder|
+2026-12-02|5|koto|Japanese koto, a long wooden zither lying flat, with 13 strings over movable white bridges|koto, ?zither|Its bridges are moved to tune each string|
+2026-12-02|5|orrery|brass clockwork orrery model of the solar system, with planet balls on arms around a central sun|orrery, planetarium, solar system model|Named after the Earl of Orrery, who owned an early one|
+2026-12-02|5|tricornhat|black tricorne hat with three sides of the brim turned up into a triangle, with gold trim|tricorne, tricorn, tricorn hat, tricorne hat, three-cornered hat, ?hat, ?pirate hat|The turned-up brim kept rain off and let soldiers carry muskets on the shoulder|
+2026-12-02|6|adze|old woodworking adze, a long wooden handle with a curved steel blade set crosswise like a hoe|adze, adz|The blade runs across the handle, unlike an axe|
+2026-12-03|1|cheese|wedge of yellow cheese with round holes|cheese, swiss cheese, emmental, cheese wedge|The holes come from gas made by bacteria|
+2026-12-03|1|basketball|orange basketball with black lines|basketball, ball|The first games used a peach basket as the hoop|
+2026-12-03|1|airplane|white passenger jet airliner flying, three-quarter view|airplane, aeroplane, plane, jet, airliner, aircraft|An airliner cruises at about 900 km/h|
+2026-12-03|2|kangaroo|red kangaroo standing upright on its strong hind legs with its long tail|kangaroo, roo|Kangaroos can't walk backward|
+2026-12-03|2|tennisracket|tennis racket with strings, and a yellow tennis ball|tennis racket, racket, racquet, tennis racquet|The fuzzy ball was made yellow in 1972 to show up on TV|
+2026-12-03|2|saw|carpenter's handsaw with a wooden handle and a toothed steel blade|saw, handsaw, hand saw|Saw teeth bend alternately left and right so the blade doesn't jam|
+2026-12-03|2|trumpet|brass trumpet with three valves, side view|trumpet, cornet|Trumpets were found in Tutankhamun's tomb|
+2026-12-03|2|telescope|brass refracting telescope on a wooden tripod|telescope, spyglass|Galileo's first telescope magnified only three times|
+2026-12-03|2|avocado|avocado cut in half with the brown pit in one half, next to the dark skinned whole fruit|avocado|Its name comes from the Aztec word ahuacatl|grey
+2026-12-03|2|tractor|red farm tractor with big rear wheels and small front wheels, side view|tractor|The big back wheels give grip in soft soil|
+2026-12-03|3|lantern|old metal camping lantern with a glass chimney and a carry handle, lit|lantern, oil lantern, hurricane lamp, lamp|The glass chimney keeps the wind from blowing it out|
+2026-12-03|3|anteater|giant anteater with a long tube-shaped snout, bushy tail and grey-black stripe|anteater, giant anteater|Its tongue flicks 150 times a minute|
+2026-12-03|3|puffin|Atlantic puffin standing, black and white with a big orange and grey striped bill|puffin, atlantic puffin|A puffin can carry a dozen fish crosswise in its bill|
+2026-12-03|3|bagpipes|Scottish bagpipes with a tartan bag, three drone pipes and a chanter|bagpipes, bagpipe, pipes, great highland bagpipe|The bag holds air so the sound never stops for breath|
+2026-12-03|3|boomerang|wooden boomerang, a curved L-shaped throwing stick with painted dots|boomerang|Only the light curved ones come back; hunting ones fly straight|
+2026-12-03|3|pogostick|pogo stick with handlebars, foot pegs and a spring|pogo stick, pogo|Modern ones use air springs to jump over 3 metres|
+2026-12-03|3|cablecar|red aerial cable car cabin hanging from a cable|cable car, gondola, aerial tramway, ropeway, cable way|The car has no engine; the cable pulls it|
+2026-12-03|4|fonduepot|red enamel cheese fondue pot on a stand with a burner and long fondue forks|fondue pot, fondue, caquelon|Lose your bread in the pot and tradition says you buy the next round|
+2026-12-03|4|bokchoy|bok choy cabbage with white stalks and dark green leaves|bok choy, pak choi, pak choy, chinese cabbage, ?cabbage|It has been grown in China for over 1500 years|grey
+2026-12-03|4|foldingfan|open Japanese folding fan with a painted paper leaf and wooden ribs|folding fan, hand fan, fan, sensu|The folding fan is said to have been invented in Japan|
+2026-12-03|4|plumbbob|brass plumb bob, a pointed weight hanging from a string|plumb bob, plumb line, plumb|"Plumb" comes from plumbum, Latin for lead|
+2026-12-03|4|geigercounter|handheld Geiger counter with a needle dial and a wand probe on a cord|geiger counter, geiger, radiation detector, dosimeter|The clicks are single particles passing through the tube|
+2026-12-03|4|barometer|round brass aneroid barometer with a dial reading Rain, Change, Fair|barometer|A falling barometer means a storm may be coming|
+2026-12-03|4|buddhashand|Buddha's hand citron, a yellow fruit split into many long finger-like segments|buddha's hand, buddhas hand, fingered citron, ?citron|It has almost no juice or pulp, and is kept for its scent|
+2026-12-03|5|dikdik|dik-dik, a tiny antelope with big dark eyes, a long pointed snout and small straight horns|dik-dik, dikdik, dik dik, ?antelope, ?deer|Named for its alarm call|
+2026-12-03|5|hurdygurdy|hurdy-gurdy, a wooden violin-shaped instrument with a crank handle at the tail and a box of keys on the neck|hurdy-gurdy, hurdy gurdy, wheel fiddle|A cranked wheel rubs the strings like an endless bow|
+2026-12-03|5|armillarysphere|brass armillary sphere, nested rings around a central ball, on a stand|armillary sphere, armillary, armilla|The rings show the circles of the sky around the Earth|
+2026-12-03|5|sampan|small wooden Chinese sampan boat with a curved woven bamboo canopy|sampan, ?boat|The name means three planks|
+2026-12-03|6|drawknife|antique drawknife, a long straight blade with a wooden handle at each end bent toward the user|drawknife, draw knife, drawshave, draw shave|You pull it toward yourself to shave wood|
+2026-12-04|1|cat|orange tabby cat sitting|cat, kitten, tabby|Cats sleep for about two thirds of their lives|
+2026-12-04|1|broccoli|head of green broccoli|broccoli|Broccoli was bred from wild cabbage|grey
+2026-12-04|1|rocket|white space rocket with red fins standing upright|rocket, spaceship, rocket ship|A rocket has to reach about 28,000 km/h to stay in orbit|
+2026-12-04|2|peacock|peacock with its tail feathers fanned open showing the eye spots|peacock, peafowl|Only males have the big tail; females are peahens|grey
+2026-12-04|2|calculator|grey pocket calculator with buttons and a digital display|calculator|The first pocket calculators cost about as much as a used car|
+2026-12-04|2|screwdriver|screwdriver with a red and clear handle and a steel shaft|screwdriver, screw driver|The cross-head screw was patented by Henry Phillips|
+2026-12-04|2|clothesiron|white and blue steam clothes iron, side view|iron, clothes iron, steam iron|Old irons were heated on the stove|
+2026-12-04|2|garlic|bulb of garlic with a few loose cloves|garlic, garlic bulb, garlic clove|Ancient Egyptian pyramid builders were given garlic for strength|
+2026-12-04|2|frisbee|bright orange plastic flying disc|frisbee, flying disc, disc, flying disk|Named after the Frisbie Pie Company, whose tins students threw|
+2026-12-04|2|motorcycle|red sport motorcycle, side view|motorcycle, motorbike, bike|The first motorcycle was a wooden frame with an engine, in 1885|
+2026-12-04|3|tambourine|wooden tambourine with pairs of small brass jingles around the frame and a white skin|tambourine|It goes back over 3,000 years|
+2026-12-04|3|redpanda|red panda with rusty-red fur, a white-marked face and a ringed bushy tail|red panda, lesser panda, firefox|Named panda before the giant panda was|
+2026-12-04|3|hammock|striped rope hammock hanging between two short wooden posts|hammock|Hammocks were used by Taíno people long before sailors|
+2026-12-04|3|kayak|bright yellow kayak with a double-bladed paddle|kayak, ?canoe, ?boat|Invented by Arctic peoples, from driftwood and sealskin|
+2026-12-04|3|jackinthebox|jack-in-the-box, a colourful toy box with a crank handle and a clown springing out on a spring|jack-in-the-box, jack in the box|Turn the crank long enough and the clown springs out|
+2026-12-04|3|slinky|metal Slinky spring toy arched over like it's walking down a step|slinky, spring, ?coil|Invented by accident with a dropped spring in 1943|
+2026-12-04|3|stopwatch|silver mechanical stopwatch with a crown button on top and a white dial|stopwatch, stop watch, timer|Sprints are timed to a hundredth of a second|
+2026-12-04|4|hornbill|great hornbill with a big yellow curved bill and a casque on top, black and white feathers|hornbill, great hornbill|The female seals herself into the nest with mud|
+2026-12-04|4|concertina|hexagonal concertina with leather bellows and button ends|concertina, ?accordion|Smaller than an accordion, played with buttons on both ends|
+2026-12-04|4|ricecooker|white electric rice cooker with a lid and a small control panel|rice cooker|It switches off when the water is gone and the pot gets hotter than 100°C|
+2026-12-04|4|chisel|woodworking chisel with a wooden handle and a flat steel blade|chisel, wood chisel|Some of the oldest chisels are made of stone|
+2026-12-04|4|persimmon|two orange persimmons with dark leafy caps|persimmon, kaki, sharon fruit|Unripe ones are very dry and bitter|
+2026-12-04|4|erlenmeyer|Erlenmeyer flask, a conical glass lab flask with a narrow neck, half full of blue liquid|erlenmeyer flask, conical flask, flask, erlenmeyer, ?beaker|Named after a German chemist, Emil Erlenmeyer|
+2026-12-04|4|chinesejunk|Chinese junk sailing ship with red ribbed fan-like sails and a high stern|junk, chinese junk, ?boat, ?ship|Junks had watertight compartments centuries before European ships|
+2026-12-04|5|ayeaye|aye-aye lemur with big eyes, large ears and a long thin bony middle finger|aye-aye, aye aye, ayeaye, ?lemur|It taps on wood and listens for grubs|
+2026-12-04|5|stirlingengine|small brass Stirling engine model with a flywheel, a cylinder and a heat plate|stirling engine, hot air engine, ?engine|Runs on any heat source, even a warm hand|
+2026-12-04|5|snakefruit|salak snake fruit, pear-shaped with scaly reddish-brown skin like a snake, one peeled to show cream segments|snake fruit, salak, salacca|The skin looks like snakeskin|
+2026-12-04|5|cribbage|wooden cribbage board with rows of peg holes and coloured pegs, with playing cards|cribbage board, cribbage, crib board, crib|Cribbage was invented by an English poet, Sir John Suckling|
+2026-12-04|6|sheng|Chinese sheng mouth organ, a round cup base with a mouthpiece and a bundle of vertical bamboo pipes|sheng|One of the oldest Chinese instruments, over 3,000 years old|
+2026-12-05|1|horse|brown horse standing, side view|horse, pony|Horses can sleep standing up|
+2026-12-05|1|friedegg|sunny-side-up fried egg with a yellow yolk, top view|fried egg, egg, sunny side up|The yolk's colour comes from what the hen eats|
+2026-12-05|1|camera|black digital camera with a big lens, three-quarter view|camera, dslr|The word camera is Latin for room|
+2026-12-05|2|zebra|zebra standing, side view|zebra|Every zebra's stripes are unique|
+2026-12-05|2|drill|cordless power drill with a battery and a drill bit|drill, power drill, electric drill|The first electric drill was made in Australia in 1889|
+2026-12-05|2|candle|white lit pillar candle with melted wax drips|candle, wax candle|Candles were once used to tell the time|
+2026-12-05|2|corncob|yellow corn cob with the husk peeled back|corn, corn cob, maize, corn on the cob, sweetcorn|A cob always has an even number of rows|
+2026-12-05|2|tent|orange dome camping tent with the door open|tent|Tents are among the oldest kinds of shelter|
+2026-12-05|2|sled|wooden sled with red metal runners|sled, sledge, sleigh, toboggan|Sleds were used for moving heavy loads long before the wheel|
+2026-12-05|2|locomotive|black steam locomotive with a smokestack and red wheels, side view|steam locomotive, locomotive, steam train, train, engine|The first steam locomotive ran in Wales in 1804|
+2026-12-05|3|flute|silver concert flute with its keys, lying diagonally|flute|One of the oldest instruments; bone flutes are 40,000 years old|
+2026-12-05|3|manatee|manatee, a large grey sea mammal with a round paddle tail and flippers|manatee, sea cow|Sailors may have mistaken them for mermaids|
+2026-12-05|3|anvil|black blacksmith's anvil with a pointed horn|anvil|The horn is used to bend metal into curves|
+2026-12-05|3|espressomachine|chrome espresso machine with a portafilter handle and a cup|espresso machine, coffee machine, espresso maker|Espresso is pushed through at nine times the air pressure|
+2026-12-05|3|catamaran|white catamaran sailboat with two hulls and a sail|catamaran, cat, ?sailboat, ?boat|Two hulls make it steadier than a single hull|
+2026-12-05|3|magic8ball|black magic 8 ball with a white circle showing the number 8|magic 8 ball, magic eight ball, 8 ball, eight ball|Inside floats a 20-sided die with an answer on each face|
+2026-12-05|3|genielamp|golden oil lamp with a long spout and a curved handle, the genie lamp shape|genie lamp, oil lamp, aladdin's lamp, magic lamp, lamp|Lamps like this burned olive oil through a wick in the spout|
+2026-12-05|4|kiwibird|kiwi bird, round brown fluffy body with a long thin beak|kiwi, kiwi bird|It lays one of the biggest eggs for its size of any bird|
+2026-12-05|4|oboe|black wooden oboe with silver keys and a double reed|oboe|The whole orchestra tunes to its A|
+2026-12-05|4|kumquat|small oval orange kumquats, a few with leaves|kumquat, cumquat|You eat it whole, sweet skin and sour inside|
+2026-12-05|4|croquetmallet|wooden croquet mallet and a red ball beside it|croquet mallet, mallet, croquet|Croquet was in the 1900 Olympics|
+2026-12-05|4|chessclock|wooden chess clock with two dials and two buttons on top|chess clock, game clock|Pressing your button stops your time and starts your opponent's|
+2026-12-05|4|teslacoil|Tesla coil, a tall copper-wound coil with a metal donut on top, shooting purple lightning|tesla coil|It can make lightning bolts of millions of volts|
+2026-12-05|4|fiddlehead|curled fiddlehead fern fronds|fiddlehead, fiddlehead fern, fern|Named for its shape like the scroll of a violin|grey
+2026-12-05|5|gerenuk|gerenuk, a long-necked antelope standing on its hind legs to eat from a tree|gerenuk, giraffe gazelle, ?antelope, ?gazelle|It can live without ever drinking water|
+2026-12-05|5|oud|Arabic oud, a lute with a big pear-shaped body, a short neck and a backward bent pegbox|oud, ud, ?lute, ?guitar|The ancestor of the European lute|
+2026-12-05|5|bathysphere|bathysphere, a steel ball with small round windows hanging from a cable|bathysphere, diving bell, ?submarine|In 1934 it carried two men half a mile under the sea|
+2026-12-05|5|zoetrope|zoetrope, a spinning drum with slits on a stand, with a strip of drawings inside|zoetrope|Look through the slits as it spins and the drawings move|
+2026-12-05|6|warmingpan|antique copper bed warming pan, a lidded round pan on a long wooden handle|warming pan, bed warmer, bedwarmer, ?pan|Filled with hot coals and run between the sheets before bed|
+2026-12-06|1|bee|honey bee with yellow and black stripes and clear wings|bee, honey bee, honeybee, bumblebee|A bee visits about 100 flowers on one trip|
+2026-12-06|1|cherries|pair of red cherries joined at the stems|cherries, cherry|Cherry trees can live 100 years|
+2026-12-06|1|car|red car, side view|car, automobile|The first car had three wheels|
+2026-12-06|2|hippo|hippopotamus standing on land, side view|hippo, hippopotamus|Hippos can't swim; they walk on the river bed|
+2026-12-06|2|piano|black grand piano with the lid up|piano, grand piano|A piano has 88 keys|
+2026-12-06|2|toolbox|red metal toolbox with a handle, open showing tools|toolbox, tool box, tool kit|The cantilever trays pull open like stairs|
+2026-12-06|2|rockinghorse|wooden rocking horse with curved rockers and a painted mane|rocking horse, hobby horse|Some were made for royal children with real horsehair|
+2026-12-06|2|firetruck|red fire engine with a ladder, side view|fire truck, fire engine, firetruck|Early fire engines were pulled by horses|
+2026-12-06|2|eggplant|purple eggplant aubergine|eggplant, aubergine, brinjal|Early English ones were white and egg-shaped|
+2026-12-06|2|armchair|upholstered brown leather armchair, three-quarter view|armchair, chair, club chair|Armchairs were once only for the head of the house|
+2026-12-06|3|horseshoemagnet|red horseshoe magnet with silver tips|magnet, horseshoe magnet|Bending a bar into a horseshoe puts both poles side by side|
+2026-12-06|3|pinball|pinball machine with a lit backglass and a playfield|pinball, pinball machine|Pinball was banned in New York for over 30 years|
+2026-12-06|3|spacehelmet|white astronaut space helmet with a gold visor|space helmet, astronaut helmet, helmet|The gold visor reflects the sun's glare and heat|
+2026-12-06|3|peppergrinder|wooden pepper grinder with peppercorns beside it|pepper grinder, pepper mill, peppermill, grinder|Pepper was once so precious it was used as money|
+2026-12-06|3|marimba|wooden marimba with long wooden bars and resonator tubes underneath, with mallets|marimba, xylophone|The tubes under the bars make each note ring out|
+2026-12-06|3|segway|Segway, a two-wheeled self-balancing scooter with a handle|segway, scooter, hoverboard|It balances using gyroscopes and tilt sensors|
+2026-12-06|3|trowel|garden trowel with a pointed steel blade and a wooden handle|trowel, garden trowel|Masons use a flat trowel; gardeners a scooped one|
+2026-12-06|4|hoopoe|hoopoe bird with orange plumage, black-and-white striped wings and a fanned crest|hoopoe|Its call is a soft hoop-hoop-hoop|
+2026-12-06|4|lyrebird|lyrebird with its long lacy tail fanned up in a lyre shape|lyrebird, lyre bird|It can mimic chainsaws and camera shutters|
+2026-12-06|4|lotuspod|dried brown lotus seed pod, a flat-topped cone with round holes and seeds|lotus pod, lotus seed pod, lotus|Lotus seeds can sprout after 1,300 years|
+2026-12-06|4|rambutan|bunch of rambutans, red fruit covered in soft hairy spines|rambutan|Its name comes from the Malay word for hair|
+2026-12-06|4|slideprojector|vintage slide projector with a round carousel tray on top|slide projector, projector, carousel projector|The carousel tray holds 80 slides|
+2026-12-06|4|beesmoker|beekeeper's smoker, a metal can with a spout and bellows on the side|bee smoker, smoker|Smoke calms bees by masking their alarm scent|
+2026-12-06|4|carrom|square wooden carrom board with pockets at the corners and round coins on it|carrom, carrom board, carom|The striker is flicked with a finger|
+2026-12-06|5|potoo|potoo bird, a camouflaged grey-brown bird perched upright on a broken branch with huge eyes|potoo, common potoo, ?owl|It sits so still it looks like part of the branch|
+2026-12-06|5|bandoneon|bandoneon, a square button concertina with pleated bellows|bandoneon, bandonion, ?accordion, ?concertina|The heart of Argentine tango|
+2026-12-06|5|planisphere|round planisphere star finder, a star chart disc with a rotating window|planisphere, star finder, star wheel, star chart|Turn it to tonight's date and hour to see the stars overhead|
+2026-12-06|5|coracle|coracle, a small round boat of woven willow covered in black hide, with a paddle|coracle, ?boat|Light enough to carry on your back|
+2026-12-06|6|jabuticaba|jabuticaba tree trunk covered in dark purple grape-like fruits growing straight on the bark|jabuticaba, brazilian grape tree, ?grape|The fruit grows straight out of the trunk|

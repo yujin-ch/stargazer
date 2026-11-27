@@ -1,0 +1,208 @@
+{
+ "date": "2026-12-06",
+ "items": [
+  {
+   "id": "bee",
+   "band": 1,
+   "desc": "honey bee with yellow and black stripes and clear wings",
+   "names": "bee, honey bee, honeybee, bumblebee",
+   "note": "A bee visits about 100 flowers on one trip"
+  },
+  {
+   "id": "cherries",
+   "band": 1,
+   "desc": "pair of red cherries joined at the stems",
+   "names": "cherries, cherry",
+   "note": "Cherry trees can live 100 years"
+  },
+  {
+   "id": "car",
+   "band": 1,
+   "desc": "red car, side view",
+   "names": "car, automobile",
+   "note": "The first car had three wheels"
+  },
+  {
+   "id": "hippo",
+   "band": 2,
+   "desc": "hippopotamus standing on land, side view",
+   "names": "hippo, hippopotamus",
+   "note": "Hippos can't swim; they walk on the river bed"
+  },
+  {
+   "id": "piano",
+   "band": 2,
+   "desc": "black grand piano with the lid up",
+   "names": "piano, grand piano",
+   "note": "A piano has 88 keys"
+  },
+  {
+   "id": "toolbox",
+   "band": 2,
+   "desc": "red metal toolbox with a handle, open showing tools",
+   "names": "toolbox, tool box, tool kit",
+   "note": "The cantilever trays pull open like stairs"
+  },
+  {
+   "id": "rockinghorse",
+   "band": 2,
+   "desc": "wooden rocking horse with curved rockers and a painted mane",
+   "names": "rocking horse, hobby horse",
+   "note": "Some were made for royal children with real horsehair"
+  },
+  {
+   "id": "firetruck",
+   "band": 2,
+   "desc": "red fire engine with a ladder, side view",
+   "names": "fire truck, fire engine, firetruck",
+   "note": "Early fire engines were pulled by horses"
+  },
+  {
+   "id": "eggplant",
+   "band": 2,
+   "desc": "purple eggplant aubergine",
+   "names": "eggplant, aubergine, brinjal",
+   "note": "Early English ones were white and egg-shaped"
+  },
+  {
+   "id": "armchair",
+   "band": 2,
+   "desc": "upholstered brown leather armchair, three-quarter view",
+   "names": "armchair, chair, club chair",
+   "note": "Armchairs were once only for the head of the house"
+  },
+  {
+   "id": "horseshoemagnet",
+   "band": 3,
+   "desc": "red horseshoe magnet with silver tips",
+   "names": "magnet, horseshoe magnet",
+   "note": "Bending a bar into a horseshoe puts both poles side by side"
+  },
+  {
+   "id": "pinball",
+   "band": 3,
+   "desc": "pinball machine with a lit backglass and a playfield",
+   "names": "pinball, pinball machine",
+   "note": "Pinball was banned in New York for over 30 years"
+  },
+  {
+   "id": "spacehelmet",
+   "band": 3,
+   "desc": "white astronaut space helmet with a gold visor",
+   "names": "space helmet, astronaut helmet, helmet",
+   "note": "The gold visor reflects the sun's glare and heat"
+  },
+  {
+   "id": "peppergrinder",
+   "band": 3,
+   "desc": "wooden pepper grinder with peppercorns beside it",
+   "names": "pepper grinder, pepper mill, peppermill, grinder",
+   "note": "Pepper was once so precious it was used as money"
+  },
+  {
+   "id": "marimba",
+   "band": 3,
+   "desc": "wooden marimba with long wooden bars and resonator tubes underneath, with mallets",
+   "names": "marimba, xylophone",
+   "note": "The tubes under the bars make each note ring out"
+  },
+  {
+   "id": "segway",
+   "band": 3,
+   "desc": "Segway, a two-wheeled self-balancing scooter with a handle",
+   "names": "segway, scooter, hoverboard",
+   "note": "It balances using gyroscopes and tilt sensors"
+  },
+  {
+   "id": "trowel",
+   "band": 3,
+   "desc": "garden trowel with a pointed steel blade and a wooden handle",
+   "names": "trowel, garden trowel",
+   "note": "Masons use a flat trowel; gardeners a scooped one"
+  },
+  {
+   "id": "hoopoe",
+   "band": 4,
+   "desc": "hoopoe bird with orange plumage, black-and-white striped wings and a fanned crest",
+   "names": "hoopoe",
+   "note": "Its call is a soft hoop-hoop-hoop"
+  },
+  {
+   "id": "lyrebird",
+   "band": 4,
+   "desc": "lyrebird with its long lacy tail fanned up in a lyre shape",
+   "names": "lyrebird, lyre bird",
+   "note": "It can mimic chainsaws and camera shutters"
+  },
+  {
+   "id": "lotuspod",
+   "band": 4,
+   "desc": "dried brown lotus seed pod, a flat-topped cone with round holes and seeds",
+   "names": "lotus pod, lotus seed pod, lotus",
+   "note": "Lotus seeds can sprout after 1,300 years"
+  },
+  {
+   "id": "rambutan",
+   "band": 4,
+   "desc": "bunch of rambutans, red fruit covered in soft hairy spines",
+   "names": "rambutan",
+   "note": "Its name comes from the Malay word for hair"
+  },
+  {
+   "id": "slideprojector",
+   "band": 4,
+   "desc": "vintage slide projector with a round carousel tray on top",
+   "names": "slide projector, projector, carousel projector",
+   "note": "The carousel tray holds 80 slides"
+  },
+  {
+   "id": "beesmoker",
+   "band": 4,
+   "desc": "beekeeper's smoker, a metal can with a spout and bellows on the side",
+   "names": "bee smoker, smoker",
+   "note": "Smoke calms bees by masking their alarm scent"
+  },
+  {
+   "id": "carrom",
+   "band": 4,
+   "desc": "square wooden carrom board with pockets at the corners and round coins on it",
+   "names": "carrom, carrom board, carom",
+   "note": "The striker is flicked with a finger"
+  },
+  {
+   "id": "potoo",
+   "band": 5,
+   "desc": "potoo bird, a camouflaged grey-brown bird perched upright on a broken branch with huge eyes",
+   "names": "potoo, common potoo, ?owl",
+   "note": "It sits so still it looks like part of the branch"
+  },
+  {
+   "id": "bandoneon",
+   "band": 5,
+   "desc": "bandoneon, a square button concertina with pleated bellows",
+   "names": "bandoneon, bandonion, ?accordion, ?concertina",
+   "note": "The heart of Argentine tango"
+  },
+  {
+   "id": "planisphere",
+   "band": 5,
+   "desc": "round planisphere star finder, a star chart disc with a rotating window",
+   "names": "planisphere, star finder, star wheel, star chart",
+   "note": "Turn it to tonight's date and hour to see the stars overhead"
+  },
+  {
+   "id": "coracle",
+   "band": 5,
+   "desc": "coracle, a small round boat of woven willow covered in black hide, with a paddle",
+   "names": "coracle, ?boat",
+   "note": "Light enough to carry on your back"
+  },
+  {
+   "id": "jabuticaba",
+   "band": 6,
+   "desc": "jabuticaba tree trunk covered in dark purple grape-like fruits growing straight on the bark",
+   "names": "jabuticaba, brazilian grape tree, ?grape",
+   "note": "The fruit grows straight out of the trunk"
+  }
+ ]
+}

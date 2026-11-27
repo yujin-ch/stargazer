@@ -2,207 +2,211 @@
  "date": "2026-12-02",
  "items": [
   {
-   "id": "crown",
+   "id": "carrot",
    "band": 1,
-   "desc": "gold royal crown set with red and blue jewels",
-   "names": "crown",
-   "note": "Some crowns weigh over two kilos"
+   "desc": "orange carrot with leafy tops",
+   "names": "carrot",
+   "note": "Carrots used to be purple",
+   "bg": "grey"
   },
   {
-   "id": "pencil",
+   "id": "frog",
    "band": 1,
-   "desc": "yellow wooden pencil with a pink eraser, sharpened tip",
-   "names": "pencil",
-   "note": "There's no lead in a pencil, just graphite and clay"
+   "desc": "green tree frog sitting, with red eyes and orange toes",
+   "names": "frog, tree frog",
+   "note": "A group of frogs is called an army",
+   "bg": "grey"
   },
   {
-   "id": "strawberry",
+   "id": "toothbrush",
    "band": 1,
-   "desc": "single ripe red strawberry with green leaves on top",
-   "names": "strawberry",
-   "note": "The only fruit that wears its seeds on the outside"
+   "desc": "blue and white toothbrush, side view showing the bristles",
+   "names": "toothbrush, tooth brush",
+   "note": "The first bristle toothbrushes used hog hair"
   },
   {
-   "id": "rubikscube",
+   "id": "watermelon",
    "band": 2,
-   "desc": "scrambled Rubik's cube",
-   "names": "rubik's cube, rubiks cube, cube, puzzle cube",
-   "note": "43 quintillion possible positions"
+   "desc": "watermelon wedge with red flesh, black seeds and striped green rind",
+   "names": "watermelon, melon",
+   "note": "A watermelon is about 92 percent water",
+   "bg": "grey"
   },
   {
-   "id": "jellyfish",
+   "id": "owl",
    "band": 2,
-   "desc": "translucent pink jellyfish with trailing tentacles",
-   "names": "jellyfish, jelly fish, jelly",
-   "note": "No brain, no heart, no bones"
+   "desc": "brown barn owl perched, with a heart-shaped white face",
+   "names": "owl, barn owl",
+   "note": "An owl can turn its head about 270 degrees"
+  },
+  {
+   "id": "thermometer",
+   "band": 2,
+   "desc": "old glass mercury thermometer with a red column and printed scale on a wooden backing",
+   "names": "thermometer",
+   "note": "Fahrenheit set 0 at the coldest temperature he could make with ice and salt"
+  },
+  {
+   "id": "pliers",
+   "band": 2,
+   "desc": "pair of steel pliers with red rubber handles",
+   "names": "pliers, needle-nose pliers",
+   "note": "Pliers go back to Bronze Age blacksmiths"
+  },
+  {
+   "id": "rockingchair",
+   "band": 2,
+   "desc": "wooden rocking chair with curved runners, three-quarter view",
+   "names": "rocking chair, rocker",
+   "note": "Benjamin Franklin is often said to have invented it"
+  },
+  {
+   "id": "helicopter",
+   "band": 2,
+   "desc": "red helicopter with main rotor blades and a tail rotor, side view",
+   "names": "helicopter, chopper",
+   "note": "Leonardo da Vinci sketched a screw-shaped helicopter in the 1480s"
+  },
+  {
+   "id": "yoyo",
+   "band": 2,
+   "desc": "red wooden yo-yo with its string wound and a loop at the end",
+   "names": "yo-yo, yoyo, yo yo",
+   "note": "In 1985 a yo-yo went to space on the shuttle Discovery"
+  },
+  {
+   "id": "snaredrum",
+   "band": 3,
+   "desc": "snare drum with a chrome shell, white head and a pair of drumsticks",
+   "names": "snare drum, snare, ?drum",
+   "note": "The wires underneath give it its sharp rattle"
+  },
+  {
+   "id": "platypus",
+   "band": 3,
+   "desc": "platypus with a brown furry body, a flat duck-like bill and webbed feet",
+   "names": "platypus, duck-billed platypus",
+   "note": "A mammal that lays eggs"
+  },
+  {
+   "id": "pinata",
+   "band": 3,
+   "desc": "star-shaped pi\u00f1ata with colourful paper fringes and cone points",
+   "names": "pi\u00f1ata, pinata",
+   "note": "Pi\u00f1atas came to Mexico by way of Spain, and maybe China before that"
   },
   {
    "id": "sewingmachine",
-   "band": 2,
-   "desc": "black antique sewing machine with gold decoration",
+   "band": 3,
+   "desc": "antique black sewing machine with gold decoration and a hand wheel",
    "names": "sewing machine",
-   "note": "Made shirts far quicker than hand stitching"
+   "note": "The needle's eye is near its tip, not the top"
   },
   {
-   "id": "magnifyingglass",
-   "band": 2,
-   "desc": "magnifying glass with a wooden handle",
-   "names": "magnifying glass, magnifier, loupe",
-   "note": "Detectives' favourite"
-  },
-  {
-   "id": "paddle",
-   "band": 2,
-   "desc": "wooden canoe paddle",
-   "names": "paddle, oar, canoe paddle",
-   "note": "Paddles are held, oars sit in a lock"
-  },
-  {
-   "id": "globe",
-   "band": 2,
-   "desc": "desk globe on a wooden stand",
-   "names": "globe, world globe",
-   "note": "Tilted 23.5 degrees, like the Earth"
-  },
-  {
-   "id": "chessknight",
-   "band": 2,
-   "desc": "black chess knight piece",
-   "names": "knight, chess knight, horse, chess piece",
-   "note": "The only piece that jumps"
-  },
-  {
-   "id": "candelabra",
-   "band": 2,
-   "desc": "silver three-arm candelabra with lit candles",
-   "names": "candelabra, candelabrum, candlestick, candle holder",
-   "note": "Each arm holds its own candle"
-  },
-  {
-   "id": "trilobite",
+   "id": "jetski",
    "band": 3,
-   "desc": "trilobite fossil",
-   "names": "trilobite, fossil",
-   "note": "Ruled the seas for 270 million years"
+   "desc": "blue and white personal watercraft jet ski, three-quarter view",
+   "names": "jet ski, jetski, personal watercraft, waverunner, sea-doo",
+   "note": "It moves by pumping a jet of water out the back"
   },
   {
-   "id": "mandolin",
+   "id": "rotaryphone",
    "band": 3,
-   "desc": "mandolin with a teardrop body",
-   "names": "mandolin",
-   "note": "Eight strings in four pairs"
+   "desc": "black rotary dial telephone with a coiled cord",
+   "names": "rotary phone, rotary telephone, dial phone, telephone, phone",
+   "note": "Dialling a 0 took the longest, ten clicks"
   },
   {
-   "id": "fountainpen",
+   "id": "matryoshka",
    "band": 3,
-   "desc": "black fountain pen with a gold nib",
-   "names": "fountain pen, pen",
-   "note": "Ink flows down by capillary action"
+   "desc": "set of Russian nesting dolls, painted red and gold, in a row from big to small",
+   "names": "matryoshka, nesting dolls, russian dolls, babushka dolls, stacking dolls",
+   "note": "The first set, from 1890, had eight dolls"
   },
   {
-   "id": "pomegranate",
-   "band": 3,
-   "desc": "pomegranate split open showing red seeds",
-   "names": "pomegranate",
-   "note": "Each one can hold hundreds of seeds"
+   "id": "fennecfox",
+   "band": 4,
+   "desc": "fennec fox, small sandy fox with huge ears, sitting",
+   "names": "fennec fox, fennec, ?fox",
+   "note": "Its huge ears let heat escape in the desert"
   },
   {
-   "id": "narwhal",
-   "band": 3,
-   "desc": "narwhal with its long spiral tusk",
-   "names": "narwhal",
-   "note": "The tusk is a tooth"
+   "id": "didgeridoo",
+   "band": 4,
+   "desc": "didgeridoo, a long wooden wind tube painted with Aboriginal dot patterns",
+   "names": "didgeridoo, didjeridu, yidaki",
+   "note": "Players keep a drone going by breathing in through the nose while blowing"
   },
   {
-   "id": "cassette",
-   "band": 3,
-   "desc": "audio cassette tape",
-   "names": "cassette, cassette tape, tape, mixtape",
-   "note": "Each side held about 30 minutes"
+   "id": "bunsenburner",
+   "band": 4,
+   "desc": "laboratory Bunsen burner with a blue flame on top of the metal tube and a rubber gas hose",
+   "names": "bunsen burner, burner",
+   "note": "The collar at the bottom lets in air for a hotter blue flame"
   },
   {
-   "id": "cuckooclock",
-   "band": 3,
-   "desc": "carved wooden cuckoo clock with pinecone weights",
-   "names": "cuckoo clock, clock",
-   "note": "From Germany's Black Forest"
-  },
-  {
-   "id": "clogs",
-   "band": 3,
-   "desc": "pair of yellow wooden clogs",
-   "names": "clogs, clog, wooden shoes, klompen",
-   "note": "Carved from one block of willow or poplar"
-  },
-  {
-   "id": "nutcracker",
-   "band": 3,
-   "desc": "wooden soldier nutcracker",
-   "names": "nutcracker, nut cracker",
-   "note": "Made famous by Tchaikovsky's ballet"
-  },
-  {
-   "id": "lute",
-   "band": 3,
-   "desc": "lute with a bent-back pegbox and round back",
-   "names": "lute",
-   "note": "The ancestor of the guitar"
-  },
-  {
-   "id": "waxseal",
-   "band": 3,
-   "desc": "red wax seal stamp with a brass head",
-   "names": "wax seal, seal, stamp, sealing wax",
-   "note": "Proved a letter hadn't been opened"
-  },
-  {
-   "id": "horseshoecrab",
-   "band": 3,
-   "desc": "horseshoe crab, top view",
-   "names": "horseshoe crab",
-   "note": "Its blue blood is used to test medicines"
+   "id": "vise",
+   "band": 4,
+   "desc": "cast-iron bench vise painted blue, with steel jaws and a T-shaped handle",
+   "names": "vise, vice, bench vise, bench vice",
+   "note": "The screw gives a huge squeeze from a small push"
   },
   {
    "id": "jackfruit",
    "band": 4,
-   "desc": "huge jackfruit",
+   "desc": "whole jackfruit with bumpy spiky green-yellow skin next to a cut piece showing yellow pods",
    "names": "jackfruit, jack fruit",
-   "note": "The biggest tree fruit"
-  },
-  {
-   "id": "davylamp",
-   "band": 4,
-   "desc": "brass Davy safety lamp",
-   "names": "davy lamp, safety lamp, miner's lamp",
-   "note": "Kept miners' flames from igniting gas"
+   "note": "The largest tree fruit: one can weigh over 40 kilograms",
+   "bg": "grey"
   },
   {
    "id": "mangosteen",
    "band": 4,
-   "desc": "purple mangosteen cut open",
+   "desc": "mangosteen fruit, round dark purple rind with a green cap, one opened to show white segments",
    "names": "mangosteen",
    "note": "Called the queen of fruits"
   },
   {
-   "id": "eartrumpet",
+   "id": "hovercraft",
    "band": 4,
-   "desc": "brass ear trumpet",
-   "names": "ear trumpet, hearing trumpet",
-   "note": "A hearing aid before electricity"
+   "desc": "hovercraft with a black rubber skirt and a big rear propeller fan",
+   "names": "hovercraft, air cushion vehicle",
+   "note": "It floats on a cushion of air, so it can cross land and water"
   },
   {
-   "id": "babirusa",
-   "band": 4,
-   "desc": "babirusa with curved tusks",
-   "names": "babirusa, deer pig, pig",
-   "note": "Its upper tusks grow through its snout"
+   "id": "proboscismonkey",
+   "band": 5,
+   "desc": "proboscis monkey with reddish fur and a large long drooping nose, sitting",
+   "names": "proboscis monkey, long-nosed monkey, ?monkey",
+   "note": "The big nose may make its honking call louder"
   },
   {
-   "id": "lyre",
-   "band": 4,
-   "desc": "ancient Greek lyre",
-   "names": "lyre",
-   "note": "Played by Apollo in myth"
+   "id": "koto",
+   "band": 5,
+   "desc": "Japanese koto, a long wooden zither lying flat, with 13 strings over movable white bridges",
+   "names": "koto, ?zither",
+   "note": "Its bridges are moved to tune each string"
+  },
+  {
+   "id": "orrery",
+   "band": 5,
+   "desc": "brass clockwork orrery model of the solar system, with planet balls on arms around a central sun",
+   "names": "orrery, planetarium, solar system model",
+   "note": "Named after the Earl of Orrery, who owned an early one"
+  },
+  {
+   "id": "tricornhat",
+   "band": 5,
+   "desc": "black tricorne hat with three sides of the brim turned up into a triangle, with gold trim",
+   "names": "tricorne, tricorn, tricorn hat, tricorne hat, three-cornered hat, ?hat, ?pirate hat",
+   "note": "The turned-up brim kept rain off and let soldiers carry muskets on the shoulder"
+  },
+  {
+   "id": "adze",
+   "band": 6,
+   "desc": "old woodworking adze, a long wooden handle with a curved steel blade set crosswise like a hoe",
+   "names": "adze, adz",
+   "note": "The blade runs across the handle, unlike an axe"
   }
  ]
 }

@@ -2,207 +2,210 @@
  "date": "2026-11-30",
  "items": [
   {
-   "id": "toothbrush",
+   "id": "strawberry",
    "band": 1,
-   "desc": "blue plastic toothbrush with white bristles",
-   "names": "toothbrush, tooth brush",
-   "note": "Early toothbrushes used hog bristles"
+   "desc": "ripe red strawberry with its leafy cap, seen from the side",
+   "names": "strawberry",
+   "note": "Strawberries wear their seeds on the outside, about 200 each",
+   "bg": "grey"
   },
   {
-   "id": "trumpet",
+   "id": "lightbulb",
    "band": 1,
-   "desc": "shiny brass trumpet, side view",
-   "names": "trumpet, cornet",
-   "note": "Three valves give you every note"
+   "desc": "classic clear glass incandescent light bulb with a glowing coiled filament and a silver screw base",
+   "names": "light bulb, lightbulb, bulb, globe",
+   "note": "Most of the energy in an old bulb came out as heat, not light"
   },
   {
    "id": "penguin",
    "band": 1,
-   "desc": "emperor penguin standing upright, side view",
-   "names": "penguin, emperor penguin",
-   "note": "Emperor dads keep the egg warm on their feet"
+   "desc": "emperor penguin standing upright, black back, white belly, yellow-orange patch at the neck",
+   "names": "penguin, emperor penguin, king penguin",
+   "note": "Emperor penguins can dive deeper than 500 metres"
   },
   {
-   "id": "graduationcap",
+   "id": "toaster",
    "band": 2,
-   "desc": "black graduation cap with a gold tassel",
-   "names": "graduation cap, mortarboard, mortar board, cap",
-   "note": "Named after a plasterer's board"
+   "desc": "retro chrome two-slot toaster with two slices of toast popping up",
+   "names": "toaster",
+   "note": "Sliced bread came after the pop-up toaster, not before"
   },
   {
-   "id": "mailbox",
+   "id": "snail",
    "band": 2,
-   "desc": "blue US mailbox on legs",
-   "names": "mailbox, letterbox, postbox, mail box",
-   "note": "Collected twice a day in some cities"
+   "desc": "garden snail with a brown spiral shell and both eye stalks raised",
+   "names": "snail, garden snail, ?slug",
+   "note": "A snail can sleep for up to three years in a dry spell"
   },
   {
-   "id": "bagpipes",
+   "id": "globe",
    "band": 2,
-   "desc": "Scottish bagpipes with tartan bag and three drones",
-   "names": "bagpipes, bagpipe, pipes",
-   "note": "The drones play one note the whole time"
+   "desc": "desk globe of the Earth on a tilted brass half-ring stand with a wooden base, blue oceans",
+   "names": "globe, world globe, terrestrial globe",
+   "note": "The oldest surviving globe, from 1492, has no Americas on it"
   },
   {
-   "id": "cello",
+   "id": "ladder",
    "band": 2,
-   "desc": "cello standing upright with its bow",
-   "names": "cello, violoncello",
-   "note": "Played sitting, held between the knees"
+   "desc": "wooden A-frame step ladder, opened, three-quarter view",
+   "names": "ladder, stepladder, step ladder",
+   "note": "Walking under a ladder was unlucky because of the triangle it makes with the wall"
   },
   {
-   "id": "musicbox",
+   "id": "sunflower",
    "band": 2,
-   "desc": "open wooden music box with a tiny ballerina",
-   "names": "music box, jewelry box, musical box",
-   "note": "A pinned drum plucks a steel comb"
+   "desc": "single tall sunflower head with yellow petals and a dark brown seed centre, short stem",
+   "names": "sunflower",
+   "note": "A sunflower head is hundreds of tiny flowers packed in spirals",
+   "bg": "grey"
   },
   {
-   "id": "xylophone",
+   "id": "skateboard",
    "band": 2,
-   "desc": "wooden xylophone with two mallets",
-   "names": "xylophone, marimba",
-   "note": "The name means \"wood sound\""
+   "desc": "wooden skateboard with red wheels, tilted three-quarter view showing the deck and trucks",
+   "names": "skateboard, skate board",
+   "note": "Skateboards began as surfers' way to surf on dry days"
   },
   {
-   "id": "lantern",
+   "id": "sailboat",
    "band": 2,
-   "desc": "old brass oil lantern with a glass chimney",
-   "names": "lantern, oil lamp, lamp",
-   "note": "Glass keeps the wind off the flame"
+   "desc": "small white sailboat with one tall triangular sail and a blue hull",
+   "names": "sailboat, sailing boat, yacht, dinghy, ?boat",
+   "note": "A sailboat can sail faster than the wind that pushes it"
   },
   {
-   "id": "whisk",
-   "band": 2,
-   "desc": "metal balloon whisk",
-   "names": "whisk, egg beater, balloon whisk",
-   "note": "More wires, more air"
-  },
-  {
-   "id": "spiritlevel",
+   "id": "harp",
    "band": 3,
-   "desc": "yellow spirit level with a bubble",
-   "names": "spirit level, level, bubble level",
-   "note": "The bubble finds the middle when it's flat"
+   "desc": "tall golden concert harp with its curved neck and many strings",
+   "names": "harp, concert harp, pedal harp",
+   "note": "A concert harp has 47 strings and 7 pedals"
   },
   {
-   "id": "filmreel",
+   "id": "frenchpress",
    "band": 3,
-   "desc": "metal film reel with film",
-   "names": "film reel, reel, movie reel",
-   "note": "24 frames a second"
+   "desc": "glass French press coffee maker with a silver plunger and frame, half full of coffee",
+   "names": "french press, cafetiere, coffee press, press pot, plunger",
+   "note": "The plunger's mesh traps the grounds at the bottom"
   },
   {
-   "id": "anvil",
+   "id": "narwhal",
    "band": 3,
-   "desc": "black iron blacksmith's anvil",
-   "names": "anvil",
-   "note": "The pointed end is called the horn"
+   "desc": "narwhal whale with a long straight spiral tusk, grey mottled skin, side view",
+   "names": "narwhal",
+   "note": "The tusk is a tooth, and it can grow 3 metres long"
   },
   {
-   "id": "zeppelin",
+   "id": "cuckooclock",
    "band": 3,
-   "desc": "silver zeppelin airship",
-   "names": "zeppelin, airship, blimp, dirigible",
-   "note": "A zeppelin has a rigid frame inside"
+   "desc": "carved brown wooden Black Forest cuckoo clock with a little bird at the open door, pine-cone weights hanging on chains",
+   "names": "cuckoo clock, ?clock",
+   "note": "The pine-cone weights are what keep it running"
   },
   {
-   "id": "submarine",
+   "id": "pomegranate",
    "band": 3,
-   "desc": "yellow submarine with a periscope",
-   "names": "submarine, sub",
-   "note": "Tanks of water let it sink and rise"
+   "desc": "whole red pomegranate next to a cut half showing ruby seeds",
+   "names": "pomegranate",
+   "note": "One pomegranate can hold over 600 seeds"
   },
   {
-   "id": "monocle",
+   "id": "unicycle",
    "band": 3,
-   "desc": "gold-rimmed monocle on a chain",
-   "names": "monocle",
-   "note": "One lens, held in by the eye socket"
+   "desc": "unicycle with a single wheel, a seat on a straight post and pedals on the wheel hub",
+   "names": "unicycle",
+   "note": "With no gears, one pedal turn is one wheel turn"
   },
   {
-   "id": "concertina",
+   "id": "waffleiron",
    "band": 3,
-   "desc": "hexagonal concertina",
-   "names": "concertina",
-   "note": "Smaller cousin of the accordion"
+   "desc": "black cast-iron stovetop waffle iron, open, showing the square grid plates",
+   "names": "waffle iron, waffle maker",
+   "note": "Waffle irons were once made with family crests on the plates"
   },
   {
-   "id": "floppydisk",
-   "band": 3,
-   "desc": "blue 3.5 inch floppy disk",
-   "names": "floppy disk, floppy, diskette",
-   "note": "Held 1.44 megabytes"
+   "id": "bassoon",
+   "band": 4,
+   "desc": "wooden bassoon, long reddish-brown tube with silver keys and a curved metal crook",
+   "names": "bassoon, fagotto",
+   "note": "Unfolded, a bassoon's tube would be about 2.5 metres long"
   },
   {
-   "id": "sickle",
-   "band": 3,
-   "desc": "curved sickle with a wooden handle",
-   "names": "sickle",
-   "note": "For cutting grain by hand"
+   "id": "loom",
+   "band": 4,
+   "desc": "small wooden table loom with warp threads and a half-woven colourful cloth",
+   "names": "loom, weaving loom, handloom",
+   "note": "The punched cards of the Jacquard loom inspired early computers"
   },
   {
-   "id": "garlicpress",
-   "band": 3,
-   "desc": "stainless steel garlic press",
-   "names": "garlic press",
-   "note": "Squeezes cloves through tiny holes"
+   "id": "dreidel",
+   "band": 4,
+   "desc": "wooden four-sided spinning top with a Hebrew letter on each face and a short handle",
+   "names": "dreidel, dreidl, sevivon",
+   "note": "Each of the four letters tells you what to take or give"
   },
   {
-   "id": "didgeridoo",
-   "band": 3,
-   "desc": "painted didgeridoo",
-   "names": "didgeridoo, didjeridu",
-   "note": "Played with circular breathing"
+   "id": "curlingstone",
+   "band": 4,
+   "desc": "granite curling stone, grey polished round stone with a red handle on top",
+   "names": "curling stone, curling rock, ?stone",
+   "note": "Most curling stones come from one Scottish island, Ailsa Craig"
+  },
+  {
+   "id": "snowmobile",
+   "band": 4,
+   "desc": "red and black snowmobile with front skis and a rear track",
+   "names": "snowmobile, skidoo, ski-doo, snow machine",
+   "note": "The first snowmobile was built to reach patients in snowy Quebec"
+  },
+  {
+   "id": "capybara",
+   "band": 4,
+   "desc": "capybara, a big brown rodent with a blunt square face, sitting",
+   "names": "capybara",
+   "note": "The world's largest rodent, and a strong swimmer"
+  },
+  {
+   "id": "pennyfarthing",
+   "band": 4,
+   "desc": "penny-farthing bicycle with a huge front wheel and a tiny rear wheel",
+   "names": "penny-farthing, penny farthing, high wheeler, ordinary",
+   "note": "The big wheel made it faster, since pedals turned the wheel directly"
   },
   {
    "id": "samovar",
-   "band": 3,
-   "desc": "ornate brass samovar",
+   "band": 5,
+   "desc": "ornate brass Russian samovar urn with a tap, side handles and a small teapot on top",
    "names": "samovar",
-   "note": "A Russian urn for boiling tea water"
-  },
-  {
-   "id": "balalaika",
-   "band": 4,
-   "desc": "triangular balalaika",
-   "names": "balalaika",
-   "note": "A triangle-shaped Russian lute"
+   "note": "Its central pipe once held burning charcoal to keep the water hot"
   },
   {
    "id": "shamisen",
-   "band": 4,
-   "desc": "shamisen, the three-stringed Japanese lute",
-   "names": "shamisen, samisen",
-   "note": "Played with a big plectrum"
+   "band": 5,
+   "desc": "Japanese shamisen, a three-stringed lute with a square drum body and a long thin neck",
+   "names": "shamisen, samisen, sangen",
+   "note": "It is plucked with a large fan-shaped plectrum called a bachi"
   },
   {
-   "id": "orrery",
-   "band": 4,
-   "desc": "brass orrery model of the solar system",
-   "names": "orrery, solar system model",
-   "note": "Named after an Earl of Orrery"
+   "id": "babirusa",
+   "band": 5,
+   "desc": "babirusa wild pig, grey nearly hairless skin, with upper tusks that grow up through the snout and curve back toward the forehead",
+   "names": "babirusa, deer pig, ?pig, ?boar",
+   "note": "Its upper tusks grow up through the top of its snout"
   },
   {
-   "id": "tricorn",
-   "band": 4,
-   "desc": "black tricorn hat",
-   "names": "tricorn, tricorne, tricorn hat, three-cornered hat",
-   "note": "The pirate classic"
+   "id": "romanesco",
+   "band": 5,
+   "desc": "head of romanesco broccoli with pointed spiralling fractal cones, lime green",
+   "names": "romanesco, romanesco broccoli, romanesque cauliflower, ?broccoli, ?cauliflower",
+   "note": "Each cone is made of smaller cones in a spiral pattern",
+   "bg": "grey"
   },
   {
-   "id": "handpan",
-   "band": 4,
-   "desc": "steel handpan drum",
-   "names": "handpan, hang, hang drum, steel tongue drum",
-   "note": "Played with the hands like a UFO-shaped bell"
-  },
-  {
-   "id": "dugong",
-   "band": 4,
-   "desc": "dugong swimming",
-   "names": "dugong, sea cow, manatee",
-   "note": "Cousin of the manatee"
+   "id": "theodolite",
+   "band": 6,
+   "desc": "surveyor's theodolite, an instrument with a telescope sight on a rotating yellow and black body, standing on a wooden tripod",
+   "names": "theodolite, transit, total station",
+   "note": "It measures angles to map the land, from the pyramids to modern roads"
   }
  ]
 }

@@ -2,207 +2,209 @@
  "date": "2026-12-03",
  "items": [
   {
-   "id": "apple",
+   "id": "cheese",
    "band": 1,
-   "desc": "shiny red apple with a short stem and one leaf",
-   "names": "apple",
-   "note": "An apple tree can live for over 100 years"
+   "desc": "wedge of yellow cheese with round holes",
+   "names": "cheese, swiss cheese, emmental, cheese wedge",
+   "note": "The holes come from gas made by bacteria"
   },
   {
-   "id": "sunglasses",
+   "id": "basketball",
    "band": 1,
-   "desc": "pair of black sunglasses with dark lenses, front view",
-   "names": "sunglasses, shades, sunnies, glasses",
-   "note": "Early sunglasses in China were made of smoky quartz"
+   "desc": "orange basketball with black lines",
+   "names": "basketball, ball",
+   "note": "The first games used a peach basket as the hoop"
   },
   {
-   "id": "lightbulb",
+   "id": "airplane",
    "band": 1,
-   "desc": "clear glass light bulb with a glowing filament and screw base",
-   "names": "light bulb, lightbulb, bulb",
-   "note": "Only about 5% of an old bulb's energy became light"
+   "desc": "white passenger jet airliner flying, three-quarter view",
+   "names": "airplane, aeroplane, plane, jet, airliner, aircraft",
+   "note": "An airliner cruises at about 900 km/h"
   },
   {
-   "id": "corkscrew",
+   "id": "kangaroo",
    "band": 2,
-   "desc": "waiter's corkscrew, opened out",
-   "names": "corkscrew, wine opener, bottle opener",
-   "note": "The spiral is called the worm"
+   "desc": "red kangaroo standing upright on its strong hind legs with its long tail",
+   "names": "kangaroo, roo",
+   "note": "Kangaroos can't walk backward"
   },
   {
-   "id": "dartboard",
+   "id": "tennisracket",
    "band": 2,
-   "desc": "dartboard with three darts",
-   "names": "dartboard, dart board, darts",
-   "note": "Numbers are arranged so big misses cost points"
+   "desc": "tennis racket with strings, and a yellow tennis ball",
+   "names": "tennis racket, racket, racquet, tennis racquet",
+   "note": "The fuzzy ball was made yellow in 1972 to show up on TV"
   },
   {
-   "id": "snail",
+   "id": "saw",
    "band": 2,
-   "desc": "garden snail with a brown spiral shell, side view",
-   "names": "snail",
-   "note": "A snail can sleep for three years"
+   "desc": "carpenter's handsaw with a wooden handle and a toothed steel blade",
+   "names": "saw, handsaw, hand saw",
+   "note": "Saw teeth bend alternately left and right so the blade doesn't jam"
   },
   {
-   "id": "rockinghorse",
+   "id": "trumpet",
    "band": 2,
-   "desc": "dapple-grey wooden rocking horse",
-   "names": "rocking horse, hobby horse",
-   "note": "Popular toys since the 1600s"
+   "desc": "brass trumpet with three valves, side view",
+   "names": "trumpet, cornet",
+   "note": "Trumpets were found in Tutankhamun's tomb"
   },
   {
-   "id": "birdcage",
+   "id": "telescope",
    "band": 2,
-   "desc": "ornate white domed birdcage, empty",
-   "names": "birdcage, bird cage, cage",
-   "note": "Victorian homes kept singing canaries"
+   "desc": "brass refracting telescope on a wooden tripod",
+   "names": "telescope, spyglass",
+   "note": "Galileo's first telescope magnified only three times"
   },
   {
-   "id": "octopus",
+   "id": "avocado",
    "band": 2,
-   "desc": "orange octopus with curling tentacles",
-   "names": "octopus",
-   "note": "Three hearts and blue blood"
+   "desc": "avocado cut in half with the brown pit in one half, next to the dark skinned whole fruit",
+   "names": "avocado",
+   "note": "Its name comes from the Aztec word ahuacatl",
+   "bg": "grey"
   },
   {
-   "id": "windchime",
+   "id": "tractor",
    "band": 2,
-   "desc": "bamboo wind chime",
-   "names": "wind chime, windchime, chimes",
-   "note": "Hung where the breeze can find it"
+   "desc": "red farm tractor with big rear wheels and small front wheels, side view",
+   "names": "tractor",
+   "note": "The big back wheels give grip in soft soil"
   },
   {
-   "id": "sloth",
-   "band": 2,
-   "desc": "three-toed sloth hanging from a branch",
-   "names": "sloth",
-   "note": "Algae grows in its fur"
+   "id": "lantern",
+   "band": 3,
+   "desc": "old metal camping lantern with a glass chimney and a carry handle, lit",
+   "names": "lantern, oil lantern, hurricane lamp, lamp",
+   "note": "The glass chimney keeps the wind from blowing it out"
+  },
+  {
+   "id": "anteater",
+   "band": 3,
+   "desc": "giant anteater with a long tube-shaped snout, bushy tail and grey-black stripe",
+   "names": "anteater, giant anteater",
+   "note": "Its tongue flicks 150 times a minute"
   },
   {
    "id": "puffin",
    "band": 3,
-   "desc": "Atlantic puffin with a striped orange beak",
+   "desc": "Atlantic puffin standing, black and white with a big orange and grey striped bill",
    "names": "puffin, atlantic puffin",
-   "note": "Can hold a dozen fish crosswise in its beak"
+   "note": "A puffin can carry a dozen fish crosswise in its bill"
   },
   {
-   "id": "fennecfox",
+   "id": "bagpipes",
    "band": 3,
-   "desc": "fennec fox with huge ears",
-   "names": "fennec fox, fennec, fox",
-   "note": "Big ears shed desert heat"
+   "desc": "Scottish bagpipes with a tartan bag, three drone pipes and a chanter",
+   "names": "bagpipes, bagpipe, pipes, great highland bagpipe",
+   "note": "The bag holds air so the sound never stops for breath"
   },
   {
-   "id": "jukebox",
+   "id": "boomerang",
    "band": 3,
-   "desc": "colorful vintage jukebox",
-   "names": "jukebox, juke box",
-   "note": "Put a coin in, pick a song"
+   "desc": "wooden boomerang, a curved L-shaped throwing stick with painted dots",
+   "names": "boomerang",
+   "note": "Only the light curved ones come back; hunting ones fly straight"
   },
   {
-   "id": "frenchpress",
+   "id": "pogostick",
    "band": 3,
-   "desc": "glass french press coffee maker",
-   "names": "french press, cafetiere, coffee press, press pot",
-   "note": "Push the plunger down slowly"
+   "desc": "pogo stick with handlebars, foot pegs and a spring",
+   "names": "pogo stick, pogo",
+   "note": "Modern ones use air springs to jump over 3 metres"
   },
   {
-   "id": "capybara",
+   "id": "cablecar",
    "band": 3,
-   "desc": "capybara sitting, side view",
-   "names": "capybara, capybaras",
-   "note": "The world's biggest rodent"
+   "desc": "red aerial cable car cabin hanging from a cable",
+   "names": "cable car, gondola, aerial tramway, ropeway, cable way",
+   "note": "The car has no engine; the cable pulls it"
   },
   {
-   "id": "unicycle",
-   "band": 3,
-   "desc": "unicycle, side view",
-   "names": "unicycle",
-   "note": "One wheel, a lot of practice"
-  },
-  {
-   "id": "steeldrum",
-   "band": 3,
-   "desc": "steel pan drum",
-   "names": "steel drum, steel pan, steelpan, pan",
-   "note": "Born in Trinidad from oil barrels"
-  },
-  {
-   "id": "kiwibird",
-   "band": 3,
-   "desc": "kiwi bird, side view",
-   "names": "kiwi, kiwi bird",
-   "note": "Lays one of the biggest eggs for its size"
-  },
-  {
-   "id": "seaurchin",
-   "band": 3,
-   "desc": "purple sea urchin",
-   "names": "sea urchin, urchin",
-   "note": "It walks on hundreds of tiny tube feet"
-  },
-  {
-   "id": "dreidel",
-   "band": 3,
-   "desc": "wooden dreidel spinning top with Hebrew letters",
-   "names": "dreidel, dreidl, spinning top",
-   "note": "Four sides, four outcomes"
-  },
-  {
-   "id": "anglerfish",
-   "band": 3,
-   "desc": "deep-sea anglerfish with a glowing lure",
-   "names": "anglerfish, angler fish, monkfish",
-   "note": "Its glowing lure attracts prey in the dark"
-  },
-  {
-   "id": "pennyfarthing",
-   "band": 3,
-   "desc": "penny-farthing bicycle with a giant front wheel",
-   "names": "penny-farthing, penny farthing, high wheeler, bicycle",
-   "note": "Named after a big and a small coin"
-  },
-  {
-   "id": "proboscismonkey",
+   "id": "fonduepot",
    "band": 4,
-   "desc": "proboscis monkey with a big nose",
-   "names": "proboscis monkey, monkey",
-   "note": "The big nose belongs to the males"
+   "desc": "red enamel cheese fondue pot on a stand with a burner and long fondue forks",
+   "names": "fondue pot, fondue, caquelon",
+   "note": "Lose your bread in the pot and tradition says you buy the next round"
   },
   {
-   "id": "romanesco",
+   "id": "bokchoy",
    "band": 4,
-   "desc": "romanesco broccoli with spiraling florets",
-   "names": "romanesco, romanesco broccoli, broccoli",
-   "note": "Its florets form natural fractals"
+   "desc": "bok choy cabbage with white stalks and dark green leaves",
+   "names": "bok choy, pak choi, pak choy, chinese cabbage, ?cabbage",
+   "note": "It has been grown in China for over 1500 years",
+   "bg": "grey"
   },
   {
-   "id": "gerenuk",
+   "id": "foldingfan",
    "band": 4,
-   "desc": "gerenuk standing on hind legs to eat leaves",
-   "names": "gerenuk, giraffe gazelle, antelope",
-   "note": "Stands on its hind legs to reach leaves"
+   "desc": "open Japanese folding fan with a painted paper leaf and wooden ribs",
+   "names": "folding fan, hand fan, fan, sensu",
+   "note": "The folding fan is said to have been invented in Japan"
   },
   {
-   "id": "koto",
+   "id": "plumbbob",
    "band": 4,
-   "desc": "koto, the long Japanese zither",
-   "names": "koto",
-   "note": "Thirteen strings over movable bridges"
+   "desc": "brass plumb bob, a pointed weight hanging from a string",
+   "names": "plumb bob, plumb line, plumb",
+   "note": "\"Plumb\" comes from plumbum, Latin for lead"
   },
   {
-   "id": "rambutan",
+   "id": "geigercounter",
    "band": 4,
-   "desc": "hairy red rambutan fruit",
-   "names": "rambutan",
-   "note": "The name means \"hairy\""
+   "desc": "handheld Geiger counter with a needle dial and a wand probe on a cord",
+   "names": "geiger counter, geiger, radiation detector, dosimeter",
+   "note": "The clicks are single particles passing through the tube"
   },
   {
-   "id": "kohlrabi",
+   "id": "barometer",
    "band": 4,
-   "desc": "purple kohlrabi",
-   "names": "kohlrabi, turnip cabbage",
-   "note": "A cabbage that swelled at the stem"
+   "desc": "round brass aneroid barometer with a dial reading Rain, Change, Fair",
+   "names": "barometer",
+   "note": "A falling barometer means a storm may be coming"
+  },
+  {
+   "id": "buddhashand",
+   "band": 4,
+   "desc": "Buddha's hand citron, a yellow fruit split into many long finger-like segments",
+   "names": "buddha's hand, buddhas hand, fingered citron, ?citron",
+   "note": "It has almost no juice or pulp, and is kept for its scent"
+  },
+  {
+   "id": "dikdik",
+   "band": 5,
+   "desc": "dik-dik, a tiny antelope with big dark eyes, a long pointed snout and small straight horns",
+   "names": "dik-dik, dikdik, dik dik, ?antelope, ?deer",
+   "note": "Named for its alarm call"
+  },
+  {
+   "id": "hurdygurdy",
+   "band": 5,
+   "desc": "hurdy-gurdy, a wooden violin-shaped instrument with a crank handle at the tail and a box of keys on the neck",
+   "names": "hurdy-gurdy, hurdy gurdy, wheel fiddle",
+   "note": "A cranked wheel rubs the strings like an endless bow"
+  },
+  {
+   "id": "armillarysphere",
+   "band": 5,
+   "desc": "brass armillary sphere, nested rings around a central ball, on a stand",
+   "names": "armillary sphere, armillary, armilla",
+   "note": "The rings show the circles of the sky around the Earth"
+  },
+  {
+   "id": "sampan",
+   "band": 5,
+   "desc": "small wooden Chinese sampan boat with a curved woven bamboo canopy",
+   "names": "sampan, ?boat",
+   "note": "The name means three planks"
+  },
+  {
+   "id": "drawknife",
+   "band": 6,
+   "desc": "antique drawknife, a long straight blade with a wooden handle at each end bent toward the user",
+   "names": "drawknife, draw knife, drawshave, draw shave",
+   "note": "You pull it toward yourself to shave wood"
   }
  ]
 }

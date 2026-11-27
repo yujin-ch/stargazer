@@ -89,6 +89,7 @@ def chroma_key(img, ai_mask=None):
     # backdrop = green clearly ahead of red and blue, relative to brightness, so the darker green of
     # floor shadows goes too (objects are never green by prompt rule)
     fg = ~((g > np.maximum(r, b) * 1.3 + 8) & (greenness > 12))
+    key = fg.copy()
     if ai_mask is not None:
         # the cut-out model knows where the object is (so floor and shadow stay out, and green-tinted
         # white parts stay in); the key only clears clearly green pixels inside it (gaps, edges)
@@ -107,7 +108,10 @@ def chroma_key(img, ai_mask=None):
         else:
             big = 1 + np.flatnonzero(sizes >= max(200, sizes.max() * 0.002))
         keep = np.isin(lab_, big)
-    keep = ndimage.binary_fill_holes(keep) & fg
+    # the cut-out model drops thin parts (an erhu's neck, a bow, a rod): grow back through everything the
+    # green key calls object, as long as it is joined to what was kept
+    keep = ndimage.binary_propagation(keep, mask=key | keep)
+    keep = ndimage.binary_fill_holes(keep) & key
     # despill: green may not exceed the larger of red and blue
     out = rgb.copy()
     out[..., 1] = np.minimum(g, (r + b) / 2 + 4)
